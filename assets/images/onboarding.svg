@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300">
+  <!-- Background blobs -->
+  <ellipse cx="280" cy="60" rx="80" ry="70" fill="#6C63FF" opacity="0.12"/>
+  <ellipse cx="70" cy="230" rx="70" ry="60" fill="#FF6584" opacity="0.10"/>
+  <!-- Main card -->
+  <rect x="60" y="40" width="240" height="180" rx="20" fill="#22213A" stroke="#2D2C4A" stroke-width="1.5"/>
+  <!-- Question mark big -->
+  <text x="180" y="158" font-size="100" text-anchor="middle" fill="#6C63FF" opacity="0.3" font-family="Arial" font-weight="bold">?</text>
+  <!-- Progress bar -->
+  <rect x="80" y="185" width="200" height="10" rx="5" fill="#1A1929"/>
+  <rect x="80" y="185" width="130" height="10" rx="5" fill="#6C63FF"/>
+  <!-- Option pills -->
+  <rect x="80" y="72" width="200" height="32" rx="10" fill="#2D2C4A"/>
+  <rect x="80" y="72" width="200" height="32" rx="10" fill="#6C63FF" opacity="0.2" stroke="#6C63FF" stroke-width="1.5"/>
+  <rect x="80" y="112" width="200" height="32" rx="10" fill="#2D2C4A"/>
+  <rect x="80" y="152" width="200" height="32" rx="10" fill="#2D2C4A"/>
+  <!-- Checkmark on first option -->
+  <circle cx="262" cy="88" r="10" fill="#10B981"/>
+  <polyline points="257,88 261,93 268,83" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Stars floating -->
+  <text x="42" y="72" font-size="22" fill="#F59E0B">★</text>
+  <text x="295" y="100" font-size="16" fill="#FF6584">★</text>
+  <text x="30" y="160" font-size="14" fill="#6C63FF">★</text>
+  <text x="305" y="200" font-size="18" fill="#10B981">★</text>
+</svg>

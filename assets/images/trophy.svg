@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <!-- Trophy cup body -->
+  <path d="M95 60 H205 V160 Q205 210 150 230 Q95 210 95 160 Z" fill="#F59E0B"/>
+  <path d="M105 60 H195 V155 Q195 200 150 218 Q105 200 105 155 Z" fill="#FCD34D"/>
+  <!-- Handles -->
+  <path d="M95 80 Q55 80 55 120 Q55 155 95 155" fill="none" stroke="#F59E0B" stroke-width="16" stroke-linecap="round"/>
+  <path d="M205 80 Q245 80 245 120 Q245 155 205 155" fill="none" stroke="#F59E0B" stroke-width="16" stroke-linecap="round"/>
+  <!-- Base stem -->
+  <rect x="130" y="230" width="40" height="20" rx="4" fill="#D97706"/>
+  <rect x="105" y="248" width="90" height="18" rx="9" fill="#D97706"/>
+  <!-- Star on trophy -->
+  <polygon points="150,90 157,112 180,112 162,126 169,148 150,134 131,148 138,126 120,112 143,112" fill="#D97706"/>
+  <!-- Shine -->
+  <ellipse cx="125" cy="95" rx="8" ry="20" fill="white" opacity="0.2" transform="rotate(-20 125 95)"/>
+</svg>

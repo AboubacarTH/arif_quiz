@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 280">
+  <!-- Background circle -->
+  <circle cx="150" cy="130" r="85" fill="#22213A"/>
+  <circle cx="150" cy="130" r="70" fill="#1A1929"/>
+  <!-- Wifi arcs (broken) -->
+  <path d="M80 130 Q150 60 220 130" fill="none" stroke="#2D2C4A" stroke-width="14" stroke-linecap="round"/>
+  <path d="M100 150 Q150 95 200 150" fill="none" stroke="#2D2C4A" stroke-width="14" stroke-linecap="round"/>
+  <path d="M120 170 Q150 130 180 170" fill="none" stroke="#2D2C4A" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="150" cy="185" r="10" fill="#2D2C4A"/>
+  <!-- Red X slash across -->
+  <line x1="85" y1="80" x2="215" y2="185" stroke="#EF4444" stroke-width="8" stroke-linecap="round"/>
+  <line x1="215" y1="80" x2="85" y2="185" stroke="#EF4444" stroke-width="8" stroke-linecap="round"/>
+  <!-- Label -->
+  <rect x="80" y="232" width="140" height="14" rx="7" fill="#22213A"/>
+  <rect x="95" y="254" width="110" height="10" rx="5" fill="#1A1929"/>
+</svg>

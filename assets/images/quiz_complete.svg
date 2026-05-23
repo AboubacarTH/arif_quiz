@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <!-- Outer glow ring -->
+  <circle cx="150" cy="140" r="95" fill="#6C63FF" opacity="0.08"/>
+  <circle cx="150" cy="140" r="78" fill="#6C63FF" opacity="0.12"/>
+  <!-- Main circle -->
+  <circle cx="150" cy="140" r="62" fill="#22213A" stroke="#6C63FF" stroke-width="4"/>
+  <!-- Checkmark -->
+  <polyline points="118,140 138,162 184,116" fill="none" stroke="#10B981" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Confetti dots -->
+  <circle cx="60" cy="60" r="7" fill="#FF6584"/>
+  <circle cx="240" cy="55" r="5" fill="#F59E0B"/>
+  <circle cx="50" cy="200" r="5" fill="#6C63FF"/>
+  <circle cx="255" cy="195" r="7" fill="#10B981"/>
+  <circle cx="80" cy="255" r="4" fill="#F59E0B"/>
+  <circle cx="220" cy="250" r="5" fill="#FF6584"/>
+  <rect x="228" y="80" width="10" height="10" rx="2" fill="#6C63FF" transform="rotate(20 233 85)"/>
+  <rect x="55" y="130" width="8" height="8" rx="2" fill="#10B981" transform="rotate(-15 59 134)"/>
+  <rect x="200" y="230" width="10" height="10" rx="2" fill="#F59E0B" transform="rotate(30 205 235)"/>
+</svg>
