@@ -1,4 +1,4 @@
-import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class LeaderboardTile extends StatelessWidget {
@@ -42,10 +42,14 @@ class LeaderboardTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: isCurrentUser ? AppColors.primary.withOpacity(0.15) : AppColors.cardBg,
+        color: isCurrentUser
+            ? AppColors.primary.withValues(alpha: 0.15)
+            : context.appColors.cardBg,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isCurrentUser ? AppColors.primary.withOpacity(0.4) : AppColors.cardBgLight,
+          color: isCurrentUser
+              ? AppColors.primary.withValues(alpha: 0.4)
+              : context.appColors.cardBgLight,
           width: isCurrentUser ? 1.5 : 1,
         ),
       ),
@@ -55,7 +59,9 @@ class LeaderboardTile extends StatelessWidget {
           SizedBox(
             width: 40,
             child: rank <= 3
-                ? Text(_rankEmoji, style: const TextStyle(fontSize: 22), textAlign: TextAlign.center)
+                ? Text(_rankEmoji,
+                    style: const TextStyle(fontSize: 22),
+                    textAlign: TextAlign.center)
                 : Text(
                     _rankEmoji,
                     style: TextStyle(
@@ -74,7 +80,7 @@ class LeaderboardTile extends StatelessWidget {
             height: 42,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primary.withOpacity(0.2),
+              color: AppColors.primary.withValues(alpha: 0.2),
               border: isCurrentUser
                   ? Border.all(color: AppColors.primary, width: 2)
                   : null,
@@ -83,7 +89,9 @@ class LeaderboardTile extends StatelessWidget {
               child: Text(
                 name[0].toUpperCase(),
                 style: TextStyle(
-                  color: isCurrentUser ? AppColors.primary : AppColors.textSecondary,
+                  color: isCurrentUser
+                      ? AppColors.primary
+                      : context.appColors.textSecondary,
                   fontWeight: FontWeight.w800,
                   fontSize: 17,
                 ),
@@ -99,25 +107,35 @@ class LeaderboardTile extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        color: isCurrentUser ? AppColors.primary : AppColors.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
+                    Flexible(
+                      child: Text(
+                        name,
+                        style: TextStyle(
+                          color: isCurrentUser
+                              ? AppColors.primary
+                              : context.appColors.textPrimary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (isCurrentUser) ...[
                       const SizedBox(width: 6),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 1),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.2),
+                          color: AppColors.primary.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
                           'You',
-                          style: TextStyle(color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700),
                         ),
                       ),
                     ],
@@ -126,7 +144,10 @@ class LeaderboardTile extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   '$quizzesTaken quizzes · ${accuracy.toStringAsFixed(1)}% accuracy',
-                  style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
+                  style:
+                      TextStyle(color: context.appColors.textMuted, fontSize: 11),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -137,20 +158,25 @@ class LeaderboardTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.star_rounded, color: AppColors.warning, size: 15),
+                  const Icon(Icons.star_rounded,
+                      color: AppColors.warning, size: 15),
                   const SizedBox(width: 3),
                   Text(
                     '$points',
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
+                    style: TextStyle(
+                      color: context.appColors.textPrimary,
                       fontWeight: FontWeight.w800,
                       fontSize: 15,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
-              const Text('points', style: TextStyle(color: AppColors.textMuted, fontSize: 10)),
+              Text('points',
+                  style: TextStyle(color: context.appColors.textMuted, fontSize: 10)),
             ],
           ),
         ],
@@ -197,7 +223,7 @@ class PodiumDisplay extends StatelessWidget {
                   height: ranks[i] == 1 ? 56 : 46,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: color.withOpacity(0.25),
+                    color: color.withValues(alpha: 0.25),
                     border: Border.all(color: color, width: 2.5),
                   ),
                   child: Center(
@@ -214,26 +240,31 @@ class PodiumDisplay extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   (user['name'] as String).split(' ')[0],
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: context.appColors.textPrimary,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
                 Text(
                   '${user['total_points']}pts',
-                  style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                      color: color, fontSize: 11, fontWeight: FontWeight.w700),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 8),
                 // Platform
                 Container(
                   height: heights[i],
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.15),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-                    border: Border.all(color: color.withOpacity(0.35)),
+                    color: color.withValues(alpha: 0.15),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(10)),
+                    border: Border.all(color: color.withValues(alpha: 0.35)),
                   ),
                   alignment: Alignment.center,
                   child: Text(

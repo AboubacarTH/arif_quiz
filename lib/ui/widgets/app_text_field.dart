@@ -1,4 +1,4 @@
-import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -78,7 +78,7 @@ class _AppTextFieldState extends State<AppTextField> {
         ? AppColors.error
         : _isFocused
             ? AppColors.primary
-            : AppColors.cardBgLight;
+            : context.appColors.cardBgLight;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +88,7 @@ class _AppTextFieldState extends State<AppTextField> {
         Text(
           widget.label,
           style: TextStyle(
-            color: _isFocused ? AppColors.primary : AppColors.textSecondary,
+            color: _isFocused ? AppColors.primary : context.appColors.textSecondary,
             fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
@@ -99,11 +99,17 @@ class _AppTextFieldState extends State<AppTextField> {
         AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            color: AppColors.cardBg,
+            color: context.appColors.cardBg,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: borderColor, width: _isFocused ? 2 : 1.5),
             boxShadow: _isFocused
-                ? [BoxShadow(color: AppColors.primary.withOpacity(0.1), blurRadius: 8, spreadRadius: 0)]
+                ? [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      spreadRadius: 0,
+                    ),
+                  ]
                 : null,
           ),
           child: TextField(
@@ -120,22 +126,28 @@ class _AppTextFieldState extends State<AppTextField> {
             onTap: widget.onTap,
             onSubmitted: widget.onSubmitted,
             textInputAction: widget.textInputAction,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: context.appColors.textPrimary,
               fontSize: 15,
               fontFamily: 'Nunito',
             ),
             decoration: InputDecoration(
               hintText: widget.hint,
-              hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 15),
+              hintStyle:
+                  TextStyle(color: context.appColors.textMuted, fontSize: 15),
               prefixIcon: widget.prefixIcon != null
-                  ? Icon(widget.prefixIcon, color: _isFocused ? AppColors.primary : AppColors.textMuted, size: 20)
+                  ? Icon(widget.prefixIcon,
+                      color:
+                          _isFocused ? AppColors.primary : context.appColors.textMuted,
+                      size: 20)
                   : null,
               suffixIcon: widget.obscureText
                   ? IconButton(
                       icon: Icon(
-                        _obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                        color: AppColors.textMuted,
+                        _obscure
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: context.appColors.textMuted,
                         size: 20,
                       ),
                       onPressed: () => setState(() => _obscure = !_obscure),
@@ -145,7 +157,8 @@ class _AppTextFieldState extends State<AppTextField> {
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               errorBorder: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               counterText: '',
               filled: false,
             ),
@@ -158,13 +171,16 @@ class _AppTextFieldState extends State<AppTextField> {
           Row(
             children: [
               if (hasError)
-                const Icon(Icons.error_outline, size: 13, color: AppColors.error),
+                const Icon(Icons.error_outline,
+                    size: 13, color: AppColors.error),
               if (hasError) const SizedBox(width: 4),
-              Text(
-                widget.errorText ?? widget.helper!,
-                style: TextStyle(
-                  color: hasError ? AppColors.error : AppColors.textMuted,
-                  fontSize: 12,
+              Expanded(
+                child: Text(
+                  widget.errorText ?? widget.helper!,
+                  style: TextStyle(
+                    color: hasError ? AppColors.error : context.appColors.textMuted,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ],

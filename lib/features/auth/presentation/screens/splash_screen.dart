@@ -1,8 +1,9 @@
-import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
+﻿import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,109 +12,114 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeIn;
-  late Animation<double> _scaleAnim;
-
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    );
-    _fadeIn = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0, 0.6)),
-    );
-    _scaleAnim = Tween<double>(begin: 0.6, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
-    _controller.forward();
     _checkAuth();
   }
 
   Future<void> _checkAuth() async {
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future.delayed(const Duration(milliseconds: 2200));
     final token = await apiService.getToken();
     if (!mounted) return;
-    if (token != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const MainNavigation()),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => token != null ? const MainNavigation() : const LoginScreen(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) => FadeTransition(
-            opacity: _fadeIn,
-            child: ScaleTransition(
-              scale: _scaleAnim,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(28),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withOpacity(0.4),
-                          blurRadius: 32,
-                          spreadRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.quiz_rounded,
-                      color: Colors.white,
-                      size: 52,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'QuizMaster',
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 36,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -1,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Test Your Knowledge',
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
+      backgroundColor: context.appColors.bg,
+      body: Stack(
+        children: [
+          // Background glow blobs
+          Positioned(
+            top: -100,
+            left: -100,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primary.withValues(alpha: 0.12),
               ),
+            ).animate().scale(duration: 2.seconds, curve: Curves.easeOut),
+          ),
+          Positioned(
+            bottom: -80,
+            right: -80,
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.secondary.withValues(alpha: 0.1),
+              ),
+            ).animate().scale(duration: 2.seconds, delay: 300.ms, curve: Curves.easeOut),
+          ),
+          // Center content
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Logo
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    gradient: AppGradients.primary,
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.5),
+                        blurRadius: 40,
+                        spreadRadius: 6,
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.quiz_rounded, color: Colors.white, size: 52),
+                ).animate().scale(
+                  duration: 800.ms,
+                  curve: Curves.elasticOut,
+                  begin: const Offset(0.5, 0.5),
+                ),
+                const SizedBox(height: 28),
+                // Title
+                Text(
+                  'Arif Quiz',
+                  style: TextStyle(
+                    color: context.appColors.textPrimary,
+                    fontSize: 38,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ).animate().fadeIn(delay: 400.ms, duration: 500.ms).slideY(begin: 0.3),
+                const SizedBox(height: 8),
+                Text(
+                  'Challenge tes amis. Domine le quiz.',
+                  style: TextStyle(color: context.appColors.textSecondary, fontSize: 15),
+                ).animate().fadeIn(delay: 600.ms, duration: 500.ms),
+                const SizedBox(height: 60),
+                // Loading indicator
+                SizedBox(
+                  width: 120,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: const LinearProgressIndicator(
+                      backgroundColor: Color(0xFF2A2A4A),
+                      valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                      minHeight: 3,
+                    ),
+                  ),
+                ).animate().fadeIn(delay: 800.ms),
+              ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

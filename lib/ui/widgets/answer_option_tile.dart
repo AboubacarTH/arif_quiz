@@ -1,4 +1,4 @@
-import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -30,7 +30,8 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
   @override
   void initState() {
     super.initState();
-    _shake = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _shake = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 400));
     _shakeAnim = TweenSequence([
       TweenSequenceItem(tween: Tween(begin: 0.0, end: -6.0), weight: 1),
       TweenSequenceItem(tween: Tween(begin: -6.0, end: 6.0), weight: 2),
@@ -47,7 +48,8 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
       HapticFeedback.mediumImpact();
       _shake.forward(from: 0);
     }
-    if (widget.state == AnswerState.correct && old.state != AnswerState.correct) {
+    if (widget.state == AnswerState.correct &&
+        old.state != AnswerState.correct) {
       HapticFeedback.lightImpact();
     }
   }
@@ -59,35 +61,37 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
   }
 
   Color get _bgColor => switch (widget.state) {
-        AnswerState.idle     => AppColors.cardBg,
-        AnswerState.selected => AppColors.primary.withOpacity(0.2),
-        AnswerState.correct  => AppColors.success.withOpacity(0.2),
-        AnswerState.wrong    => AppColors.error.withOpacity(0.15),
+        AnswerState.idle => context.appColors.cardBg,
+        AnswerState.selected => AppColors.primary.withValues(alpha: 0.2),
+        AnswerState.correct => AppColors.success.withValues(alpha: 0.2),
+        AnswerState.wrong => AppColors.error.withValues(alpha: 0.15),
       };
 
   Color get _borderColor => switch (widget.state) {
-        AnswerState.idle     => AppColors.cardBgLight,
+        AnswerState.idle => context.appColors.cardBgLight,
         AnswerState.selected => AppColors.primary,
-        AnswerState.correct  => AppColors.success,
-        AnswerState.wrong    => AppColors.error,
+        AnswerState.correct => AppColors.success,
+        AnswerState.wrong => AppColors.error,
       };
 
   Color get _labelBg => switch (widget.state) {
-        AnswerState.idle     => AppColors.cardBgLight,
+        AnswerState.idle => context.appColors.cardBgLight,
         AnswerState.selected => AppColors.primary,
-        AnswerState.correct  => AppColors.success,
-        AnswerState.wrong    => AppColors.error,
+        AnswerState.correct => AppColors.success,
+        AnswerState.wrong => AppColors.error,
       };
 
   Color get _labelFg => switch (widget.state) {
-        AnswerState.idle => AppColors.textSecondary,
-        _               => Colors.white,
+        AnswerState.idle => context.appColors.textSecondary,
+        _ => Colors.white,
       };
 
   Widget? get _trailingIcon => switch (widget.state) {
-        AnswerState.correct => const Icon(Icons.check_circle_rounded, color: AppColors.success),
-        AnswerState.wrong   => const Icon(Icons.cancel_rounded, color: AppColors.error),
-        _                   => null,
+        AnswerState.correct =>
+          const Icon(Icons.check_circle_rounded, color: AppColors.success),
+        AnswerState.wrong =>
+          const Icon(Icons.cancel_rounded, color: AppColors.error),
+        _ => null,
       };
 
   @override
@@ -136,7 +140,7 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
                   widget.option,
                   style: TextStyle(
                     color: widget.state == AnswerState.idle
-                        ? AppColors.textPrimary
+                        ? context.appColors.textPrimary
                         : _borderColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w600,

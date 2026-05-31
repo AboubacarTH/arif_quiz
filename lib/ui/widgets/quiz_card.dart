@@ -1,4 +1,4 @@
-import 'package:arif_quiz/shared/models/models.dart';
+﻿import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +19,8 @@ class QuizCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (style) {
-      QuizCardStyle.list     => _ListCard(quiz: quiz, onTap: onTap),
-      QuizCardStyle.grid     => _GridCard(quiz: quiz, onTap: onTap),
+      QuizCardStyle.list => _ListCard(quiz: quiz, onTap: onTap),
+      QuizCardStyle.grid => _GridCard(quiz: quiz, onTap: onTap),
       QuizCardStyle.featured => _FeaturedCard(quiz: quiz, onTap: onTap),
     };
   }
@@ -36,7 +36,8 @@ class _ListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final diffColor = AppColors.difficultyColor(quiz.difficulty);
     final catColor = quiz.category?.color != null
-        ? Color(int.parse(quiz.category!.color.replaceFirst('#', 'FF'), radix: 16))
+        ? Color(
+            int.parse(quiz.category!.color.replaceFirst('#', 'FF'), radix: 16))
         : AppColors.primary;
 
     return GestureDetector(
@@ -44,9 +45,9 @@ class _ListCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.cardBg,
+          color: context.appColors.cardBg,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.cardBgLight),
+          border: Border.all(color: context.appColors.cardBgLight),
         ),
         child: Row(
           children: [
@@ -55,7 +56,7 @@ class _ListCard extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: catColor.withOpacity(0.15),
+                color: catColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Center(
@@ -73,32 +74,36 @@ class _ListCard extends StatelessWidget {
                 children: [
                   Text(
                     quiz.title,
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
+                    style: TextStyle(
+                      color: context.appColors.textPrimary,
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
-                  Row(
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       _Tag(quiz.difficulty.toUpperCase(), diffColor),
-                      const SizedBox(width: 8),
-                      _Meta(Icons.help_outline_rounded, '${quiz.totalQuestions}Q'),
-                      const SizedBox(width: 8),
+                      _Meta(Icons.help_outline_rounded,
+                          '${quiz.totalQuestions}Q'),
                       _Meta(Icons.timer_outlined, '${quiz.timeLimit}s'),
                     ],
                   ),
                 ],
               ),
             ),
+            const SizedBox(width: 8),
             // Play count + chevron
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                Icon(Icons.chevron_right_rounded,
+                    color: context.appColors.textMuted),
                 const SizedBox(height: 4),
                 _Meta(Icons.play_circle_outline_rounded, '${quiz.playCount}'),
               ],
@@ -120,7 +125,8 @@ class _GridCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final diffColor = AppColors.difficultyColor(quiz.difficulty);
     final catColor = quiz.category?.color != null
-        ? Color(int.parse(quiz.category!.color.replaceFirst('#', 'FF'), radix: 16))
+        ? Color(
+            int.parse(quiz.category!.color.replaceFirst('#', 'FF'), radix: 16))
         : AppColors.primary;
 
     return GestureDetector(
@@ -128,9 +134,9 @@ class _GridCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.cardBg,
+          color: context.appColors.cardBg,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.cardBgLight),
+          border: Border.all(color: context.appColors.cardBgLight),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,11 +149,12 @@ class _GridCard extends StatelessWidget {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: catColor.withOpacity(0.15),
+                    color: catColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
-                    child: Text(quiz.category?.icon ?? '📝', style: const TextStyle(fontSize: 22)),
+                    child: Text(quiz.category?.icon ?? '📝',
+                        style: const TextStyle(fontSize: 22)),
                   ),
                 ),
                 _Tag(quiz.difficulty.toUpperCase(), diffColor),
@@ -156,8 +163,8 @@ class _GridCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               quiz.title,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: context.appColors.textPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 height: 1.3,
@@ -189,7 +196,8 @@ class _FeaturedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final catColor = quiz.category?.color != null
-        ? Color(int.parse(quiz.category!.color.replaceFirst('#', 'FF'), radix: 16))
+        ? Color(
+            int.parse(quiz.category!.color.replaceFirst('#', 'FF'), radix: 16))
         : AppColors.primary;
     final diffColor = AppColors.difficultyColor(quiz.difficulty);
 
@@ -202,10 +210,13 @@ class _FeaturedCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [catColor.withOpacity(0.25), catColor.withOpacity(0.08)],
+            colors: [
+              catColor.withValues(alpha: 0.25),
+              catColor.withValues(alpha: 0.08),
+            ],
           ),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: catColor.withOpacity(0.3)),
+          border: Border.all(color: catColor.withValues(alpha: 0.3)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,15 +224,16 @@ class _FeaturedCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(quiz.category?.icon ?? '📝', style: const TextStyle(fontSize: 32)),
+                Text(quiz.category?.icon ?? '📝',
+                    style: const TextStyle(fontSize: 32)),
                 _Tag(quiz.difficulty.toUpperCase(), diffColor),
               ],
             ),
             const SizedBox(height: 14),
             Text(
               quiz.title,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: context.appColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 height: 1.3,
@@ -241,15 +253,19 @@ class _FeaturedCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: catColor.withOpacity(0.3),
+                color: catColor.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
                   SizedBox(width: 4),
-                  Text('Play Now', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13)),
+                  Text('Play Now',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13)),
                 ],
               ),
             ),
@@ -270,10 +286,12 @@ class _Tag extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.15),
+          color: color.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Text(label, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w700)),
+        child: Text(label,
+            style: TextStyle(
+                color: color, fontSize: 10, fontWeight: FontWeight.w700)),
       );
 }
 
@@ -284,10 +302,14 @@ class _Meta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppColors.textMuted, size: 13),
+          Icon(icon, color: context.appColors.textMuted, size: 13),
           const SizedBox(width: 3),
-          Text(label, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+          Text(label,
+              style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis),
         ],
       );
 }

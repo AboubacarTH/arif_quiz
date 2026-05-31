@@ -1,317 +1,269 @@
-import 'dart:async';
+﻿import 'package:arif_quiz/features/quiz/bloc/quiz_play_controller.dart';
+import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/ui/animations/page_transitions.dart';
+import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
+import 'package:arif_quiz/ui/widgets/empty_state.dart';
+import 'package:arif_quiz/ui/widgets/timer_ring.dart';
 import 'package:flutter/material.dart';
 
 class QuizPlayScreen extends StatefulWidget {
   final QuizModel quiz;
-  const QuizPlayScreen({super.key, required this.quiz});
-
+  final int? challengeId;
+  const QuizPlayScreen({super.key, required this.quiz, this.challengeId});
   @override
   State<QuizPlayScreen> createState() => _QuizPlayScreenState();
 }
 
-class _QuizPlayScreenState extends State<QuizPlayScreen>
-    with SingleTickerProviderStateMixin {
-  List<QuestionModel> _questions = [];
-  int _currentIndex = 0;
-  String? _selectedAnswer;
-  bool _answered = false;
-  bool _loading = true;
-  int _timeLeft = 30;
-  int _totalTimeTaken = 0;
-  Timer? _timer;
-  final Map<String, String> _answers = {};
-  late AnimationController _progressController;
+class _QuizPlayScreenState extends State<QuizPlayScreen> {
+  QuizPlayController? _ctrl;
+  bool _initLoading = true;
+  String? _initError;
+  final _repo = QuizRepository(apiService);
 
   @override
   void initState() {
     super.initState();
-    _progressController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _loadQuestions();
   }
 
   Future<void> _loadQuestions() async {
+    setState(() {
+      _initLoading = true;
+      _initError = null;
+    });
     try {
-      final res = await apiService.getQuizQuestions(widget.quiz.id);
+      final data = await _repo.getQuizQuestions(widget.quiz.id);
+      final ctrl = QuizPlayController(
+          quizId: widget.quiz.id,
+          questions: data.questions,
+          timeLimit: data.timeLimit);
+      ctrl.addListener(_onCtrlChange);
       setState(() {
-        _questions = (res['questions'] as List).map((q) => QuestionModel.fromJson(q)).toList();
-        _timeLeft   = widget.quiz.timeLimit;
-        _loading    = false;
+        _ctrl = ctrl;
+        _initLoading = false;
       });
-      _startTimer();
-    } catch (e) {
-      setState(() => _loading = false);
+    } catch (_) {
+      setState(() {
+        _initError = 'Failed to load questions.';
+        _initLoading = false;
+      });
     }
   }
 
-  void _startTimer() {
-    _timer?.cancel();
-    _timeLeft = widget.quiz.timeLimit;
-    _progressController.value = 1.0;
-    _progressController.reverse(from: 1.0);
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      setState(() => _timeLeft--);
-      if (_timeLeft <= 0) {
-        t.cancel();
-        _nextQuestion();
-      }
-    });
-  }
-
-  void _selectAnswer(String answer) {
-    if (_answered) return;
-    _timer?.cancel();
-    setState(() {
-      _selectedAnswer = answer;
-      _answered = true;
-      _totalTimeTaken += widget.quiz.timeLimit - _timeLeft;
-      _answers[_questions[_currentIndex].id.toString()] = answer;
-    });
-
-    Future.delayed(const Duration(milliseconds: 900), _nextQuestion);
-  }
-
-  void _nextQuestion() {
+  void _onCtrlChange() {
     if (!mounted) return;
-    if (_currentIndex >= _questions.length - 1) {
-      _submitQuiz();
-      return;
-    }
-    setState(() {
-      _currentIndex++;
-      _selectedAnswer = null;
-      _answered = false;
-    });
-    _startTimer();
+    setState(() {});
+    if (_ctrl?.phase == PlayPhase.submitting) _submit();
   }
 
-  Future<void> _submitQuiz() async {
-    _timer?.cancel();
+  Future<void> _submit() async {
     try {
-      final res = await apiService.submitQuiz(
+      final result = await _repo.submitQuiz(
         quizId: widget.quiz.id,
-        answers: _answers,
-        timeTaken: _totalTimeTaken,
+        answers: Map<String, String>.from(_ctrl!.answers),
+        timeTaken: _ctrl!.totalTime,
       );
+      _ctrl?.setResult(result);
       if (!mounted) return;
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => QuizResultScreen(
-            result: QuizAttemptResult.fromJson(res),
-            quiz: widget.quiz,
-          ),
-        ),
-      );
-    } catch (e) {
+          context,
+          FadeScaleRoute(
+              page: QuizResultScreen(result: result, quiz: widget.quiz)));
+    } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to submit. Check your connection.')),
+        const SnackBar(
+            content: Text('Failed to submit quiz. Check your connection.'),
+            backgroundColor: AppColors.error),
       );
     }
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
-    _progressController.dispose();
+    _ctrl?.removeListener(_onCtrlChange);
+    _ctrl?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
+    if (_initLoading) {
       return Scaffold(
-        backgroundColor: AppColors.background,
-        body: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
-      );
+          backgroundColor: context.appColors.bg,
+          body: const Center(
+              child: CircularProgressIndicator(color: AppColors.primary)));
+    }
+    if (_initError != null) {
+      return Scaffold(
+          backgroundColor: context.appColors.bg,
+          body: ErrorState(message: _initError!, onRetry: _loadQuestions));
     }
 
-    if (_questions.isEmpty) {
-      return Scaffold(
-        backgroundColor: AppColors.background,
-        body: const Center(child: Text('No questions available', style: TextStyle(color: AppColors.textSecondary))),
-      );
-    }
+    final ctrl = _ctrl!;
+    final q = ctrl.currentQuestion;
+    final opts = q.options ?? ['True', 'False'];
+    final labels = ['A', 'B', 'C', 'D'];
 
-    final question = _questions[_currentIndex];
-    final timerRatio = _timeLeft / widget.quiz.timeLimit;
-    final timerColor = timerRatio > 0.5
-        ? AppColors.success
-        : timerRatio > 0.25
-            ? AppColors.warning
-            : AppColors.error;
-
-    return WillPopScope(
-      onWillPop: () async {
-        final confirm = await showDialog<bool>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            backgroundColor: AppColors.cardBg,
-            title: const Text('Quit Quiz?', style: TextStyle(color: AppColors.textPrimary)),
-            content: const Text('Your progress will be lost.', style: TextStyle(color: AppColors.textSecondary)),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Quit', style: TextStyle(color: AppColors.error)),
-              ),
-            ],
-          ),
-        );
-        return confirm ?? false;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        final quit = await _confirmQuit();
+        if (quit && mounted) Navigator.pop(context);
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.appColors.bg,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Progress header
+                const SizedBox(height: 16),
+                // Top bar
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary),
-                      onPressed: () => Navigator.maybePop(context),
+                    GestureDetector(
+                      onTap: () async {
+                        if (await _confirmQuit() && mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                            color: context.appColors.cardBg,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Icon(Icons.close_rounded,
+                            color: context.appColors.textSecondary, size: 18),
+                      ),
                     ),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: LinearProgressIndicator(
-                          value: (_currentIndex + 1) / _questions.length,
-                          backgroundColor: AppColors.cardBg,
-                          valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+                          value: ctrl.progress,
+                          backgroundColor: context.appColors.cardBg,
+                          valueColor:
+                              const AlwaysStoppedAnimation(AppColors.primary),
                           minHeight: 8,
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Text(
-                      '${_currentIndex + 1}/${_questions.length}',
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
+                    Text('${ctrl.index + 1}/${ctrl.questions.length}',
+                        style: TextStyle(
+                            color: context.appColors.textSecondary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
 
                 // Timer
-                Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        width: 72,
-                        height: 72,
-                        child: CircularProgressIndicator(
-                          value: timerRatio,
-                          backgroundColor: AppColors.cardBg,
-                          valueColor: AlwaysStoppedAnimation(timerColor),
-                          strokeWidth: 6,
-                        ),
-                      ),
-                      Text(
-                        '$_timeLeft',
-                        style: TextStyle(
-                          color: timerColor,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                TimerRing(
+                    timeLeft: ctrl.timeLeft,
+                    totalTime: ctrl.timeLimit,
+                    size: 80),
                 const SizedBox(height: 28),
 
                 // Question
-                Text(
-                  'Question ${_currentIndex + 1}',
-                  style: const TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Question ${ctrl.index + 1}',
+                      style: const TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5)),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  question.text,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    height: 1.4,
-                  ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(q.text,
+                      style: TextStyle(
+                          color: context.appColors.textPrimary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          height: 1.4,
+                          fontFamily: 'Nunito')),
                 ),
                 const SizedBox(height: 28),
 
-                // Answer options
+                // Answers
                 Expanded(
-                  child: ListView(
-                    children: (question.options ?? ['True', 'False']).map((option) {
-                      Color bg = AppColors.cardBg;
-                      Color border = AppColors.cardBgLight;
-                      Color text = AppColors.textPrimary;
-
-                      if (_answered && _selectedAnswer == option) {
-                        bg = AppColors.primary.withOpacity(0.2);
-                        border = AppColors.primary;
-                        text = AppColors.primary;
-                      }
-
-                      return GestureDetector(
-                        onTap: () => _selectAnswer(option),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          margin: const EdgeInsets.only(bottom: 12),
-                          padding: const EdgeInsets.all(18),
-                          decoration: BoxDecoration(
-                            color: bg,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: border, width: 2),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  option,
-                                  style: TextStyle(
-                                    color: text,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              if (_answered && _selectedAnswer == option)
-                                const Icon(Icons.check_circle_rounded, color: AppColors.primary),
-                            ],
-                          ),
-                        ),
+                  child: ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: opts.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    itemBuilder: (ctx, i) {
+                      final opt = opts[i];
+                      final state = !ctrl.answered
+                          ? AnswerState.idle
+                          : ctrl.selected == opt
+                              ? AnswerState.selected
+                              : AnswerState.idle;
+                      return AnswerOptionTile(
+                        label: labels[i < labels.length ? i : 0],
+                        option: opt,
+                        state: state,
+                        onTap: () {
+                          ctrl.selectAnswer(opt);
+                          ctrl.advance();
+                        },
                       );
-                    }).toList(),
+                    },
                   ),
                 ),
 
-                // Skip button
-                if (!_answered)
-                  Center(
-                    child: TextButton(
-                      onPressed: _nextQuestion,
-                      child: const Text(
-                        'Skip →',
-                        style: TextStyle(color: AppColors.textMuted, fontSize: 14),
-                      ),
-                    ),
-                  ),
+                // Skip
+                if (!ctrl.answered)
+                  TextButton(
+                    onPressed: ctrl.advance,
+                    child: Text('Skip →',
+                        style: TextStyle(
+                            color: context.appColors.textMuted, fontSize: 14)),
+                  )
+                else
+                  const SizedBox(height: 48),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<bool> _confirmQuit() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            backgroundColor: context.appColors.cardBg,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: Text('Quit Quiz?',
+                style: TextStyle(
+                    color: context.appColors.textPrimary, fontWeight: FontWeight.w700)),
+            content: Text('Your progress will be lost.',
+                style: TextStyle(color: context.appColors.textSecondary)),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(ctx, false),
+                  child: const Text('Keep Playing')),
+              TextButton(
+                  onPressed: () => Navigator.pop(ctx, true),
+                  child: const Text('Quit',
+                      style: TextStyle(color: AppColors.error))),
+            ],
+          ),
+        ) ??
+        false;
   }
 }

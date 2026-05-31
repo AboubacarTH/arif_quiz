@@ -1,7 +1,8 @@
-import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 enum AppButtonVariant { primary, secondary, danger, ghost }
+
 enum AppButtonSize { small, medium, large }
 
 class AppButton extends StatefulWidget {
@@ -59,42 +60,64 @@ class _AppButtonState extends State<AppButton>
   void _onTapCancel() => _controller.forward();
 
   Color get _bgColor => switch (widget.variant) {
-        AppButtonVariant.primary   => AppColors.primary,
-        AppButtonVariant.secondary => AppColors.cardBg,
-        AppButtonVariant.danger    => AppColors.error,
-        AppButtonVariant.ghost     => Colors.transparent,
+        AppButtonVariant.primary => AppColors.primary,
+        AppButtonVariant.secondary => context.appColors.cardBg,
+        AppButtonVariant.danger => AppColors.error,
+        AppButtonVariant.ghost => Colors.transparent,
       };
 
   Color get _fgColor => switch (widget.variant) {
-        AppButtonVariant.primary   => Colors.white,
-        AppButtonVariant.secondary => AppColors.textPrimary,
-        AppButtonVariant.danger    => Colors.white,
-        AppButtonVariant.ghost     => AppColors.primary,
+        AppButtonVariant.primary => Colors.white,
+        AppButtonVariant.secondary => context.appColors.textPrimary,
+        AppButtonVariant.danger => Colors.white,
+        AppButtonVariant.ghost => AppColors.primary,
       };
 
   BorderSide get _border => switch (widget.variant) {
-        AppButtonVariant.secondary => const BorderSide(color: AppColors.cardBgLight, width: 1.5),
-        AppButtonVariant.ghost     => const BorderSide(color: AppColors.primary, width: 1.5),
-        _                          => BorderSide.none,
+        AppButtonVariant.secondary =>
+          BorderSide(color: context.appColors.cardBgLight, width: 1.5),
+        AppButtonVariant.ghost =>
+          const BorderSide(color: AppColors.primary, width: 1.5),
+        _ => BorderSide.none,
       };
 
   EdgeInsets get _padding => switch (widget.size) {
-        AppButtonSize.small  => const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        AppButtonSize.medium => const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        AppButtonSize.large  => const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+        AppButtonSize.small =>
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        AppButtonSize.medium =>
+          const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        AppButtonSize.large =>
+          const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
       };
 
   double get _fontSize => switch (widget.size) {
-        AppButtonSize.small  => 13,
+        AppButtonSize.small => 13,
         AppButtonSize.medium => 15,
-        AppButtonSize.large  => 17,
+        AppButtonSize.large => 17,
       };
 
   double get _iconSize => switch (widget.size) {
-        AppButtonSize.small  => 16,
+        AppButtonSize.small => 16,
         AppButtonSize.medium => 18,
-        AppButtonSize.large  => 20,
+        AppButtonSize.large => 20,
       };
+
+  Widget _label() {
+    final label = Text(
+      widget.label,
+      style: TextStyle(
+        color: _fgColor,
+        fontSize: _fontSize,
+        fontWeight: FontWeight.w700,
+        fontFamily: 'Nunito',
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+    );
+
+    return widget.fullWidth ? Flexible(child: label) : label;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,13 +135,13 @@ class _AppButtonState extends State<AppButton>
           width: widget.fullWidth ? double.infinity : null,
           padding: _padding,
           decoration: BoxDecoration(
-            color: disabled ? _bgColor.withOpacity(0.5) : _bgColor,
+            color: disabled ? _bgColor.withValues(alpha: 0.5) : _bgColor,
             borderRadius: BorderRadius.circular(12),
             border: Border.fromBorderSide(_border),
             boxShadow: widget.variant == AppButtonVariant.primary && !disabled
                 ? [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.35),
+                      color: AppColors.primary.withValues(alpha: 0.35),
                       blurRadius: 14,
                       offset: const Offset(0, 4),
                     )
@@ -126,7 +149,8 @@ class _AppButtonState extends State<AppButton>
                 : null,
           ),
           child: Row(
-            mainAxisSize: widget.fullWidth ? MainAxisSize.max : MainAxisSize.min,
+            mainAxisSize:
+                widget.fullWidth ? MainAxisSize.max : MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (widget.loading)
@@ -143,15 +167,7 @@ class _AppButtonState extends State<AppButton>
                   Icon(widget.icon, color: _fgColor, size: _iconSize),
                   const SizedBox(width: 8),
                 ],
-                Text(
-                  widget.label,
-                  style: TextStyle(
-                    color: _fgColor,
-                    fontSize: _fontSize,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Nunito',
-                  ),
-                ),
+                _label(),
                 if (widget.icon != null && widget.iconTrailing) ...[
                   const SizedBox(width: 8),
                   Icon(widget.icon, color: _fgColor, size: _iconSize),

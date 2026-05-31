@@ -1,4 +1,4 @@
-import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class EmptyState extends StatelessWidget {
@@ -19,9 +19,11 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final padding = MediaQuery.sizeOf(context).width < 360 ? 24.0 : 40.0;
+
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(40),
+        padding: EdgeInsets.all(padding),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -30,8 +32,8 @@ class EmptyState extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               title,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: context.appColors.textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
               ),
@@ -41,8 +43,8 @@ class EmptyState extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 subtitle!,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  color: context.appColors.textSecondary,
                   fontSize: 14,
                   height: 1.5,
                 ),
@@ -75,9 +77,11 @@ class ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final padding = MediaQuery.sizeOf(context).width < 360 ? 24.0 : 40.0;
+
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(40),
+        padding: EdgeInsets.all(padding),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -85,16 +89,17 @@ class ErrorState extends StatelessWidget {
               width: 70,
               height: 70,
               decoration: BoxDecoration(
-                color: AppColors.error.withOpacity(0.1),
+                color: AppColors.error.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Icon(Icons.wifi_off_rounded, color: AppColors.error, size: 34),
+              child: const Icon(Icons.wifi_off_rounded,
+                  color: AppColors.error, size: 34),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Oops!',
               style: TextStyle(
-                color: AppColors.textPrimary,
+                color: context.appColors.textPrimary,
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
               ),
@@ -102,7 +107,8 @@ class ErrorState extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               message,
-              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14, height: 1.5),
+              style: TextStyle(
+                  color: context.appColors.textSecondary, fontSize: 14, height: 1.5),
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[
@@ -127,14 +133,15 @@ class NoInternetBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      color: AppColors.error.withOpacity(0.9),
+      color: AppColors.error.withValues(alpha: 0.9),
       child: const Row(
         children: [
           Icon(Icons.wifi_off_rounded, color: Colors.white, size: 16),
           SizedBox(width: 8),
           Text(
             'No internet connection',
-            style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
           ),
         ],
       ),

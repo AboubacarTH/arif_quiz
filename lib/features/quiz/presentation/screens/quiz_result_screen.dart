@@ -1,156 +1,147 @@
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
+import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/ui/animations/page_transitions.dart';
+import 'package:arif_quiz/ui/painters/background_painter.dart';
+import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 
 class QuizResultScreen extends StatelessWidget {
   final QuizAttemptResult result;
   final QuizModel quiz;
-
   const QuizResultScreen({super.key, required this.result, required this.quiz});
 
   @override
   Widget build(BuildContext context) {
-    final gradeColor = AppColors.gradeColor(result.grade);
+    final grade = result.grade;
+    final gradeColor = AppColors.gradeColor(grade);
+    final scoreRatio = result.score / 100;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.appColors.bg,
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
                 child: Column(
                   children: [
-                    const SizedBox(height: 16),
-                    // Grade circle
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: gradeColor.withOpacity(0.15),
-                        border: Border.all(color: gradeColor, width: 4),
-                        boxShadow: [
-                          BoxShadow(
-                            color: gradeColor.withOpacity(0.3),
-                            blurRadius: 32,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          result.grade,
-                          style: TextStyle(
-                            color: gradeColor,
-                            fontSize: 52,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      _getMessage(result.score),
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      quiz.title,
-                      style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                    ),
-                    const SizedBox(height: 28),
-
-                    // Score card
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.cardBg,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.cardBgLight),
-                      ),
-                      child: Column(
+                    // Score arc + grade
+                    SizedBox(
+                      width: 180,
+                      height: 180,
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          // Score percentage
-                          Text(
-                            '${result.score.toStringAsFixed(1)}%',
-                            style: TextStyle(
-                              color: gradeColor,
-                              fontSize: 48,
-                              fontWeight: FontWeight.w800,
-                            ),
+                          CustomPaint(
+                            size: const Size(180, 180),
+                            painter: ScoreArcPainter(
+                                score: scoreRatio,
+                                color: gradeColor,
+                                strokeWidth: 14),
                           ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Score',
-                            style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                          ),
-                          const Divider(height: 28),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              _StatItem('${result.correctCount}/${result.totalQuestions}', 'Correct', AppColors.success),
-                              _StatItem('+${result.pointsEarned}', 'Points', AppColors.warning),
-                              _StatItem('${_formatTime(result.timeTaken)}', 'Time', AppColors.info),
+                              Text(grade,
+                                  style: TextStyle(
+                                      color: gradeColor,
+                                      fontSize: 52,
+                                      fontWeight: FontWeight.w800,
+                                      fontFamily: 'Nunito')),
+                              Text('${result.score.toStringAsFixed(1)}%',
+                                  style: TextStyle(
+                                      color: gradeColor.withValues(alpha: 0.7),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)),
                             ],
                           ),
                         ],
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    Text(_headline(result.score),
+                        style: TextStyle(
+                            color: context.appColors.textPrimary,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Nunito')),
+                    const SizedBox(height: 4),
+                    Text(quiz.title,
+                        style: TextStyle(
+                            color: context.appColors.textSecondary, fontSize: 13)),
                     const SizedBox(height: 24),
 
-                    // Review answers
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        'Review Answers',
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
+                    // Stats row
+                    Container(
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                          color: context.appColors.cardBg,
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(color: context.appColors.cardBgLight)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _Stat(
+                              '${result.correctCount}/${result.totalQuestions}',
+                              'Correct',
+                              AppColors.success),
+                          _divider(context),
+                          _Stat('+${result.pointsEarned}', 'Points',
+                              AppColors.warning),
+                          _divider(context),
+                          _Stat(_fmtTime(result.timeTaken), 'Time',
+                              AppColors.info),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 24),
+
+                    // Review
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Answer Review',
+                            style: TextStyle(
+                                color: context.appColors.textPrimary,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700))),
+                    const SizedBox(height: 12),
                     ...result.results.map((r) => _ReviewCard(r)),
                   ],
                 ),
               ),
             ),
 
-            // Bottom buttons
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
+            // Bottom actions
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 36),
+              decoration: BoxDecoration(
+                color: context.appColors.bg,
+                border: Border(top: BorderSide(color: context.appColors.cardBgLight)),
+              ),
               child: Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
+                    child: AppButton(
+                      label: 'Home',
+                      variant: AppButtonVariant.secondary,
                       onPressed: () => Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (_) => const MainNavigation()),
-                        (_) => false,
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.textSecondary,
-                        side: const BorderSide(color: AppColors.cardBgLight),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('Home'),
+                          context,
+                          FadeScaleRoute(page: const MainNavigation()),
+                          (_) => false),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Play Again'),
+                    child: AppButton(
+                      label: 'Play Again',
+                      icon: Icons.replay_rounded,
+                      onPressed: () => Navigator.pushReplacement(
+                          context,
+                          SlideRightRoute(
+                              page: QuizDetailScreen(quizId: quiz.id))),
                     ),
                   ),
                 ],
@@ -162,110 +153,144 @@ class QuizResultScreen extends StatelessWidget {
     );
   }
 
-  String _getMessage(double score) {
-    if (score >= 90) return 'Outstanding! 🏆';
-    if (score >= 80) return 'Excellent! 🎉';
-    if (score >= 70) return 'Great Job! 👏';
-    if (score >= 60) return 'Not Bad! 👍';
-    if (score >= 50) return 'Keep Going! 💪';
-    return 'Try Again! 🔄';
+  String _headline(double s) {
+    if (s >= 90) return 'Outstanding! ??';
+    if (s >= 80) return 'Excellent! ??';
+    if (s >= 70) return 'Great Job! ??';
+    if (s >= 60) return 'Not Bad! ??';
+    if (s >= 50) return 'Keep Going! ??';
+    return 'Try Again! ??';
   }
 
-  String _formatTime(int seconds) {
-    if (seconds < 60) return '${seconds}s';
-    return '${seconds ~/ 60}m ${seconds % 60}s';
-  }
+  String _fmtTime(int s) => s < 60 ? '${s}s' : '${s ~/ 60}m ${s % 60}s';
+
+  Widget _divider(BuildContext context) =>
+      Container(width: 1, height: 36, color: context.appColors.cardBgLight);
 }
 
-class _StatItem extends StatelessWidget {
-  final String value;
-  final String label;
+class _Stat extends StatelessWidget {
+  final String value, label;
   final Color color;
-
-  const _StatItem(this.value, this.label, this.color);
-
+  const _Stat(this.value, this.label, this.color);
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          Text(value, style: TextStyle(color: color, fontSize: 20, fontWeight: FontWeight.w800)),
+          Text(value,
+              style: TextStyle(
+                  color: color,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Nunito')),
           const SizedBox(height: 2),
-          Text(label, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+          Text(label,
+              style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
         ],
       );
 }
 
-class _ReviewCard extends StatelessWidget {
+class _ReviewCard extends StatefulWidget {
   final QuestionResult result;
   const _ReviewCard(this.result);
+  @override
+  State<_ReviewCard> createState() => _ReviewCardState();
+}
 
+class _ReviewCardState extends State<_ReviewCard> {
+  bool _expanded = false;
   @override
   Widget build(BuildContext context) {
-    final color = result.isCorrect ? AppColors.success : AppColors.error;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withOpacity(0.25)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                result.isCorrect ? Icons.check_circle_rounded : Icons.cancel_rounded,
-                color: color,
-                size: 18,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  result.question,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+    final r = widget.result;
+    final color = r.isCorrect ? AppColors.success : AppColors.error;
+    return GestureDetector(
+      onTap: () => setState(() => _expanded = !_expanded),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.07),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: color.withValues(alpha: 0.22)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                    r.isCorrect
+                        ? Icons.check_circle_rounded
+                        : Icons.cancel_rounded,
+                    color: color,
+                    size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                    child: Text(r.question,
+                        style: TextStyle(
+                            color: context.appColors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            height: 1.3))),
+                Icon(
+                    _expanded
+                        ? Icons.expand_less_rounded
+                        : Icons.expand_more_rounded,
+                    color: context.appColors.textMuted,
+                    size: 18),
+              ],
+            ),
+            if (_expanded) ...[
+              const SizedBox(height: 10),
+              if (r.userAnswer != null && !r.isCorrect)
+                _AnswerRow('Your answer', r.userAnswer!, AppColors.error),
+              _AnswerRow('Correct', r.correctAnswer, AppColors.success),
+              if (r.explanation != null) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: context.appColors.cardBgLight,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('?? ', style: TextStyle(fontSize: 13)),
+                      Expanded(
+                          child: Text(r.explanation!,
+                              style: TextStyle(
+                                  color: context.appColors.textSecondary,
+                                  fontSize: 12,
+                                  height: 1.4))),
+                    ],
                   ),
                 ),
-              ),
+              ],
             ],
-          ),
-          const SizedBox(height: 8),
-          if (result.userAnswer != null && !result.isCorrect)
-            _AnswerRow('Your answer', result.userAnswer!, AppColors.error),
-          _AnswerRow('Correct answer', result.correctAnswer, AppColors.success),
-          if (result.explanation != null) ...[
-            const SizedBox(height: 6),
-            Text(
-              '💡 ${result.explanation}',
-              style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
-            ),
           ],
-        ],
+        ),
       ),
     );
   }
 }
 
 class _AnswerRow extends StatelessWidget {
-  final String label;
-  final String answer;
+  final String label, answer;
   final Color color;
-
   const _AnswerRow(this.label, this.answer, this.color);
-
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(bottom: 4, left: 26),
         child: RichText(
           text: TextSpan(
-            style: const TextStyle(fontSize: 13, fontFamily: 'Nunito'),
+            style: const TextStyle(fontSize: 12, fontFamily: 'Nunito'),
             children: [
-              TextSpan(text: '$label: ', style: const TextStyle(color: AppColors.textMuted)),
-              TextSpan(text: answer, style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+              TextSpan(
+                  text: '$label: ',
+                  style: TextStyle(color: context.appColors.textMuted)),
+              TextSpan(
+                  text: answer,
+                  style: TextStyle(color: color, fontWeight: FontWeight.w700)),
             ],
           ),
         ),

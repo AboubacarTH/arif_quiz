@@ -1,4 +1,4 @@
-import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ShimmerBox extends StatefulWidget {
@@ -25,7 +25,8 @@ class _ShimmerBoxState extends State<ShimmerBox>
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1200))
       ..repeat();
     _anim = Tween<double>(begin: -1.5, end: 1.5).animate(
       CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
@@ -50,10 +51,10 @@ class _ShimmerBoxState extends State<ShimmerBox>
           gradient: LinearGradient(
             begin: Alignment(_anim.value - 1, 0),
             end: Alignment(_anim.value, 0),
-            colors: const [
-              AppColors.cardBg,
-              AppColors.cardBgLight,
-              AppColors.cardBg,
+            colors: [
+              context.appColors.cardBg,
+              context.appColors.cardBgLight,
+              context.appColors.cardBg,
             ],
           ),
         ),
@@ -78,20 +79,20 @@ class QuizListSkeleton extends StatelessWidget {
       itemBuilder: (_, __) => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.cardBg,
+          color: context.appColors.cardBg,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.cardBgLight),
+          border: Border.all(color: context.appColors.cardBgLight),
         ),
         child: const Row(
           children: [
             ShimmerBox(width: 56, height: 56, radius: 14),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ShimmerBox(width: double.infinity, height: 14, radius: 6),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   ShimmerBox(width: 160, height: 11, radius: 6),
                 ],
               ),
@@ -110,13 +111,14 @@ class CategoryRowSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 100,
+      height: 120,
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         scrollDirection: Axis.horizontal,
         itemCount: 5,
         separatorBuilder: (_, __) => const SizedBox(width: 10),
-        itemBuilder: (_, __) => const ShimmerBox(width: 90, height: 100, radius: 18),
+        itemBuilder: (_, __) =>
+            const ShimmerBox(width: 90, height: 112, radius: 18),
       ),
     );
   }
@@ -129,24 +131,32 @@ class ProfileSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
       child: Column(
         children: [
           ShimmerBox(width: double.infinity, height: 200, radius: 24),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           Row(
-            children: const [
-              Expanded(child: ShimmerBox(width: double.infinity, height: 90, radius: 16)),
+            children: [
+              Expanded(
+                  child: ShimmerBox(
+                      width: double.infinity, height: 90, radius: 16)),
               SizedBox(width: 12),
-              Expanded(child: ShimmerBox(width: double.infinity, height: 90, radius: 16)),
+              Expanded(
+                  child: ShimmerBox(
+                      width: double.infinity, height: 90, radius: 16)),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
-            children: const [
-              Expanded(child: ShimmerBox(width: double.infinity, height: 90, radius: 16)),
+            children: [
+              Expanded(
+                  child: ShimmerBox(
+                      width: double.infinity, height: 90, radius: 16)),
               SizedBox(width: 12),
-              Expanded(child: ShimmerBox(width: double.infinity, height: 90, radius: 16)),
+              Expanded(
+                  child: ShimmerBox(
+                      width: double.infinity, height: 90, radius: 16)),
             ],
           ),
         ],

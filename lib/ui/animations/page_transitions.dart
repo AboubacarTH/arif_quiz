@@ -13,7 +13,8 @@ class SlideUpRoute extends PageRouteBuilder {
               begin: const Offset(0, 1),
               end: Offset.zero,
             ).chain(CurveTween(curve: Curves.easeOutCubic));
-            return SlideTransition(position: animation.drive(tween), child: child);
+            return SlideTransition(
+                position: animation.drive(tween), child: child);
           },
         );
 }
@@ -26,7 +27,8 @@ class FadeScaleRoute extends PageRouteBuilder {
           transitionDuration: const Duration(milliseconds: 300),
           pageBuilder: (context, animation, secondaryAnimation) => page,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final fade = CurvedAnimation(parent: animation, curve: Curves.easeOut);
+            final fade =
+                CurvedAnimation(parent: animation, curve: Curves.easeOut);
             final scale = Tween(begin: 0.92, end: 1.0).animate(
               CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
             );

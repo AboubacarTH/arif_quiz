@@ -1,4 +1,4 @@
-import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class QuizAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -29,7 +29,7 @@ class QuizAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: backgroundColor ?? AppColors.background,
+      backgroundColor: backgroundColor ?? context.appColors.bg,
       elevation: elevation,
       centerTitle: true,
       automaticallyImplyLeading: false,
@@ -39,22 +39,24 @@ class QuizAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Container(
                 margin: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppColors.cardBg,
+                  color: context.appColors.cardBg,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.arrow_back_ios_new_rounded,
-                    size: 18, color: AppColors.textPrimary),
+                child: Icon(Icons.arrow_back_ios_new_rounded,
+                    size: 18, color: context.appColors.textPrimary),
               ),
             )
           : leading,
       title: Text(
         title,
-        style: const TextStyle(
-          color: AppColors.textPrimary,
+        style: TextStyle(
+          color: context.appColors.textPrimary,
           fontSize: 18,
           fontWeight: FontWeight.w800,
           fontFamily: 'Nunito',
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       actions: actions,
       bottom: bottom != null
@@ -89,7 +91,7 @@ class SliverQuizAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.appColors.bg,
       elevation: 0,
       pinned: pinned,
       expandedHeight: expandedHeight,
@@ -104,20 +106,24 @@ class SliverQuizAppBar extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: context.appColors.textPrimary,
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             if (subtitle != null)
               Text(
                 subtitle!,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  color: context.appColors.textSecondary,
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
           ],
         ),

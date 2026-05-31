@@ -1,4 +1,4 @@
-import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class TimerRing extends StatelessWidget {
@@ -38,7 +38,7 @@ class TimerRing extends StatelessWidget {
             child: CircularProgressIndicator(
               value: 1.0,
               strokeWidth: size * 0.09,
-              valueColor: AlwaysStoppedAnimation(AppColors.cardBg),
+              valueColor: AlwaysStoppedAnimation(context.appColors.cardBg),
             ),
           ),
           // Progress ring
@@ -60,7 +60,7 @@ class TimerRing extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.error.withOpacity(0.25),
+                    color: AppColors.error.withValues(alpha: 0.25),
                     blurRadius: 16,
                     spreadRadius: 2,
                   ),
@@ -109,7 +109,8 @@ class _AnimatedProgressRingState extends State<AnimatedProgressRing>
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 800));
     _anim = Tween(begin: widget.value, end: widget.value).animate(_ctrl);
   }
 

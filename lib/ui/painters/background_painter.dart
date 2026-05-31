@@ -1,4 +1,4 @@
-import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 /// Draws subtle blob shapes for screen backgrounds
@@ -10,37 +10,50 @@ class BlobPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color.withOpacity(opacity);
+    final paint = Paint()..color = color.withValues(alpha: opacity);
 
     // Top-right blob
     final path1 = Path()
       ..moveTo(size.width * 0.6, 0)
       ..cubicTo(
-        size.width * 1.1, 0,
-        size.width * 1.1, size.height * 0.4,
-        size.width * 0.75, size.height * 0.3,
+        size.width * 1.1,
+        0,
+        size.width * 1.1,
+        size.height * 0.4,
+        size.width * 0.75,
+        size.height * 0.3,
       )
       ..cubicTo(
-        size.width * 0.5, size.height * 0.2,
-        size.width * 0.4, 0,
-        size.width * 0.6, 0,
+        size.width * 0.5,
+        size.height * 0.2,
+        size.width * 0.4,
+        0,
+        size.width * 0.6,
+        0,
       )
       ..close();
     canvas.drawPath(path1, paint);
 
     // Bottom-left blob
-    final paint2 = Paint()..color = AppColors.accent.withOpacity(opacity * 0.7);
+    final paint2 = Paint()
+      ..color = AppColors.accent.withValues(alpha: opacity * 0.7);
     final path2 = Path()
       ..moveTo(0, size.height * 0.75)
       ..cubicTo(
-        -size.width * 0.15, size.height * 0.6,
-        size.width * 0.2, size.height * 0.5,
-        size.width * 0.25, size.height * 0.7,
+        -size.width * 0.15,
+        size.height * 0.6,
+        size.width * 0.2,
+        size.height * 0.5,
+        size.width * 0.25,
+        size.height * 0.7,
       )
       ..cubicTo(
-        size.width * 0.3, size.height * 0.9,
-        0, size.height,
-        0, size.height * 0.75,
+        size.width * 0.3,
+        size.height * 0.9,
+        0,
+        size.height,
+        0,
+        size.height * 0.75,
       )
       ..close();
     canvas.drawPath(path2, paint2);
@@ -117,7 +130,7 @@ class ScoreArcPainter extends CustomPainter {
 
     // Glow
     final glowPaint = Paint()
-      ..color = color.withOpacity(0.25)
+      ..color = color.withValues(alpha: 0.25)
       ..strokeWidth = strokeWidth * 2.5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
@@ -141,7 +154,8 @@ class ScoreArcPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(ScoreArcPainter old) => old.score != score || old.color != color;
+  bool shouldRepaint(ScoreArcPainter old) =>
+      old.score != score || old.color != color;
 }
 
 // Wrapper widget for BlobPainter
@@ -149,7 +163,8 @@ class BlobBackground extends StatelessWidget {
   final Widget child;
   final Color color;
 
-  const BlobBackground({super.key, required this.child, this.color = AppColors.primary});
+  const BlobBackground(
+      {super.key, required this.child, this.color = AppColors.primary});
 
   @override
   Widget build(BuildContext context) {
