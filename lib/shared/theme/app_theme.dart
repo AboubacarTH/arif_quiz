@@ -23,26 +23,26 @@ class AppColorScheme {
     required this.textMuted,
   });
 
-  static const dark = AppColorScheme(
-    bg: Color(0xFF0D0D1A),
-    cardBg: Color(0xFF161629),
-    cardBgLight: Color(0xFF1E1E38),
-    surface: Color(0xFF111122),
-    border: Color(0xFF2A2A4A),
-    textPrimary: Color(0xFFF1F5F9),
-    textSecondary: Color(0xFF94A3B8),
-    textMuted: Color(0xFF64748B),
+  static const light = AppColorScheme(
+    bg: Color(0xFFFFFFFF),
+    cardBg: Color(0xFFFFFFFF),
+    cardBgLight: Color(0xFFF0FFF4),
+    surface: Color(0xFFF9FAFB),
+    border: Color(0xFFD1FAE5),
+    textPrimary: Color(0xFF111827),
+    textSecondary: Color(0xFF6B7280),
+    textMuted: Color(0xFF9CA3AF),
   );
 
-  static const light = AppColorScheme(
-    bg: Color(0xFFF5F3FF),
-    cardBg: Color(0xFFFFFFFF),
-    cardBgLight: Color(0xFFEDE9FE),
-    surface: Color(0xFFF0EEFF),
-    border: Color(0xFFDDD6FE),
-    textPrimary: Color(0xFF1E1B4B),
-    textSecondary: Color(0xFF4C3D8F),
-    textMuted: Color(0xFF9083C5),
+  static const dark = AppColorScheme(
+    bg: Color(0xFF111827),
+    cardBg: Color(0xFF1F2937),
+    cardBgLight: Color(0xFF374151),
+    surface: Color(0xFF1F2937),
+    border: Color(0xFF374151),
+    textPrimary: Color(0xFFF9FAFB),
+    textSecondary: Color(0xFFD1D5DB),
+    textMuted: Color(0xFF6B7280),
   );
 
   static AppColorScheme of(BuildContext context) =>
@@ -56,49 +56,50 @@ extension AppColorSchemeExt on BuildContext {
 // ─── Couleurs partagées (identiques dark & light) ───────────────────────────
 
 class AppColors {
-  // Accents neon — identiques dans les deux thèmes
-  static const primary = Color(0xFF7C3AED);
-  static const primaryLight = Color(0xFF9D5FF7);
-  static const primaryDark = Color(0xFF5B21B6);
-  static const secondary = Color(0xFF06B6D4);
-  static const secondaryLight = Color(0xFF22D3EE);
-  static const accent = Color(0xFFF59E0B);
-  static const accentLight = Color(0xFFFBBF24);
+  // ── Vert (couleur principale) ──
+  static const primary = Color(0xFF16A34A);
+  static const primaryLight = Color(0xFF22C55E);
+  static const primaryDark = Color(0xFF15803D);
 
-  // Status
-  static const success = Color(0xFF10B981);
+  // ── Orange (accent) ──
+  static const secondary = Color(0xFFF97316);
+  static const secondaryLight = Color(0xFFFB923C);
+  static const accent = Color(0xFFF97316);
+  static const accentLight = Color(0xFFFB923C);
+
+  // ── Status ──
+  static const success = Color(0xFF16A34A);
   static const error = Color(0xFFEF4444);
-  static const warning = Color(0xFFF59E0B);
-  static const info = Color(0xFF06B6D4);
+  static const warning = Color(0xFFF97316);
+  static const info = Color(0xFF3B82F6);
 
-  // Difficulté
-  static const easy = Color(0xFF10B981);
-  static const medium = Color(0xFFF59E0B);
+  // ── Difficulté ──
+  static const easy = Color(0xFF16A34A);
+  static const medium = Color(0xFFF97316);
   static const hard = Color(0xFFEF4444);
 
-  // Grades
-  static const gradeS = Color(0xFFF59E0B);
-  static const gradeA = Color(0xFF10B981);
-  static const gradeB = Color(0xFF06B6D4);
-  static const gradeC = Color(0xFF7C3AED);
-  static const gradeD = Color(0xFFF97316);
+  // ── Grades ──
+  static const gradeS = Color(0xFFF97316);
+  static const gradeA = Color(0xFF16A34A);
+  static const gradeB = Color(0xFF3B82F6);
+  static const gradeC = Color(0xFF8B5CF6);
+  static const gradeD = Color(0xFFF59E0B);
   static const gradeF = Color(0xFFEF4444);
 
-  // Modes de jeu
-  static const modeClassic = Color(0xFF7C3AED);
+  // ── Modes de jeu ──
+  static const modeClassic = Color(0xFF16A34A);
   static const modeSurvival = Color(0xFFEF4444);
-  static const modeSpeed = Color(0xFF06B6D4);
+  static const modeSpeed = Color(0xFFF97316);
 
-  // ── Aliases de compatibilité (backward compat) ──
-  // Ces valeurs pointent vers le thème dark ; les écrans migrent vers context.appColors
-  static const darkBg = Color(0xFF0D0D1A);
-  static const cardBg = Color(0xFF161629);
-  static const cardBgLight = Color(0xFF1E1E38);
-  static const surface = Color(0xFF111122);
-  static const background = darkBg;
-  static const textPrimary = Color(0xFFF1F5F9);
-  static const textSecondary = Color(0xFF94A3B8);
-  static const textMuted = Color(0xFF64748B);
+  // ── Aliases backward-compat (pointent vers le thème dark) ──
+  static const darkBg = Color(0xFF111827);
+  static const cardBg = Color(0xFF1F2937);
+  static const cardBgLight = Color(0xFF374151);
+  static const surface = Color(0xFF1F2937);
+  static const background = Color(0xFFFFFFFF);
+  static const textPrimary = Color(0xFFF9FAFB);
+  static const textSecondary = Color(0xFFD1D5DB);
+  static const textMuted = Color(0xFF6B7280);
 
   static Color gradeColor(String grade) => switch (grade) {
         'S' => gradeS,
@@ -113,7 +114,7 @@ class AppColors {
         'easy' => easy,
         'medium' => medium,
         'hard' => hard,
-        _ => const Color(0xFF94A3B8),
+        _ => const Color(0xFF6B7280),
       };
 
   static Color modeColor(String mode) => switch (mode) {
@@ -126,21 +127,6 @@ class AppColors {
 // ─── Thèmes Material3 ───────────────────────────────────────────────────────
 
 class AppTheme {
-  static ThemeData get dark => _build(
-        brightness: Brightness.dark,
-        cs: AppColorScheme.dark,
-        colorScheme: const ColorScheme.dark(
-          primary: AppColors.primary,
-          secondary: AppColors.secondary,
-          surface: Color(0xFF161629),
-          error: AppColors.error,
-          onPrimary: Colors.white,
-          onSecondary: Colors.white,
-          onSurface: Color(0xFFF1F5F9),
-          onError: Colors.white,
-        ),
-      );
-
   static ThemeData get light => _build(
         brightness: Brightness.light,
         cs: AppColorScheme.light,
@@ -151,8 +137,21 @@ class AppTheme {
           error: AppColors.error,
           onPrimary: Colors.white,
           onSecondary: Colors.white,
-          onSurface: Color(0xFF1E1B4B),
-          onError: Colors.white,
+          onSurface: Color(0xFF111827),
+        ),
+      );
+
+  static ThemeData get dark => _build(
+        brightness: Brightness.dark,
+        cs: AppColorScheme.dark,
+        colorScheme: const ColorScheme.dark(
+          primary: AppColors.primary,
+          secondary: AppColors.secondary,
+          surface: Color(0xFF1F2937),
+          error: AppColors.error,
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
+          onSurface: Color(0xFFF9FAFB),
         ),
       );
 
@@ -283,45 +282,6 @@ class AppTheme {
       );
 }
 
-// ─── Gradients ──────────────────────────────────────────────────────────────
-
-class AppGradients {
-  static const primary = LinearGradient(
-    colors: [AppColors.primary, AppColors.primaryLight],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const secondary = LinearGradient(
-    colors: [AppColors.secondary, Color(0xFF0EA5E9)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const gold = LinearGradient(
-    colors: [AppColors.accent, AppColors.accentLight],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static LinearGradient dark(BuildContext context) {
-    final cs = context.appColors;
-    return LinearGradient(
-      colors: [cs.bg, cs.cardBg],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-    );
-  }
-
-  static const survival = LinearGradient(
-    colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const speed = LinearGradient(
-    colors: [AppColors.secondary, Color(0xFF0284C7)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-}
+// ─── Supprimé : plus de dégradés dans l'app ─────────────────────────────────
+// AppGradients a été retiré. Utiliser AppColors.primary / AppColors.secondary
+// comme couleurs pleines à la place.

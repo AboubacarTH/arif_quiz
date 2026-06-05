@@ -156,24 +156,34 @@ class ChallengeModel {
   final int id;
   final String code;
   final UserModel creator;
-  final QuizModel quiz;
+  final QuizModel? quiz;
+  final CategoryModel? category;
+  final String sourceType; // 'quiz' | 'category' | 'all'
   final String mode;
   final String title;
   final String status;
   final DateTime? expiresAt;
+  final DateTime? createdAt;
   final int participantsCount;
+  final int questionsCount;
+  final bool myCompleted;
   final List<ChallengeParticipant>? leaderboard;
 
   const ChallengeModel({
     required this.id,
     required this.code,
     required this.creator,
-    required this.quiz,
+    this.quiz,
+    this.category,
+    this.sourceType = 'quiz',
     required this.mode,
     required this.title,
     required this.status,
     this.expiresAt,
+    this.createdAt,
     this.participantsCount = 0,
+    this.questionsCount = 10,
+    this.myCompleted = false,
     this.leaderboard,
   });
 
@@ -183,16 +193,23 @@ class ChallengeModel {
         creator: json['creator'] != null
             ? UserModel.fromJson(json['creator'])
             : UserModel.fromJson({'id': 0, 'name': 'Unknown', 'email': ''}),
-        quiz: json['quiz'] != null
-            ? QuizModel.fromJson(json['quiz'])
-            : QuizModel.fromJson({'id': 0, 'title': 'Unknown', 'difficulty': 'medium', 'time_limit': 30, 'total_questions': 0, 'play_count': 0}),
+        quiz: json['quiz'] != null ? QuizModel.fromJson(json['quiz']) : null,
+        category: json['category'] != null
+            ? CategoryModel.fromJson(Map<String, dynamic>.from(json['category']))
+            : null,
+        sourceType: json['source_type'] ?? 'quiz',
         mode: json['mode'] ?? 'classic',
         title: json['title'] ?? '',
         status: json['status'] ?? 'open',
         expiresAt: json['expires_at'] != null
             ? DateTime.tryParse(json['expires_at'])
             : null,
+        createdAt: json['created_at'] != null
+            ? DateTime.tryParse(json['created_at'])
+            : null,
         participantsCount: json['participants_count'] ?? 0,
+        questionsCount: json['questions_count'] ?? 10,
+        myCompleted: json['my_completed'] ?? false,
         leaderboard: json['leaderboard'] != null
             ? (json['leaderboard'] as List)
                 .map((e) => ChallengeParticipant.fromJson(e))
@@ -200,8 +217,34 @@ class ChallengeModel {
             : null,
       );
 
+  String get sourceLabel {
+    if (sourceType == 'category') return category?.name ?? 'Catégorie';
+    if (sourceType == 'all') return 'Tous les quiz';
+    return quiz?.title ?? 'Quiz';
+  }
+
+  ChallengeModel copyWithCompleted() => ChallengeModel(
+        id: id,
+        code: code,
+        creator: creator,
+        quiz: quiz,
+        category: category,
+        sourceType: sourceType,
+        mode: mode,
+        title: title,
+        status: status,
+        expiresAt: expiresAt,
+        createdAt: createdAt,
+        participantsCount: participantsCount,
+        questionsCount: questionsCount,
+        myCompleted: true,
+        leaderboard: leaderboard,
+      );
+
   bool get isExpired => expiresAt != null && expiresAt!.isBefore(DateTime.now());
   bool get isOpen => status == 'open' && !isExpired;
+  bool get canDelete =>
+      createdAt != null && DateTime.now().difference(createdAt!).inHours >= 24;
 }
 
 class ChallengeParticipant {
@@ -417,6 +460,7 @@ class QuestionModel {
   final String text;
   final String type;
   final List<String>? options;
+  final String? correctAnswer;
   final int points;
   final int order;
 
@@ -425,6 +469,7 @@ class QuestionModel {
     required this.text,
     required this.type,
     this.options,
+    this.correctAnswer,
     required this.points,
     required this.order,
   });
@@ -435,6 +480,7 @@ class QuestionModel {
         type: json['type'] ?? 'multiple_choice',
         options:
             json['options'] != null ? List<String>.from(json['options']) : null,
+        correctAnswer: json['answer'],
         points: json['points'] ?? 10,
         order: json['order'] ?? 0,
       );
@@ -461,10 +507,10 @@ class QuestionResult {
   });
 
   factory QuestionResult.fromJson(Map<String, dynamic> json) => QuestionResult(
-        questionId: json['question_id'],
+        questionId: json['question_id'] ?? 0,
         question: json['question'] ?? json['question_text'] ?? '',
         userAnswer: json['user_answer'],
-        correctAnswer: json['correct_answer'],
+        correctAnswer: json['correct_answer'] ?? '',
         explanation: json['explanation'],
         isCorrect: json['is_correct'] ?? false,
         points: json['points'] ?? 0,
@@ -504,8 +550,8 @@ class QuizAttemptResult {
         pointsEarned: json['points_earned'] ?? 0,
         xpEarned: json['xp_earned'] ?? 0,
         grade: json['grade'] ?? 'F',
-        results: (json['results'] as List)
-            .map((r) => QuestionResult.fromJson(r))
+        results: ((json['results'] as List?) ?? [])
+            .map((r) => QuestionResult.fromJson(r as Map<String, dynamic>))
             .toList(),
       );
 }
@@ -535,4 +581,155 @@ enum GameMode {
         survival => '❤️',
         speed => '⚡',
       };
+}
+
+// ========== ADMIN MODELS ==========
+
+class AdminStatsModel {
+  final int totalCategories;
+  final int totalQuizzes;
+  final int publishedQuizzes;
+  final int totalQuestions;
+
+  const AdminStatsModel({
+    required this.totalCategories,
+    required this.totalQuizzes,
+    required this.publishedQuizzes,
+    required this.totalQuestions,
+  });
+
+  factory AdminStatsModel.fromJson(Map<String, dynamic> json) => AdminStatsModel(
+        totalCategories: json['total_categories'] ?? 0,
+        totalQuizzes: json['total_quizzes'] ?? 0,
+        publishedQuizzes: json['published_quizzes'] ?? 0,
+        totalQuestions: json['total_questions'] ?? 0,
+      );
+}
+
+class AdminCategoryModel {
+  final int id;
+  final String name;
+  final String slug;
+  final String? description;
+  final String? icon;
+  final String color;
+  final bool isActive;
+  final int quizzesCount;
+  final int publishedQuizzesCount;
+
+  const AdminCategoryModel({
+    required this.id,
+    required this.name,
+    required this.slug,
+    this.description,
+    this.icon,
+    required this.color,
+    required this.isActive,
+    required this.quizzesCount,
+    required this.publishedQuizzesCount,
+  });
+
+  factory AdminCategoryModel.fromJson(Map<String, dynamic> json) => AdminCategoryModel(
+        id: json['id'],
+        name: json['name'] ?? '',
+        slug: json['slug'] ?? '',
+        description: json['description'],
+        icon: json['icon'],
+        color: json['color'] ?? '#7C3AED',
+        isActive: json['is_active'] ?? true,
+        quizzesCount: json['quizzes_count'] ?? 0,
+        publishedQuizzesCount: json['published_quizzes_count'] ?? 0,
+      );
+}
+
+class AdminQuizModel {
+  final int id;
+  final int categoryId;
+  final String title;
+  final String? description;
+  final String difficulty;
+  final int timeLimit;
+  final int totalQuestions;
+  final int pointsPerQuestion;
+  final bool isPublished;
+  final String? thumbnail;
+  final int playCount;
+  final int questionsCount;
+  final int attemptsCount;
+  final AdminCategoryModel? category;
+
+  const AdminQuizModel({
+    required this.id,
+    required this.categoryId,
+    required this.title,
+    this.description,
+    required this.difficulty,
+    required this.timeLimit,
+    required this.totalQuestions,
+    required this.pointsPerQuestion,
+    required this.isPublished,
+    this.thumbnail,
+    required this.playCount,
+    required this.questionsCount,
+    required this.attemptsCount,
+    this.category,
+  });
+
+  factory AdminQuizModel.fromJson(Map<String, dynamic> json) => AdminQuizModel(
+        id: json['id'],
+        categoryId: json['category_id'] ?? 0,
+        title: json['title'] ?? '',
+        description: json['description'],
+        difficulty: json['difficulty'] ?? 'medium',
+        timeLimit: json['time_limit'] ?? 30,
+        totalQuestions: json['total_questions'] ?? 0,
+        pointsPerQuestion: json['points_per_question'] ?? 10,
+        isPublished: json['is_published'] ?? false,
+        thumbnail: json['thumbnail'],
+        playCount: json['play_count'] ?? 0,
+        questionsCount: json['questions_count'] ?? 0,
+        attemptsCount: json['attempts_count'] ?? 0,
+        category: json['category'] != null
+            ? AdminCategoryModel.fromJson(Map<String, dynamic>.from(json['category']))
+            : null,
+      );
+}
+
+class AdminQuestionModel {
+  final int id;
+  final int quizId;
+  final String text;
+  final String type;
+  final List<String>? options;
+  final String correctAnswer;
+  final String? explanation;
+  final int order;
+  final int points;
+  final String? quizTitle;
+
+  const AdminQuestionModel({
+    required this.id,
+    required this.quizId,
+    required this.text,
+    required this.type,
+    this.options,
+    required this.correctAnswer,
+    this.explanation,
+    required this.order,
+    required this.points,
+    this.quizTitle,
+  });
+
+  factory AdminQuestionModel.fromJson(Map<String, dynamic> json) => AdminQuestionModel(
+        id: json['id'],
+        quizId: json['quiz_id'] ?? 0,
+        text: json['text'] ?? '',
+        type: json['type'] ?? 'multiple_choice',
+        options: json['options'] != null ? List<String>.from(json['options']) : null,
+        correctAnswer: json['correct_answer'] ?? '',
+        explanation: json['explanation'],
+        order: json['order'] ?? 0,
+        points: json['points'] ?? 10,
+        quizTitle: json['quiz']?['title'],
+      );
 }

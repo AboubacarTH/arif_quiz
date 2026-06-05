@@ -1,0 +1,7 @@
+# Copiez ce fichier en "key.properties" (sans .template) et remplissez les valeurs.
+# !! Ne jamais committer key.properties dans git !!
+
+storePassword=VOTRE_MOT_DE_PASSE_KEYSTORE
+keyPassword=VOTRE_MOT_DE_PASSE_CLE
+keyAlias=VOTRE_ALIAS_CLE
+storeFile=../arif_quiz.jks

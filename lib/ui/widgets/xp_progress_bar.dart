@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -27,7 +27,7 @@ class XpProgressBar extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                gradient: AppGradients.primary,
+                color: AppColors.primary,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -59,14 +59,8 @@ class XpProgressBar extends StatelessWidget {
                 child: Container(
                   height: 8,
                   decoration: BoxDecoration(
-                    gradient: AppGradients.primary,
+                    color: AppColors.primary,
                     borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.5),
-                        blurRadius: 6,
-                      ),
-                    ],
                   ),
                 ),
               ),

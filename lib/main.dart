@@ -3,14 +3,19 @@ import 'package:flutter/services.dart';
 import 'shared/theme/app_theme.dart';
 import 'shared/theme/theme_controller.dart';
 import 'core/api/api_service.dart';
+import 'core/monetization/monetization_controller.dart';
 import 'features/auth/presentation/screens/splash_screen.dart';
 
 final apiService = ApiService();
 final themeController = ThemeController();
+final monetizationController = MonetizationController();
+final ValueNotifier<bool> isGuest = ValueNotifier(false);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // Initialise AdMob + Play Billing en arrière-plan au démarrage
+  monetizationController.initialize();
   runApp(const QuizApp());
 }
 

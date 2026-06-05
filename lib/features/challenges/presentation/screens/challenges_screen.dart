@@ -119,14 +119,44 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
-                (_, i) => Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: ChallengeCard(
-                    challenge: _ctrl.created[i],
-                    showShareCode: true,
-                    onTap: () => _openDetail(_ctrl.created[i]),
-                  ),
-                ).animate().fadeIn(delay: (i * 60).ms).slideY(begin: 0.1),
+                (_, i) {
+                  final c = _ctrl.created[i];
+                  final card = Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: ChallengeCard(
+                      challenge: c,
+                      showShareCode: true,
+                      onTap: () => _openDetail(c),
+                    ),
+                  ).animate().fadeIn(delay: (i * 60).ms).slideY(begin: 0.1);
+
+                  if (!c.canDelete) return card;
+
+                  return Dismissible(
+                    key: Key('challenge-${c.id}'),
+                    direction: DismissDirection.endToStart,
+                    confirmDismiss: (_) => _confirmDelete(c),
+                    onDismissed: (_) => _deleteChallenge(c),
+                    background: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 20),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.error,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.delete_outline_rounded, color: Colors.white, size: 26),
+                          SizedBox(height: 4),
+                          Text('Supprimer', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
+                        ],
+                      ),
+                    ),
+                    child: card,
+                  );
+                },
                 childCount: _ctrl.created.length,
               ),
             ),
@@ -195,6 +225,46 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => ChallengeDetailScreen(challenge: challenge)),
+    );
+  }
+
+  Future<bool> _confirmDelete(ChallengeModel challenge) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            backgroundColor: context.appColors.cardBg,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: Text(
+              'Supprimer le défi ?',
+              style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700),
+            ),
+            content: Text(
+              'Le défi "${challenge.title}" sera définitivement supprimé.',
+              style: TextStyle(color: context.appColors.textSecondary),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text('Annuler', style: TextStyle(color: context.appColors.textMuted)),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Supprimer', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  Future<void> _deleteChallenge(ChallengeModel challenge) async {
+    final success = await _ctrl.deleteChallenge(challenge.id);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(success ? 'Défi supprimé' : 'Erreur lors de la suppression'),
+        backgroundColor: success ? AppColors.success : AppColors.error,
+      ),
     );
   }
 }

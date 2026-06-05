@@ -59,24 +59,30 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                child: NeonButton(
-                  label: 'Jouer ce défi',
-                  width: double.infinity,
-                  icon: Icons.play_arrow_rounded,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => GameModeSelectScreen(
-                        quiz: _challenge.quiz,
-                        forcedMode: GameMode.values.firstWhere(
-                          (m) => m.apiValue == _challenge.mode,
-                          orElse: () => GameMode.classic,
+                child: _challenge.myCompleted
+                    ? _buildAlreadyPlayedBanner()
+                    : NeonButton(
+                        label: 'Jouer ce défi',
+                        width: double.infinity,
+                        icon: Icons.play_arrow_rounded,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => GameModeSelectScreen(
+                              quiz: _challenge.quiz,
+                              challengeSourceLabel: _challenge.quiz == null
+                                  ? _challenge.sourceLabel
+                                  : null,
+                              forcedMode: GameMode.values.firstWhere(
+                                (m) => m.apiValue == _challenge.mode,
+                                orElse: () => GameMode.classic,
+                              ),
+                              challengeId: _challenge.id,
+                              challenge: _challenge,
+                            ),
+                          ),
                         ),
-                        challengeId: _challenge.id,
                       ),
-                    ),
-                  ),
-                ),
               ),
             ),
             if (_loading)
@@ -87,6 +93,34 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
               ..._buildLeaderboard(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAlreadyPlayedBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: AppColors.success.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Tu as déjà joué ce défi. Consulte le classement ci-dessous.',
+              style: TextStyle(
+                color: AppColors.success,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -120,7 +154,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
               return ListTile(
                 leading: _rankWidget(rank as int),
                 title: Text(user['name'] ?? '', style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700)),
-                subtitle: Text('${(p['time_taken'] ?? 0)}s • ${p['correct_count']}/${_challenge.quiz.totalQuestions}',
+                subtitle: Text('${(p['time_taken'] ?? 0)}s • ${p['correct_count']}/${_challenge.questionsCount}',
                     style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
                 trailing: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

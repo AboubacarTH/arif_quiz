@@ -74,7 +74,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.bg,
-      appBar: const QuizAppBar(title: 'Forgot Password', showBack: true),
       body: SafeArea(
         child: BlobBackground(
           child: SingleChildScrollView(
@@ -82,8 +81,35 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Back button
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: context.appColors.cardBg,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: context.appColors.border),
+                    ),
+                    child: Icon(Icons.arrow_back_ios_new_rounded,
+                        color: context.appColors.textSecondary, size: 16),
+                  ),
+                ),
+                const SizedBox(height: 28),
+                // Logo
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/images/arifquiz_192.png',
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 24),
                 Text(
-                  'Reset\nPassword',
+                  'Réinitialiser\nle mot de passe',
                   style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontSize: 36,
@@ -93,7 +119,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Enter your email to receive a reset link',
+                  'Entre ton email pour recevoir un lien de réinitialisation',
                   style:
                       TextStyle(color: context.appColors.textSecondary, fontSize: 16),
                 ),

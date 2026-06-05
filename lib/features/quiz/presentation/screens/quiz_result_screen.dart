@@ -1,5 +1,9 @@
+import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
+import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dart';
+import 'package:arif_quiz/features/challenges/presentation/screens/challenge_detail_screen.dart';
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
+import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
@@ -10,7 +14,16 @@ import 'package:flutter/material.dart';
 class QuizResultScreen extends StatelessWidget {
   final QuizAttemptResult result;
   final QuizModel quiz;
-  const QuizResultScreen({super.key, required this.result, required this.quiz});
+  final bool guestMode;
+  final ChallengeModel? challenge;
+
+  const QuizResultScreen({
+    super.key,
+    required this.result,
+    required this.quiz,
+    this.guestMode = false,
+    this.challenge,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +127,99 @@ class QuizResultScreen extends StatelessWidget {
               ),
             ),
 
+            // Guest banner
+            if (guestMode)
+              Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: AppColors.primary.withValues(alpha: 0.25)),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      '🏆 Sauvegarde ta progression !',
+                      style: TextStyle(
+                        color: context.appColors.textPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Crée un compte pour suivre tes scores\net débloquer toutes les fonctionnalités.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: context.appColors.textSecondary, fontSize: 12),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              isGuest.value = false;
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                FadeScaleRoute(page: const RegisterScreen()),
+                                (_) => false,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Text(
+                                'Créer un compte',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              isGuest.value = false;
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                FadeScaleRoute(page: const LoginScreen()),
+                                (_) => false,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: context.appColors.cardBg,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: context.appColors.border),
+                              ),
+                              child: Text(
+                                'Se connecter',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: context.appColors.textPrimary,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             // Bottom actions
             Container(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 36),
@@ -125,7 +231,7 @@ class QuizResultScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppButton(
-                      label: 'Home',
+                      label: 'Accueil',
                       variant: AppButtonVariant.secondary,
                       onPressed: () => Navigator.pushAndRemoveUntil(
                           context,
@@ -135,14 +241,27 @@ class QuizResultScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: AppButton(
-                      label: 'Play Again',
-                      icon: Icons.replay_rounded,
-                      onPressed: () => Navigator.pushReplacement(
-                          context,
-                          SlideRightRoute(
-                              page: QuizDetailScreen(quizId: quiz.id))),
-                    ),
+                    child: challenge != null
+                        ? AppButton(
+                            label: 'Voir le défi',
+                            icon: Icons.leaderboard_rounded,
+                            onPressed: () => Navigator.pushReplacement(
+                              context,
+                              SlideRightRoute(
+                                page: ChallengeDetailScreen(
+                                  challenge: challenge!.copyWithCompleted(),
+                                ),
+                              ),
+                            ),
+                          )
+                        : AppButton(
+                            label: 'Rejouer',
+                            icon: Icons.replay_rounded,
+                            onPressed: () => Navigator.pushReplacement(
+                                context,
+                                SlideRightRoute(
+                                    page: QuizDetailScreen(quizId: quiz.id))),
+                          ),
                   ),
                 ],
               ),

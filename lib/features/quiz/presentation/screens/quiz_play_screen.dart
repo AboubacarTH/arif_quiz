@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/features/quiz/bloc/quiz_play_controller.dart';
+﻿import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
+import 'package:arif_quiz/features/quiz/bloc/quiz_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
 import 'package:arif_quiz/main.dart';
@@ -13,7 +14,8 @@ import 'package:flutter/material.dart';
 class QuizPlayScreen extends StatefulWidget {
   final QuizModel quiz;
   final int? challengeId;
-  const QuizPlayScreen({super.key, required this.quiz, this.challengeId});
+  final ChallengeModel? challenge;
+  const QuizPlayScreen({super.key, required this.quiz, this.challengeId, this.challenge});
   @override
   State<QuizPlayScreen> createState() => _QuizPlayScreenState();
 }
@@ -36,17 +38,28 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
       _initError = null;
     });
     try {
-      final data = await _repo.getQuizQuestions(widget.quiz.id);
+      final List<QuestionModel> questions;
+      final int timeLimit;
+      if (widget.challengeId != null) {
+        final data = await ChallengeRepository(apiService).getChallengeQuestions(widget.challengeId!);
+        questions = data.questions;
+        timeLimit = data.timeLimit;
+      } else {
+        final data = await _repo.getQuizQuestions(widget.quiz.id);
+        questions = data.questions;
+        timeLimit = data.timeLimit;
+      }
       final ctrl = QuizPlayController(
           quizId: widget.quiz.id,
-          questions: data.questions,
-          timeLimit: data.timeLimit);
+          questions: questions,
+          timeLimit: timeLimit);
       ctrl.addListener(_onCtrlChange);
       setState(() {
         _ctrl = ctrl;
         _initLoading = false;
       });
-    } catch (_) {
+    } catch (e) {
+      debugPrint('Challenge load error: $e');
       setState(() {
         _initError = 'Failed to load questions.';
         _initLoading = false;
@@ -61,26 +74,99 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
   }
 
   Future<void> _submit() async {
-    try {
-      final result = await _repo.submitQuiz(
-        quizId: widget.quiz.id,
-        answers: Map<String, String>.from(_ctrl!.answers),
-        timeTaken: _ctrl!.totalTime,
-      );
+    final questions = _ctrl!.questions;
+    final answers = Map<String, String>.from(_ctrl!.answers);
+    final timeTaken = _ctrl!.totalTime;
+
+    // Mode invité : résultat local sans appel API
+    if (isGuest.value) {
+      final result = _localResult(questions, answers, timeTaken);
       _ctrl?.setResult(result);
       if (!mounted) return;
       Navigator.pushReplacement(
           context,
           FadeScaleRoute(
-              page: QuizResultScreen(result: result, quiz: widget.quiz)));
-    } catch (_) {
+              page: QuizResultScreen(
+                  result: result, quiz: widget.quiz, guestMode: true)));
+      return;
+    }
+
+    try {
+      final questionIds = questions.map((q) => q.id).toList();
+      QuizAttemptResult result;
+      if (widget.challengeId != null) {
+        final crepo = ChallengeRepository(apiService);
+        result = await crepo.submitChallenge(
+          challengeId: widget.challengeId!,
+          answers: answers,
+          timeTaken: timeTaken,
+          questionIds: questionIds,
+        );
+      } else {
+        result = await _repo.submitQuiz(
+          quizId: widget.quiz.id,
+          answers: answers,
+          timeTaken: timeTaken,
+          questionIds: questionIds,
+        );
+      }
+
+      _ctrl?.setResult(result);
+      if (!mounted) return;
+      Navigator.pushReplacement(
+          context,
+          FadeScaleRoute(
+              page: QuizResultScreen(result: result, quiz: widget.quiz, challenge: widget.challenge)));
+    } catch (e) {
+      debugPrint('Challenge submit error: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Failed to submit quiz. Check your connection.'),
+            content: Text('Erreur lors de la soumission. Vérifie ta connexion.'),
             backgroundColor: AppColors.error),
       );
     }
+  }
+
+  QuizAttemptResult _localResult(
+      List<QuestionModel> questions, Map<String, String> answers, int timeTaken) {
+    int correct = 0;
+    final results = <QuestionResult>[];
+    for (final q in questions) {
+      final ua = answers[q.id.toString()];
+      final ca = q.correctAnswer ?? '';
+      final ok = ua != null && ua.trim() == ca.trim();
+      if (ok) correct++;
+      results.add(QuestionResult(
+          questionId: q.id,
+          question: q.text,
+          userAnswer: ua,
+          correctAnswer: ca,
+          isCorrect: ok,
+          points: ok ? q.points : 0));
+    }
+    final total = questions.length;
+    final score = total > 0 ? correct / total * 100 : 0.0;
+    final grade = score >= 90
+        ? 'S'
+        : score >= 80
+            ? 'A'
+            : score >= 70
+                ? 'B'
+                : score >= 60
+                    ? 'C'
+                    : score >= 50
+                        ? 'D'
+                        : 'F';
+    return QuizAttemptResult(
+        score: score,
+        correctCount: correct,
+        totalQuestions: total,
+        timeTaken: timeTaken,
+        pointsEarned: 0,
+        xpEarned: 0,
+        grade: grade,
+        results: results);
   }
 
   @override
@@ -205,10 +291,13 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (ctx, i) {
                       final opt = opts[i];
+                      final correct = ctrl.currentQuestion.correctAnswer;
                       final state = !ctrl.answered
                           ? AnswerState.idle
-                          : ctrl.selected == opt
-                              ? AnswerState.selected
+                          : opt == ctrl.selected
+                              ? (correct != null && opt == correct
+                                  ? AnswerState.correct
+                                  : AnswerState.wrong)
                               : AnswerState.idle;
                       return AnswerOptionTile(
                         label: labels[i < labels.length ? i : 0],

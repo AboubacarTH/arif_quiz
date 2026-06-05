@@ -1,5 +1,4 @@
-﻿import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
-import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
+﻿import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -23,11 +22,10 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(milliseconds: 2200));
     final token = await apiService.getToken();
     if (!mounted) return;
+    isGuest.value = token == null;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (_) => token != null ? const MainNavigation() : const LoginScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const MainNavigation()),
     );
   }
 
@@ -72,7 +70,6 @@ class _SplashScreenState extends State<SplashScreen> {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    gradient: AppGradients.primary,
                     borderRadius: BorderRadius.circular(28),
                     boxShadow: [
                       BoxShadow(
@@ -82,7 +79,15 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                     ],
                   ),
-                  child: const Icon(Icons.quiz_rounded, color: Colors.white, size: 52),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: Image.asset(
+                      'assets/images/arifquiz_192.png',
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ).animate().scale(
                   duration: 800.ms,
                   curve: Curves.elasticOut,

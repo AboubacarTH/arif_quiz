@@ -83,7 +83,7 @@ class ChallengeCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              challenge.quiz.title,
+              challenge.sourceLabel,
               style: TextStyle(color: context.appColors.textSecondary, fontSize: 13),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -101,9 +101,27 @@ class ChallengeCard extends StatelessWidget {
                 Icon(Icons.quiz_outlined, size: 14, color: context.appColors.textMuted),
                 const SizedBox(width: 4),
                 Text(
-                  '${challenge.quiz.totalQuestions} q.',
+                  '${challenge.questionsCount} questions',
                   style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
                 ),
+                if (challenge.myCompleted) ...[
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: AppColors.success.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      '✓ Joué',
+                      style: TextStyle(
+                        color: AppColors.success,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
             if (showShareCode) ...[

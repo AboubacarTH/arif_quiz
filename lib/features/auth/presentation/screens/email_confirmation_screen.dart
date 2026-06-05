@@ -115,6 +115,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
   }
 
   void _continue() {
+    isGuest.value = false;
     final destination =
         widget.canContinue ? const MainNavigation() : const LoginScreen();
 

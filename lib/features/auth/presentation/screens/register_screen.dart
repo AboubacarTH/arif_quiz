@@ -114,7 +114,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.bg,
-      appBar: const QuizAppBar(title: 'Create Account', showBack: true),
       body: SafeArea(
         child: BlobBackground(
           child: SingleChildScrollView(
@@ -122,8 +121,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Back button
+                GestureDetector(
+                  onTap: _goToLogin,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: context.appColors.cardBg,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: context.appColors.border),
+                    ),
+                    child: Icon(Icons.arrow_back_ios_new_rounded,
+                        color: context.appColors.textSecondary, size: 16),
+                  ),
+                ),
+                const SizedBox(height: 28),
+                // Logo
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/images/arifquiz_192.png',
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 24),
                 Text(
-                  'Create\nAccount',
+                  'Créer un\ncompte',
                   style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontSize: 36,
@@ -133,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Join thousands of quiz enthusiasts',
+                  'Rejoins des milliers de joueurs',
                   style:
                       TextStyle(color: context.appColors.textSecondary, fontSize: 16),
                 ),

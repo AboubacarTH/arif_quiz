@@ -16,16 +16,28 @@ class ChallengeRepository {
   }
 
   Future<ChallengeModel> createChallenge({
-    required int quizId,
+    required String sourceType,
+    int? quizId,
+    int? categoryId,
     required String mode,
     required String title,
   }) async {
     final res = await _api.post('/challenges', data: {
-      'quiz_id': quizId,
+      'source_type': sourceType,
+      if (quizId != null) 'quiz_id': quizId,
+      if (categoryId != null) 'category_id': categoryId,
       'mode': mode,
       'title': title,
     });
     return ChallengeModel.fromJson(res.data['data']);
+  }
+
+  Future<({List<QuestionModel> questions, int timeLimit})> getChallengeQuestions(int challengeId) async {
+    final res = await _api.get('/challenges/$challengeId/questions');
+    return (
+      questions: (res.data['questions'] as List).map((q) => QuestionModel.fromJson(q)).toList(),
+      timeLimit: res.data['time_limit'] as int? ?? 30,
+    );
   }
 
   Future<ChallengeModel> getChallengeByCode(String code) async {
@@ -42,12 +54,15 @@ class ChallengeRepository {
     required int challengeId,
     required Map<String, String> answers,
     required int timeTaken,
+    required List<int> questionIds,
   }) async {
     final res = await _api.post('/challenges/$challengeId/submit', data: {
       'answers': answers,
       'time_taken': timeTaken,
+      'question_ids': questionIds,
     });
-    return QuizAttemptResult.fromJson(res.data['data']);
+    final data = res.data['data'] as Map<String, dynamic>;
+    return QuizAttemptResult.fromJson(data);
   }
 
   Future<Map<String, dynamic>> getChallengeLeaderboard(int challengeId) async {

@@ -32,14 +32,22 @@ class ChallengeController extends ChangeNotifier {
   }
 
   Future<ChallengeModel?> createChallenge({
-    required int quizId,
+    required String sourceType,
+    int? quizId,
+    int? categoryId,
     required String mode,
     required String title,
   }) async {
     isCreating = true;
     notifyListeners();
     try {
-      final challenge = await _repo.createChallenge(quizId: quizId, mode: mode, title: title);
+      final challenge = await _repo.createChallenge(
+        sourceType: sourceType,
+        quizId: quizId,
+        categoryId: categoryId,
+        mode: mode,
+        title: title,
+      );
       created.insert(0, challenge);
       notifyListeners();
       return challenge;
@@ -77,6 +85,17 @@ class ChallengeController extends ChangeNotifier {
       return await _repo.getChallengeByCode(code);
     } catch (_) {
       return null;
+    }
+  }
+
+  Future<bool> deleteChallenge(int challengeId) async {
+    try {
+      await _repo.closeChallenge(challengeId);
+      created.removeWhere((c) => c.id == challengeId);
+      notifyListeners();
+      return true;
+    } catch (_) {
+      return false;
     }
   }
 }

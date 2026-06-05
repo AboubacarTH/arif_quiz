@@ -14,8 +14,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 class SurvivalPlayScreen extends StatefulWidget {
   final QuizModel quiz;
   final int? challengeId;
+  final ChallengeModel? challenge;
 
-  const SurvivalPlayScreen({super.key, required this.quiz, this.challengeId});
+  const SurvivalPlayScreen({super.key, required this.quiz, this.challengeId, this.challenge});
 
   @override
   State<SurvivalPlayScreen> createState() => _SurvivalPlayScreenState();
@@ -50,14 +51,25 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
 
   Future<void> _loadQuestions() async {
     try {
-      final data = await _repo.getQuizQuestions(widget.quiz.id);
+      final List<QuestionModel> questions;
+      int timeLimit;
+      if (widget.challengeId != null) {
+        final data = await ChallengeRepository(apiService).getChallengeQuestions(widget.challengeId!);
+        questions = data.questions;
+        timeLimit = data.timeLimit;
+      } else {
+        final data = await _repo.getQuizQuestions(widget.quiz.id);
+        questions = data.questions;
+        timeLimit = data.timeLimit;
+      }
       setState(() {
-        _questions = data.questions;
-        _timeLeft = data.timeLimit;
+        _questions = questions;
+        _timeLeft = timeLimit;
         _loading = false;
       });
-      _startTimer(data.timeLimit);
-    } catch (_) {
+      _startTimer(timeLimit);
+    } catch (e) {
+      debugPrint('Challenge load error: $e');
       setState(() {
         _error = 'Impossible de charger les questions.';
         _loading = false;
@@ -83,9 +95,11 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
     _timer?.cancel();
     _totalTime += (widget.quiz.timeLimit - _timeLeft).abs();
 
+    final correct = _current.correctAnswer;
     final isCorrect = answer != null &&
-        _questions[_index].options != null &&
-        answer.isNotEmpty;
+        answer.isNotEmpty &&
+        correct != null &&
+        answer == correct;
 
     setState(() {
       _selected = answer;
@@ -123,32 +137,85 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
 
   Future<void> _submitResults() async {
     setState(() => _submitting = true);
+    final playedCount = (_index + 1).clamp(1, _questions.length);
+    final playedQuestions = _questions.take(playedCount).toList();
+    final playedIds = playedQuestions.map((q) => q.id).toList();
+    final answers = Map<String, String>.from(_answers);
+
+    if (isGuest.value) {
+      final result = _localResult(playedQuestions, answers, _totalTime);
+      if (!mounted) return;
+      Navigator.pushReplacement(
+          context,
+          FadeScaleRoute(
+              page: QuizResultScreen(
+                  result: result, quiz: widget.quiz, guestMode: true)));
+      return;
+    }
+
     try {
       QuizAttemptResult result;
       if (widget.challengeId != null) {
         final crepo = ChallengeRepository(apiService);
         result = await crepo.submitChallenge(
           challengeId: widget.challengeId!,
-          answers: Map<String, String>.from(_answers),
+          answers: answers,
           timeTaken: _totalTime,
+          questionIds: playedIds,
         );
       } else {
         result = await _repo.submitQuiz(
           quizId: widget.quiz.id,
-          answers: Map<String, String>.from(_answers),
+          answers: answers,
           timeTaken: _totalTime,
+          questionIds: playedIds,
           mode: 'survival',
         );
       }
       if (!mounted) return;
-      Navigator.pushReplacement(context, FadeScaleRoute(page: QuizResultScreen(result: result, quiz: widget.quiz)));
-    } catch (_) {
+      Navigator.pushReplacement(
+          context, FadeScaleRoute(page: QuizResultScreen(result: result, quiz: widget.quiz, challenge: widget.challenge)));
+    } catch (e) {
+      debugPrint('Challenge submit error: $e');
       if (!mounted) return;
       setState(() => _submitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erreur lors de la soumission'), backgroundColor: AppColors.error),
+        const SnackBar(
+            content: Text('Erreur lors de la soumission'),
+            backgroundColor: AppColors.error),
       );
     }
+  }
+
+  QuizAttemptResult _localResult(
+      List<QuestionModel> questions, Map<String, String> answers, int timeTaken) {
+    int correct = 0;
+    final results = <QuestionResult>[];
+    for (final q in questions) {
+      final ua = answers[q.id.toString()];
+      final ca = q.correctAnswer ?? '';
+      final ok = ua != null && ua.trim() == ca.trim();
+      if (ok) correct++;
+      results.add(QuestionResult(
+          questionId: q.id,
+          question: q.text,
+          userAnswer: ua,
+          correctAnswer: ca,
+          isCorrect: ok,
+          points: ok ? q.points : 0));
+    }
+    final total = questions.length;
+    final score = total > 0 ? correct / total * 100 : 0.0;
+    final grade = score >= 90 ? 'S' : score >= 80 ? 'A' : score >= 70 ? 'B' : score >= 60 ? 'C' : score >= 50 ? 'D' : 'F';
+    return QuizAttemptResult(
+        score: score,
+        correctCount: correct,
+        totalQuestions: total,
+        timeTaken: timeTaken,
+        pointsEarned: 0,
+        xpEarned: 0,
+        grade: grade,
+        results: results);
   }
 
   @override
@@ -160,9 +227,36 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return Scaffold(backgroundColor: context.appColors.bg, body: const Center(child: CircularProgressIndicator(color: AppColors.primary)));
-    if (_error != null) return Scaffold(backgroundColor: context.appColors.bg, body: ErrorState(message: _error!, onRetry: _loadQuestions));
-    if (_submitting) return Scaffold(backgroundColor: context.appColors.bg, body: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [CircularProgressIndicator(color: AppColors.primary), SizedBox(height: 16), Text('Calcul des résultats...', style: TextStyle(color: context.appColors.textSecondary))])));
+    if (_loading) {
+      return Scaffold(
+        backgroundColor: context.appColors.bg,
+        body: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+      );
+    }
+    if (_error != null) {
+      return Scaffold(
+        backgroundColor: context.appColors.bg,
+        body: ErrorState(message: _error!, onRetry: _loadQuestions),
+      );
+    }
+    if (_submitting) {
+      return Scaffold(
+        backgroundColor: context.appColors.bg,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(color: AppColors.primary),
+              const SizedBox(height: 16),
+              Text(
+                'Calcul des résultats...',
+                style: TextStyle(color: context.appColors.textSecondary),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return PopScope(
       canPop: false,
@@ -191,9 +285,17 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
               GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: Container(
-                  width: 36, height: 36,
-                  decoration: BoxDecoration(color: context.appColors.cardBg, borderRadius: BorderRadius.circular(10)),
-                  child: Icon(Icons.close_rounded, color: context.appColors.textSecondary, size: 18),
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: context.appColors.cardBg,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.close_rounded,
+                    color: context.appColors.textSecondary,
+                    size: 18,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -209,7 +311,10 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
                 ),
               ),
               const SizedBox(width: 12),
-              Text('${_index + 1}/${_questions.length}', style: TextStyle(color: context.appColors.textSecondary, fontSize: 13)),
+              Text(
+                '${_index + 1}/${_questions.length}',
+                style: TextStyle(color: context.appColors.textSecondary, fontSize: 13),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -226,22 +331,58 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
                 ),
-                child: const Text('MODE SURVIE', style: TextStyle(color: AppColors.error, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1)),
+                child: const Text(
+                  'MODE SURVIE',
+                  style: TextStyle(
+                    color: AppColors.error,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1,
+                  ),
+                ),
               ),
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(color: context.appColors.cardBg, borderRadius: BorderRadius.circular(20)),
-                child: Text('$_timeLeft s', style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
+                decoration: BoxDecoration(
+                  color: context.appColors.cardBg,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '$_timeLeft s',
+                  style: TextStyle(
+                    color: context.appColors.textPrimary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 24),
-          Align(alignment: Alignment.centerLeft, child: Text('Question ${_index + 1}', style: const TextStyle(color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 0.5))),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Question ${_index + 1}',
+              style: const TextStyle(
+                color: AppColors.error,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
           const SizedBox(height: 8),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(q.text, style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w700, height: 1.4)),
+            child: Text(
+              q.text,
+              style: TextStyle(
+                color: context.appColors.textPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                height: 1.4,
+              ),
+            ),
           ),
           const SizedBox(height: 28),
           Expanded(
@@ -252,13 +393,18 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
               separatorBuilder: (_, __) => const SizedBox(height: 10),
               itemBuilder: (_, i) {
                 final opt = opts[i];
+                final correct = _current.correctAnswer;
                 return AnswerOptionTile(
                   label: labels[i < labels.length ? i : 0],
                   option: opt,
-                  state: !_answered ? AnswerState.idle : (_selected == opt ? AnswerState.selected : AnswerState.idle),
-                  onTap: () {
-                    _handleAnswer(opt);
-                  },
+                  state: !_answered
+                      ? AnswerState.idle
+                      : opt == _selected
+                          ? (correct != null && opt == correct
+                              ? AnswerState.correct
+                              : AnswerState.wrong)
+                          : AnswerState.idle,
+                  onTap: () => _handleAnswer(opt),
                 );
               },
             ),
@@ -277,10 +423,19 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
           children: [
             const Text('💔', style: TextStyle(fontSize: 64)).animate().shake(),
             const SizedBox(height: 20),
-            const Text('Game Over !', style: TextStyle(color: AppColors.error, fontSize: 28, fontWeight: FontWeight.w800)),
+            const Text(
+              'Game Over !',
+              style: TextStyle(
+                color: AppColors.error,
+                fontSize: 28,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             const SizedBox(height: 8),
-            Text('Tu as survécu ${_index} question${_index > 1 ? 's' : ''}',
-                style: TextStyle(color: context.appColors.textSecondary, fontSize: 16)),
+            Text(
+              'Tu as survécu $_index question${_index > 1 ? 's' : ''}',
+              style: TextStyle(color: context.appColors.textSecondary, fontSize: 16),
+            ),
             const SizedBox(height: 32),
             ElevatedButton.icon(
               onPressed: _submitResults,

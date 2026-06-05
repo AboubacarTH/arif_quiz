@@ -13,8 +13,9 @@ import 'package:flutter/material.dart';
 class SpeedPlayScreen extends StatefulWidget {
   final QuizModel quiz;
   final int? challengeId;
+  final ChallengeModel? challenge;
 
-  const SpeedPlayScreen({super.key, required this.quiz, this.challengeId});
+  const SpeedPlayScreen({super.key, required this.quiz, this.challengeId, this.challenge});
 
   @override
   State<SpeedPlayScreen> createState() => _SpeedPlayScreenState();
@@ -47,13 +48,21 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
 
   Future<void> _loadQuestions() async {
     try {
-      final data = await _repo.getQuizQuestions(widget.quiz.id);
+      final List<QuestionModel> questions;
+      if (widget.challengeId != null) {
+        final data = await ChallengeRepository(apiService).getChallengeQuestions(widget.challengeId!);
+        questions = data.questions;
+      } else {
+        final data = await _repo.getQuizQuestions(widget.quiz.id);
+        questions = data.questions;
+      }
       setState(() {
-        _questions = data.questions;
+        _questions = questions;
         _loading = false;
       });
       _startTimer();
-    } catch (_) {
+    } catch (e) {
+      debugPrint('Challenge load error: $e');
       setState(() {
         _error = 'Impossible de charger les questions.';
         _loading = false;
@@ -103,32 +112,82 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
 
   Future<void> _submitResults() async {
     setState(() => _submitting = true);
+    final answers = Map<String, String>.from(_answers);
+
+    if (isGuest.value) {
+      final result = _localResult(_questions, answers, _totalTime);
+      if (!mounted) return;
+      Navigator.pushReplacement(
+          context,
+          FadeScaleRoute(
+              page: QuizResultScreen(
+                  result: result, quiz: widget.quiz, guestMode: true)));
+      return;
+    }
+
     try {
       QuizAttemptResult result;
       if (widget.challengeId != null) {
         final crepo = ChallengeRepository(apiService);
         result = await crepo.submitChallenge(
           challengeId: widget.challengeId!,
-          answers: Map<String, String>.from(_answers),
+          answers: answers,
           timeTaken: _totalTime,
+          questionIds: _questions.map((q) => q.id).toList(),
         );
       } else {
         result = await _repo.submitQuiz(
           quizId: widget.quiz.id,
-          answers: Map<String, String>.from(_answers),
+          answers: answers,
           timeTaken: _totalTime,
+          questionIds: _questions.map((q) => q.id).toList(),
           mode: 'speed',
         );
       }
       if (!mounted) return;
-      Navigator.pushReplacement(context, FadeScaleRoute(page: QuizResultScreen(result: result, quiz: widget.quiz)));
-    } catch (_) {
+      Navigator.pushReplacement(
+          context, FadeScaleRoute(page: QuizResultScreen(result: result, quiz: widget.quiz, challenge: widget.challenge)));
+    } catch (e) {
+      debugPrint('Challenge submit error: $e');
       if (!mounted) return;
       setState(() => _submitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erreur lors de la soumission'), backgroundColor: AppColors.error),
+        const SnackBar(
+            content: Text('Erreur lors de la soumission'),
+            backgroundColor: AppColors.error),
       );
     }
+  }
+
+  QuizAttemptResult _localResult(
+      List<QuestionModel> questions, Map<String, String> answers, int timeTaken) {
+    int correct = 0;
+    final results = <QuestionResult>[];
+    for (final q in questions) {
+      final ua = answers[q.id.toString()];
+      final ca = q.correctAnswer ?? '';
+      final ok = ua != null && ua.trim() == ca.trim();
+      if (ok) correct++;
+      results.add(QuestionResult(
+          questionId: q.id,
+          question: q.text,
+          userAnswer: ua,
+          correctAnswer: ca,
+          isCorrect: ok,
+          points: ok ? q.points : 0));
+    }
+    final total = questions.length;
+    final score = total > 0 ? correct / total * 100 : 0.0;
+    final grade = score >= 90 ? 'S' : score >= 80 ? 'A' : score >= 70 ? 'B' : score >= 60 ? 'C' : score >= 50 ? 'D' : 'F';
+    return QuizAttemptResult(
+        score: score,
+        correctCount: correct,
+        totalQuestions: total,
+        timeTaken: timeTaken,
+        pointsEarned: 0,
+        xpEarned: 0,
+        grade: grade,
+        results: results);
   }
 
   @override
@@ -139,9 +198,36 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return Scaffold(backgroundColor: context.appColors.bg, body: const Center(child: CircularProgressIndicator(color: AppColors.secondary)));
-    if (_error != null) return Scaffold(backgroundColor: context.appColors.bg, body: ErrorState(message: _error!, onRetry: _loadQuestions));
-    if (_submitting) return Scaffold(backgroundColor: context.appColors.bg, body: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [CircularProgressIndicator(color: AppColors.secondary), SizedBox(height: 16), Text('Calcul des résultats...', style: TextStyle(color: context.appColors.textSecondary))])));
+    if (_loading) {
+      return Scaffold(
+        backgroundColor: context.appColors.bg,
+        body: const Center(child: CircularProgressIndicator(color: AppColors.secondary)),
+      );
+    }
+    if (_error != null) {
+      return Scaffold(
+        backgroundColor: context.appColors.bg,
+        body: ErrorState(message: _error!, onRetry: _loadQuestions),
+      );
+    }
+    if (_submitting) {
+      return Scaffold(
+        backgroundColor: context.appColors.bg,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(color: AppColors.secondary),
+              const SizedBox(height: 16),
+              Text(
+                'Calcul des résultats...',
+                style: TextStyle(color: context.appColors.textSecondary),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     final q = _current;
     final opts = q.options ?? ['Vrai', 'Faux'];
@@ -163,9 +249,17 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Container(
-                        width: 36, height: 36,
-                        decoration: BoxDecoration(color: context.appColors.cardBg, borderRadius: BorderRadius.circular(10)),
-                        child: Icon(Icons.close_rounded, color: context.appColors.textSecondary, size: 18),
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: context.appColors.cardBg,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.close_rounded,
+                          color: context.appColors.textSecondary,
+                          size: 18,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -181,7 +275,13 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Text('${_index + 1}/${_questions.length}', style: TextStyle(color: context.appColors.textSecondary, fontSize: 13)),
+                    Text(
+                      '${_index + 1}/${_questions.length}',
+                      style: TextStyle(
+                        color: context.appColors.textSecondary,
+                        fontSize: 13,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -207,7 +307,11 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                             value: timerPercent,
                             backgroundColor: context.appColors.cardBg,
                             valueColor: AlwaysStoppedAnimation(
-                              timerPercent > 0.5 ? AppColors.secondary : timerPercent > 0.25 ? AppColors.warning : AppColors.error,
+                              timerPercent > 0.5
+                                  ? AppColors.secondary
+                                  : timerPercent > 0.25
+                                      ? AppColors.warning
+                                      : AppColors.error,
                             ),
                             minHeight: 12,
                           ),
@@ -215,19 +319,45 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Text('$_timeLeft s', style: TextStyle(
-                      color: timerPercent > 0.5 ? AppColors.secondary : timerPercent > 0.25 ? AppColors.warning : AppColors.error,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                    )),
+                    Text(
+                      '$_timeLeft s',
+                      style: TextStyle(
+                        color: timerPercent > 0.5
+                            ? AppColors.secondary
+                            : timerPercent > 0.25
+                                ? AppColors.warning
+                                : AppColors.error,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 24),
-                Align(alignment: Alignment.centerLeft, child: Text('Question ${_index + 1}', style: const TextStyle(color: AppColors.secondary, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 0.5))),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Question ${_index + 1}',
+                    style: const TextStyle(
+                      color: AppColors.secondary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(q.text, style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w700, height: 1.4)),
+                  child: Text(
+                    q.text,
+                    style: TextStyle(
+                      color: context.appColors.textPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      height: 1.4,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 28),
                 Expanded(
@@ -238,10 +368,17 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (_, i) {
                       final opt = opts[i];
+                      final correct = _current.correctAnswer;
                       return AnswerOptionTile(
                         label: labels[i < labels.length ? i : 0],
                         option: opt,
-                        state: !_answered ? AnswerState.idle : (_selected == opt ? AnswerState.selected : AnswerState.idle),
+                        state: !_answered
+                            ? AnswerState.idle
+                            : opt == _selected
+                                ? (correct != null && opt == correct
+                                    ? AnswerState.correct
+                                    : AnswerState.wrong)
+                                : AnswerState.idle,
                         onTap: () => _selectAnswer(opt),
                       );
                     },

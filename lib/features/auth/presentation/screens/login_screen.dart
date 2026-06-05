@@ -33,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onAuthChanged() {
     if (!mounted) return;
     if (_auth.isAuthenticated) {
+      isGuest.value = false;
       Navigator.pushAndRemoveUntil(
         context,
         PageRouteBuilder(
@@ -84,17 +85,13 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 40),
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  child: const Icon(
-                    Icons.quiz_rounded,
-                    color: Colors.white,
-                    size: 36,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/images/arifquiz_192.png',
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -228,6 +225,62 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 24),
+                Row(children: [
+                  Expanded(child: Divider(color: context.appColors.border)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text('ou', style: TextStyle(color: context.appColors.textMuted, fontSize: 13)),
+                  ),
+                  Expanded(child: Divider(color: context.appColors.border)),
+                ]),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    isGuest.value = true;
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => const MainNavigation(),
+                        transitionsBuilder: (_, a, __, child) =>
+                            FadeTransition(opacity: a, child: child),
+                        transitionDuration: const Duration(milliseconds: 400),
+                      ),
+                      (_) => false,
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      color: context.appColors.cardBg,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: context.appColors.border),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.person_outline_rounded,
+                            color: context.appColors.textSecondary, size: 18),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Continuer sans compte',
+                          style: TextStyle(
+                            color: context.appColors.textSecondary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Les scores ne seront pas sauvegardés',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
                 ),
               ],
             ),

@@ -42,12 +42,14 @@ class QuizRepository {
     required int quizId,
     required Map<String, String> answers,
     required int timeTaken,
+    required List<int> questionIds,
     String mode = 'classic',
   }) async {
     final res = await _api.submitQuizWithMode(
       quizId: quizId,
       answers: answers,
       timeTaken: timeTaken,
+      questionIds: questionIds,
       mode: mode,
     );
     return QuizAttemptResult.fromJson(res);

@@ -118,7 +118,7 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
           const SizedBox(height: 10),
           Text(c.title, style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          Text(c.quiz.title, style: TextStyle(color: context.appColors.textSecondary, fontSize: 13)),
+          Text(c.sourceLabel, style: TextStyle(color: context.appColors.textSecondary, fontSize: 13)),
           const SizedBox(height: 8),
           Row(children: [
             _chip(AppColors.modeColor(c.mode), _modeLabel(c.mode)),

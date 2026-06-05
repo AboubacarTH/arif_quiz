@@ -6,10 +6,10 @@ abstract class HomeState {}
 class HomeInitial    extends HomeState {}
 class HomeLoading    extends HomeState {}
 class HomeLoaded     extends HomeState {
-  final UserModel user;
+  final UserModel? user;
   final List<CategoryModel> categories;
   final List<QuizModel> featured;
-  HomeLoaded({required this.user, required this.categories, required this.featured});
+  HomeLoaded({this.user, required this.categories, required this.featured});
 }
 class HomeError extends HomeState {
   final String message;
@@ -38,6 +38,23 @@ class HomeController extends ChangeNotifier {
       ]);
       _emit(HomeLoaded(
         user:       results[2] as UserModel,
+        categories: results[0] as List<CategoryModel>,
+        featured:   results[1] as List<QuizModel>,
+      ));
+    } catch (_) {
+      _emit(HomeError('Failed to load. Pull to refresh.'));
+    }
+  }
+
+  Future<void> loadGuest() async {
+    _emit(HomeLoading());
+    try {
+      final results = await Future.wait([
+        _repo.getCategories(),
+        _repo.getFeaturedQuizzes(),
+      ]);
+      _emit(HomeLoaded(
+        user:       null,
         categories: results[0] as List<CategoryModel>,
         featured:   results[1] as List<QuizModel>,
       ));

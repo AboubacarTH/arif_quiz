@@ -203,6 +203,10 @@ class ApiService {
     return _dio.put(path, data: data);
   }
 
+  Future<Response<dynamic>> patch(String path, {dynamic data}) async {
+    return _dio.patch(path, data: data);
+  }
+
   Future<Response<dynamic>> delete(String path) async {
     return _dio.delete(path);
   }
@@ -212,12 +216,14 @@ class ApiService {
     required int quizId,
     required Map<String, String> answers,
     required int timeTaken,
+    required List<int> questionIds,
     String mode = 'classic',
   }) async {
     final res = await _dio.post('/quizzes/$quizId/submit', data: {
       'answers': answers,
       'time_taken': timeTaken,
       'mode': mode,
+      'question_ids': questionIds,
     });
     return res.data;
   }

@@ -81,13 +81,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                   width: double.infinity,
                   height: 160,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          catColor.withValues(alpha: 0.3),
-                          catColor.withValues(alpha: 0.1)
-                        ]),
+                    color: catColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: catColor.withValues(alpha: 0.35)),
                   ),
