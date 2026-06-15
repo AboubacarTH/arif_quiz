@@ -3,6 +3,7 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.da
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/app_bar.dart';
 import 'package:arif_quiz/ui/widgets/app_button.dart';
@@ -82,8 +83,8 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                   height: 160,
                   decoration: BoxDecoration(
                     color: catColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: catColor.withValues(alpha: 0.35)),
+                    borderRadius: AppRadius.rXl,
+                    boxShadow: AppShadows.tinted(context, catColor),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -176,11 +177,11 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
 
                 // How to play
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSpacing.lg),
                   decoration: BoxDecoration(
-                      color: context.appColors.cardBg,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: context.appColors.cardBgLight)),
+                      color: context.cardElevated,
+                      borderRadius: AppRadius.rLg,
+                      boxShadow: AppShadows.card(context)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

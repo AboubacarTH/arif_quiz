@@ -1,5 +1,7 @@
-﻿import 'package:arif_quiz/main.dart';
+﻿import 'package:arif_quiz/features/auth/presentation/screens/password_reset_code_screen.dart';
+import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/ui.dart';
 import 'package:flutter/material.dart';
 
@@ -53,12 +55,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     try {
       await apiService.forgotPassword(_emailCtrl.text.trim());
       if (!mounted) return;
-      setState(() {
-        _success = 'If this email exists, a password reset link has been sent.';
-      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => PasswordResetCodeScreen(email: _emailCtrl.text.trim()),
+        ),
+      );
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = 'Unable to send reset link. Try again.');
+      setState(() => _error = 'Impossible d\'envoyer le code. Réessaie.');
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -88,9 +93,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: context.appColors.cardBg,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: context.appColors.border),
+                      color: context.cardElevated,
+                      borderRadius: AppRadius.rMd,
+                      boxShadow: AppShadows.card(context),
                     ),
                     child: Icon(Icons.arrow_back_ios_new_rounded,
                         color: context.appColors.textSecondary, size: 16),

@@ -6,6 +6,7 @@ import 'package:arif_quiz/features/admin/presentation/screens/admin_quizzes_scre
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -126,9 +127,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         const SizedBox(height: 12),
         Container(
           decoration: BoxDecoration(
-            color: context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: context.appColors.border),
+            color: context.cardElevated,
+            borderRadius: AppRadius.rXl,
+            boxShadow: AppShadows.card(context),
           ),
           child: Column(
             children: [
@@ -195,11 +196,11 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: context.appColors.border),
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.card(context),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,9 +233,9 @@ class _StatCardSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
-          color: context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: context.appColors.border),
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.card(context),
         ),
       );
 }

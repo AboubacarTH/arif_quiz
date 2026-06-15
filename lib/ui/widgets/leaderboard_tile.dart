@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 class LeaderboardTile extends StatelessWidget {
@@ -39,19 +40,18 @@ class LeaderboardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg, vertical: AppSpacing.md),
       decoration: BoxDecoration(
         color: isCurrentUser
-            ? AppColors.primary.withValues(alpha: 0.15)
-            : context.appColors.cardBg,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: isCurrentUser
-              ? AppColors.primary.withValues(alpha: 0.4)
-              : context.appColors.cardBgLight,
-          width: isCurrentUser ? 1.5 : 1,
-        ),
+            ? AppColors.primary.withValues(alpha: 0.12)
+            : context.cardElevated,
+        borderRadius: AppRadius.rMd,
+        border: isCurrentUser
+            ? Border.all(color: AppColors.primary.withValues(alpha: 0.45), width: 1.5)
+            : null,
+        boxShadow: isCurrentUser ? null : AppShadows.card(context),
       ),
       child: Row(
         children: [

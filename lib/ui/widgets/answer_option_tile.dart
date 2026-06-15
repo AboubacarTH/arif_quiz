@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -61,14 +62,14 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
   }
 
   Color get _bgColor => switch (widget.state) {
-        AnswerState.idle => context.appColors.cardBg,
+        AnswerState.idle => context.cardElevated,
         AnswerState.selected => AppColors.primary.withValues(alpha: 0.2),
         AnswerState.correct => AppColors.success.withValues(alpha: 0.2),
         AnswerState.wrong => AppColors.error.withValues(alpha: 0.15),
       };
 
   Color get _borderColor => switch (widget.state) {
-        AnswerState.idle => context.appColors.cardBgLight,
+        AnswerState.idle => Colors.transparent,
         AnswerState.selected => AppColors.primary,
         AnswerState.correct => AppColors.success,
         AnswerState.wrong => AppColors.error,
@@ -107,11 +108,14 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           decoration: BoxDecoration(
             color: _bgColor,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: AppRadius.rMd,
             border: Border.all(color: _borderColor, width: 2),
+            boxShadow: widget.state == AnswerState.idle
+                ? AppShadows.card(context)
+                : null,
           ),
           child: Row(
             children: [

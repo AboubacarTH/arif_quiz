@@ -6,7 +6,7 @@ import 'package:arif_quiz/features/profile/presentation/screens/edit_profile_scr
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
-import 'package:arif_quiz/shared/theme/theme_controller.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/ui/widgets/paywall_sheet.dart';
@@ -48,6 +48,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context,
       FadeScaleRoute(page: const LoginScreen()),
       (_) => false,
+    );
+  }
+
+  Future<void> _deleteAccount(String password) async {
+    try {
+      await apiService.deleteAccount(password);
+      if (!mounted) return;
+      Navigator.pushAndRemoveUntil(
+        context,
+        FadeScaleRoute(page: const LoginScreen()),
+        (_) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Mot de passe incorrect ou erreur réseau.'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
+  }
+
+  void _confirmDeleteAccount() {
+    final passwordCtrl = TextEditingController();
+    bool obscure = true;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setStateDialog) => AlertDialog(
+          backgroundColor: context.appColors.cardBg,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(
+            'Supprimer le compte ?',
+            style: TextStyle(
+                color: context.appColors.textPrimary,
+                fontWeight: FontWeight.w700),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Cette action est irréversible. Toutes tes données seront supprimées définitivement.',
+                style: TextStyle(color: context.appColors.textSecondary),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: passwordCtrl,
+                obscureText: obscure,
+                style: TextStyle(color: context.appColors.textPrimary),
+                decoration: InputDecoration(
+                  labelText: 'Mot de passe',
+                  labelStyle:
+                      TextStyle(color: context.appColors.textSecondary),
+                  filled: true,
+                  fillColor: context.appColors.bg,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: context.appColors.border),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      obscure
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                      color: context.appColors.textMuted,
+                      size: 20,
+                    ),
+                    onPressed: () =>
+                        setStateDialog(() => obscure = !obscure),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                'Annuler',
+                style: TextStyle(color: context.appColors.textSecondary),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                final password = passwordCtrl.text;
+                Navigator.pop(ctx);
+                _deleteAccount(password);
+              },
+              child: const Text(
+                'Supprimer',
+                style: TextStyle(
+                    color: AppColors.error, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -156,6 +257,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
                 const SizedBox(height: 24),
                 _buildLogoutButton(),
+                const SizedBox(height: 12),
+                _buildDeleteAccountButton(),
               ],
             ),
           ),
@@ -192,9 +295,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: context.appColors.cardBg,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: context.appColors.border),
+                    color: context.cardElevated,
+                    borderRadius: AppRadius.rMd,
+                    boxShadow: AppShadows.card(context),
                   ),
                   child: Row(
                     children: [
@@ -224,11 +327,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildHero(UserModel user, int rank) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+        color: context.cardElevated,
+        borderRadius: AppRadius.rXl,
+        boxShadow: AppShadows.tinted(context, AppColors.primary),
       ),
       child: Column(
         children: [
@@ -336,11 +439,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildXpBar(UserModel user) {
     final percent = user.xpPercent;
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: context.appColors.cardBg,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: context.appColors.border),
+        color: context.cardElevated,
+        borderRadius: AppRadius.rLg,
+        boxShadow: AppShadows.card(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -463,9 +566,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
-            color: context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: context.appColors.border),
+            color: context.cardElevated,
+            borderRadius: AppRadius.rLg,
+            boxShadow: AppShadows.card(context),
           ),
           child: ListenableBuilder(
             listenable: themeController,
@@ -578,7 +681,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ).animate().fadeIn(delay: 380.ms);
   }
 
-  // ─── Logout ─────────────────────────────────────────────────────────────────
+  // ─── Logout / Delete ────────────────────────────────────────────────────────
 
   Widget _buildLogoutButton() {
     return GestureDetector(
@@ -609,6 +712,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     ).animate().fadeIn(delay: 400.ms);
+  }
+
+  Widget _buildDeleteAccountButton() {
+    return GestureDetector(
+      onTap: _confirmDeleteAccount,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: context.appColors.border),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.delete_forever_rounded,
+                color: context.appColors.textMuted, size: 18),
+            const SizedBox(width: 8),
+            Text(
+              'Supprimer mon compte',
+              style: TextStyle(
+                color: context.appColors.textMuted,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ).animate().fadeIn(delay: 420.ms);
   }
 }
 
@@ -752,12 +886,12 @@ class _AttemptTile extends StatelessWidget {
     final date = rawDate != null ? DateTime.tryParse(rawDate.toString())?.toLocal() : null;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: context.appColors.cardBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: context.appColors.border),
+        color: context.cardElevated,
+        borderRadius: AppRadius.rLg,
+        boxShadow: AppShadows.card(context),
       ),
       child: Row(
         children: [
@@ -920,12 +1054,11 @@ class _GetPremiumCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.lg),
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.07),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.2)),
+            color: context.cardElevated,
+            borderRadius: AppRadius.rLg,
+            boxShadow: AppShadows.tinted(context, AppColors.primary),
           ),
           child: Row(
             children: [

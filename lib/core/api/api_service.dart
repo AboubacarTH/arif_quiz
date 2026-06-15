@@ -74,6 +74,20 @@ class ApiService {
     return _asMap(res.data);
   }
 
+  Future<Map<String, dynamic>> resetPassword({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    final res = await _dio.post('/auth/reset-password', data: {
+      'email': email,
+      'code': code,
+      'password': password,
+      'password_confirmation': password,
+    });
+    return _asMap(res.data);
+  }
+
   Future<Map<String, dynamic>> verifyEmail({
     required String email,
     required String code,
@@ -96,6 +110,11 @@ class ApiService {
 
   Future<void> logout() async {
     await _dio.post('/auth/logout');
+    await _storage.delete(key: 'auth_token');
+  }
+
+  Future<void> deleteAccount(String password) async {
+    await _dio.delete('/profile', data: {'password': password});
     await _storage.delete(key: 'auth_token');
   }
 

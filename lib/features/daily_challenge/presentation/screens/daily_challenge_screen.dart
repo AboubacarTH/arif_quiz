@@ -5,6 +5,7 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/neon_button.dart';
@@ -187,11 +188,11 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
             ),
           ] else ...[
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.lg),
               decoration: BoxDecoration(
-                color: context.appColors.cardBg,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFF2A2A4A)),
+                color: context.cardElevated,
+                borderRadius: AppRadius.rLg,
+                boxShadow: AppShadows.card(context),
               ),
               child: Column(
                 children: [

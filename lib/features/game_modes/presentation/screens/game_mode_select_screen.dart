@@ -4,6 +4,7 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.da
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/game_mode_card.dart';
 import 'package:arif_quiz/ui/widgets/neon_button.dart';
@@ -100,12 +101,12 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
-              width: 38,
-              height: 38,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
-                color: context.appColors.cardBg,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: context.appColors.border),
+                color: context.cardElevated,
+                borderRadius: AppRadius.rMd,
+                boxShadow: AppShadows.card(context),
               ),
               child: Icon(
                 Icons.arrow_back_ios_new_rounded,
@@ -138,11 +139,11 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
     final diffColor = diff != null ? AppColors.difficultyColor(diff) : AppColors.primary;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: context.appColors.cardBg,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: context.appColors.border),
+        color: context.cardElevated,
+        borderRadius: AppRadius.rLg,
+        boxShadow: AppShadows.card(context),
       ),
       child: Row(
         children: [

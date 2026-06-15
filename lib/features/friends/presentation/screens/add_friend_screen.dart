@@ -69,7 +69,7 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
                 : ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: widget.ctrl.searchResults.length,
-                    separatorBuilder: (_, __) => const Divider(color: Color(0xFF2A2A4A), height: 1),
+                    separatorBuilder: (_, __) => Divider(color: context.appColors.border, height: 1),
                     itemBuilder: (_, i) => _UserResultTile(
                       user: widget.ctrl.searchResults[i],
                       onSendRequest: () async {

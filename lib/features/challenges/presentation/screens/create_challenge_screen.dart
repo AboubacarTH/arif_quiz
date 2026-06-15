@@ -2,6 +2,7 @@ import 'package:arif_quiz/features/challenges/bloc/challenge_controller.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/widgets/game_mode_card.dart';
 import 'package:arif_quiz/ui/widgets/neon_button.dart';
 import 'package:arif_quiz/ui/widgets/shimmer_loading.dart';
@@ -239,12 +240,12 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
           GestureDetector(
             onTap: _canGoBack() ? _back : () => Navigator.pop(context),
             child: Container(
-              width: 38,
-              height: 38,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
-                color: context.appColors.cardBg,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: context.appColors.border),
+                color: context.cardElevated,
+                borderRadius: AppRadius.rMd,
+                boxShadow: AppShadows.card(context),
               ),
               child: Icon(
                 _canGoBack()
@@ -398,13 +399,14 @@ class _StepSource extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: selected
                       ? src.color.withValues(alpha: 0.1)
-                      : context.appColors.cardBg,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color:
-                        selected ? src.color : context.appColors.border,
-                    width: selected ? 2 : 1,
-                  ),
+                      : context.cardElevated,
+                  borderRadius: AppRadius.rLg,
+                  border: selected
+                      ? Border.all(color: src.color, width: 2)
+                      : null,
+                  boxShadow: selected
+                      ? AppShadows.tinted(context, src.color)
+                      : AppShadows.card(context),
                 ),
                 child: Row(
                   children: [
@@ -603,9 +605,8 @@ class _StepCategoryState extends State<_StepCategory> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: color.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(18),
-                          border:
-                              Border.all(color: color.withValues(alpha: 0.25)),
+                          borderRadius: AppRadius.rLg,
+                          boxShadow: AppShadows.tinted(context, color),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -777,12 +778,14 @@ class _StepQuizState extends State<_StepQuiz> {
                         decoration: BoxDecoration(
                           color: selected
                               ? catColor.withValues(alpha: 0.1)
-                              : context.appColors.cardBg,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: selected ? catColor : context.appColors.border,
-                            width: selected ? 2 : 1,
-                          ),
+                              : context.cardElevated,
+                          borderRadius: AppRadius.rLg,
+                          border: selected
+                              ? Border.all(color: catColor, width: 2)
+                              : null,
+                          boxShadow: selected
+                              ? AppShadows.tinted(context, catColor)
+                              : AppShadows.card(context),
                         ),
                         child: Row(
                           children: [
@@ -933,11 +936,11 @@ class _StepConfig extends StatelessWidget {
         children: [
           // Source résumé
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             decoration: BoxDecoration(
-              color: context.appColors.cardBg,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: context.appColors.border),
+              color: context.cardElevated,
+              borderRadius: AppRadius.rLg,
+              boxShadow: AppShadows.card(context),
             ),
             child: Row(
               children: [

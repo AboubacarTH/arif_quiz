@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 enum AppButtonVariant { primary, secondary, danger, ghost }
@@ -82,12 +83,12 @@ class _AppButtonState extends State<AppButton>
       };
 
   EdgeInsets get _padding => switch (widget.size) {
-        AppButtonSize.small =>
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        AppButtonSize.medium =>
-          const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        AppButtonSize.large =>
-          const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+        AppButtonSize.small => const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg, vertical: AppSpacing.sm + 2),
+        AppButtonSize.medium => const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xxl, vertical: AppSpacing.md + 2),
+        AppButtonSize.large => const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xxxl, vertical: AppSpacing.lg + 2),
       };
 
   double get _fontSize => switch (widget.size) {
@@ -135,17 +136,17 @@ class _AppButtonState extends State<AppButton>
           width: widget.fullWidth ? double.infinity : null,
           padding: _padding,
           decoration: BoxDecoration(
-            color: disabled ? _bgColor.withValues(alpha: 0.5) : _bgColor,
-            borderRadius: BorderRadius.circular(12),
+            color: disabled ? _bgColor.withValues(alpha: 0.45) : _bgColor,
+            borderRadius: AppRadius.rMd,
             border: Border.fromBorderSide(_border),
-            boxShadow: widget.variant == AppButtonVariant.primary && !disabled
-                ? [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.35),
-                      blurRadius: 14,
-                      offset: const Offset(0, 4),
-                    )
-                  ]
+            boxShadow: !disabled
+                ? switch (widget.variant) {
+                    AppButtonVariant.primary =>
+                      AppShadows.tinted(context, AppColors.primary),
+                    AppButtonVariant.danger =>
+                      AppShadows.tinted(context, AppColors.error),
+                    _ => null,
+                  }
                 : null,
           ),
           child: Row(

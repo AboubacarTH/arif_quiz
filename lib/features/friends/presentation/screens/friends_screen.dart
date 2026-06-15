@@ -4,6 +4,7 @@ import 'package:arif_quiz/features/friends/presentation/screens/add_friend_scree
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/widgets/friend_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -128,7 +129,7 @@ class _FriendsScreenState extends State<FriendsScreen>
       color: AppColors.primary,
       child: ListView.separated(
         itemCount: _ctrl.friends.length,
-        separatorBuilder: (_, __) => const Divider(color: Color(0xFF2A2A4A), height: 1),
+        separatorBuilder: (_, __) => Divider(color: context.appColors.border, height: 1),
         itemBuilder: (_, i) {
           final f = _ctrl.friends[i];
           return FriendTile(
@@ -159,7 +160,7 @@ class _FriendsScreenState extends State<FriendsScreen>
     }
     return ListView.separated(
       itemCount: _ctrl.requests.length,
-      separatorBuilder: (_, __) => const Divider(color: Color(0xFF2A2A4A), height: 1),
+      separatorBuilder: (_, __) => Divider(color: context.appColors.border, height: 1),
       itemBuilder: (_, i) {
         final req = _ctrl.requests[i];
         return FriendTile(
@@ -212,11 +213,11 @@ class _FriendsScreenState extends State<FriendsScreen>
         itemBuilder: (_, i) {
           final a = _ctrl.activity[i];
           return Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSpacing.md),
             decoration: BoxDecoration(
-              color: context.appColors.cardBg,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF2A2A4A)),
+              color: context.cardElevated,
+              borderRadius: AppRadius.rMd,
+              boxShadow: AppShadows.card(context),
             ),
             child: Row(
               children: [

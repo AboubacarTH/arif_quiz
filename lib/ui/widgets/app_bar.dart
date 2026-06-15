@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 class QuizAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -38,9 +39,13 @@ class QuizAppBar extends StatelessWidget implements PreferredSizeWidget {
               onTap: () => Navigator.maybePop(context),
               child: Container(
                 margin: const EdgeInsets.all(8),
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: context.appColors.cardBg,
-                  borderRadius: BorderRadius.circular(10),
+                  color: context.cardElevated,
+                  borderRadius: AppRadius.rSm,
+                  boxShadow: AppShadows.card(context),
                 ),
                 child: Icon(Icons.arrow_back_ios_new_rounded,
                     size: 18, color: context.appColors.textPrimary),

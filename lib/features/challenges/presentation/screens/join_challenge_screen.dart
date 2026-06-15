@@ -2,6 +2,7 @@
 import 'package:arif_quiz/features/challenges/presentation/screens/challenge_detail_screen.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/widgets/neon_button.dart';
 import 'package:flutter/material.dart';
 
@@ -101,11 +102,11 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
 
   Widget _buildPreview(ChallengeModel c) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: context.appColors.cardBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.4)),
+        color: context.cardElevated,
+        borderRadius: AppRadius.rLg,
+        boxShadow: AppShadows.tinted(context, AppColors.primary),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

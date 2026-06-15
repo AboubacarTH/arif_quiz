@@ -1,5 +1,6 @@
 ﻿import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
@@ -24,14 +25,14 @@ class CategoryChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         decoration: BoxDecoration(
-          color: selected ? color.withValues(alpha: 0.25) : context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: selected ? color : context.appColors.cardBgLight,
-            width: selected ? 1.5 : 1,
-          ),
+          color: selected ? color.withValues(alpha: 0.16) : context.cardElevated,
+          borderRadius: AppRadius.rXl,
+          border: selected
+              ? Border.all(color: color.withValues(alpha: 0.5), width: 1.5)
+              : null,
+          boxShadow: selected ? null : AppShadows.card(context),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -80,8 +81,8 @@ class CategoryCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: color.withValues(alpha: 0.25)),
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.tinted(context, color),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

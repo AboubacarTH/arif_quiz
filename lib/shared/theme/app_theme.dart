@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_tokens.dart';
+
 // ─── Palettes dépendantes du thème ─────────────────────────────────────────
 
 class AppColorScheme {
@@ -24,14 +26,14 @@ class AppColorScheme {
   });
 
   static const light = AppColorScheme(
-    bg: Color(0xFFFFFFFF),
+    bg: Color(0xFFF6F7F9), // gris très clair → fait « flotter » les cartes blanches
     cardBg: Color(0xFFFFFFFF),
-    cardBgLight: Color(0xFFF0FFF4),
-    surface: Color(0xFFF9FAFB),
-    border: Color(0xFFD1FAE5),
-    textPrimary: Color(0xFF111827),
-    textSecondary: Color(0xFF6B7280),
-    textMuted: Color(0xFF9CA3AF),
+    cardBgLight: Color(0xFFEFF1F4),
+    surface: Color(0xFFFFFFFF),
+    border: Color(0xFFEAECEF),
+    textPrimary: Color(0xFF0F172A),
+    textSecondary: Color(0xFF64748B),
+    textMuted: Color(0xFF94A3B8),
   );
 
   static const dark = AppColorScheme(
@@ -181,17 +183,17 @@ class AppTheme {
         cardTheme: CardThemeData(
           color: cs.cardBg,
           elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: cs.border, width: 1),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.rLg),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            elevation: 0,
+            shadowColor: AppColors.primary.withValues(alpha: 0.22),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xxxl, vertical: AppSpacing.lg),
+            shape: RoundedRectangleBorder(borderRadius: AppRadius.rMd),
             textStyle: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -202,39 +204,69 @@ class AppTheme {
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.primary,
-            side: const BorderSide(color: AppColors.primary),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            side: const BorderSide(color: AppColors.primary, width: 1.5),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xxl, vertical: AppSpacing.md + 2),
+            shape: RoundedRectangleBorder(borderRadius: AppRadius.rMd),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: cs.cardBg,
+          fillColor: cs.surface,
+          contentPadding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: AppRadius.rMd,
             borderSide: BorderSide(color: cs.border),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: AppRadius.rMd,
             borderSide: BorderSide(color: cs.border),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: AppRadius.rMd,
             borderSide: const BorderSide(color: AppColors.primary, width: 2),
           ),
           labelStyle: TextStyle(color: cs.textSecondary),
           hintStyle: TextStyle(color: cs.textMuted),
         ),
         textTheme: TextTheme(
-          displayLarge: TextStyle(color: cs.textPrimary, fontWeight: FontWeight.w800),
-          displayMedium: TextStyle(color: cs.textPrimary, fontWeight: FontWeight.w800),
-          headlineLarge: TextStyle(color: cs.textPrimary, fontWeight: FontWeight.w700),
-          headlineMedium: TextStyle(color: cs.textPrimary, fontWeight: FontWeight.w700),
-          titleLarge: TextStyle(color: cs.textPrimary, fontWeight: FontWeight.w700),
-          titleMedium: TextStyle(color: cs.textPrimary, fontWeight: FontWeight.w600),
-          bodyLarge: TextStyle(color: cs.textPrimary),
-          bodyMedium: TextStyle(color: cs.textSecondary),
-          labelLarge: TextStyle(color: cs.textPrimary, fontWeight: FontWeight.w700),
+          displayLarge: TextStyle(
+              color: cs.textPrimary,
+              fontWeight: FontWeight.w800,
+              fontSize: 32,
+              height: 1.1,
+              letterSpacing: -0.5),
+          displayMedium: TextStyle(
+              color: cs.textPrimary,
+              fontWeight: FontWeight.w800,
+              fontSize: 28,
+              height: 1.1,
+              letterSpacing: -0.4),
+          headlineLarge: TextStyle(
+              color: cs.textPrimary,
+              fontWeight: FontWeight.w800,
+              fontSize: 24,
+              height: 1.15,
+              letterSpacing: -0.3),
+          headlineMedium: TextStyle(
+              color: cs.textPrimary,
+              fontWeight: FontWeight.w700,
+              fontSize: 20,
+              height: 1.2,
+              letterSpacing: -0.2),
+          titleLarge: TextStyle(
+              color: cs.textPrimary,
+              fontWeight: FontWeight.w700,
+              fontSize: 17,
+              height: 1.25),
+          titleMedium: TextStyle(
+              color: cs.textPrimary, fontWeight: FontWeight.w600, fontSize: 15),
+          bodyLarge: TextStyle(color: cs.textPrimary, fontSize: 15, height: 1.4),
+          bodyMedium:
+              TextStyle(color: cs.textSecondary, fontSize: 13, height: 1.45),
+          labelLarge: TextStyle(
+              color: cs.textPrimary, fontWeight: FontWeight.w700, fontSize: 13),
         ),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: cs.cardBg,
@@ -249,8 +281,8 @@ class AppTheme {
         chipTheme: ChipThemeData(
           backgroundColor: cs.cardBgLight,
           labelStyle: TextStyle(color: cs.textPrimary),
-          side: BorderSide(color: cs.border),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          side: BorderSide.none,
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.rSm),
         ),
         listTileTheme: ListTileThemeData(
           tileColor: Colors.transparent,
@@ -260,12 +292,14 @@ class AppTheme {
         snackBarTheme: SnackBarThemeData(
           backgroundColor: cs.cardBg,
           contentTextStyle: TextStyle(color: cs.textPrimary),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.rMd),
           behavior: SnackBarBehavior.floating,
+          elevation: 8,
         ),
         dialogTheme: DialogThemeData(
           backgroundColor: cs.cardBg,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          elevation: 12,
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.rXl),
         ),
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: cs.cardBg,

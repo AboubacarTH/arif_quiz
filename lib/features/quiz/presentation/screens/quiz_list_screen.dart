@@ -4,6 +4,7 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/app_text_field.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
@@ -120,12 +121,12 @@ class _QuizListScreenState extends State<QuizListScreen> {
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
-              width: 38,
-              height: 38,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
-                color: context.appColors.cardBg,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: context.appColors.border),
+                color: context.cardElevated,
+                borderRadius: AppRadius.rMd,
+                boxShadow: AppShadows.card(context),
               ),
               child: Icon(Icons.arrow_back_ios_new_rounded,
                   color: context.appColors.textSecondary, size: 16),
@@ -193,14 +194,12 @@ class _QuizListScreenState extends State<QuizListScreen> {
           decoration: BoxDecoration(
             color: _selectedCatId != null
                 ? selectedColor.withValues(alpha: 0.08)
-                : context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: _selectedCatId != null
-                  ? selectedColor.withValues(alpha: 0.5)
-                  : context.appColors.border,
-              width: _selectedCatId != null ? 1.5 : 1,
-            ),
+                : context.cardElevated,
+            borderRadius: AppRadius.rMd,
+            border: _selectedCatId != null
+                ? Border.all(color: selectedColor.withValues(alpha: 0.5), width: 1.5)
+                : null,
+            boxShadow: _selectedCatId != null ? null : AppShadows.card(context),
           ),
           child: Row(
             children: [

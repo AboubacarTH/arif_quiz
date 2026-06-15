@@ -1,5 +1,6 @@
 ﻿import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 enum QuizCardStyle { list, grid, featured }
@@ -43,11 +44,11 @@ class _ListCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: context.appColors.cardBgLight),
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.card(context),
         ),
         child: Row(
           children: [
@@ -57,7 +58,7 @@ class _ListCard extends StatelessWidget {
               height: 56,
               decoration: BoxDecoration(
                 color: catColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: AppRadius.rMd,
               ),
               child: Center(
                 child: Text(
@@ -132,11 +133,11 @@ class _GridCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: context.appColors.cardBgLight),
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.card(context),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +151,7 @@ class _GridCard extends StatelessWidget {
                   height: 44,
                   decoration: BoxDecoration(
                     color: catColor.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppRadius.rMd,
                   ),
                   child: Center(
                     child: Text(quiz.category?.icon ?? '📝',
@@ -205,11 +206,11 @@ class _FeaturedCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 220,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: catColor.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: catColor.withValues(alpha: 0.3)),
+          color: context.cardElevated,
+          borderRadius: AppRadius.rXl,
+          boxShadow: AppShadows.tinted(context, catColor),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,8 +247,8 @@ class _FeaturedCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: catColor.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(10),
+                color: catColor,
+                borderRadius: AppRadius.rSm,
               ),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -10,6 +10,7 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_list_screen.da
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/ui/widgets/quiz_card.dart';
@@ -174,13 +175,12 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => Navigator.push(
                 context, SlideRightRoute(page: const NotificationsScreen())),
             child: Container(
-              width: 40,
-              height: 40,
+              width: 42,
+              height: 42,
               decoration: BoxDecoration(
-                color: context.appColors.cardBg,
-                borderRadius: BorderRadius.circular(14),
-                border:
-                    Border.all(color: context.appColors.border, width: 1),
+                color: context.cardElevated,
+                borderRadius: AppRadius.rMd,
+                boxShadow: AppShadows.card(context),
               ),
               child: Icon(
                 Icons.notifications_outlined,
@@ -200,11 +200,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.25)),
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.tinted(context, AppColors.primary),
         ),
         child: Row(
           children: [
@@ -282,11 +283,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: context.appColors.border),
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.card(context),
         ),
         child: Row(
           children: [
@@ -315,11 +316,12 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: () => Navigator.push(
             context, SlideRightRoute(page: const DailyChallengeScreen())),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.07),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: AppColors.primary.withValues(alpha: 0.25)),
+            color: context.cardElevated,
+            borderRadius: AppRadius.rLg,
+            boxShadow: AppShadows.tinted(context, AppColors.primary),
           ),
           child: Row(
             children: [
@@ -502,8 +504,8 @@ class _CategoryTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: color.withValues(alpha: 0.25)),
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.tinted(context, color),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

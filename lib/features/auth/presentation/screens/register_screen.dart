@@ -2,6 +2,7 @@
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/ui.dart';
 import 'package:flutter/material.dart';
 
@@ -128,9 +129,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: context.appColors.cardBg,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: context.appColors.border),
+                      color: context.cardElevated,
+                      borderRadius: AppRadius.rMd,
+                      boxShadow: AppShadows.card(context),
                     ),
                     child: Icon(Icons.arrow_back_ios_new_rounded,
                         color: context.appColors.textSecondary, size: 16),

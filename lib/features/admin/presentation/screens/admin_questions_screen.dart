@@ -2,6 +2,7 @@ import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 class AdminQuestionsScreen extends StatefulWidget {
@@ -320,11 +321,11 @@ class _QuestionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: context.appColors.border),
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.card(context),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

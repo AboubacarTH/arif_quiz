@@ -1,5 +1,6 @@
 ﻿import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
@@ -23,11 +24,11 @@ class ChallengeCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF2A2A4A)),
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.card(context),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +127,7 @@ class ChallengeCard extends StatelessWidget {
             ),
             if (showShareCode) ...[
               const SizedBox(height: 12),
-              const Divider(color: Color(0xFF2A2A4A), height: 1),
+              Divider(color: context.appColors.border, height: 1),
               const SizedBox(height: 12),
               Row(
                 children: [

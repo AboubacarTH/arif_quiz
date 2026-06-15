@@ -6,6 +6,7 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/painters/background_painter.dart';
 import 'package:arif_quiz/ui/widgets/app_button.dart';
@@ -91,9 +92,9 @@ class QuizResultScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
-                          color: context.appColors.cardBg,
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(color: context.appColors.cardBgLight)),
+                          color: context.cardElevated,
+                          borderRadius: AppRadius.rLg,
+                          boxShadow: AppShadows.card(context)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -199,10 +200,9 @@ class QuizResultScreen extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
-                                color: context.appColors.cardBg,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                    color: context.appColors.border),
+                                color: context.cardElevated,
+                                borderRadius: AppRadius.rSm,
+                                boxShadow: AppShadows.card(context),
                               ),
                               child: Text(
                                 'Se connecter',

@@ -1,5 +1,6 @@
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -43,25 +44,16 @@ class GameModeCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: selected
-              ? _color.withValues(alpha: 0.1)
-              : context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: selected ? _color : context.appColors.border,
-            width: selected ? 2 : 1,
-          ),
-          boxShadow: selected
-              ? [
-                  BoxShadow(
-                    color: _color.withValues(alpha: 0.2),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4),
-                  )
-                ]
+          color: selected ? _color.withValues(alpha: 0.1) : context.cardElevated,
+          borderRadius: AppRadius.rXl,
+          border: selected
+              ? Border.all(color: _color.withValues(alpha: 0.6), width: 2)
               : null,
+          boxShadow: selected
+              ? AppShadows.tinted(context, _color)
+              : AppShadows.card(context),
         ),
         child: Row(
           children: [

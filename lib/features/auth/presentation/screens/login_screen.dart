@@ -5,6 +5,7 @@ import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dar
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/ui.dart';
 import 'package:flutter/material.dart';
 
@@ -254,9 +255,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
-                      color: context.appColors.cardBg,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: context.appColors.border),
+                      color: context.cardElevated,
+                      borderRadius: AppRadius.rMd,
+                      boxShadow: AppShadows.card(context),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
