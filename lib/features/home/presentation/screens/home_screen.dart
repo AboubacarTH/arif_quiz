@@ -435,12 +435,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _categoriesRow(List<CategoryModel> cats) {
     return SizedBox(
-      height: 108,
+      height: 132,
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.fromLTRB(20, 2, 20, 16),
+        clipBehavior: Clip.none,
         scrollDirection: Axis.horizontal,
         itemCount: cats.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (_, i) => _CategoryTile(
           category: cats[i],
           onTap: () => _openCategory(cats[i]),
@@ -452,9 +453,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // ─── Featured horizontal ─────────────────────────────────────────────────────
 
   Widget _featuredHorizontal(List<QuizModel> quizzes) => SizedBox(
-        height: 210,
+        height: 222,
         child: ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.fromLTRB(20, 2, 20, 16),
+          clipBehavior: Clip.none,
           scrollDirection: Axis.horizontal,
           itemCount: quizzes.length,
           separatorBuilder: (_, __) => const SizedBox(width: 12),
@@ -500,33 +502,45 @@ class _CategoryTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 90,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        width: 96,
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: context.cardElevated,
           borderRadius: AppRadius.rLg,
-          boxShadow: AppShadows.tinted(context, color),
+          border: Border.all(color: context.appColors.border),
+          boxShadow: AppShadows.card(context),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(category.icon ?? '📚',
-                style: const TextStyle(fontSize: 30)),
-            const SizedBox(height: 6),
+            Container(
+              width: 46,
+              height: 46,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Center(
+                child: Text(category.icon ?? '📚',
+                    style: const TextStyle(fontSize: 24)),
+              ),
+            ),
+            const SizedBox(height: 8),
             Text(
               category.name,
               style: TextStyle(
                 color: context.appColors.textPrimary,
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
+                height: 1.1,
               ),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 3),
             Text(
-              '${category.quizCount}',
+              '${category.quizCount} quiz',
               style: TextStyle(
                 color: color,
                 fontSize: 10,

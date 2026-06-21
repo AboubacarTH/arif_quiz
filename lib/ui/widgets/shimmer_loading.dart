@@ -113,12 +113,12 @@ class CategoryRowSkeleton extends StatelessWidget {
     return SizedBox(
       height: 120,
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         scrollDirection: Axis.horizontal,
         itemCount: 5,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (_, __) =>
-            const ShimmerBox(width: 90, height: 112, radius: 18),
+            const ShimmerBox(width: 96, height: 116, radius: 18),
       ),
     );
   }

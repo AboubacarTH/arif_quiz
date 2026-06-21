@@ -210,7 +210,8 @@ class _FeaturedCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.cardElevated,
           borderRadius: AppRadius.rXl,
-          boxShadow: AppShadows.tinted(context, catColor),
+          border: Border.all(color: context.appColors.border),
+          boxShadow: AppShadows.card(context),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,8 +219,18 @@ class _FeaturedCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(quiz.category?.icon ?? '📝',
-                    style: const TextStyle(fontSize: 32)),
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: catColor.withValues(alpha: 0.15),
+                    borderRadius: AppRadius.rMd,
+                  ),
+                  child: Center(
+                    child: Text(quiz.category?.icon ?? '📝',
+                        style: const TextStyle(fontSize: 26)),
+                  ),
+                ),
                 _Tag(quiz.difficulty.toUpperCase(), diffColor),
               ],
             ),
