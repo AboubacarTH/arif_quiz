@@ -26,25 +26,25 @@ class AppColorScheme {
   });
 
   static const light = AppColorScheme(
-    bg: Color(0xFFF6F7F9), // gris très clair → fait « flotter » les cartes blanches
-    cardBg: Color(0xFFFFFFFF),
-    cardBgLight: Color(0xFFEFF1F4),
-    surface: Color(0xFFFFFFFF),
-    border: Color(0xFFEAECEF),
-    textPrimary: Color(0xFF0F172A),
-    textSecondary: Color(0xFF64748B),
-    textMuted: Color(0xFF94A3B8),
+    bg: Color(0xFFF5E6CA), // crème (couleur principale)
+    cardBg: Color(0xFFFFFDF8), // blanc cassé chaud → fait « flotter » les cartes
+    cardBgLight: Color(0xFFEFE2C8),
+    surface: Color(0xFFFFFDF8),
+    border: Color(0xFFE3D5B8),
+    textPrimary: Color(0xFF1C1917), // 14.2:1 sur crème → AAA
+    textSecondary: Color(0xFF5C5648), // 5.9:1 → AA
+    textMuted: Color(0xFF6B6452), // 4.8:1 → AA
   );
 
   static const dark = AppColorScheme(
-    bg: Color(0xFF111827),
-    cardBg: Color(0xFF1F2937),
-    cardBgLight: Color(0xFF374151),
-    surface: Color(0xFF1F2937),
-    border: Color(0xFF374151),
-    textPrimary: Color(0xFFF9FAFB),
-    textSecondary: Color(0xFFD1D5DB),
-    textMuted: Color(0xFF6B7280),
+    bg: Color(0xFF14110D), // brun très foncé chaud (déclinaison de la crème)
+    cardBg: Color(0xFF221E18),
+    cardBgLight: Color(0xFF2E2920),
+    surface: Color(0xFF221E18),
+    border: Color(0xFF3A342A),
+    textPrimary: Color(0xFFF5E6CA), // crème sur fond sombre → 15.3:1 (AAA)
+    textSecondary: Color(0xFFC9BCA0), // 10.0:1 (AAA)
+    textMuted: Color(0xFF8A7F68), // 4.8:1 (AA)
   );
 
   static AppColorScheme of(BuildContext context) =>
@@ -58,50 +58,52 @@ extension AppColorSchemeExt on BuildContext {
 // ─── Couleurs partagées (identiques dark & light) ───────────────────────────
 
 class AppColors {
-  // ── Vert (couleur principale) ──
-  static const primary = Color(0xFF16A34A);
-  static const primaryLight = Color(0xFF22C55E);
-  static const primaryDark = Color(0xFF15803D);
+  // ── Teal (couleur principale) ──
+  static const primary = Color(0xFF0F766E); // bouton plein + blanc → 5.5:1 (AA)
+  static const primaryLight = Color(0xFF14B8A6);
+  static const primaryDark = Color(0xFF115E59); // texte/contour sur crème → 6.2:1 (AA)
 
-  // ── Orange (accent) ──
-  static const secondary = Color(0xFFF97316);
-  static const secondaryLight = Color(0xFFFB923C);
-  static const accent = Color(0xFFF97316);
-  static const accentLight = Color(0xFFFB923C);
+  // ── Corail (accent secondaire) ──
+  // ⚠️ trop clair pour porter du texte blanc (2.5:1) ou servir de texte sur
+  // crème (2.0:1) → à utiliser en remplissage avec texte sombre (onSecondary).
+  static const secondary = Color(0xFFFF7F50);
+  static const secondaryLight = Color(0xFFFF9D77);
+  static const accent = Color(0xFFFF7F50);
+  static const accentLight = Color(0xFFFF9D77);
 
   // ── Status ──
-  static const success = Color(0xFF16A34A);
-  static const error = Color(0xFFEF4444);
-  static const warning = Color(0xFFF97316);
-  static const info = Color(0xFF3B82F6);
+  static const success = Color(0xFF0F766E); // teal = succès (aligné primaire)
+  static const error = Color(0xFFEF4444); // rouge conservé (clarté sémantique)
+  static const warning = Color(0xFFD97706); // ambre (distinct du coral et du rouge)
+  static const info = Color(0xFF0F766E);
 
   // ── Difficulté ──
-  static const easy = Color(0xFF16A34A);
-  static const medium = Color(0xFFF97316);
-  static const hard = Color(0xFFEF4444);
+  static const easy = Color(0xFF0F766E); // teal
+  static const medium = Color(0xFFFF7F50); // coral
+  static const hard = Color(0xFFEF4444); // rouge
 
   // ── Grades ──
-  static const gradeS = Color(0xFFF97316);
-  static const gradeA = Color(0xFF16A34A);
-  static const gradeB = Color(0xFF3B82F6);
-  static const gradeC = Color(0xFF8B5CF6);
+  static const gradeS = Color(0xFFFF7F50); // coral
+  static const gradeA = Color(0xFF0F766E); // teal
+  static const gradeB = Color(0xFF14B8A6); // teal clair
+  static const gradeC = Color(0xFFD97706); // ambre
   static const gradeD = Color(0xFFF59E0B);
   static const gradeF = Color(0xFFEF4444);
 
   // ── Modes de jeu ──
-  static const modeClassic = Color(0xFF16A34A);
-  static const modeSurvival = Color(0xFFEF4444);
-  static const modeSpeed = Color(0xFFF97316);
+  static const modeClassic = Color(0xFF0F766E); // teal
+  static const modeSurvival = Color(0xFFEF4444); // rouge
+  static const modeSpeed = Color(0xFFFF7F50); // coral
 
   // ── Aliases backward-compat (pointent vers le thème dark) ──
-  static const darkBg = Color(0xFF111827);
-  static const cardBg = Color(0xFF1F2937);
-  static const cardBgLight = Color(0xFF374151);
-  static const surface = Color(0xFF1F2937);
-  static const background = Color(0xFFFFFFFF);
-  static const textPrimary = Color(0xFFF9FAFB);
-  static const textSecondary = Color(0xFFD1D5DB);
-  static const textMuted = Color(0xFF6B7280);
+  static const darkBg = Color(0xFF14110D);
+  static const cardBg = Color(0xFF221E18);
+  static const cardBgLight = Color(0xFF2E2920);
+  static const surface = Color(0xFF221E18);
+  static const background = Color(0xFFF5E6CA);
+  static const textPrimary = Color(0xFFF5E6CA);
+  static const textSecondary = Color(0xFFC9BCA0);
+  static const textMuted = Color(0xFF8A7F68);
 
   static Color gradeColor(String grade) => switch (grade) {
         'S' => gradeS,
@@ -135,11 +137,11 @@ class AppTheme {
         colorScheme: const ColorScheme.light(
           primary: AppColors.primary,
           secondary: AppColors.secondary,
-          surface: Color(0xFFFFFFFF),
+          surface: Color(0xFFFFFDF8),
           error: AppColors.error,
-          onPrimary: Colors.white,
-          onSecondary: Colors.white,
-          onSurface: Color(0xFF111827),
+          onPrimary: Colors.white, // sur teal → 5.5:1 (AA)
+          onSecondary: Color(0xFF1C1917), // sur coral → 7.1:1 (AAA), blanc échoue
+          onSurface: Color(0xFF1C1917),
         ),
       );
 
@@ -149,11 +151,11 @@ class AppTheme {
         colorScheme: const ColorScheme.dark(
           primary: AppColors.primary,
           secondary: AppColors.secondary,
-          surface: Color(0xFF1F2937),
+          surface: Color(0xFF221E18),
           error: AppColors.error,
           onPrimary: Colors.white,
-          onSecondary: Colors.white,
-          onSurface: Color(0xFFF9FAFB),
+          onSecondary: Color(0xFF1C1917), // sur coral → texte sombre, blanc échoue
+          onSurface: Color(0xFFF5E6CA),
         ),
       );
 
@@ -203,7 +205,7 @@ class AppTheme {
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.primary,
+            foregroundColor: AppColors.primaryDark, // texte teal foncé → 6.2:1 (AA)
             side: const BorderSide(color: AppColors.primary, width: 1.5),
             padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.xxl, vertical: AppSpacing.md + 2),
