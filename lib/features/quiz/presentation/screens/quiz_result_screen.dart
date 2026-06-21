@@ -2,6 +2,7 @@ import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dart';
 import 'package:arif_quiz/features/challenges/presentation/screens/challenge_detail_screen.dart';
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
+import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
@@ -122,7 +123,7 @@ class QuizResultScreen extends StatelessWidget {
                                 fontSize: 17,
                                 fontWeight: FontWeight.w700))),
                     const SizedBox(height: 12),
-                    ...result.results.map((r) => _ReviewCard(r)),
+                    ...result.results.map((r) => _ReviewCard(r, canReport: !guestMode)),
                   ],
                 ),
               ),
@@ -309,7 +310,8 @@ class _Stat extends StatelessWidget {
 
 class _ReviewCard extends StatefulWidget {
   final QuestionResult result;
-  const _ReviewCard(this.result);
+  final bool canReport;
+  const _ReviewCard(this.result, {this.canReport = true});
   @override
   State<_ReviewCard> createState() => _ReviewCardState();
 }
@@ -385,8 +387,199 @@ class _ReviewCardState extends State<_ReviewCard> {
                   ),
                 ),
               ],
+              if (widget.canReport) ...[
+                const SizedBox(height: 6),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () => _showReportSheet(context, r),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.error,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    icon: const Icon(Icons.flag_outlined, size: 16),
+                    label: const Text('Signaler une erreur',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                  ),
+                ),
+              ],
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Signalement d'une question ─────────────────────────────────────────────
+
+const _reportReasons = <(String, String)>[
+  ('wrong_answer', 'La bonne réponse est incorrecte'),
+  ('ambiguous', 'Question ambiguë ou mal formulée'),
+  ('typo', 'Faute d\'orthographe'),
+  ('outdated', 'Information périmée'),
+  ('other', 'Autre'),
+];
+
+void _showReportSheet(BuildContext context, QuestionResult r) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => _ReportSheet(result: r),
+  );
+}
+
+class _ReportSheet extends StatefulWidget {
+  final QuestionResult result;
+  const _ReportSheet({required this.result});
+  @override
+  State<_ReportSheet> createState() => _ReportSheetState();
+}
+
+class _ReportSheetState extends State<_ReportSheet> {
+  String _reason = _reportReasons.first.$1;
+  final _commentCtrl = TextEditingController();
+  bool _submitting = false;
+
+  @override
+  void dispose() {
+    _commentCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    setState(() => _submitting = true);
+    try {
+      final message = await QuizRepository(apiService).reportQuestion(
+        questionId: widget.result.questionId,
+        reason: _reason,
+        comment: _commentCtrl.text,
+      );
+      if (!mounted) return;
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: AppColors.success),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _submitting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Échec de l\'envoi. Réessayez.'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.appColors.cardBg,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.appColors.cardBgLight,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  const Icon(Icons.flag_rounded, color: AppColors.error, size: 20),
+                  const SizedBox(width: 8),
+                  Text('Signaler cette question',
+                      style: TextStyle(
+                          color: context.appColors.textPrimary,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w800)),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(widget.result.question,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: context.appColors.textSecondary, fontSize: 13)),
+              const SizedBox(height: 16),
+              Text('Motif',
+                  style: TextStyle(
+                      color: context.appColors.textPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700)),
+              const SizedBox(height: 8),
+              ..._reportReasons.map((reason) {
+                final selected = _reason == reason.$1;
+                return GestureDetector(
+                  onTap: _submitting
+                      ? null
+                      : () => setState(() => _reason = reason.$1),
+                  behavior: HitTestBehavior.opaque,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      children: [
+                        Icon(
+                          selected
+                              ? Icons.radio_button_checked_rounded
+                              : Icons.radio_button_unchecked_rounded,
+                          color: selected
+                              ? AppColors.primary
+                              : context.appColors.textMuted,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(reason.$2,
+                              style: TextStyle(
+                                  color: context.appColors.textPrimary,
+                                  fontSize: 14)),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _commentCtrl,
+                enabled: !_submitting,
+                maxLines: 3,
+                maxLength: 1000,
+                decoration: const InputDecoration(
+                  hintText: 'Commentaire (optionnel)',
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: AppButton(
+                  label: 'Envoyer le signalement',
+                  icon: Icons.send_rounded,
+                  loading: _submitting,
+                  onPressed: _submitting ? null : _submit,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:arif_quiz/features/admin/presentation/screens/admin_categories_s
 import 'package:arif_quiz/features/admin/presentation/screens/admin_import_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_questions_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_quizzes_screen.dart';
+import 'package:arif_quiz/features/admin/presentation/screens/admin_reports_screen.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -108,6 +109,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         _StatCard(label: 'Quiz total', value: s.totalQuizzes, icon: Icons.quiz_rounded, color: AppColors.primary),
         _StatCard(label: 'Publiés', value: s.publishedQuizzes, icon: Icons.published_with_changes_rounded, color: AppColors.success),
         _StatCard(label: 'Questions', value: s.totalQuestions, icon: Icons.help_outline_rounded, color: AppColors.secondary),
+        _StatCard(label: 'Signalements', value: s.pendingReports, icon: Icons.flag_rounded, color: AppColors.error),
       ],
     ).animate().fadeIn(duration: 300.ms);
   }
@@ -174,6 +176,19 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AdminImportScreen()),
+                ).then((_) => _loadStats()),
+              ),
+              _divider(),
+              _NavTile(
+                icon: Icons.flag_rounded,
+                color: AppColors.error,
+                label: 'Signalements',
+                subtitle: _stats != null && _stats!.pendingReports > 0
+                    ? '${_stats!.pendingReports} en attente de traitement'
+                    : 'Réponses signalées par les joueurs',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AdminReportsScreen()),
                 ).then((_) => _loadStats()),
               ),
             ],

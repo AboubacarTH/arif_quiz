@@ -590,12 +590,14 @@ class AdminStatsModel {
   final int totalQuizzes;
   final int publishedQuizzes;
   final int totalQuestions;
+  final int pendingReports;
 
   const AdminStatsModel({
     required this.totalCategories,
     required this.totalQuizzes,
     required this.publishedQuizzes,
     required this.totalQuestions,
+    this.pendingReports = 0,
   });
 
   factory AdminStatsModel.fromJson(Map<String, dynamic> json) => AdminStatsModel(
@@ -603,7 +605,78 @@ class AdminStatsModel {
         totalQuizzes: json['total_quizzes'] ?? 0,
         publishedQuizzes: json['published_quizzes'] ?? 0,
         totalQuestions: json['total_questions'] ?? 0,
+        pendingReports: json['pending_reports'] ?? 0,
       );
+}
+
+// ========== ADMIN REPORT MODEL ==========
+
+class AdminReportModel {
+  final int id;
+  final String reason;
+  final String? comment;
+  final String status; // pending | reviewed | resolved | dismissed
+  final DateTime? createdAt;
+  final String? userName;
+  final String? userEmail;
+  final int? quizId;
+  final String? quizTitle;
+  final int? questionId;
+  final String? questionText;
+  final List<String>? questionOptions;
+  final String? correctAnswer;
+
+  const AdminReportModel({
+    required this.id,
+    required this.reason,
+    this.comment,
+    required this.status,
+    this.createdAt,
+    this.userName,
+    this.userEmail,
+    this.quizId,
+    this.quizTitle,
+    this.questionId,
+    this.questionText,
+    this.questionOptions,
+    this.correctAnswer,
+  });
+
+  factory AdminReportModel.fromJson(Map<String, dynamic> json) => AdminReportModel(
+        id: json['id'],
+        reason: json['reason'] ?? 'other',
+        comment: json['comment'],
+        status: json['status'] ?? 'pending',
+        createdAt: json['created_at'] != null
+            ? DateTime.tryParse(json['created_at'])
+            : null,
+        userName: json['user']?['name'],
+        userEmail: json['user']?['email'],
+        quizId: json['quiz']?['id'],
+        quizTitle: json['quiz']?['title'],
+        questionId: json['question']?['id'],
+        questionText: json['question']?['text'],
+        questionOptions: json['question']?['options'] != null
+            ? List<String>.from(json['question']['options'])
+            : null,
+        correctAnswer: json['question']?['correct_answer'],
+      );
+
+  String get reasonLabel => switch (reason) {
+        'wrong_answer' => 'Bonne réponse incorrecte',
+        'ambiguous' => 'Question ambiguë',
+        'typo' => 'Faute d\'orthographe',
+        'outdated' => 'Information périmée',
+        _ => 'Autre',
+      };
+
+  String get statusLabel => switch (status) {
+        'pending' => 'En attente',
+        'reviewed' => 'En cours',
+        'resolved' => 'Résolu',
+        'dismissed' => 'Rejeté',
+        _ => status,
+      };
 }
 
 class AdminCategoryModel {

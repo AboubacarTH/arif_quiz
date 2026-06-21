@@ -57,4 +57,19 @@ class QuizRepository {
 
   Future<List<dynamic>> getLeaderboard(int quizId) =>
       _api.getQuizLeaderboard(quizId);
+
+  /// Signale une question (réponse incorrecte, ambiguë, etc.) aux admins.
+  Future<String> reportQuestion({
+    required int questionId,
+    required String reason,
+    String? comment,
+  }) async {
+    final res = await _api.post('/question-reports', data: {
+      'question_id': questionId,
+      'reason': reason,
+      if (comment != null && comment.trim().isNotEmpty) 'comment': comment.trim(),
+    });
+    return (res.data is Map ? res.data['message'] as String? : null) ??
+        'Signalement envoyé';
+  }
 }

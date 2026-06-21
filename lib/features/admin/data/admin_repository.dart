@@ -118,6 +118,34 @@ class AdminRepository {
     await _api.delete('/admin/questions/$id');
   }
 
+  // ── Signalements ──────────────────────────────────────────────────────────
+
+  Future<({List<AdminReportModel> reports, int lastPage, int total})> getReports({
+    String? status,
+    int page = 1,
+  }) async {
+    final res = await _api.get('/admin/reports', queryParameters: {
+      if (status != null && status.isNotEmpty) 'status': status,
+      'page': page,
+    });
+    final list = res.data['data'] as List;
+    final meta = res.data['meta'] as Map<String, dynamic>? ?? {};
+    return (
+      reports: list.map((e) => AdminReportModel.fromJson(e)).toList(),
+      lastPage: meta['last_page'] as int? ?? 1,
+      total: meta['total'] as int? ?? 0,
+    );
+  }
+
+  Future<AdminReportModel> updateReportStatus(int id, String status) async {
+    final res = await _api.put('/admin/reports/$id', data: {'status': status});
+    return AdminReportModel.fromJson(res.data['data']);
+  }
+
+  Future<void> deleteReport(int id) async {
+    await _api.delete('/admin/reports/$id');
+  }
+
   // ── Import ────────────────────────────────────────────────────────────────
 
   Future<Map<String, dynamic>> importExcel({
