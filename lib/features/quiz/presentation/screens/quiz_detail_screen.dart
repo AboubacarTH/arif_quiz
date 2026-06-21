@@ -82,21 +82,32 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                   width: double.infinity,
                   height: 160,
                   decoration: BoxDecoration(
-                    color: catColor.withValues(alpha: 0.12),
+                    color: context.cardElevated,
                     borderRadius: AppRadius.rXl,
-                    boxShadow: AppShadows.tinted(context, catColor),
+                    border: Border.all(color: context.appColors.border),
+                    boxShadow: AppShadows.card(context),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(q.category?.icon ?? '📝',
-                          style: const TextStyle(fontSize: 48)),
-                      const SizedBox(height: 8),
+                      Container(
+                        width: 76,
+                        height: 76,
+                        decoration: BoxDecoration(
+                          color: catColor.withValues(alpha: 0.14),
+                          borderRadius: AppRadius.rLg,
+                        ),
+                        child: Center(
+                          child: Text(q.category?.icon ?? '📝',
+                              style: const TextStyle(fontSize: 40)),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                       if (q.category != null)
                         Text(q.category!.name,
                             style: TextStyle(
                                 color: catColor,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
                                 fontSize: 14)),
                     ],
                   ),
