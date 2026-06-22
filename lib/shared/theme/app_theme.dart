@@ -26,14 +26,14 @@ class AppColorScheme {
   });
 
   static const light = AppColorScheme(
-    bg: Color(0xFFF5E6CA), // crème (couleur principale)
-    cardBg: Color(0xFFFFFDF8), // blanc cassé chaud → fait « flotter » les cartes
-    cardBgLight: Color(0xFFEFE2C8),
-    surface: Color(0xFFFFFDF8),
-    border: Color(0xFFE3D5B8),
-    textPrimary: Color(0xFF1C1917), // 14.2:1 sur crème → AAA
-    textSecondary: Color(0xFF5C5648), // 5.9:1 → AA
-    textMuted: Color(0xFF6B6452), // 4.8:1 → AA
+    bg: Color(0xFFFFF7E6), // ivoire (couleur principale)
+    cardBg: Color(0xFFFFFFFF), // blanc pur → fait « flotter » les cartes sur l'ivoire
+    cardBgLight: Color(0xFFF7EFDD),
+    surface: Color(0xFFFFFFFF),
+    border: Color(0xFFEFE3CC),
+    textPrimary: Color(0xFF1C1917), // 16.4:1 sur ivoire → AAA
+    textSecondary: Color(0xFF57534E), // 7.2:1 → AAA
+    textMuted: Color(0xFF797060), // 4.6:1 → AA
   );
 
   static const dark = AppColorScheme(
@@ -42,7 +42,7 @@ class AppColorScheme {
     cardBgLight: Color(0xFF2E2920),
     surface: Color(0xFF221E18),
     border: Color(0xFF3A342A),
-    textPrimary: Color(0xFFF5E6CA), // crème sur fond sombre → 15.3:1 (AAA)
+    textPrimary: Color(0xFFFFF7E6), // ivoire sur fond sombre → 17.7:1 (AAA)
     textSecondary: Color(0xFFC9BCA0), // 10.0:1 (AAA)
     textMuted: Color(0xFF8A7F68), // 4.8:1 (AA)
   );
@@ -58,50 +58,51 @@ extension AppColorSchemeExt on BuildContext {
 // ─── Couleurs partagées (identiques dark & light) ───────────────────────────
 
 class AppColors {
-  // ── Teal (couleur principale) ──
-  static const primary = Color(0xFF0F766E); // bouton plein + blanc → 5.5:1 (AA)
-  static const primaryLight = Color(0xFF14B8A6);
-  static const primaryDark = Color(0xFF115E59); // texte/contour sur crème → 6.2:1 (AA)
+  // ── Rust (couleur principale) ──
+  static const primary = Color(0xFFC2410C); // bouton plein + blanc → 5.2:1 (AA)
+  static const primaryLight = Color(0xFFEA580C);
+  static const primaryDark = Color(0xFF9A3412); // texte/contour sur ivoire → 6.9:1 (AA)
 
-  // ── Corail (accent secondaire) ──
-  // ⚠️ trop clair pour porter du texte blanc (2.5:1) ou servir de texte sur
-  // crème (2.0:1) → à utiliser en remplissage avec texte sombre (onSecondary).
-  static const secondary = Color(0xFFFF7F50);
-  static const secondaryLight = Color(0xFFFF9D77);
-  static const accent = Color(0xFFFF7F50);
-  static const accentLight = Color(0xFFFF9D77);
+  // ── Or (accent secondaire) ──
+  // Rôle accent (texte/icône) : gold-700 #A16207, lisible sur ivoire (4.6:1, AA).
+  // L'or vif #EAB308 (1.8:1 sur ivoire) est réservé aux remplissages avec texte
+  // sombre → exposé via secondaryLight/accentLight.
+  static const secondary = Color(0xFFA16207);
+  static const secondaryLight = Color(0xFFEAB308);
+  static const accent = Color(0xFFA16207);
+  static const accentLight = Color(0xFFEAB308);
 
   // ── Status ──
-  static const success = Color(0xFF0F766E); // teal = succès (aligné primaire)
+  static const success = Color(0xFF15803D); // vert (distinct du rust)
   static const error = Color(0xFFEF4444); // rouge conservé (clarté sémantique)
-  static const warning = Color(0xFFD97706); // ambre (distinct du coral et du rouge)
-  static const info = Color(0xFF0F766E);
+  static const warning = Color(0xFFD97706); // ambre (distinct du rouge)
+  static const info = Color(0xFF0284C7); // bleu
 
   // ── Difficulté ──
-  static const easy = Color(0xFF0F766E); // teal
-  static const medium = Color(0xFFFF7F50); // coral
+  static const easy = Color(0xFF15803D); // vert
+  static const medium = Color(0xFFA16207); // or
   static const hard = Color(0xFFEF4444); // rouge
 
   // ── Grades ──
-  static const gradeS = Color(0xFFFF7F50); // coral
-  static const gradeA = Color(0xFF0F766E); // teal
-  static const gradeB = Color(0xFF14B8A6); // teal clair
-  static const gradeC = Color(0xFFD97706); // ambre
-  static const gradeD = Color(0xFFF59E0B);
-  static const gradeF = Color(0xFFEF4444);
+  static const gradeS = Color(0xFFA16207); // or
+  static const gradeA = Color(0xFF15803D); // vert
+  static const gradeB = Color(0xFF0284C7); // bleu
+  static const gradeC = Color(0xFF9333EA); // violet
+  static const gradeD = Color(0xFFD97706); // ambre
+  static const gradeF = Color(0xFFEF4444); // rouge
 
   // ── Modes de jeu ──
-  static const modeClassic = Color(0xFF0F766E); // teal
+  static const modeClassic = Color(0xFFC2410C); // rust
   static const modeSurvival = Color(0xFFEF4444); // rouge
-  static const modeSpeed = Color(0xFFFF7F50); // coral
+  static const modeSpeed = Color(0xFFA16207); // or
 
   // ── Aliases backward-compat (pointent vers le thème dark) ──
   static const darkBg = Color(0xFF14110D);
   static const cardBg = Color(0xFF221E18);
   static const cardBgLight = Color(0xFF2E2920);
   static const surface = Color(0xFF221E18);
-  static const background = Color(0xFFF5E6CA);
-  static const textPrimary = Color(0xFFF5E6CA);
+  static const background = Color(0xFFFFF7E6);
+  static const textPrimary = Color(0xFFFFF7E6);
   static const textSecondary = Color(0xFFC9BCA0);
   static const textMuted = Color(0xFF8A7F68);
 
@@ -137,10 +138,10 @@ class AppTheme {
         colorScheme: const ColorScheme.light(
           primary: AppColors.primary,
           secondary: AppColors.secondary,
-          surface: Color(0xFFFFFDF8),
+          surface: Color(0xFFFFFFFF),
           error: AppColors.error,
-          onPrimary: Colors.white, // sur teal → 5.5:1 (AA)
-          onSecondary: Color(0xFF1C1917), // sur coral → 7.1:1 (AAA), blanc échoue
+          onPrimary: Colors.white, // sur rust → 5.2:1 (AA)
+          onSecondary: Colors.white, // sur gold-700 → 4.9:1 (AA)
           onSurface: Color(0xFF1C1917),
         ),
       );
@@ -154,8 +155,8 @@ class AppTheme {
           surface: Color(0xFF221E18),
           error: AppColors.error,
           onPrimary: Colors.white,
-          onSecondary: Color(0xFF1C1917), // sur coral → texte sombre, blanc échoue
-          onSurface: Color(0xFFF5E6CA),
+          onSecondary: Colors.white, // sur gold-700 → 4.9:1 (AA)
+          onSurface: Color(0xFFFFF7E6),
         ),
       );
 
