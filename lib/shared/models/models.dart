@@ -484,6 +484,13 @@ class QuestionModel {
         points: json['points'] ?? 10,
         order: json['order'] ?? 0,
       );
+
+  /// Comparaison tolérante (casse + espaces), alignée sur la logique serveur
+  /// (`strtolower(trim(...))`) pour éviter tout écart d'affichage vs score réel.
+  bool isCorrect(String? answer) =>
+      answer != null &&
+      correctAnswer != null &&
+      answer.trim().toLowerCase() == correctAnswer!.trim().toLowerCase();
 }
 
 // ========== QUIZ RESULT MODEL ==========

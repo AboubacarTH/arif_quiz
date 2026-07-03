@@ -165,18 +165,6 @@ class ApiService {
   }
 
   // ==================== ATTEMPTS ====================
-  Future<Map<String, dynamic>> submitQuiz({
-    required int quizId,
-    required Map<String, String> answers,
-    required int timeTaken,
-  }) async {
-    final res = await _dio.post('/quizzes/$quizId/submit', data: {
-      'answers': answers,
-      'time_taken': timeTaken,
-    });
-    return res.data;
-  }
-
   Future<Map<String, dynamic>> getAttemptHistory({int page = 1}) async {
     final res = await _dio.get('/attempts', queryParameters: {'page': page});
     return res.data;

@@ -8,6 +8,7 @@ import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
+import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 
 class SpeedPlayScreen extends StatefulWidget {
@@ -236,6 +237,10 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
 
     return PopScope(
       canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        if (await confirmQuitGame(context) && mounted) Navigator.pop(context);
+      },
       child: Scaffold(
         backgroundColor: context.appColors.bg,
         body: SafeArea(
@@ -247,7 +252,11 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                 Row(
                   children: [
                     GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () async {
+                        if (await confirmQuitGame(context) && mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
                       child: Container(
                         width: 36,
                         height: 36,
@@ -368,17 +377,16 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (_, i) {
                       final opt = opts[i];
-                      final correct = _current.correctAnswer;
                       return AnswerOptionTile(
                         label: labels[i < labels.length ? i : 0],
                         option: opt,
                         state: !_answered
                             ? AnswerState.idle
-                            : opt == _selected
-                                ? (correct != null && opt == correct
-                                    ? AnswerState.correct
-                                    : AnswerState.wrong)
-                                : AnswerState.idle,
+                            : _current.isCorrect(opt)
+                                ? AnswerState.correct
+                                : opt == _selected
+                                    ? AnswerState.wrong
+                                    : AnswerState.idle,
                         onTap: () => _selectAnswer(opt),
                       );
                     },

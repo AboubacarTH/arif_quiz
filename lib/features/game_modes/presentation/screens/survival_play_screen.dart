@@ -8,6 +8,7 @@ import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
+import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -32,6 +33,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
   bool _submitting = false;
 
   int _index = 0;
+  int _timeLimit = 30;
   int _timeLeft = 0;
   int _totalTime = 0;
   String? _selected;
@@ -64,6 +66,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
       }
       setState(() {
         _questions = questions;
+        _timeLimit = timeLimit;
         _timeLeft = timeLimit;
         _loading = false;
       });
@@ -93,13 +96,9 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
   void _handleAnswer(String? answer) {
     if (_answered || _gameOver) return;
     _timer?.cancel();
-    _totalTime += (widget.quiz.timeLimit - _timeLeft).abs();
+    _totalTime += (_timeLimit - _timeLeft).abs();
 
-    final correct = _current.correctAnswer;
-    final isCorrect = answer != null &&
-        answer.isNotEmpty &&
-        correct != null &&
-        answer == correct;
+    final isCorrect = _current.isCorrect(answer);
 
     setState(() {
       _selected = answer;
@@ -132,7 +131,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
       _selected = null;
       _answered = false;
     });
-    _startTimer(widget.quiz.timeLimit);
+    _startTimer(_timeLimit);
   }
 
   Future<void> _submitResults() async {
@@ -260,6 +259,14 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
 
     return PopScope(
       canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        if (_gameOver) {
+          if (mounted) Navigator.pop(context);
+          return;
+        }
+        if (await confirmQuitGame(context) && mounted) Navigator.pop(context);
+      },
       child: Scaffold(
         backgroundColor: context.appColors.bg,
         body: SafeArea(
@@ -283,7 +290,11 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
           Row(
             children: [
               GestureDetector(
-                onTap: () => Navigator.pop(context),
+                onTap: () async {
+                  if (await confirmQuitGame(context) && mounted) {
+                    Navigator.pop(context);
+                  }
+                },
                 child: Container(
                   width: 36,
                   height: 36,
@@ -393,17 +404,16 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
               separatorBuilder: (_, __) => const SizedBox(height: 10),
               itemBuilder: (_, i) {
                 final opt = opts[i];
-                final correct = _current.correctAnswer;
                 return AnswerOptionTile(
                   label: labels[i < labels.length ? i : 0],
                   option: opt,
                   state: !_answered
                       ? AnswerState.idle
-                      : opt == _selected
-                          ? (correct != null && opt == correct
-                              ? AnswerState.correct
-                              : AnswerState.wrong)
-                          : AnswerState.idle,
+                      : _current.isCorrect(opt)
+                          ? AnswerState.correct
+                          : opt == _selected
+                              ? AnswerState.wrong
+                              : AnswerState.idle,
                   onTap: () => _handleAnswer(opt),
                 );
               },
@@ -433,7 +443,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              'Tu as survécu $_index question${_index > 1 ? 's' : ''}',
+              'Tu as survécu à $_index question${_index >= 2 ? 's' : ''}',
               style: TextStyle(color: context.appColors.textSecondary, fontSize: 16),
             ),
             const SizedBox(height: 32),

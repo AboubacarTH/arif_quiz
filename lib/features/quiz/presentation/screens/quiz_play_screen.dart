@@ -8,6 +8,7 @@ import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
+import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
 import 'package:arif_quiz/ui/widgets/timer_ring.dart';
 import 'package:flutter/material.dart';
 
@@ -197,9 +198,9 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
-        final quit = await _confirmQuit();
+        final quit = await confirmQuitGame(context);
         if (quit && mounted) Navigator.pop(context);
       },
       child: Scaffold(
@@ -215,7 +216,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        if (await _confirmQuit() && mounted) {
+                        if (await confirmQuitGame(context) && mounted) {
                           Navigator.pop(context);
                         }
                       },
@@ -291,14 +292,16 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (ctx, i) {
                       final opt = opts[i];
-                      final correct = ctrl.currentQuestion.correctAnswer;
+                      final q = ctrl.currentQuestion;
+                      // Une fois répondu : on révèle toujours la bonne réponse
+                      // (verte) et on marque le choix erroné (rouge).
                       final state = !ctrl.answered
                           ? AnswerState.idle
-                          : opt == ctrl.selected
-                              ? (correct != null && opt == correct
-                                  ? AnswerState.correct
-                                  : AnswerState.wrong)
-                              : AnswerState.idle;
+                          : q.isCorrect(opt)
+                              ? AnswerState.correct
+                              : opt == ctrl.selected
+                                  ? AnswerState.wrong
+                                  : AnswerState.idle;
                       return AnswerOptionTile(
                         label: labels[i < labels.length ? i : 0],
                         option: opt,
@@ -330,29 +333,4 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
     );
   }
 
-  Future<bool> _confirmQuit() async {
-    return await showDialog<bool>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            backgroundColor: context.appColors.cardBg,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: Text('Quit Quiz?',
-                style: TextStyle(
-                    color: context.appColors.textPrimary, fontWeight: FontWeight.w700)),
-            content: Text('Your progress will be lost.',
-                style: TextStyle(color: context.appColors.textSecondary)),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(ctx, false),
-                  child: const Text('Keep Playing')),
-              TextButton(
-                  onPressed: () => Navigator.pop(ctx, true),
-                  child: const Text('Quit',
-                      style: TextStyle(color: AppColors.error))),
-            ],
-          ),
-        ) ??
-        false;
-  }
 }
