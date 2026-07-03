@@ -1,5 +1,5 @@
-﻿import 'dart:async';
 import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
+import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
 import 'package:arif_quiz/main.dart';
@@ -17,46 +17,33 @@ class SurvivalPlayScreen extends StatefulWidget {
   final int? challengeId;
   final ChallengeModel? challenge;
 
-  const SurvivalPlayScreen({super.key, required this.quiz, this.challengeId, this.challenge});
+  const SurvivalPlayScreen(
+      {super.key, required this.quiz, this.challengeId, this.challenge});
 
   @override
   State<SurvivalPlayScreen> createState() => _SurvivalPlayScreenState();
 }
 
-class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
-    with SingleTickerProviderStateMixin {
+class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
   final _repo = QuizRepository(apiService);
-  List<QuestionModel> _questions = [];
+  GamePlayController? _ctrl;
   bool _loading = true;
   String? _error;
-  bool _gameOver = false;
   bool _submitting = false;
-
-  int _index = 0;
-  int _timeLimit = 30;
-  int _timeLeft = 0;
-  int _totalTime = 0;
-  String? _selected;
-  bool _answered = false;
-  final Map<String, String> _answers = {};
-  Timer? _timer;
-  late AnimationController _shakeCtrl;
-
-  QuestionModel get _current => _questions[_index];
 
   @override
   void initState() {
     super.initState();
-    _shakeCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _loadQuestions();
   }
 
   Future<void> _loadQuestions() async {
     try {
       final List<QuestionModel> questions;
-      int timeLimit;
+      final int timeLimit;
       if (widget.challengeId != null) {
-        final data = await ChallengeRepository(apiService).getChallengeQuestions(widget.challengeId!);
+        final data = await ChallengeRepository(apiService)
+            .getChallengeQuestions(widget.challengeId!);
         questions = data.questions;
         timeLimit = data.timeLimit;
       } else {
@@ -64,13 +51,16 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
         questions = data.questions;
         timeLimit = data.timeLimit;
       }
+      final ctrl = GamePlayController(
+        mode: GameMode.survival,
+        questions: questions,
+        secondsPerQuestion: timeLimit,
+      );
+      ctrl.addListener(_onChange);
       setState(() {
-        _questions = questions;
-        _timeLimit = timeLimit;
-        _timeLeft = timeLimit;
+        _ctrl = ctrl;
         _loading = false;
       });
-      _startTimer(timeLimit);
     } catch (e) {
       debugPrint('Challenge load error: $e');
       setState(() {
@@ -80,70 +70,27 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
     }
   }
 
-  void _startTimer(int limit) {
-    _timer?.cancel();
-    _timeLeft = limit;
-    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) return;
-      setState(() => _timeLeft--);
-      if (_timeLeft <= 0) {
-        t.cancel();
-        _handleAnswer(null);
-      }
-    });
-  }
-
-  void _handleAnswer(String? answer) {
-    if (_answered || _gameOver) return;
-    _timer?.cancel();
-    _totalTime += (_timeLimit - _timeLeft).abs();
-
-    final isCorrect = _current.isCorrect(answer);
-
-    setState(() {
-      _selected = answer;
-      _answered = true;
-      if (answer != null) _answers[_current.id.toString()] = answer;
-    });
-
-    Future.delayed(const Duration(milliseconds: 700), () {
-      if (!mounted) return;
-      if (isCorrect) {
-        _advance();
-      } else {
-        _triggerGameOver();
-      }
-    });
-  }
-
-  void _triggerGameOver() {
-    _shakeCtrl.forward(from: 0);
-    setState(() => _gameOver = true);
-  }
-
-  void _advance() {
-    if (_index >= _questions.length - 1) {
-      _submitResults();
-      return;
-    }
-    setState(() {
-      _index++;
-      _selected = null;
-      _answered = false;
-    });
-    _startTimer(_timeLimit);
+  void _onChange() {
+    if (!mounted) return;
+    setState(() {});
+    if (_ctrl?.phase == GamePhase.submitting) _submitResults();
   }
 
   Future<void> _submitResults() async {
+    final ctrl = _ctrl!;
+    if (_submitting) return;
     setState(() => _submitting = true);
-    final playedCount = (_index + 1).clamp(1, _questions.length);
-    final playedQuestions = _questions.take(playedCount).toList();
+    // En survie on ne soumet que le sous-ensemble réellement joué (mort = fin),
+    // donc pas de session serveur ici : chemin legacy question_ids.
+    final playedQuestions = ctrl.playedQuestions;
     final playedIds = playedQuestions.map((q) => q.id).toList();
-    final answers = Map<String, String>.from(_answers);
+    final answers = Map<String, String>.from(ctrl.answers);
 
     if (isGuest.value) {
       final result = QuizAttemptResult.fromLocalScoring(
-          questions: playedQuestions, answers: answers, timeTaken: _totalTime);
+          questions: playedQuestions,
+          answers: answers,
+          timeTaken: ctrl.totalTime);
       if (!mounted) return;
       Navigator.pushReplacement(
           context,
@@ -160,21 +107,26 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
         result = await crepo.submitChallenge(
           challengeId: widget.challengeId!,
           answers: answers,
-          timeTaken: _totalTime,
+          timeTaken: ctrl.totalTime,
           questionIds: playedIds,
         );
       } else {
         result = await _repo.submitQuiz(
           quizId: widget.quiz.id,
           answers: answers,
-          timeTaken: _totalTime,
+          timeTaken: ctrl.totalTime,
           questionIds: playedIds,
           mode: 'survival',
         );
       }
       if (!mounted) return;
       Navigator.pushReplacement(
-          context, FadeScaleRoute(page: QuizResultScreen(result: result, quiz: widget.quiz, challenge: widget.challenge)));
+          context,
+          FadeScaleRoute(
+              page: QuizResultScreen(
+                  result: result,
+                  quiz: widget.quiz,
+                  challenge: widget.challenge)));
     } catch (e) {
       debugPrint('Challenge submit error: $e');
       if (!mounted) return;
@@ -189,8 +141,8 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
 
   @override
   void dispose() {
-    _timer?.cancel();
-    _shakeCtrl.dispose();
+    _ctrl?.removeListener(_onChange);
+    _ctrl?.dispose();
     super.dispose();
   }
 
@@ -199,7 +151,8 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
     if (_loading) {
       return Scaffold(
         backgroundColor: context.appColors.bg,
-        body: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+        body: const Center(
+            child: CircularProgressIndicator(color: AppColors.primary)),
       );
     }
     if (_error != null) {
@@ -227,11 +180,14 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
       );
     }
 
+    final ctrl = _ctrl!;
+    final gameOver = ctrl.phase == GamePhase.gameOver;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
-        if (_gameOver) {
+        if (gameOver) {
           if (mounted) Navigator.pop(context);
           return;
         }
@@ -240,14 +196,15 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
       child: Scaffold(
         backgroundColor: context.appColors.bg,
         body: SafeArea(
-          child: _gameOver ? _buildGameOver() : _buildQuestion(),
+          child: gameOver ? _buildGameOver() : _buildQuestion(),
         ),
       ),
     );
   }
 
   Widget _buildQuestion() {
-    final q = _current;
+    final ctrl = _ctrl!;
+    final q = ctrl.currentQuestion;
     final opts = q.options ?? ['Vrai', 'Faux'];
     final labels = ['A', 'B', 'C', 'D'];
 
@@ -284,7 +241,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: LinearProgressIndicator(
-                    value: (_index + 1) / _questions.length,
+                    value: ctrl.progress,
                     backgroundColor: context.appColors.cardBg,
                     valueColor: const AlwaysStoppedAnimation(AppColors.error),
                     minHeight: 8,
@@ -293,8 +250,9 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
               ),
               const SizedBox(width: 12),
               Text(
-                '${_index + 1}/${_questions.length}',
-                style: TextStyle(color: context.appColors.textSecondary, fontSize: 13),
+                '${ctrl.index + 1}/${ctrl.questions.length}',
+                style:
+                    TextStyle(color: context.appColors.textSecondary, fontSize: 13),
               ),
             ],
           ),
@@ -306,11 +264,13 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
               const Text('❤️', style: TextStyle(fontSize: 22)),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: AppColors.error.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
+                  border:
+                      Border.all(color: AppColors.error.withValues(alpha: 0.4)),
                 ),
                 child: const Text(
                   'MODE SURVIE',
@@ -324,13 +284,14 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
               ),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
                   color: context.appColors.cardBg,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  '$_timeLeft s',
+                  '${ctrl.timeLeft} s',
                   style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontWeight: FontWeight.w800,
@@ -343,7 +304,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Question ${_index + 1}',
+              'Question ${ctrl.index + 1}',
               style: const TextStyle(
                 color: AppColors.error,
                 fontSize: 12,
@@ -377,14 +338,14 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
                 return AnswerOptionTile(
                   label: labels[i < labels.length ? i : 0],
                   option: opt,
-                  state: !_answered
+                  state: !ctrl.answered
                       ? AnswerState.idle
-                      : _current.isCorrect(opt)
+                      : q.isCorrect(opt)
                           ? AnswerState.correct
-                          : opt == _selected
+                          : opt == ctrl.selected
                               ? AnswerState.wrong
                               : AnswerState.idle,
-                  onTap: () => _handleAnswer(opt),
+                  onTap: () => ctrl.selectAnswer(opt),
                 );
               },
             ),
@@ -395,6 +356,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
   }
 
   Widget _buildGameOver() {
+    final survived = _ctrl!.survivedCount;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -413,8 +375,9 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              'Tu as survécu à $_index question${_index >= 2 ? 's' : ''}',
-              style: TextStyle(color: context.appColors.textSecondary, fontSize: 16),
+              'Tu as survécu à $survived question${survived >= 2 ? 's' : ''}',
+              style:
+                  TextStyle(color: context.appColors.textSecondary, fontSize: 16),
             ),
             const SizedBox(height: 32),
             ElevatedButton.icon(
@@ -423,13 +386,15 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen>
               label: const Text('Voir les résultats'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.error,
-                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
               ),
             ),
             const SizedBox(height: 12),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Quitter', style: TextStyle(color: context.appColors.textMuted)),
+              child: Text('Quitter',
+                  style: TextStyle(color: context.appColors.textMuted)),
             ),
           ],
         ),

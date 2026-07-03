@@ -1,5 +1,5 @@
 ﻿import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
-import 'package:arif_quiz/features/quiz/bloc/quiz_play_controller.dart';
+import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
 import 'package:arif_quiz/main.dart';
@@ -22,7 +22,7 @@ class QuizPlayScreen extends StatefulWidget {
 }
 
 class _QuizPlayScreenState extends State<QuizPlayScreen> {
-  QuizPlayController? _ctrl;
+  GamePlayController? _ctrl;
   bool _initLoading = true;
   String? _initError;
   int? _sessionId;
@@ -53,10 +53,10 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
         timeLimit = data.timeLimit;
         _sessionId = data.sessionId;
       }
-      final ctrl = QuizPlayController(
-          quizId: widget.quiz.id,
+      final ctrl = GamePlayController(
+          mode: GameMode.classic,
           questions: questions,
-          timeLimit: timeLimit);
+          secondsPerQuestion: timeLimit);
       ctrl.addListener(_onCtrlChange);
       setState(() {
         _ctrl = ctrl;
@@ -74,7 +74,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
   void _onCtrlChange() {
     if (!mounted) return;
     setState(() {});
-    if (_ctrl?.phase == PlayPhase.submitting) _submit();
+    if (_ctrl?.phase == GamePhase.submitting) _submit();
   }
 
   Future<void> _submit() async {
@@ -221,7 +221,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                 // Timer
                 TimerRing(
                     timeLeft: ctrl.timeLeft,
-                    totalTime: ctrl.timeLimit,
+                    totalTime: ctrl.secondsPerQuestion,
                     size: 80),
                 const SizedBox(height: 28),
 
@@ -271,10 +271,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                         label: labels[i < labels.length ? i : 0],
                         option: opt,
                         state: state,
-                        onTap: () {
-                          ctrl.selectAnswer(opt);
-                          ctrl.advance();
-                        },
+                        onTap: () => ctrl.selectAnswer(opt),
                       );
                     },
                   ),
@@ -283,7 +280,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                 // Skip
                 if (!ctrl.answered)
                   TextButton(
-                    onPressed: ctrl.advance,
+                    onPressed: ctrl.skip,
                     child: Text('Skip →',
                         style: TextStyle(
                             color: context.appColors.textMuted, fontSize: 14)),

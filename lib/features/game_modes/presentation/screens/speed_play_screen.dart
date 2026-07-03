@@ -1,5 +1,5 @@
-﻿import 'dart:async';
 import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
+import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
 import 'package:arif_quiz/main.dart';
@@ -16,7 +16,8 @@ class SpeedPlayScreen extends StatefulWidget {
   final int? challengeId;
   final ChallengeModel? challenge;
 
-  const SpeedPlayScreen({super.key, required this.quiz, this.challengeId, this.challenge});
+  const SpeedPlayScreen(
+      {super.key, required this.quiz, this.challengeId, this.challenge});
 
   @override
   State<SpeedPlayScreen> createState() => _SpeedPlayScreenState();
@@ -26,21 +27,11 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
   static const _secondsPerQuestion = 5;
 
   final _repo = QuizRepository(apiService);
-  List<QuestionModel> _questions = [];
+  GamePlayController? _ctrl;
   bool _loading = true;
   String? _error;
   bool _submitting = false;
   int? _sessionId;
-
-  int _index = 0;
-  int _timeLeft = _secondsPerQuestion;
-  int _totalTime = 0;
-  String? _selected;
-  bool _answered = false;
-  final Map<String, String> _answers = {};
-  Timer? _timer;
-
-  QuestionModel get _current => _questions[_index];
 
   @override
   void initState() {
@@ -52,7 +43,8 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
     try {
       final List<QuestionModel> questions;
       if (widget.challengeId != null) {
-        final data = await ChallengeRepository(apiService).getChallengeQuestions(widget.challengeId!);
+        final data = await ChallengeRepository(apiService)
+            .getChallengeQuestions(widget.challengeId!);
         questions = data.questions;
         _sessionId = data.sessionId;
       } else {
@@ -60,11 +52,16 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
         questions = data.questions;
         _sessionId = data.sessionId;
       }
+      final ctrl = GamePlayController(
+        mode: GameMode.speed,
+        questions: questions,
+        secondsPerQuestion: _secondsPerQuestion,
+      );
+      ctrl.addListener(_onChange);
       setState(() {
-        _questions = questions;
+        _ctrl = ctrl;
         _loading = false;
       });
-      _startTimer();
     } catch (e) {
       debugPrint('Challenge load error: $e');
       setState(() {
@@ -74,53 +71,22 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
     }
   }
 
-  void _startTimer() {
-    _timer?.cancel();
-    _timeLeft = _secondsPerQuestion;
-    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) return;
-      setState(() => _timeLeft--);
-      if (_timeLeft <= 0) {
-        t.cancel();
-        _selectAnswer(null);
-      }
-    });
-  }
-
-  void _selectAnswer(String? answer) {
-    if (_answered) return;
-    _timer?.cancel();
-    _totalTime += _secondsPerQuestion - _timeLeft;
-
-    setState(() {
-      _selected = answer;
-      _answered = true;
-      if (answer != null) _answers[_current.id.toString()] = answer;
-    });
-
-    Future.delayed(const Duration(milliseconds: 500), _advance);
-  }
-
-  void _advance() {
-    if (_index >= _questions.length - 1) {
-      _submitResults();
-      return;
-    }
-    setState(() {
-      _index++;
-      _selected = null;
-      _answered = false;
-    });
-    _startTimer();
+  void _onChange() {
+    if (!mounted) return;
+    setState(() {});
+    if (_ctrl?.phase == GamePhase.submitting) _submitResults();
   }
 
   Future<void> _submitResults() async {
+    final ctrl = _ctrl!;
+    if (_submitting) return;
     setState(() => _submitting = true);
-    final answers = Map<String, String>.from(_answers);
+    final answers = Map<String, String>.from(ctrl.answers);
+    final questionIds = ctrl.questions.map((q) => q.id).toList();
 
     if (isGuest.value) {
       final result = QuizAttemptResult.fromLocalScoring(
-          questions: _questions, answers: answers, timeTaken: _totalTime);
+          questions: ctrl.questions, answers: answers, timeTaken: ctrl.totalTime);
       if (!mounted) return;
       Navigator.pushReplacement(
           context,
@@ -137,23 +103,28 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
         result = await crepo.submitChallenge(
           challengeId: widget.challengeId!,
           answers: answers,
-          timeTaken: _totalTime,
-          questionIds: _questions.map((q) => q.id).toList(),
+          timeTaken: ctrl.totalTime,
+          questionIds: questionIds,
           sessionId: _sessionId,
         );
       } else {
         result = await _repo.submitQuiz(
           quizId: widget.quiz.id,
           answers: answers,
-          timeTaken: _totalTime,
-          questionIds: _questions.map((q) => q.id).toList(),
+          timeTaken: ctrl.totalTime,
+          questionIds: questionIds,
           mode: 'speed',
           sessionId: _sessionId,
         );
       }
       if (!mounted) return;
       Navigator.pushReplacement(
-          context, FadeScaleRoute(page: QuizResultScreen(result: result, quiz: widget.quiz, challenge: widget.challenge)));
+          context,
+          FadeScaleRoute(
+              page: QuizResultScreen(
+                  result: result,
+                  quiz: widget.quiz,
+                  challenge: widget.challenge)));
     } catch (e) {
       debugPrint('Challenge submit error: $e');
       if (!mounted) return;
@@ -168,7 +139,8 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _ctrl?.removeListener(_onChange);
+    _ctrl?.dispose();
     super.dispose();
   }
 
@@ -177,7 +149,8 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
     if (_loading) {
       return Scaffold(
         backgroundColor: context.appColors.bg,
-        body: const Center(child: CircularProgressIndicator(color: AppColors.secondary)),
+        body: const Center(
+            child: CircularProgressIndicator(color: AppColors.secondary)),
       );
     }
     if (_error != null) {
@@ -205,10 +178,11 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
       );
     }
 
-    final q = _current;
+    final ctrl = _ctrl!;
+    final q = ctrl.currentQuestion;
     final opts = q.options ?? ['Vrai', 'Faux'];
     final labels = ['A', 'B', 'C', 'D'];
-    final timerPercent = _timeLeft / _secondsPerQuestion;
+    final timerPercent = ctrl.timePercent;
 
     return PopScope(
       canPop: false,
@@ -251,16 +225,17 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: LinearProgressIndicator(
-                          value: (_index + 1) / _questions.length,
+                          value: ctrl.progress,
                           backgroundColor: context.appColors.cardBg,
-                          valueColor: const AlwaysStoppedAnimation(AppColors.secondary),
+                          valueColor:
+                              const AlwaysStoppedAnimation(AppColors.secondary),
                           minHeight: 8,
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      '${_index + 1}/${_questions.length}',
+                      '${ctrl.index + 1}/${ctrl.questions.length}',
                       style: TextStyle(
                         color: context.appColors.textSecondary,
                         fontSize: 13,
@@ -273,13 +248,20 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppColors.secondary.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.secondary.withValues(alpha: 0.4)),
+                        border: Border.all(
+                            color: AppColors.secondary.withValues(alpha: 0.4)),
                       ),
-                      child: const Text('⚡ SPEED', style: TextStyle(color: AppColors.secondary, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1)),
+                      child: const Text('⚡ SPEED',
+                          style: TextStyle(
+                              color: AppColors.secondary,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 1)),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -304,7 +286,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      '$_timeLeft s',
+                      '${ctrl.timeLeft} s',
                       style: TextStyle(
                         color: timerPercent > 0.5
                             ? AppColors.secondary
@@ -321,7 +303,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Question ${_index + 1}',
+                    'Question ${ctrl.index + 1}',
                     style: const TextStyle(
                       color: AppColors.secondary,
                       fontSize: 12,
@@ -355,14 +337,14 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                       return AnswerOptionTile(
                         label: labels[i < labels.length ? i : 0],
                         option: opt,
-                        state: !_answered
+                        state: !ctrl.answered
                             ? AnswerState.idle
-                            : _current.isCorrect(opt)
+                            : q.isCorrect(opt)
                                 ? AnswerState.correct
-                                : opt == _selected
+                                : opt == ctrl.selected
                                     ? AnswerState.wrong
                                     : AnswerState.idle,
-                        onTap: () => _selectAnswer(opt),
+                        onTap: () => ctrl.selectAnswer(opt),
                       );
                     },
                   ),

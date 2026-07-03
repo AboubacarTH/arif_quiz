@@ -1,5 +1,5 @@
 ﻿import 'package:arif_quiz/features/daily_challenge/data/daily_challenge_repository.dart';
-import 'package:arif_quiz/features/quiz/bloc/quiz_play_controller.dart' show PlayPhase, QuizPlayController;
+import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart' show GamePhase, GamePlayController;
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
 import 'package:arif_quiz/main.dart';
@@ -29,7 +29,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
   // Play state
   bool _playing = false;
   bool _submitting = false;
-  late QuizPlayController _playCtrl;
+  late GamePlayController _playCtrl;
 
   @override
   void initState() {
@@ -48,15 +48,15 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     setState(() => _loading = true);
     try {
       final data = await _quizRepo.getQuizQuestions(_daily!.quiz.id);
-      _playCtrl = QuizPlayController(
-        quizId: _daily!.quiz.id,
+      _playCtrl = GamePlayController(
+        mode: GameMode.classic,
         questions: data.questions,
-        timeLimit: data.timeLimit,
+        secondsPerQuestion: data.timeLimit,
       );
       _playCtrl.addListener(() {
         if (!mounted) return;
         setState(() {});
-        if (_playCtrl.phase == PlayPhase.submitting) _submit();
+        if (_playCtrl.phase == GamePhase.submitting) _submit();
       });
       setState(() {
         _playing = true;
@@ -286,10 +286,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                       label: labels[i < labels.length ? i : 0],
                       option: opt,
                       state: !ctrl.answered ? AnswerState.idle : (ctrl.selected == opt ? AnswerState.selected : AnswerState.idle),
-                      onTap: () {
-                        ctrl.selectAnswer(opt);
-                        ctrl.advance();
-                      },
+                      onTap: () => ctrl.selectAnswer(opt),
                     );
                   },
                 ),
