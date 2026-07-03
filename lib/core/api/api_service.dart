@@ -259,12 +259,14 @@ class ApiService {
     required int timeTaken,
     required List<int> questionIds,
     String mode = 'classic',
+    int? sessionId,
   }) async {
     final res = await _dio.post('/quizzes/$quizId/submit', data: {
       'answers': answers,
       'time_taken': timeTaken,
       'mode': mode,
       'question_ids': questionIds,
+      if (sessionId != null) 'session_id': sessionId,
     });
     return res.data;
   }

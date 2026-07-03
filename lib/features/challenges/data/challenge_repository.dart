@@ -32,11 +32,13 @@ class ChallengeRepository {
     return ChallengeModel.fromJson(res.data['data']);
   }
 
-  Future<({List<QuestionModel> questions, int timeLimit})> getChallengeQuestions(int challengeId) async {
+  Future<({List<QuestionModel> questions, int timeLimit, int? sessionId})>
+      getChallengeQuestions(int challengeId) async {
     final res = await _api.get('/challenges/$challengeId/questions');
     return (
       questions: (res.data['questions'] as List).map((q) => QuestionModel.fromJson(q)).toList(),
       timeLimit: res.data['time_limit'] as int? ?? 30,
+      sessionId: res.data['session_id'] as int?,
     );
   }
 
@@ -55,11 +57,13 @@ class ChallengeRepository {
     required Map<String, String> answers,
     required int timeTaken,
     required List<int> questionIds,
+    int? sessionId,
   }) async {
     final res = await _api.post('/challenges/$challengeId/submit', data: {
       'answers': answers,
       'time_taken': timeTaken,
       'question_ids': questionIds,
+      if (sessionId != null) 'session_id': sessionId,
     });
     final data = res.data['data'] as Map<String, dynamic>;
     return QuizAttemptResult.fromJson(data);

@@ -30,11 +30,13 @@ class QuizRepository {
     return QuizModel.fromJson(res['quiz']);
   }
 
-  Future<({List<QuestionModel> questions, int timeLimit})> getQuizQuestions(int id) async {
+  Future<({List<QuestionModel> questions, int timeLimit, int? sessionId})>
+      getQuizQuestions(int id) async {
     final res = await _api.getQuizQuestions(id);
     return (
       questions: (res['questions'] as List).map((q) => QuestionModel.fromJson(q)).toList(),
       timeLimit: res['time_limit'] as int? ?? 30,
+      sessionId: res['session_id'] as int?,
     );
   }
 
@@ -44,6 +46,7 @@ class QuizRepository {
     required int timeTaken,
     required List<int> questionIds,
     String mode = 'classic',
+    int? sessionId,
   }) async {
     final res = await _api.submitQuizWithMode(
       quizId: quizId,
@@ -51,6 +54,7 @@ class QuizRepository {
       timeTaken: timeTaken,
       questionIds: questionIds,
       mode: mode,
+      sessionId: sessionId,
     );
     return QuizAttemptResult.fromJson(res);
   }

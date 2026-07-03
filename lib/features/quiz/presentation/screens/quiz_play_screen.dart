@@ -25,6 +25,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
   QuizPlayController? _ctrl;
   bool _initLoading = true;
   String? _initError;
+  int? _sessionId;
   final _repo = QuizRepository(apiService);
 
   @override
@@ -45,10 +46,12 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
         final data = await ChallengeRepository(apiService).getChallengeQuestions(widget.challengeId!);
         questions = data.questions;
         timeLimit = data.timeLimit;
+        _sessionId = data.sessionId;
       } else {
         final data = await _repo.getQuizQuestions(widget.quiz.id);
         questions = data.questions;
         timeLimit = data.timeLimit;
+        _sessionId = data.sessionId;
       }
       final ctrl = QuizPlayController(
           quizId: widget.quiz.id,
@@ -103,6 +106,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
           answers: answers,
           timeTaken: timeTaken,
           questionIds: questionIds,
+          sessionId: _sessionId,
         );
       } else {
         result = await _repo.submitQuiz(
@@ -110,6 +114,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
           answers: answers,
           timeTaken: timeTaken,
           questionIds: questionIds,
+          sessionId: _sessionId,
         );
       }
 

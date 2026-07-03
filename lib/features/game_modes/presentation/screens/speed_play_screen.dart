@@ -30,6 +30,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
   bool _loading = true;
   String? _error;
   bool _submitting = false;
+  int? _sessionId;
 
   int _index = 0;
   int _timeLeft = _secondsPerQuestion;
@@ -53,9 +54,11 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
       if (widget.challengeId != null) {
         final data = await ChallengeRepository(apiService).getChallengeQuestions(widget.challengeId!);
         questions = data.questions;
+        _sessionId = data.sessionId;
       } else {
         final data = await _repo.getQuizQuestions(widget.quiz.id);
         questions = data.questions;
+        _sessionId = data.sessionId;
       }
       setState(() {
         _questions = questions;
@@ -136,6 +139,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
           answers: answers,
           timeTaken: _totalTime,
           questionIds: _questions.map((q) => q.id).toList(),
+          sessionId: _sessionId,
         );
       } else {
         result = await _repo.submitQuiz(
@@ -144,6 +148,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
           timeTaken: _totalTime,
           questionIds: _questions.map((q) => q.id).toList(),
           mode: 'speed',
+          sessionId: _sessionId,
         );
       }
       if (!mounted) return;
