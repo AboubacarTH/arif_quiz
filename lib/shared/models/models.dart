@@ -561,7 +561,54 @@ class QuizAttemptResult {
             .map((r) => QuestionResult.fromJson(r as Map<String, dynamic>))
             .toList(),
       );
+
+  /// Scoring local (mode invité / hors-ligne) — source unique de vérité pour
+  /// éviter la triple duplication dans les écrans de jeu et garantir la même
+  /// comparaison (casse-insensible) que le serveur.
+  factory QuizAttemptResult.fromLocalScoring({
+    required List<QuestionModel> questions,
+    required Map<String, String> answers,
+    required int timeTaken,
+  }) {
+    var correct = 0;
+    final results = <QuestionResult>[];
+    for (final q in questions) {
+      final ua = answers[q.id.toString()];
+      final ok = q.isCorrect(ua);
+      if (ok) correct++;
+      results.add(QuestionResult(
+        questionId: q.id,
+        question: q.text,
+        userAnswer: ua,
+        correctAnswer: q.correctAnswer ?? '',
+        isCorrect: ok,
+        points: ok ? q.points : 0,
+      ));
+    }
+    final total = questions.length;
+    final score = total > 0 ? correct / total * 100 : 0.0;
+    return QuizAttemptResult(
+      score: score,
+      correctCount: correct,
+      totalQuestions: total,
+      timeTaken: timeTaken,
+      pointsEarned: 0,
+      xpEarned: 0,
+      grade: gradeForScore(score),
+      results: results,
+    );
+  }
 }
+
+/// Barème de note partagé, aligné sur le serveur (`QuizAttemptController::getGrade`).
+String gradeForScore(double score) => switch (score) {
+      >= 90 => 'S',
+      >= 80 => 'A',
+      >= 70 => 'B',
+      >= 60 => 'C',
+      >= 50 => 'D',
+      _ => 'F',
+    };
 
 // ========== GAME MODE ==========
 enum GameMode {

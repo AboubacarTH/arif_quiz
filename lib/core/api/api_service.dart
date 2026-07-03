@@ -3,9 +3,23 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiService {
   static const String productionUrl = 'https://arif-quiz.admindigitalyser.com/api/v1';
-  static const String localUrl = 'http://10.44.13.211:8000/api/v1';
-  static const String baseUrl = productionUrl;
+
+  /// URL de dev, injectable au build (aucune modif de code) :
+  ///   flutter run --dart-define=USE_LOCAL_API=true
+  ///   (option) --dart-define=LOCAL_API_URL=http://192.168.x.x:8000/api/v1
+  static const String _localUrl = String.fromEnvironment(
+    'LOCAL_API_URL',
+    defaultValue: 'http://10.44.13.211:8000/api/v1',
+  );
+  static const bool _useLocalApi = bool.fromEnvironment('USE_LOCAL_API');
+  static const String baseUrl = _useLocalApi ? _localUrl : productionUrl;
+
   static const _storage = FlutterSecureStorage();
+
+  /// Appelé sur 401 (session expirée / token invalide) hors flux de connexion.
+  /// Le token est déjà purgé ; l'app enregistre un callback pour rediriger
+  /// vers l'écran de connexion.
+  void Function()? onUnauthorized;
 
   late final Dio _dio;
 
@@ -28,10 +42,30 @@ class ApiService {
         }
         handler.next(options);
       },
-      onError: (error, handler) {
+      onError: (error, handler) async {
+        // 401 sur un endpoint protégé → session expirée : on purge et on
+        // laisse l'app rediriger. On ignore les endpoints d'auth publics
+        // (ex. « mauvais identifiants » au login ne doit pas tout réinitialiser).
+        if (error.response?.statusCode == 401 &&
+            !_isPublicAuthPath(error.requestOptions.path)) {
+          await _storage.delete(key: 'auth_token');
+          onUnauthorized?.call();
+        }
         handler.next(error);
       },
     ));
+  }
+
+  static bool _isPublicAuthPath(String path) {
+    const publicAuth = [
+      '/auth/login',
+      '/auth/register',
+      '/auth/forgot-password',
+      '/auth/reset-password',
+      '/auth/email/verify',
+      '/auth/email/resend',
+    ];
+    return publicAuth.any(path.contains);
   }
 
   Future<void> saveToken(String token) async {

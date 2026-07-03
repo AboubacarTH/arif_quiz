@@ -81,7 +81,8 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
 
     // Mode invité : résultat local sans appel API
     if (isGuest.value) {
-      final result = _localResult(questions, answers, timeTaken);
+      final result = QuizAttemptResult.fromLocalScoring(
+          questions: questions, answers: answers, timeTaken: timeTaken);
       _ctrl?.setResult(result);
       if (!mounted) return;
       Navigator.pushReplacement(
@@ -127,47 +128,6 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
             backgroundColor: AppColors.error),
       );
     }
-  }
-
-  QuizAttemptResult _localResult(
-      List<QuestionModel> questions, Map<String, String> answers, int timeTaken) {
-    int correct = 0;
-    final results = <QuestionResult>[];
-    for (final q in questions) {
-      final ua = answers[q.id.toString()];
-      final ca = q.correctAnswer ?? '';
-      final ok = ua != null && ua.trim() == ca.trim();
-      if (ok) correct++;
-      results.add(QuestionResult(
-          questionId: q.id,
-          question: q.text,
-          userAnswer: ua,
-          correctAnswer: ca,
-          isCorrect: ok,
-          points: ok ? q.points : 0));
-    }
-    final total = questions.length;
-    final score = total > 0 ? correct / total * 100 : 0.0;
-    final grade = score >= 90
-        ? 'S'
-        : score >= 80
-            ? 'A'
-            : score >= 70
-                ? 'B'
-                : score >= 60
-                    ? 'C'
-                    : score >= 50
-                        ? 'D'
-                        : 'F';
-    return QuizAttemptResult(
-        score: score,
-        correctCount: correct,
-        totalQuestions: total,
-        timeTaken: timeTaken,
-        pointsEarned: 0,
-        xpEarned: 0,
-        grade: grade,
-        results: results);
   }
 
   @override
