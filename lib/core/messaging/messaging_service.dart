@@ -16,7 +16,9 @@ class MessagingService {
   MessagingService(this._api);
 
   final ApiService _api;
-  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  // ⚠️ Ne PAS initialiser ici : FirebaseMessaging.instance exige que
+  // Firebase.initializeApp() ait déjà tourné. On le récupère dans initialize().
+  FirebaseMessaging? _fcm;
   bool _initialized = false;
 
   Future<void> initialize() async {
@@ -25,9 +27,11 @@ class MessagingService {
       // Sur Android, les options sont lues depuis google-services.json via le
       // plugin Gradle. (iOS nécessiterait GoogleService-Info.plist en plus.)
       await Firebase.initializeApp();
+      final fcm = FirebaseMessaging.instance;
+      _fcm = fcm;
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-      await _fcm.requestPermission();
-      _fcm.onTokenRefresh.listen(_uploadToken);
+      await fcm.requestPermission();
+      fcm.onTokenRefresh.listen(_uploadToken);
       _initialized = true;
     } catch (e) {
       debugPrint('Messaging init error: $e');
@@ -40,8 +44,10 @@ class MessagingService {
   Future<void> syncToken() async {
     try {
       await initialize();
+      final fcm = _fcm;
+      if (fcm == null) return; // Firebase indisponible : on n'enregistre rien.
       if (await _api.getToken() == null) return;
-      final token = await _fcm.getToken();
+      final token = await fcm.getToken();
       if (token != null) await _uploadToken(token);
     } catch (e) {
       debugPrint('Messaging syncToken error: $e');
