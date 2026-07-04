@@ -193,8 +193,10 @@ class ApiService {
     return res.data;
   }
 
-  Future<Map<String, dynamic>> getQuizQuestions(int quizId) async {
-    final res = await _dio.get('/quizzes/$quizId/questions');
+  Future<Map<String, dynamic>> getQuizQuestions(int quizId, {int? count}) async {
+    final res = await _dio.get('/quizzes/$quizId/questions', queryParameters: {
+      if (count != null) 'count': count,
+    });
     return res.data;
   }
 

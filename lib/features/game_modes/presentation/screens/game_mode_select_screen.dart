@@ -80,6 +80,10 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
                     }),
                     const SizedBox(height: 8),
                     _buildPreviewBanner(),
+                    if (widget.challengeId == null) ...[
+                      const SizedBox(height: 16),
+                      _buildTrainingCard(),
+                    ],
                   ],
                 ),
               ),
@@ -320,6 +324,160 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
     if (mounted) {
       Navigator.pushReplacement(context, SlideRightRoute(page: screen));
     }
+  }
+
+  // ─── Mode entraînement ───────────────────────────────────────────────────────
+
+  Widget _buildTrainingCard() {
+    return GestureDetector(
+      onTap: _openTrainingSheet,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        decoration: BoxDecoration(
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          border: Border.all(color: context.appColors.border),
+          boxShadow: AppShadows.card(context),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: AppColors.info.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.center,
+              child: const Text('🎯', style: TextStyle(fontSize: 22)),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Mode entraînement',
+                      style: TextStyle(
+                          color: context.appColors.textPrimary,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 14)),
+                  Text('Choisis le nombre de questions · sans enjeu',
+                      style: TextStyle(
+                          color: context.appColors.textSecondary,
+                          fontSize: 12)),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded,
+                color: context.appColors.textMuted, size: 20),
+          ],
+        ),
+      ),
+    ).animate().fadeIn(delay: 150.ms);
+  }
+
+  void _openTrainingSheet() {
+    if (widget.quiz == null) return;
+    int selected = 10;
+    const options = [5, 10, 15, 20];
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSheet) => Container(
+          decoration: BoxDecoration(
+            color: context.appColors.cardBg,
+            borderRadius:
+                const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.appColors.cardBgLight,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text('Mode entraînement',
+                  style: TextStyle(
+                      color: context.appColors.textPrimary,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800)),
+              const SizedBox(height: 4),
+              Text('Joue sans impacter ton XP ni le classement.',
+                  style: TextStyle(
+                      color: context.appColors.textSecondary, fontSize: 13)),
+              const SizedBox(height: 16),
+              Text('Nombre de questions',
+                  style: TextStyle(
+                      color: context.appColors.textPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700)),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: options.map((n) {
+                  final sel = selected == n;
+                  return GestureDetector(
+                    onTap: () => setSheet(() => selected = n),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: sel
+                            ? AppColors.info
+                            : context.appColors.cardBgLight,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text('$n',
+                          style: TextStyle(
+                              color: sel
+                                  ? Colors.white
+                                  : context.appColors.textPrimary,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15)),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              NeonButton(
+                label: 'Commencer',
+                width: double.infinity,
+                icon: Icons.play_arrow_rounded,
+                color: AppColors.info,
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _launchTraining(selected);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _launchTraining(int count) {
+    final quiz = widget.quiz;
+    if (quiz == null || !mounted) return;
+    Navigator.pushReplacement(
+      context,
+      SlideRightRoute(
+        page: QuizPlayScreen(quiz: quiz, training: true, questionCount: count),
+      ),
+    );
   }
 }
 

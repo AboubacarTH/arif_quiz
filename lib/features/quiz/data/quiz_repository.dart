@@ -31,8 +31,8 @@ class QuizRepository {
   }
 
   Future<({List<QuestionModel> questions, int timeLimit, int? sessionId})>
-      getQuizQuestions(int id) async {
-    final res = await _api.getQuizQuestions(id);
+      getQuizQuestions(int id, {int? count}) async {
+    final res = await _api.getQuizQuestions(id, count: count);
     return (
       questions: (res['questions'] as List).map((q) => QuestionModel.fromJson(q)).toList(),
       timeLimit: res['time_limit'] as int? ?? 30,

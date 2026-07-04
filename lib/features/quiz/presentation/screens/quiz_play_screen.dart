@@ -16,7 +16,16 @@ class QuizPlayScreen extends StatefulWidget {
   final QuizModel quiz;
   final int? challengeId;
   final ChallengeModel? challenge;
-  const QuizPlayScreen({super.key, required this.quiz, this.challengeId, this.challenge});
+  final bool training;
+  final int? questionCount;
+  const QuizPlayScreen({
+    super.key,
+    required this.quiz,
+    this.challengeId,
+    this.challenge,
+    this.training = false,
+    this.questionCount,
+  });
   @override
   State<QuizPlayScreen> createState() => _QuizPlayScreenState();
 }
@@ -48,7 +57,8 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
         timeLimit = data.timeLimit;
         _sessionId = data.sessionId;
       } else {
-        final data = await _repo.getQuizQuestions(widget.quiz.id);
+        final data = await _repo.getQuizQuestions(widget.quiz.id,
+            count: widget.questionCount);
         questions = data.questions;
         timeLimit = data.timeLimit;
         _sessionId = data.sessionId;
@@ -82,8 +92,9 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
     final answers = Map<String, String>.from(_ctrl!.answers);
     final timeTaken = _ctrl!.totalTime;
 
-    // Mode invité : résultat local sans appel API
-    if (isGuest.value) {
+    // Mode invité ou entraînement : scoring local, aucune soumission — donc
+    // aucun impact XP / classement / stats.
+    if (isGuest.value || widget.training) {
       final result = QuizAttemptResult.fromLocalScoring(
           questions: questions, answers: answers, timeTaken: timeTaken);
       _ctrl?.setResult(result);
@@ -92,7 +103,10 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
           context,
           FadeScaleRoute(
               page: QuizResultScreen(
-                  result: result, quiz: widget.quiz, guestMode: true)));
+                  result: result,
+                  quiz: widget.quiz,
+                  guestMode: isGuest.value,
+                  training: widget.training)));
       return;
     }
 

@@ -19,6 +19,7 @@ class QuizResultScreen extends StatelessWidget {
   final QuizModel quiz;
   final bool guestMode;
   final ChallengeModel? challenge;
+  final bool training;
 
   const QuizResultScreen({
     super.key,
@@ -26,6 +27,7 @@ class QuizResultScreen extends StatelessWidget {
     required this.quiz,
     this.guestMode = false,
     this.challenge,
+    this.training = false,
   });
 
   @override
@@ -89,6 +91,34 @@ class QuizResultScreen extends StatelessWidget {
                         style: TextStyle(
                             color: context.appColors.textSecondary, fontSize: 13)),
                     const SizedBox(height: 24),
+
+                    if (training)
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: AppColors.info.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                              color: AppColors.info.withValues(alpha: 0.25)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Text('🎯', style: TextStyle(fontSize: 18)),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                'Mode entraînement — ce résultat n\'affecte ni ton XP ni le classement.',
+                                style: TextStyle(
+                                    color: context.appColors.textSecondary,
+                                    fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
                     // Stats row
                     Container(
