@@ -4,6 +4,7 @@ import 'package:arif_quiz/features/challenges/presentation/screens/challenge_det
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
+import 'package:arif_quiz/features/quiz/presentation/widgets/share_score_button.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -112,6 +113,10 @@ class QuizResultScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 24),
+
+                    ShareScoreButton(
+                        result: result, quiz: quiz, challenge: challenge),
                     const SizedBox(height: 24),
 
                     // Review
