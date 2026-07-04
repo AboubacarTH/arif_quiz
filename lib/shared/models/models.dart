@@ -637,6 +637,36 @@ enum GameMode {
       };
 }
 
+// ========== BADGE MODEL ==========
+class BadgeModel {
+  final String key;
+  final String title;
+  final String description;
+  final String emoji;
+  final bool unlocked;
+  final DateTime? unlockedAt;
+
+  const BadgeModel({
+    required this.key,
+    required this.title,
+    required this.description,
+    required this.emoji,
+    required this.unlocked,
+    this.unlockedAt,
+  });
+
+  factory BadgeModel.fromJson(Map<String, dynamic> json) => BadgeModel(
+        key: json['key'] ?? '',
+        title: json['title'] ?? '',
+        description: json['description'] ?? '',
+        emoji: json['emoji'] ?? '🏅',
+        unlocked: json['unlocked'] ?? false,
+        unlockedAt: json['unlocked_at'] != null
+            ? DateTime.tryParse(json['unlocked_at'])
+            : null,
+      );
+}
+
 // ========== ADMIN MODELS ==========
 
 class AdminStatsModel {

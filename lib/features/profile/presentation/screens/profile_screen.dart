@@ -1,5 +1,6 @@
 import 'package:arif_quiz/features/admin/presentation/screens/admin_dashboard.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
+import 'package:arif_quiz/features/badges/presentation/screens/badges_screen.dart';
 import 'package:arif_quiz/features/profile/data/profile_repository.dart';
 import 'package:arif_quiz/features/profile/presentation/screens/attempt_history_screen.dart';
 import 'package:arif_quiz/features/profile/presentation/screens/edit_profile_screen.dart';
@@ -245,6 +246,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildStatsRow(user),
                 const SizedBox(height: 20),
                 _buildStreakRow(user),
+                const SizedBox(height: 20),
+                _buildBadgesButton(),
                 const SizedBox(height: 24),
                 _buildPremiumSection(),
                 const SizedBox(height: 24),
@@ -537,6 +540,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ],
     ).animate().fadeIn(delay: 200.ms);
+  }
+
+  // ─── Succès / badges ─────────────────────────────────────────────────────────
+
+  Widget _buildBadgesButton() {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        SlideRightRoute(page: const BadgesScreen()),
+      ),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        decoration: BoxDecoration(
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.card(context),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: AppColors.secondary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.center,
+              child: const Text('🏅', style: TextStyle(fontSize: 22)),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Succès',
+                    style: TextStyle(
+                      color: context.appColors.textPrimary,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    'Débloque des badges en jouant',
+                    style: TextStyle(
+                        color: context.appColors.textSecondary, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded,
+                color: AppColors.secondary, size: 20),
+          ],
+        ),
+      ),
+    ).animate().fadeIn(delay: 220.ms);
   }
 
   // ─── Premium ────────────────────────────────────────────────────────────────
