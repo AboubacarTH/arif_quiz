@@ -78,6 +78,12 @@ class ChallengeRepository {
     await _api.delete('/challenges/$challengeId');
   }
 
+  /// Revanche 1-tap : recrée un défi identique et ré-invite les adversaires.
+  Future<ChallengeModel> rematch(int challengeId) async {
+    final res = await _api.post('/challenges/$challengeId/rematch');
+    return ChallengeModel.fromJson(res.data['data']);
+  }
+
   Future<void> inviteFriends(int challengeId, List<int> userIds) async {
     await _api.post('/challenges/$challengeId/invite', data: {'user_ids': userIds});
   }

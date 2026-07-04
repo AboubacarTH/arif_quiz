@@ -3,6 +3,7 @@ import 'package:arif_quiz/features/game_modes/presentation/screens/game_mode_sel
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:arif_quiz/ui/widgets/challenge_card.dart';
 import 'package:arif_quiz/ui/widgets/neon_button.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
   late ChallengeModel _challenge;
   Map<String, dynamic>? _leaderboardData;
   bool _loading = true;
+  bool _rematching = false;
 
   @override
   void initState() {
@@ -34,6 +36,29 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
       _leaderboardData = await repo.getChallengeLeaderboard(_challenge.id);
     } catch (_) {}
     if (mounted) setState(() => _loading = false);
+  }
+
+  Future<void> _rematch() async {
+    if (_rematching) return;
+    setState(() => _rematching = true);
+    try {
+      final newChallenge =
+          await ChallengeRepository(apiService).rematch(_challenge.id);
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (_) => ChallengeDetailScreen(challenge: newChallenge)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _rematching = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Revanche impossible. Réessaie.'),
+            backgroundColor: AppColors.error),
+      );
+    }
   }
 
   @override
@@ -60,7 +85,19 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: _challenge.myCompleted
-                    ? _buildAlreadyPlayedBanner()
+                    ? Column(
+                        children: [
+                          _buildAlreadyPlayedBanner(),
+                          const SizedBox(height: 12),
+                          AppButton(
+                            label: 'Revanche',
+                            icon: Icons.replay_rounded,
+                            fullWidth: true,
+                            loading: _rematching,
+                            onPressed: _rematching ? null : _rematch,
+                          ),
+                        ],
+                      )
                     : NeonButton(
                         label: 'Jouer ce défi',
                         width: double.infinity,
