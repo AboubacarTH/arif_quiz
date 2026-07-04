@@ -103,6 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
         else ...[
           SliverToBoxAdapter(child: _xpSection(d.user)),
           SliverToBoxAdapter(child: _dailyChallengeCard()),
+          if (d.friendsLeaderboard.length >= 2) ...[
+            _sectionTitle('🏅 Classement amis'),
+            SliverToBoxAdapter(
+                child: _friendsLeaderboard(d.friendsLeaderboard)),
+          ],
         ],
         _sectionTitle('Catégories', topPad: 24),
         SliverToBoxAdapter(child: _categoriesRow(d.categories)),
@@ -387,6 +392,106 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ).animate().fadeIn(delay: 150.ms).slideX(begin: 0.04),
+      ),
+    );
+  }
+
+  // ─── Classement amis ─────────────────────────────────────────────────────────
+
+  Widget _friendsLeaderboard(List<Map<String, dynamic>> entries) {
+    final top = entries.take(5).toList();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: context.cardElevated,
+          borderRadius: AppRadius.rLg,
+          boxShadow: AppShadows.card(context),
+        ),
+        child: Column(
+          children: [
+            for (var i = 0; i < top.length; i++) ...[
+              if (i > 0)
+                Divider(height: 1, color: context.appColors.border),
+              _friendRow(top[i]),
+            ],
+          ],
+        ),
+      ),
+    ).animate().fadeIn(delay: 180.ms);
+  }
+
+  Widget _friendRow(Map<String, dynamic> e) {
+    final rank = (e['rank'] as num?)?.toInt() ?? 0;
+    final isMe = e['is_me'] == true;
+    final name = e['name']?.toString() ?? '';
+    final points = (e['total_points'] as num?)?.toInt() ?? 0;
+    final level = (e['level'] as num?)?.toInt() ?? 1;
+
+    final Widget rankWidget = switch (rank) {
+      1 => const Text('🥇', style: TextStyle(fontSize: 20)),
+      2 => const Text('🥈', style: TextStyle(fontSize: 20)),
+      3 => const Text('🥉', style: TextStyle(fontSize: 20)),
+      _ => Text('$rank',
+          style: TextStyle(
+              color: context.appColors.textMuted,
+              fontWeight: FontWeight.w700,
+              fontSize: 13)),
+    };
+
+    return Container(
+      color: isMe
+          ? AppColors.primary.withValues(alpha: 0.06)
+          : Colors.transparent,
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 10),
+      child: Row(
+        children: [
+          SizedBox(width: 26, child: Center(child: rankWidget)),
+          const SizedBox(width: 8),
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.primary.withValues(alpha: 0.15),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              name.isNotEmpty ? name[0].toUpperCase() : '?',
+              style: const TextStyle(
+                  color: AppColors.primary, fontWeight: FontWeight.w800),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isMe ? '$name (toi)' : name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: context.appColors.textPrimary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14),
+                ),
+                Text('Niv. $level',
+                    style: TextStyle(
+                        color: context.appColors.textMuted, fontSize: 11)),
+              ],
+            ),
+          ),
+          const Icon(Icons.star_rounded, color: AppColors.accent, size: 14),
+          const SizedBox(width: 3),
+          Text('$points',
+              style: const TextStyle(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 13)),
+        ],
       ),
     );
   }

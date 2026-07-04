@@ -23,4 +23,8 @@ class HomeRepository {
     return UserModel.fromJson(userData);
   }
 
+  Future<List<Map<String, dynamic>>> getFriendsLeaderboard() async {
+    final res = await _api.get('/friends/leaderboard');
+    return List<Map<String, dynamic>>.from(res.data['data']);
+  }
 }
