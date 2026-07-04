@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "257601508508",
+    "project_id": "arif-quiz",
+    "storage_bucket": "arif-quiz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257601508508:android:ec9b7c0ec4686fc4cc4959",
+        "android_client_info": {
+          "package_name": "com.a2digit.arif_quiz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHAGGAPtvqq2P7RwhEzAJPZ8X6uHVCEtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
