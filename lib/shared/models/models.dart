@@ -610,6 +610,104 @@ String gradeForScore(double score) => switch (score) {
       _ => 'F',
     };
 
+// ========== JOURNEY (Mode Parcours) ==========
+class JourneyLevelModel {
+  final int level;
+  final String difficulty;
+  final int questionCount;
+  final bool isBoss;
+  final bool unlocked;
+  final int stars; // 0..3
+  final double bestScore;
+
+  const JourneyLevelModel({
+    required this.level,
+    required this.difficulty,
+    required this.questionCount,
+    required this.isBoss,
+    required this.unlocked,
+    required this.stars,
+    required this.bestScore,
+  });
+
+  bool get completed => stars > 0;
+
+  factory JourneyLevelModel.fromJson(Map<String, dynamic> json) =>
+      JourneyLevelModel(
+        level: json['level'] ?? 0,
+        difficulty: json['difficulty'] ?? 'easy',
+        questionCount: json['question_count'] ?? 0,
+        isBoss: json['is_boss'] ?? false,
+        unlocked: json['unlocked'] ?? false,
+        stars: json['stars'] ?? 0,
+        bestScore: (json['best_score'] as num?)?.toDouble() ?? 0,
+      );
+}
+
+class JourneyMapModel {
+  final int currentLevel;
+  final int levelCount;
+  final List<JourneyLevelModel> levels;
+
+  const JourneyMapModel({
+    required this.currentLevel,
+    required this.levelCount,
+    required this.levels,
+  });
+
+  factory JourneyMapModel.fromJson(Map<String, dynamic> json) => JourneyMapModel(
+        currentLevel: json['current_level'] ?? 1,
+        levelCount: json['level_count'] ?? 0,
+        levels: ((json['levels'] as List?) ?? [])
+            .map((l) => JourneyLevelModel.fromJson(Map<String, dynamic>.from(l)))
+            .toList(),
+      );
+}
+
+/// Résultat d'un niveau de parcours — étend le scoring standard avec les
+/// étoiles gagnées et le déblocage du niveau suivant.
+class JourneyLevelResult {
+  final int level;
+  final double score;
+  final int stars;
+  final int correctCount;
+  final int totalQuestions;
+  final int pointsEarned;
+  final int xpEarned;
+  final bool nextLevelUnlocked;
+  final int? nextLevel;
+  final List<QuestionResult> results;
+
+  const JourneyLevelResult({
+    required this.level,
+    required this.score,
+    required this.stars,
+    required this.correctCount,
+    required this.totalQuestions,
+    required this.pointsEarned,
+    required this.xpEarned,
+    required this.nextLevelUnlocked,
+    this.nextLevel,
+    required this.results,
+  });
+
+  factory JourneyLevelResult.fromJson(Map<String, dynamic> json) =>
+      JourneyLevelResult(
+        level: json['level'] ?? 0,
+        score: (json['score'] as num?)?.toDouble() ?? 0,
+        stars: json['stars'] ?? 0,
+        correctCount: json['correct_count'] ?? 0,
+        totalQuestions: json['total_questions'] ?? 0,
+        pointsEarned: json['points_earned'] ?? 0,
+        xpEarned: json['xp_earned'] ?? 0,
+        nextLevelUnlocked: json['next_level_unlocked'] ?? false,
+        nextLevel: json['next_level'],
+        results: ((json['results'] as List?) ?? [])
+            .map((r) => QuestionResult.fromJson(r as Map<String, dynamic>))
+            .toList(),
+      );
+}
+
 // ========== GAME MODE ==========
 enum GameMode {
   classic,

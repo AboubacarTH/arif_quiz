@@ -167,6 +167,31 @@ class ApiService {
     return res.data['categories'];
   }
 
+  // ==================== JOURNEY (Mode Parcours) ====================
+  Future<Map<String, dynamic>> getJourney() async {
+    final res = await _dio.get('/journey');
+    return _asMap(res.data);
+  }
+
+  Future<Map<String, dynamic>> startJourneyLevel(int level) async {
+    final res = await _dio.post('/journey/$level/start');
+    return _asMap(res.data);
+  }
+
+  Future<Map<String, dynamic>> submitJourneyLevel({
+    required int level,
+    required Map<String, String> answers,
+    required int timeTaken,
+    required int sessionId,
+  }) async {
+    final res = await _dio.post('/journey/$level/submit', data: {
+      'answers': answers,
+      'time_taken': timeTaken,
+      'session_id': sessionId,
+    });
+    return _asMap(res.data);
+  }
+
   // ==================== QUIZZES ====================
   Future<Map<String, dynamic>> getQuizzes({
     int? categoryId,

@@ -4,6 +4,8 @@ import 'package:arif_quiz/features/daily_challenge/presentation/screens/daily_ch
 import 'package:arif_quiz/features/home/bloc/home_controller.dart';
 import 'package:arif_quiz/features/home/data/home_repository.dart';
 import 'package:arif_quiz/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:arif_quiz/features/journey/presentation/screens/journey_map_screen.dart';
+import 'package:arif_quiz/features/quiz/presentation/screens/all_categories_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/category_quizzes_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_list_screen.dart';
@@ -102,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverToBoxAdapter(child: _guestBanner())
         else ...[
           SliverToBoxAdapter(child: _xpSection(d.user)),
+          SliverToBoxAdapter(child: _journeyCard()),
           SliverToBoxAdapter(child: _dailyChallengeCard()),
           if (d.friendsLeaderboard.length >= 2) ...[
             _sectionTitle('🏅 Classement amis'),
@@ -109,7 +112,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: _friendsLeaderboard(d.friendsLeaderboard)),
           ],
         ],
-        _sectionTitle('Catégories', topPad: 24),
+        _sectionTitle('Catégories',
+            topPad: 24,
+            actionLabel: 'Voir tout',
+            onAction: _openAllCategories),
         SliverToBoxAdapter(child: _categoriesRow(d.categories)),
         _sectionTitle('🔥 Populaires', actionLabel: 'Voir tout', onAction: _openAllQuizzes),
         SliverToBoxAdapter(child: _featuredHorizontal(d.featured)),
@@ -396,6 +402,89 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // ─── Mode Parcours ───────────────────────────────────────────────────────────
+
+  Widget _journeyCard() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+            context, SlideRightRoute(page: const JourneyMapScreen())),
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          decoration: BoxDecoration(
+            color: context.cardElevated,
+            borderRadius: AppRadius.rLg,
+            boxShadow: AppShadows.tinted(context, AppColors.secondary),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.secondary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Center(
+                  child: Text('🗺️', style: TextStyle(fontSize: 24)),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'MODE PARCOURS',
+                      style: TextStyle(
+                        color: AppColors.secondary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Grimpe les niveaux de la map',
+                      style: TextStyle(
+                        color: context.appColors.textPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Débloque, gagne des étoiles ⭐',
+                      style: TextStyle(
+                        color: context.appColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.secondary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.secondary,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+        ).animate().fadeIn(delay: 130.ms).slideX(begin: 0.04),
+      ),
+    );
+  }
+
   // ─── Classement amis ─────────────────────────────────────────────────────────
 
   Widget _friendsLeaderboard(List<Map<String, dynamic>> entries) {
@@ -588,6 +677,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openAllQuizzes() => Navigator.push(
         context,
         SlideRightRoute(page: const QuizListScreen()),
+      );
+
+  void _openAllCategories() => Navigator.push(
+        context,
+        SlideRightRoute(page: const AllCategoriesScreen()),
       );
 }
 
