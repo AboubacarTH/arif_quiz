@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final token = await apiService.getToken();
     if (!mounted) return;
     isGuest.value = token == null;
+    if (token != null) messagingService.syncToken();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const MainNavigation()),

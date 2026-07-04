@@ -35,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
     if (_auth.isAuthenticated) {
       isGuest.value = false;
+      messagingService.syncToken();
       Navigator.pushAndRemoveUntil(
         context,
         PageRouteBuilder(
