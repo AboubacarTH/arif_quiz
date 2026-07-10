@@ -81,6 +81,36 @@ class AdminRepository {
     await _api.delete('/admin/quizzes/$id');
   }
 
+  /// Téléverse un média de question (type: 'image' | 'audio') et renvoie son URL.
+  Future<String> uploadMedia({
+    required String type,
+    required String filePath,
+    required String fileName,
+  }) async {
+    final formData = FormData.fromMap({
+      'type': type,
+      'file': await MultipartFile.fromFile(filePath, filename: fileName),
+    });
+    final res = await _api.post('/admin/media', data: formData);
+    return res.data['url'] as String;
+  }
+
+  /// Recherche d'utilisateurs pour l'assignation des quiz restreints.
+  Future<List<({int id, String name, String? username})>> searchUsers(
+      String search) async {
+    final res = await _api.get('/admin/users', queryParameters: {
+      if (search.isNotEmpty) 'search': search,
+    });
+    final list = res.data['data'] as List;
+    return list
+        .map((e) => (
+              id: e['id'] as int,
+              name: (e['name'] ?? '') as String,
+              username: e['username'] as String?,
+            ))
+        .toList();
+  }
+
   // ── Questions ─────────────────────────────────────────────────────────────
 
   Future<({List<AdminQuestionModel> questions, int lastPage, int total})> getQuestions({
@@ -170,6 +200,20 @@ class AdminRepository {
       'file': await MultipartFile.fromFile(filePath, filename: fileName),
     });
     final res = await _api.post('/admin/import', data: formData);
+    return Map<String, dynamic>.from(res.data);
+  }
+
+  /// Import en masse de questions dans un quiz existant (ajout à la suite).
+  Future<Map<String, dynamic>> importQuestionsToQuiz({
+    required int quizId,
+    required String filePath,
+    required String fileName,
+  }) async {
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(filePath, filename: fileName),
+    });
+    final res =
+        await _api.post('/admin/quizzes/$quizId/import-questions', data: formData);
     return Map<String, dynamic>.from(res.data);
   }
 }

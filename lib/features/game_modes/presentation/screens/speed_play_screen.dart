@@ -7,6 +7,7 @@ import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
+import 'package:arif_quiz/ui/widgets/question_media.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
 import 'package:flutter/material.dart';
@@ -181,7 +182,6 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
     final ctrl = _ctrl!;
     final q = ctrl.currentQuestion;
     final opts = q.options ?? ['Vrai', 'Faux'];
-    final labels = ['A', 'B', 'C', 'D'];
     final timerPercent = ctrl.timePercent;
 
     return PopScope(
@@ -326,27 +326,15 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                   ),
                 ),
                 const SizedBox(height: 28),
+                if (q.hasMedia)
+                  QuestionMedia(imageUrl: q.imageUrl, audioUrl: q.audioUrl),
                 Expanded(
-                  child: ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: opts.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (_, i) {
-                      final opt = opts[i];
-                      return AnswerOptionTile(
-                        label: labels[i < labels.length ? i : 0],
-                        option: opt,
-                        state: !ctrl.answered
-                            ? AnswerState.idle
-                            : q.isCorrect(opt)
-                                ? AnswerState.correct
-                                : opt == ctrl.selected
-                                    ? AnswerState.wrong
-                                    : AnswerState.idle,
-                        onTap: () => ctrl.selectAnswer(opt),
-                      );
-                    },
+                  child: AnswerOptionsGrid(
+                    options: opts,
+                    answered: ctrl.answered,
+                    selected: ctrl.selected,
+                    isCorrect: (o) => q.isCorrect(o),
+                    onSelect: ctrl.selectAnswer,
                   ),
                 ),
               ],

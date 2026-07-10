@@ -39,6 +39,10 @@ class JourneyController extends ChangeNotifier {
     }
   }
 
+  /// Injecte directement une map (tests / prévisualisation, sans réseau).
+  @visibleForTesting
+  void seed(JourneyMapModel map) => _emit(JourneyLoaded(map));
+
   /// Rechargement silencieux après un niveau terminé (garde la map affichée si l'appel échoue).
   Future<void> refresh() async {
     try {

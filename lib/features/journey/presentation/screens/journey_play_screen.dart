@@ -7,6 +7,7 @@ import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
+import 'package:arif_quiz/ui/widgets/question_media.dart';
 import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
 import 'package:arif_quiz/ui/widgets/timer_ring.dart';
 import 'package:flutter/material.dart';
@@ -145,7 +146,6 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
     final ctrl = _ctrl!;
     final q = ctrl.currentQuestion;
     final opts = q.options ?? ['True', 'False'];
-    const labels = ['A', 'B', 'C', 'D'];
 
     return PopScope(
       canPop: false,
@@ -228,30 +228,16 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                           height: 1.4,
                           fontFamily: 'Nunito')),
                 ),
-                const SizedBox(height: 28),
+                const SizedBox(height: 20),
+                if (q.hasMedia)
+                  QuestionMedia(imageUrl: q.imageUrl, audioUrl: q.audioUrl),
                 Expanded(
-                  child: ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: opts.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (ctx, i) {
-                      final opt = opts[i];
-                      final cq = ctrl.currentQuestion;
-                      final state = !ctrl.answered
-                          ? AnswerState.idle
-                          : cq.isCorrect(opt)
-                              ? AnswerState.correct
-                              : opt == ctrl.selected
-                                  ? AnswerState.wrong
-                                  : AnswerState.idle;
-                      return AnswerOptionTile(
-                        label: labels[i < labels.length ? i : 0],
-                        option: opt,
-                        state: state,
-                        onTap: () => ctrl.selectAnswer(opt),
-                      );
-                    },
+                  child: AnswerOptionsGrid(
+                    options: opts,
+                    answered: ctrl.answered,
+                    selected: ctrl.selected,
+                    isCorrect: (o) => q.isCorrect(o),
+                    onSelect: ctrl.selectAnswer,
                   ),
                 ),
                 if (!ctrl.answered)
