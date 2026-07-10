@@ -8,6 +8,7 @@ import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
+import 'package:arif_quiz/ui/widgets/question_media.dart';
 import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
 import 'package:arif_quiz/ui/widgets/timer_ring.dart';
 import 'package:flutter/material.dart';
@@ -173,7 +174,6 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
     final ctrl = _ctrl!;
     final q = ctrl.currentQuestion;
     final opts = q.options ?? ['True', 'False'];
-    final labels = ['A', 'B', 'C', 'D'];
 
     return PopScope(
       canPop: false,
@@ -262,32 +262,18 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                 ),
                 const SizedBox(height: 28),
 
-                // Answers
+                // Média (image / audio) de la question, si présent.
+                if (q.hasMedia)
+                  QuestionMedia(imageUrl: q.imageUrl, audioUrl: q.audioUrl),
+
+                // Answers — grille 2×2 (une rangée pour vrai/faux)
                 Expanded(
-                  child: ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: opts.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (ctx, i) {
-                      final opt = opts[i];
-                      final q = ctrl.currentQuestion;
-                      // Une fois répondu : on révèle toujours la bonne réponse
-                      // (verte) et on marque le choix erroné (rouge).
-                      final state = !ctrl.answered
-                          ? AnswerState.idle
-                          : q.isCorrect(opt)
-                              ? AnswerState.correct
-                              : opt == ctrl.selected
-                                  ? AnswerState.wrong
-                                  : AnswerState.idle;
-                      return AnswerOptionTile(
-                        label: labels[i < labels.length ? i : 0],
-                        option: opt,
-                        state: state,
-                        onTap: () => ctrl.selectAnswer(opt),
-                      );
-                    },
+                  child: AnswerOptionsGrid(
+                    options: opts,
+                    answered: ctrl.answered,
+                    selected: ctrl.selected,
+                    isCorrect: (o) => q.isCorrect(o),
+                    onSelect: ctrl.selectAnswer,
                   ),
                 ),
 

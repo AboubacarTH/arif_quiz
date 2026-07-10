@@ -3,6 +3,8 @@ import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class AdminQuestionsScreen extends StatefulWidget {
@@ -424,11 +426,15 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
   late final TextEditingController _correctAnswer;
   late final TextEditingController _order;
   late final TextEditingController _points;
+  late final TextEditingController _imageUrl;
+  late final TextEditingController _audioUrl;
   final List<TextEditingController> _optionCtrls = [];
 
   int? _quizId;
   String _type = 'multiple_choice';
   bool _saving = false;
+  bool _uploadingImage = false;
+  bool _uploadingAudio = false;
   String? _error;
 
   @override
@@ -440,6 +446,8 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
     _correctAnswer = TextEditingController(text: q?.correctAnswer ?? '');
     _order       = TextEditingController(text: (q?.order ?? 0).toString());
     _points      = TextEditingController(text: (q?.points ?? 10).toString());
+    _imageUrl    = TextEditingController(text: q?.imageUrl ?? '');
+    _audioUrl    = TextEditingController(text: q?.audioUrl ?? '');
     _quizId      = q?.quizId ?? widget.defaultQuizId ?? (widget.quizzes.isNotEmpty ? widget.quizzes.first.id : null);
     _type        = q?.type ?? 'multiple_choice';
 
@@ -456,6 +464,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
   void dispose() {
     _text.dispose(); _explanation.dispose(); _correctAnswer.dispose();
     _order.dispose(); _points.dispose();
+    _imageUrl.dispose(); _audioUrl.dispose();
     for (final c in _optionCtrls) { c.dispose(); }
     super.dispose();
   }
@@ -486,6 +495,8 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
         if (options != null) 'options': options,
         'correct_answer': _correctAnswer.text.trim(),
         'explanation': _explanation.text.trim().isEmpty ? null : _explanation.text.trim(),
+        'image_url': _imageUrl.text.trim().isEmpty ? null : _imageUrl.text.trim(),
+        'audio_url': _audioUrl.text.trim().isEmpty ? null : _audioUrl.text.trim(),
         'order': int.parse(_order.text.trim()),
         'points': int.parse(_points.text.trim()),
       };
@@ -675,7 +686,14 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
               maxLines: 2,
               decoration: _dec('Explication (optionnel)'),
             ),
+            const SizedBox(height: 16),
+            // Média (image / audio)
+            Text('Média (optionnel)', style: TextStyle(color: context.appColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 10),
+            _mediaField('Image', _imageUrl, 'image', _uploadingImage),
             const SizedBox(height: 12),
+            _mediaField('Audio', _audioUrl, 'audio', _uploadingAudio),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(child: TextFormField(
@@ -710,4 +728,108 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
       );
+
+  Widget _mediaField(String label, TextEditingController ctrl, String type, bool uploading) {
+    final isImage = type == 'image';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: ctrl,
+                decoration: _dec('$label (URL, optionnel)'),
+                onChanged: (_) => setState(() {}),
+              ),
+            ),
+            const SizedBox(width: 8),
+            SizedBox(
+              height: 52,
+              child: OutlinedButton.icon(
+                onPressed: uploading ? null : () => _pickAndUpload(type),
+                icon: uploading
+                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                    : const Icon(Icons.upload_rounded, size: 18),
+                label: Text(uploading ? '...' : 'Fichier'),
+                style: OutlinedButton.styleFrom(foregroundColor: AppColors.secondary),
+              ),
+            ),
+          ],
+        ),
+        if (ctrl.text.trim().isNotEmpty) ...[
+          const SizedBox(height: 8),
+          if (isImage)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CachedNetworkImage(
+                imageUrl: ctrl.text.trim(),
+                height: 110,
+                fit: BoxFit.contain,
+                errorWidget: (_, __, ___) => Icon(Icons.broken_image_rounded,
+                    color: context.appColors.textMuted, size: 30),
+              ),
+            )
+          else
+            Row(
+              children: [
+                const Icon(Icons.audiotrack_rounded, color: AppColors.secondary, size: 16),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(ctrl.text.trim(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+                ),
+              ],
+            ),
+        ],
+      ],
+    );
+  }
+
+  Future<void> _pickAndUpload(String type) async {
+    final picked = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: type == 'image'
+          ? ['jpg', 'jpeg', 'png', 'gif', 'webp']
+          : ['mp3', 'wav', 'ogg', 'm4a', 'aac'],
+    );
+    if (picked == null || picked.files.isEmpty) return;
+    final f = picked.files.first;
+    if (f.path == null) return;
+
+    setState(() {
+      if (type == 'image') {
+        _uploadingImage = true;
+      } else {
+        _uploadingAudio = true;
+      }
+    });
+    try {
+      final url = await widget.repo
+          .uploadMedia(type: type, filePath: f.path!, fileName: f.name);
+      if (!mounted) return;
+      setState(() {
+        if (type == 'image') {
+          _imageUrl.text = url;
+        } else {
+          _audioUrl.text = url;
+        }
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Upload échoué : $e'), backgroundColor: AppColors.error));
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _uploadingImage = false;
+          _uploadingAudio = false;
+        });
+      }
+    }
+  }
 }

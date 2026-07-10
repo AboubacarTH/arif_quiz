@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class AdminQuizzesScreen extends StatefulWidget {
@@ -138,6 +141,47 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
           SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
         );
       }
+    }
+  }
+
+  Future<void> _importQuestions(AdminQuizModel quiz) async {
+    final picked = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xlsx', 'xls', 'csv'],
+    );
+    if (picked == null || picked.files.isEmpty) return;
+    final file = picked.files.first;
+    if (file.path == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Impossible d\'accéder au fichier sélectionné.'),
+            backgroundColor: AppColors.error));
+      }
+      return;
+    }
+
+    if (!mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+          child: CircularProgressIndicator(color: AppColors.primary)),
+    );
+
+    try {
+      final res = await _repo.importQuestionsToQuiz(
+          quizId: quiz.id, filePath: file.path!, fileName: file.name);
+      if (!mounted) return;
+      Navigator.pop(context); // ferme le loader
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(res['message'] as String? ?? 'Questions importées.'),
+          backgroundColor: AppColors.success));
+      _load(reset: true);
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.toString()), backgroundColor: AppColors.error));
     }
   }
 
@@ -332,6 +376,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
             quiz: _quizzes[i],
             onEdit: () => _showForm(quiz: _quizzes[i]),
             onToggle: () => _toggle(_quizzes[i]),
+            onImport: () => _importQuestions(_quizzes[i]),
             onDelete: () => _delete(_quizzes[i]),
           );
         },
@@ -374,9 +419,10 @@ class _QuizTile extends StatelessWidget {
   final AdminQuizModel quiz;
   final VoidCallback onEdit;
   final VoidCallback onToggle;
+  final VoidCallback onImport;
   final VoidCallback onDelete;
 
-  const _QuizTile({required this.quiz, required this.onEdit, required this.onToggle, required this.onDelete});
+  const _QuizTile({required this.quiz, required this.onEdit, required this.onToggle, required this.onImport, required this.onDelete});
 
   Color get _diffColor => quiz.difficulty == 'easy' ? AppColors.easy : quiz.difficulty == 'medium' ? AppColors.medium : AppColors.hard;
   String get _diffLabel => quiz.difficulty == 'easy' ? 'Facile' : quiz.difficulty == 'medium' ? 'Moyen' : 'Difficile';
@@ -432,6 +478,12 @@ class _QuizTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                TextButton.icon(
+                  onPressed: onImport,
+                  icon: const Icon(Icons.upload_file_rounded, size: 15),
+                  label: const Text('Importer'),
+                  style: TextButton.styleFrom(foregroundColor: AppColors.secondary, padding: const EdgeInsets.symmetric(horizontal: 10)),
+                ),
                 TextButton.icon(
                   onPressed: onEdit,
                   icon: const Icon(Icons.edit_rounded, size: 15),
@@ -490,6 +542,11 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
   int? _categoryId;
   String _difficulty = 'medium';
   bool _isPublished = false;
+  bool _inJourney = false;
+  String _visibility = 'public';
+  final Set<int> _allowedUserIds = {};
+  // Cache id → libellé pour afficher les utilisateurs déjà assignés.
+  final Map<int, String> _userLabels = {};
   bool _saving = false;
   String? _error;
 
@@ -504,6 +561,9 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
     _categoryId  = q?.categoryId ?? (widget.categories.isNotEmpty ? widget.categories.first.id : null);
     _difficulty  = q?.difficulty ?? 'medium';
     _isPublished = q?.isPublished ?? false;
+    _inJourney   = q?.inJourney ?? false;
+    _visibility  = q?.visibility ?? 'public';
+    _allowedUserIds.addAll(q?.allowedUserIds ?? const []);
   }
 
   @override
@@ -524,6 +584,10 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
         'time_limit': int.parse(_timeLimit.text.trim()),
         'points_per_question': int.parse(_points.text.trim()),
         'is_published': _isPublished,
+        'in_journey': _inJourney,
+        'visibility': _visibility,
+        'allowed_user_ids':
+            _visibility == 'restricted' ? _allowedUserIds.toList() : <int>[],
       };
       if (widget.quiz == null) {
         await widget.repo.createQuiz(data);
@@ -615,8 +679,87 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
               activeThumbColor: AppColors.primary,
               contentPadding: EdgeInsets.zero,
             ),
+            SwitchListTile(
+              value: _inJourney,
+              onChanged: (v) => setState(() => _inJourney = v),
+              title: Text('Inclure dans le Mode Parcours', style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
+              subtitle: Text('Ses questions alimentent la map à niveaux', style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+              activeThumbColor: AppColors.secondary,
+              contentPadding: EdgeInsets.zero,
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              initialValue: _visibility,
+              decoration: _inputDecoration('Visibilité'),
+              items: const [
+                DropdownMenuItem(value: 'public', child: Text('Public — visible par tous')),
+                DropdownMenuItem(value: 'restricted', child: Text('Restreint — utilisateurs choisis')),
+              ],
+              onChanged: (v) => setState(() => _visibility = v ?? 'public'),
+              dropdownColor: context.appColors.cardBg,
+            ),
+            if (_visibility == 'restricted') ...[
+              const SizedBox(height: 12),
+              _buildUserPicker(),
+            ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildUserPicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text('Utilisateurs autorisés',
+                style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700, fontSize: 14)),
+            const Spacer(),
+            Text('${_allowedUserIds.length} sélectionné(s)',
+                style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          onPressed: _openUserPicker,
+          icon: const Icon(Icons.person_add_alt_1_rounded, size: 18),
+          label: const Text('Choisir des utilisateurs'),
+          style: OutlinedButton.styleFrom(foregroundColor: AppColors.primary),
+        ),
+        if (_allowedUserIds.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _allowedUserIds.map((id) {
+              final label = _userLabels[id] ?? 'ID $id';
+              return Chip(
+                label: Text(label, style: const TextStyle(fontSize: 12)),
+                backgroundColor: context.appColors.cardBg,
+                onDeleted: () => setState(() => _allowedUserIds.remove(id)),
+              );
+            }).toList(),
+          ),
+        ],
+      ],
+    );
+  }
+
+  void _openUserPicker() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.appColors.cardBg,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => _UserPickerSheet(
+        repo: widget.repo,
+        selected: _allowedUserIds,
+        labels: _userLabels,
+        onChanged: () => setState(() {}),
       ),
     );
   }
@@ -636,6 +779,164 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
       maxLines: maxLines,
       keyboardType: keyboardType,
       decoration: _inputDecoration(label),
+    );
+  }
+}
+
+// ─── Sélecteur d'utilisateurs (quiz restreint) ───────────────────────────────
+
+class _UserPickerSheet extends StatefulWidget {
+  final AdminRepository repo;
+  final Set<int> selected;
+  final Map<int, String> labels;
+  final VoidCallback onChanged;
+
+  const _UserPickerSheet({
+    required this.repo,
+    required this.selected,
+    required this.labels,
+    required this.onChanged,
+  });
+
+  @override
+  State<_UserPickerSheet> createState() => _UserPickerSheetState();
+}
+
+class _UserPickerSheetState extends State<_UserPickerSheet> {
+  final _searchCtrl = TextEditingController();
+  Timer? _debounce;
+  List<({int id, String name, String? username})> _results = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load('');
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _load(String q) async {
+    setState(() => _loading = true);
+    try {
+      final users = await widget.repo.searchUsers(q);
+      if (!mounted) return;
+      setState(() {
+        _results = users;
+        _loading = false;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  void _onSearch(String v) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 350), () => _load(v.trim()));
+  }
+
+  void _toggle(({int id, String name, String? username}) u) {
+    setState(() {
+      if (widget.selected.contains(u.id)) {
+        widget.selected.remove(u.id);
+      } else {
+        widget.selected.add(u.id);
+        widget.labels[u.id] = u.username != null && u.username!.isNotEmpty
+            ? '${u.name} (@${u.username})'
+            : u.name;
+      }
+    });
+    widget.onChanged();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            Container(
+              width: 40, height: 4,
+              decoration: BoxDecoration(
+                  color: context.appColors.border,
+                  borderRadius: BorderRadius.circular(2)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: TextField(
+                controller: _searchCtrl,
+                autofocus: true,
+                onChanged: _onSearch,
+                style: TextStyle(color: context.appColors.textPrimary),
+                decoration: InputDecoration(
+                  hintText: 'Rechercher (nom, username, email)…',
+                  prefixIcon: const Icon(Icons.search_rounded),
+                  filled: true,
+                  fillColor: context.appColors.bg,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
+                ),
+              ),
+            ),
+            Expanded(
+              child: _loading
+                  ? const Center(
+                      child: CircularProgressIndicator(color: AppColors.primary))
+                  : _results.isEmpty
+                      ? Center(
+                          child: Text('Aucun utilisateur',
+                              style: TextStyle(color: context.appColors.textMuted)))
+                      : ListView.builder(
+                          itemCount: _results.length,
+                          itemBuilder: (_, i) {
+                            final u = _results[i];
+                            final sel = widget.selected.contains(u.id);
+                            return CheckboxListTile(
+                              value: sel,
+                              onChanged: (_) => _toggle(u),
+                              activeColor: AppColors.primary,
+                              title: Text(u.name,
+                                  style: TextStyle(
+                                      color: context.appColors.textPrimary,
+                                      fontWeight: FontWeight.w600)),
+                              subtitle: u.username != null
+                                  ? Text('@${u.username}',
+                                      style: TextStyle(
+                                          color: context.appColors.textMuted,
+                                          fontSize: 12))
+                                  : null,
+                            );
+                          },
+                        ),
+            ),
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primary),
+                    child: Text('OK · ${widget.selected.length} sélectionné(s)'),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

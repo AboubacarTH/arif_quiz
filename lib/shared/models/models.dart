@@ -461,6 +461,8 @@ class QuestionModel {
   final String type;
   final List<String>? options;
   final String? correctAnswer;
+  final String? imageUrl;
+  final String? audioUrl;
   final int points;
   final int order;
 
@@ -470,9 +472,14 @@ class QuestionModel {
     required this.type,
     this.options,
     this.correctAnswer,
+    this.imageUrl,
+    this.audioUrl,
     required this.points,
     required this.order,
   });
+
+  bool get hasMedia =>
+      (imageUrl?.isNotEmpty ?? false) || (audioUrl?.isNotEmpty ?? false);
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) => QuestionModel(
         id: json['id'],
@@ -481,6 +488,8 @@ class QuestionModel {
         options:
             json['options'] != null ? List<String>.from(json['options']) : null,
         correctAnswer: json['answer'],
+        imageUrl: json['image_url'],
+        audioUrl: json['audio_url'],
         points: json['points'] ?? 10,
         order: json['order'] ?? 0,
       );
@@ -907,6 +916,9 @@ class AdminQuizModel {
   final int totalQuestions;
   final int pointsPerQuestion;
   final bool isPublished;
+  final bool inJourney;
+  final String visibility; // public | restricted
+  final List<int> allowedUserIds;
   final String? thumbnail;
   final int playCount;
   final int questionsCount;
@@ -923,6 +935,9 @@ class AdminQuizModel {
     required this.totalQuestions,
     required this.pointsPerQuestion,
     required this.isPublished,
+    this.inJourney = false,
+    this.visibility = 'public',
+    this.allowedUserIds = const [],
     this.thumbnail,
     required this.playCount,
     required this.questionsCount,
@@ -940,6 +955,11 @@ class AdminQuizModel {
         totalQuestions: json['total_questions'] ?? 0,
         pointsPerQuestion: json['points_per_question'] ?? 10,
         isPublished: json['is_published'] ?? false,
+        inJourney: json['in_journey'] ?? false,
+        visibility: json['visibility'] ?? 'public',
+        allowedUserIds: json['allowed_user_ids'] != null
+            ? List<int>.from(json['allowed_user_ids'])
+            : const [],
         thumbnail: json['thumbnail'],
         playCount: json['play_count'] ?? 0,
         questionsCount: json['questions_count'] ?? 0,
@@ -958,6 +978,8 @@ class AdminQuestionModel {
   final List<String>? options;
   final String correctAnswer;
   final String? explanation;
+  final String? imageUrl;
+  final String? audioUrl;
   final int order;
   final int points;
   final String? quizTitle;
@@ -970,6 +992,8 @@ class AdminQuestionModel {
     this.options,
     required this.correctAnswer,
     this.explanation,
+    this.imageUrl,
+    this.audioUrl,
     required this.order,
     required this.points,
     this.quizTitle,
@@ -983,6 +1007,8 @@ class AdminQuestionModel {
         options: json['options'] != null ? List<String>.from(json['options']) : null,
         correctAnswer: json['correct_answer'] ?? '',
         explanation: json['explanation'],
+        imageUrl: json['image_url'],
+        audioUrl: json['audio_url'],
         order: json['order'] ?? 0,
         points: json['points'] ?? 10,
         quizTitle: json['quiz']?['title'],
