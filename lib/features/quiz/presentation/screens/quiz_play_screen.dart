@@ -239,42 +239,43 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                     size: 80),
                 const SizedBox(height: 28),
 
-                // Question
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Question ${ctrl.index + 1}',
-                      style: const TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5)),
-                ),
-                const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(q.text,
-                      style: TextStyle(
-                          color: context.appColors.textPrimary,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          height: 1.4,
-                          fontFamily: 'Nunito')),
-                ),
-                const SizedBox(height: 28),
-
-                // Média (image / audio) de la question, si présent.
-                if (q.hasMedia)
-                  QuestionMedia(imageUrl: q.imageUrl, audioUrl: q.audioUrl),
-
-                // Answers — grille 2×2 (une rangée pour vrai/faux)
+                // Média (image → audio) puis question, dans une zone flexible
+                // et scrollable : chaque bloc prend sa taille optimale.
                 Expanded(
-                  child: AnswerOptionsGrid(
-                    options: opts,
-                    answered: ctrl.answered,
-                    selected: ctrl.selected,
-                    isCorrect: (o) => q.isCorrect(o),
-                    onSelect: ctrl.selectAnswer,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (q.hasMedia)
+                          QuestionMedia(
+                              imageUrl: q.imageUrl, audioUrl: q.audioUrl),
+                        Text('Question ${ctrl.index + 1}',
+                            style: const TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5)),
+                        const SizedBox(height: 8),
+                        Text(q.text,
+                            style: TextStyle(
+                                color: context.appColors.textPrimary,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                height: 1.4,
+                                fontFamily: 'Nunito')),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
                   ),
+                ),
+
+                // Réponses (bornées ≤ moitié de l'écran, ancrées en bas)
+                AnswerOptionsGrid(
+                  options: opts,
+                  answered: ctrl.answered,
+                  selected: ctrl.selected,
+                  isCorrect: (o) => q.isCorrect(o),
+                  onSelect: ctrl.selectAnswer,
                 ),
 
                 // Skip

@@ -300,42 +300,46 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Question ${ctrl.index + 1}',
-                    style: const TextStyle(
-                      color: AppColors.secondary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    q.text,
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      height: 1.4,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 28),
-                if (q.hasMedia)
-                  QuestionMedia(imageUrl: q.imageUrl, audioUrl: q.audioUrl),
+                // Média (image → audio) puis question : zone flexible/scrollable.
                 Expanded(
-                  child: AnswerOptionsGrid(
-                    options: opts,
-                    answered: ctrl.answered,
-                    selected: ctrl.selected,
-                    isCorrect: (o) => q.isCorrect(o),
-                    onSelect: ctrl.selectAnswer,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (q.hasMedia)
+                          QuestionMedia(
+                              imageUrl: q.imageUrl, audioUrl: q.audioUrl),
+                        Text(
+                          'Question ${ctrl.index + 1}',
+                          style: const TextStyle(
+                            color: AppColors.secondary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          q.text,
+                          style: TextStyle(
+                            color: context.appColors.textPrimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            height: 1.4,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
                   ),
+                ),
+                // Réponses (bornées ≤ moitié de l'écran, ancrées en bas)
+                AnswerOptionsGrid(
+                  options: opts,
+                  answered: ctrl.answered,
+                  selected: ctrl.selected,
+                  isCorrect: (o) => q.isCorrect(o),
+                  onSelect: ctrl.selectAnswer,
                 ),
               ],
             ),

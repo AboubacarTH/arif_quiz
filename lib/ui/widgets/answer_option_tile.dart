@@ -251,46 +251,41 @@ class AnswerOptionsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final n = options.length;
+    final cols = n == 1 ? 1 : 2; // 2 colonnes (une seule si 1 option)
+    final rowCount = (n / cols).ceil();
 
-    // Vrai/Faux (ou 1 option) : une seule rangée en haut, hauteur fixe.
-    if (n <= 2) {
-      return Align(
-        alignment: Alignment.topCenter,
-        child: SizedBox(
-          height: 132,
-          child: Row(
-            children: [
-              for (var i = 0; i < n; i++) ...[
-                if (i > 0) const SizedBox(width: _gap),
-                Expanded(child: _tile(i)),
-              ],
-            ],
-          ),
-        ),
-      );
-    }
+    // L'ensemble ne doit jamais dépasser ~la moitié de la hauteur de l'écran :
+    // les tuiles ont une hauteur fixe (elles ne s'étirent plus) et le bloc est
+    // aligné en haut de l'espace disponible.
+    final screenH = MediaQuery.sizeOf(context).height;
+    final maxTotal = screenH * 0.5;
+    final rowHeight =
+        ((maxTotal - (rowCount - 1) * _gap) / rowCount).clamp(74.0, 132.0);
 
-    // 2 colonnes, remplit la hauteur disponible (2×2 pour 4 options).
     final rows = <Widget>[];
-    for (var r = 0; r * 2 < n; r++) {
+    for (var r = 0; r < rowCount; r++) {
       if (r > 0) rows.add(const SizedBox(height: _gap));
-      final left = r * 2;
-      final right = r * 2 + 1;
-      rows.add(
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(child: _tile(left)),
-              const SizedBox(width: _gap),
-              // Cellule droite (vide si nombre impair) pour garder l'alignement.
-              right < n
-                  ? Expanded(child: _tile(right))
-                  : const Expanded(child: SizedBox()),
+      rows.add(SizedBox(
+        height: rowHeight,
+        child: Row(
+          children: [
+            for (var c = 0; c < cols; c++) ...[
+              if (c > 0) const SizedBox(width: _gap),
+              // Cellule vide si nombre impair, pour garder l'alignement.
+              Expanded(
+                child: (r * cols + c) < n
+                    ? _tile(r * cols + c)
+                    : const SizedBox.shrink(),
+              ),
             ],
-          ),
+          ],
         ),
-      );
+      ));
     }
-    return Column(children: rows);
+
+    // Bloc borné (≤ moitié de l'écran), ajusté à son contenu ; placé en bas de
+    // l'écran par les écrans de jeu (la zone média + question au-dessus est
+    // flexible et absorbe l'espace restant).
+    return Column(mainAxisSize: MainAxisSize.min, children: rows);
   }
 }

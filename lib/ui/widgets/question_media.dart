@@ -30,10 +30,13 @@ class QuestionMedia extends StatelessWidget {
   }
 
   Widget _image(BuildContext context) {
+    // Hauteur optimale : ~28 % de l'écran, bornée pour rester lisible partout.
+    final maxH =
+        (MediaQuery.sizeOf(context).height * 0.28).clamp(140.0, 260.0);
     return ClipRRect(
       borderRadius: AppRadius.rLg,
       child: Container(
-        constraints: const BoxConstraints(maxHeight: 190),
+        constraints: BoxConstraints(maxHeight: maxH),
         color: context.appColors.cardBg,
         child: CachedNetworkImage(
           imageUrl: imageUrl!.trim(),
