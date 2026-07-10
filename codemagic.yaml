@@ -1,0 +1,89 @@
+# Codemagic CI/CD — build iOS (IPA) + envoi TestFlight, sans Mac.
+# Doc : https://docs.codemagic.io/yaml-quick-start/building-a-flutter-app/
+#
+# ── À FAIRE UNE SEULE FOIS dans l'interface Codemagic avant le 1er build ──
+# 1. Compte sur https://codemagic.io → « Add application » → repo GitHub arif_quiz.
+# 2. Crée une clé API App Store Connect :
+#    App Store Connect → Users and Access → Integrations → App Store Connect API
+#    → génère une clé (rôle « App Manager »), note l'Issuer ID + Key ID + le .p8.
+# 3. Dans Codemagic : Teams → Integrations → App Store Connect → « Add key »,
+#    colle Issuer ID / Key ID / .p8 et NOMME l'intégration :  ArifQuiz_ASC
+#    (ce nom doit correspondre à `integrations.app_store_connect` ci-dessous).
+# 4. Enregistre l'app dans App Store Connect avec le bundle id : com.a2-digit.arifQuiz
+#    (My Apps → + → New App). Renseigne APP_STORE_APPLE_ID ci-dessous (l'« Apple ID »
+#    numérique visible dans App Store Connect → App Information).
+#
+# Ensuite : Codemagic gère automatiquement certificats + provisioning profiles.
+
+workflows:
+  ios-testflight:
+    name: iOS · TestFlight
+    instance_type: mac_mini_m2        # machine macOS dans le cloud
+    max_build_duration: 90
+
+    integrations:
+      app_store_connect: ArifQuiz_ASC # ← nom de la clé ASC créée à l'étape 3
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.a2-digit.arifQuiz
+      vars:
+        # Apple ID numérique de l'app (App Store Connect → App Information).
+        # Sert à calculer le prochain numéro de build. Renseigne-le après l'étape 4.
+        APP_STORE_APPLE_ID: 0000000000
+        BUNDLE_ID: "com.a2-digit.arifQuiz"
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+
+    # Décommente pour builder automatiquement à chaque push sur main
+    # (sinon, tu déclenches le build à la main depuis l'interface Codemagic).
+    # triggering:
+    #   events:
+    #     - push
+    #   branch_patterns:
+    #     - pattern: main
+    #       include: true
+
+    scripts:
+      - name: Récupérer les packages Flutter
+        script: flutter pub get
+
+      - name: Installer les pods CocoaPods
+        script: |
+          # Le Podfile est généré au 1er build iOS s'il n'existe pas encore.
+          find . -name "Podfile" -execdir pod install \; || true
+
+      - name: Appliquer les profils de signature au projet Xcode
+        script: xcode-project use-profiles
+
+      - name: Build IPA (release)
+        script: |
+          # Numéro de build unique = dernier build TestFlight + 1 (évite les doublons).
+          # Repli sur le compteur Codemagic si l'app n'existe pas encore côté ASC.
+          BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo "0")
+          NEXT=$((BUILD_NUMBER + 1))
+          flutter build ipa --release \
+            --build-number=$NEXT \
+            --export-options-plist=/Users/builder/export_options.plist
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+
+    publishing:
+      email:
+        recipients:
+          - aboubacarth@wantarey.com   # ← adapte / ajoute des destinataires
+        notify:
+          success: true
+          failure: true
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # Décommente et crée d'abord le groupe dans TestFlight pour diffuser
+        # automatiquement à un groupe de bêta-testeurs :
+        # beta_groups:
+        #   - "Internal testers"
