@@ -288,7 +288,7 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
           final done = i < current;
           return Expanded(
             child: Padding(
-              padding: EdgeInsets.only(right: i < total - 1 ? 6 : 0),
+              padding: EdgeInsetsDirectional.only(end: i < total - 1 ? 6 : 0),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
                 height: 4,

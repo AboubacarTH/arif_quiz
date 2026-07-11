@@ -271,9 +271,9 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                 child: Text('${ctrl.timeLeft}s', style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w800)),
               ),
               const SizedBox(height: 20),
-              Align(alignment: Alignment.centerLeft, child: Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1), style: const TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 0.5))),
+              Align(alignment: AlignmentDirectional.centerStart, child: Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1), style: const TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 0.5))),
               const SizedBox(height: 8),
-              Align(alignment: Alignment.centerLeft, child: Text(q.text, style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w700, height: 1.4))),
+              Align(alignment: AlignmentDirectional.centerStart, child: Text(q.text, style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w700, height: 1.4))),
               const SizedBox(height: 24),
               Expanded(
                 child: ListView.separated(
