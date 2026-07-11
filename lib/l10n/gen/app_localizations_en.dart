@@ -87,4 +87,127 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageSystemNote => 'Also applies to quiz and question content.';
+
+  @override
+  String questionNumber(int number) {
+    return 'Question $number';
+  }
+
+  @override
+  String get skip => 'Skip →';
+
+  @override
+  String get loadQuestionsError => 'Couldn\'t load the questions.';
+
+  @override
+  String get loadLevelError => 'Couldn\'t load this level.';
+
+  @override
+  String get invalidSession => 'Invalid session. Retry the level.';
+
+  @override
+  String get submitError => 'Submission failed. Check your connection.';
+
+  @override
+  String get calculatingResults => 'Calculating results…';
+
+  @override
+  String get survivalTag => 'SURVIVAL MODE';
+
+  @override
+  String get gameOver => 'Game Over!';
+
+  @override
+  String survivedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You survived $count questions',
+      one: 'You survived 1 question',
+      zero: 'You didn\'t survive a single question',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get seeResults => 'See results';
+
+  @override
+  String get quit => 'Quit';
+
+  @override
+  String get quitGameTitle => 'Quit the game?';
+
+  @override
+  String get quitGameBody => 'Your progress will be lost.';
+
+  @override
+  String get keepPlaying => 'Continue';
+
+  @override
+  String get journeyMapTitle => 'Journey Mode';
+
+  @override
+  String journeyLevelProgress(int current, int total) {
+    return 'Level $current / $total';
+  }
+
+  @override
+  String get journeyUnavailable => 'Journey unavailable';
+
+  @override
+  String get comeBackLater => 'Come back later';
+
+  @override
+  String levelsCount(int count) {
+    return '🏁  $count levels';
+  }
+
+  @override
+  String get play => 'PLAY';
+
+  @override
+  String bossShort(int level) {
+    return 'BOSS $level';
+  }
+
+  @override
+  String get resultPerfect => 'Perfect!';
+
+  @override
+  String get resultGreat => 'Well played!';
+
+  @override
+  String get resultPassed => 'Level cleared';
+
+  @override
+  String get resultAlmost => 'Almost!';
+
+  @override
+  String bossLevelLabel(int level) {
+    return 'Boss · Level $level';
+  }
+
+  @override
+  String levelLabel(int level) {
+    return 'Level $level';
+  }
+
+  @override
+  String get nextLevel => 'Next level';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get replay => 'Replay';
+
+  @override
+  String get viewMap => 'View map';
+
+  @override
+  String get score => 'Score';
+
+  @override
+  String get correctLabel => 'Correct';
 }

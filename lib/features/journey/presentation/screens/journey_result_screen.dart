@@ -1,3 +1,4 @@
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/features/journey/presentation/screens/journey_play_screen.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -56,7 +57,7 @@ class JourneyResultScreen extends StatelessWidget {
                 ).animate().fadeIn(delay: 120.ms),
                 const SizedBox(height: 6),
                 Text(
-                  isBoss ? 'Boss · Niveau ${result.level}' : 'Niveau ${result.level}',
+                  isBoss ? AppLocalizations.of(context).bossLevelLabel(result.level) : AppLocalizations.of(context).levelLabel(result.level),
                   style: TextStyle(
                       color: context.appColors.textSecondary, fontSize: 14),
                 ),
@@ -67,7 +68,7 @@ class JourneyResultScreen extends StatelessWidget {
                 const Spacer(),
                 if (result.nextLevelUnlocked && result.nextLevel != null)
                   NeonButton(
-                    label: 'Niveau suivant',
+                    label: AppLocalizations.of(context).nextLevel,
                     width: double.infinity,
                     icon: Icons.arrow_forward_rounded,
                     color: _accent,
@@ -75,7 +76,7 @@ class JourneyResultScreen extends StatelessWidget {
                   )
                 else if (!passed)
                   NeonButton(
-                    label: 'Réessayer',
+                    label: AppLocalizations.of(context).retry,
                     width: double.infinity,
                     icon: Icons.refresh_rounded,
                     color: _accent,
@@ -87,7 +88,7 @@ class JourneyResultScreen extends StatelessWidget {
                     if (passed)
                       Expanded(
                         child: _SecondaryButton(
-                          label: 'Rejouer',
+                          label: AppLocalizations.of(context).replay,
                           icon: Icons.refresh_rounded,
                           onTap: () => _goToLevel(context, result.level),
                         ),
@@ -95,7 +96,7 @@ class JourneyResultScreen extends StatelessWidget {
                     if (passed) const SizedBox(width: 12),
                     Expanded(
                       child: _SecondaryButton(
-                        label: 'Voir la carte',
+                        label: AppLocalizations.of(context).viewMap,
                         icon: Icons.map_rounded,
                         onTap: () => Navigator.pop(context),
                       ),

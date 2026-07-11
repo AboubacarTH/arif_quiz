@@ -1,6 +1,7 @@
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/journey/data/journey_repository.dart';
 import 'package:arif_quiz/features/journey/presentation/screens/journey_result_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -29,7 +30,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
   final _repo = JourneyRepository(apiService);
   GamePlayController? _ctrl;
   bool _initLoading = true;
-  String? _initError;
+  bool _initFailed = false;
   int? _sessionId;
   bool _submitting = false;
 
@@ -45,7 +46,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
   Future<void> _loadQuestions() async {
     setState(() {
       _initLoading = true;
-      _initError = null;
+      _initFailed = false;
     });
     try {
       final data = await _repo.startLevel(widget.level);
@@ -65,7 +66,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
       debugPrint('Journey load error: $e');
       if (!mounted) return;
       setState(() {
-        _initError = 'Impossible de charger ce niveau.';
+        _initFailed = true;
         _initLoading = false;
       });
     }
@@ -88,8 +89,8 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
     if (_sessionId == null) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Session invalide. Réessaie le niveau.'),
+        SnackBar(
+            content: Text(AppLocalizations.of(context).invalidSession),
             backgroundColor: AppColors.error),
       );
       Navigator.pop(context);
@@ -114,8 +115,8 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
       _submitting = false;
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Erreur lors de la soumission. Vérifie ta connexion.'),
+        SnackBar(
+            content: Text(AppLocalizations.of(context).submitError),
             backgroundColor: AppColors.error),
       );
     }
@@ -136,10 +137,10 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
         body: Center(child: CircularProgressIndicator(color: _accent)),
       );
     }
-    if (_initError != null) {
+    if (_initFailed) {
       return Scaffold(
         backgroundColor: context.appColors.bg,
-        body: ErrorState(message: _initError!, onRetry: _loadQuestions),
+        body: ErrorState(message: AppLocalizations.of(context).loadLevelError, onRetry: _loadQuestions),
       );
     }
 
@@ -217,7 +218,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                         if (q.hasMedia)
                           QuestionMedia(
                               imageUrl: q.imageUrl, audioUrl: q.audioUrl),
-                        Text('Question ${ctrl.index + 1}',
+                        Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1),
                             style: TextStyle(
                                 color: _accent,
                                 fontSize: 12,
@@ -247,7 +248,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                 if (!ctrl.answered)
                   TextButton(
                     onPressed: ctrl.skip,
-                    child: Text('Passer →',
+                    child: Text(AppLocalizations.of(context).skip,
                         style: TextStyle(
                             color: context.appColors.textMuted, fontSize: 14)),
                   )
@@ -281,7 +282,7 @@ class _LevelBadge extends StatelessWidget {
           children: [
             Text(isBoss ? '👑' : '🎯', style: const TextStyle(fontSize: 13)),
             const SizedBox(width: 5),
-            Text(isBoss ? 'BOSS $level' : 'Niv. $level',
+            Text(isBoss ? AppLocalizations.of(context).bossShort(level) : AppLocalizations.of(context).levelShort(level),
                 style: TextStyle(
                     color: color, fontSize: 12, fontWeight: FontWeight.w800)),
           ],

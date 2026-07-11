@@ -2,6 +2,7 @@ import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -29,7 +30,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
   final _repo = QuizRepository(apiService);
   GamePlayController? _ctrl;
   bool _loading = true;
-  String? _error;
+  bool _failed = false;
   bool _submitting = false;
 
   @override
@@ -65,7 +66,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
     } catch (e) {
       debugPrint('Challenge load error: $e');
       setState(() {
-        _error = 'Impossible de charger les questions.';
+        _failed = true;
         _loading = false;
       });
     }
@@ -133,8 +134,8 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
       if (!mounted) return;
       setState(() => _submitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Erreur lors de la soumission'),
+        SnackBar(
+            content: Text(AppLocalizations.of(context).submitError),
             backgroundColor: AppColors.error),
       );
     }
@@ -156,10 +157,10 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
             child: CircularProgressIndicator(color: AppColors.primary)),
       );
     }
-    if (_error != null) {
+    if (_failed) {
       return Scaffold(
         backgroundColor: context.appColors.bg,
-        body: ErrorState(message: _error!, onRetry: _loadQuestions),
+        body: ErrorState(message: AppLocalizations.of(context).loadQuestionsError, onRetry: _loadQuestions),
       );
     }
     if (_submitting) {
@@ -172,7 +173,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
               const CircularProgressIndicator(color: AppColors.primary),
               const SizedBox(height: 16),
               Text(
-                'Calcul des résultats...',
+                AppLocalizations.of(context).calculatingResults,
                 style: TextStyle(color: context.appColors.textSecondary),
               ),
             ],
@@ -272,9 +273,9 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
                   border:
                       Border.all(color: AppColors.error.withValues(alpha: 0.4)),
                 ),
-                child: const Text(
-                  'MODE SURVIE',
-                  style: TextStyle(
+                child: Text(
+                  AppLocalizations.of(context).survivalTag,
+                  style: const TextStyle(
                     color: AppColors.error,
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
@@ -310,7 +311,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
                   if (q.hasMedia)
                     QuestionMedia(imageUrl: q.imageUrl, audioUrl: q.audioUrl),
                   Text(
-                    'Question ${ctrl.index + 1}',
+                    AppLocalizations.of(context).questionNumber(ctrl.index + 1),
                     style: const TextStyle(
                       color: AppColors.error,
                       fontSize: 12,
@@ -356,9 +357,9 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
           children: [
             const Text('💔', style: TextStyle(fontSize: 64)).animate().shake(),
             const SizedBox(height: 20),
-            const Text(
-              'Game Over !',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context).gameOver,
+              style: const TextStyle(
                 color: AppColors.error,
                 fontSize: 28,
                 fontWeight: FontWeight.w800,
@@ -366,7 +367,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Tu as survécu à $survived question${survived >= 2 ? 's' : ''}',
+              AppLocalizations.of(context).survivedCount(survived),
               style:
                   TextStyle(color: context.appColors.textSecondary, fontSize: 16),
             ),
@@ -374,7 +375,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
             ElevatedButton.icon(
               onPressed: _submitResults,
               icon: const Icon(Icons.bar_chart_rounded),
-              label: const Text('Voir les résultats'),
+              label: Text(AppLocalizations.of(context).seeResults),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.error,
                 padding:
@@ -384,7 +385,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
             const SizedBox(height: 12),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Quitter',
+              child: Text(AppLocalizations.of(context).quit,
                   style: TextStyle(color: context.appColors.textMuted)),
             ),
           ],
