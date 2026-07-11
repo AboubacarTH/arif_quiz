@@ -145,7 +145,45 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
     }
   }
 
+  /// Choix de la langue cible avant l'import :
+  /// en = nouvelles questions ; fr/ar/es = traductions des questions existantes.
+  Future<String?> _pickImportLocale() {
+    return showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: context.appColors.cardBg,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(16),
+        children: [
+          const Text('Langue du fichier',
+              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          const SizedBox(height: 12),
+          for (final l in const [
+            (code: 'en', label: 'Anglais — nouvelles questions'),
+            (code: 'fr', label: 'Français — traductions'),
+            (code: 'ar', label: 'العربية — traductions'),
+            (code: 'es', label: 'Español — traductions'),
+          ])
+            ListTile(
+              title: Text(l.label),
+              subtitle: l.code == 'en'
+                  ? const Text('Ajoutées à la suite des questions existantes',
+                      style: TextStyle(fontSize: 12))
+                  : const Text('Appliquées aux questions existantes (colonne order)',
+                      style: TextStyle(fontSize: 12)),
+              onTap: () => Navigator.pop(ctx, l.code),
+            ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _importQuestions(AdminQuizModel quiz) async {
+    final locale = await _pickImportLocale();
+    if (locale == null) return;
+
     final picked = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls', 'csv'],
@@ -171,7 +209,10 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
 
     try {
       final res = await _repo.importQuestionsToQuiz(
-          quizId: quiz.id, filePath: file.path!, fileName: file.name);
+          quizId: quiz.id,
+          filePath: file.path!,
+          fileName: file.name,
+          locale: locale);
       if (!mounted) return;
       Navigator.pop(context); // ferme le loader
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
