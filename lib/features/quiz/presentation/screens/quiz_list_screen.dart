@@ -1,6 +1,7 @@
 import 'package:arif_quiz/features/quiz/bloc/quiz_list_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -112,7 +113,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
                 ?.name ??
             widget.initialCategoryName ??
             'Quiz')
-        : 'Tous les quiz';
+        : AppLocalizations.of(context).allQuizzes;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -155,7 +156,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
         child: AppTextField(
           label: '',
-          hint: 'Rechercher un quiz...',
+          hint: AppLocalizations.of(context).searchQuizHint,
           controller: _searchCtrl,
           prefixIcon: Icons.search_rounded,
           suffix: _searchCtrl.text.isNotEmpty
@@ -221,8 +222,8 @@ class _QuizListScreenState extends State<QuizListScreen> {
               Expanded(
                 child: Text(
                   _categoriesLoading
-                      ? 'Chargement...'
-                      : selected?.name ?? 'Toutes les catégories',
+                      ? AppLocalizations.of(context).loadingEllipsis
+                      : selected?.name ?? AppLocalizations.of(context).allCategories,
                   style: TextStyle(
                     color: _selectedCatId != null
                         ? selectedColor
@@ -299,10 +300,10 @@ class _QuizListScreenState extends State<QuizListScreen> {
           child: Row(
             children: [
               for (final entry in {
-                null: 'Difficulté',
-                'easy': 'Facile',
-                'medium': 'Moyen',
-                'hard': 'Difficile',
+                null: AppLocalizations.of(context).difficulty,
+                'easy': AppLocalizations.of(context).diffEasy,
+                'medium': AppLocalizations.of(context).diffMedium,
+                'hard': AppLocalizations.of(context).diffHard,
               }.entries)
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
@@ -333,7 +334,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '${_ctrl.quizzes.length} quiz${_ctrl.quizzes.length > 1 ? 'zes' : ''}',
+            AppLocalizations.of(context).quizCount(_ctrl.quizzes.length),
             style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
           ),
         ),
@@ -352,9 +353,9 @@ class _QuizListScreenState extends State<QuizListScreen> {
       return ErrorState(message: _ctrl.error!, onRetry: _ctrl.load);
     }
     if (_ctrl.quizzes.isEmpty) {
-      return const EmptyState(
-        title: 'Aucun quiz trouvé',
-        subtitle: 'Essaie un autre filtre ou une autre recherche',
+      return EmptyState(
+        title: AppLocalizations.of(context).noQuizFound,
+        subtitle: AppLocalizations.of(context).tryAnotherFilter,
         emoji: '🔍',
       );
     }
@@ -450,7 +451,7 @@ class _CategorySheetState extends State<_CategorySheet> {
           child: Row(
             children: [
               Text(
-                'Catégories',
+                AppLocalizations.of(context).categories,
                 style: TextStyle(
                   color: context.appColors.textPrimary,
                   fontSize: 16,
@@ -461,9 +462,9 @@ class _CategorySheetState extends State<_CategorySheet> {
               if (widget.selectedId != null)
                 GestureDetector(
                   onTap: () => widget.onSelect(null),
-                  child: const Text(
-                    'Tout voir',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context).seeAll,
+                    style: const TextStyle(
                       color: AppColors.primary,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
@@ -495,7 +496,7 @@ class _CategorySheetState extends State<_CategorySheet> {
                     style: TextStyle(
                         color: context.appColors.textPrimary, fontSize: 14),
                     decoration: InputDecoration(
-                      hintText: 'Rechercher une catégorie...',
+                      hintText: AppLocalizations.of(context).searchCategoryHint,
                       hintStyle: TextStyle(
                           color: context.appColors.textMuted, fontSize: 14),
                       border: InputBorder.none,
@@ -524,7 +525,7 @@ class _CategorySheetState extends State<_CategorySheet> {
           child: filtered.isEmpty
               ? Center(
                   child: Text(
-                    'Aucun résultat pour "$_query"',
+                    AppLocalizations.of(context).noResultsFor(_query),
                     style: TextStyle(color: context.appColors.textMuted),
                   ),
                 )

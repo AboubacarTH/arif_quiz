@@ -1,5 +1,6 @@
 ﻿import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -52,7 +53,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.bg,
-      appBar: QuizAppBar(title: 'Quiz Details', showBack: true),
+      appBar: QuizAppBar(title: AppLocalizations.of(context).quizDetails, showBack: true),
       body: _loading
           ? const Center(
               child: CircularProgressIndicator(color: AppColors.primary))
@@ -157,14 +158,14 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                   Expanded(
                       child: StatsCard(
                           value: '${q.totalQuestions}',
-                          label: 'Questions',
+                          label: AppLocalizations.of(context).questions,
                           icon: Icons.help_rounded,
                           color: AppColors.primary)),
                   const SizedBox(width: 12),
                   Expanded(
                       child: StatsCard(
                           value: '${q.timeLimit}s',
-                          label: 'Per Question',
+                          label: AppLocalizations.of(context).perQuestion,
                           icon: Icons.timer_rounded,
                           color: AppColors.info)),
                 ]),
@@ -173,14 +174,14 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                   Expanded(
                       child: StatsCard(
                           value: '+${q.pointsPerQuestion ?? 10}',
-                          label: 'Points / Q',
+                          label: AppLocalizations.of(context).pointsPerQ,
                           icon: Icons.star_rounded,
                           color: AppColors.warning)),
                   const SizedBox(width: 12),
                   Expanded(
                       child: StatsCard(
                           value: '${q.playCount}',
-                          label: 'Plays',
+                          label: AppLocalizations.of(context).plays,
                           icon: Icons.play_circle_rounded,
                           color: AppColors.success)),
                 ]),
@@ -203,10 +204,10 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                               fontSize: 15)),
                       const SizedBox(height: 12),
                       ...[
-                        'Select one answer per question',
-                        'Answer before the timer runs out',
-                        'Earn ${q.pointsPerQuestion ?? 10} points per correct answer',
-                        'Review full explanations after the quiz',
+                        AppLocalizations.of(context).ruleSelectOne,
+                        AppLocalizations.of(context).ruleTimer,
+                        AppLocalizations.of(context).rulePoints(q.pointsPerQuestion ?? 10),
+                        AppLocalizations.of(context).ruleReview,
                       ].map((s) => Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Row(children: [
@@ -231,7 +232,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 36),
           child: AppButton(
-            label: 'Start Quiz 🚀',
+            label: AppLocalizations.of(context).startQuiz,
             fullWidth: true,
             size: AppButtonSize.large,
             icon: Icons.play_arrow_rounded,

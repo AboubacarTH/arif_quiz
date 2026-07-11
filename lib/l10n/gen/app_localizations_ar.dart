@@ -214,4 +214,168 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get correctLabel => 'صحيحة';
+
+  @override
+  String get trainingResultNote =>
+      'وضع التدريب — لا تؤثر هذه النتيجة على نقاط خبرتك أو ترتيبك.';
+
+  @override
+  String get answerReview => 'مراجعة الإجابات';
+
+  @override
+  String get createAccount => 'إنشاء حساب';
+
+  @override
+  String get homeLabel => 'الرئيسية';
+
+  @override
+  String get viewChallenge => 'عرض التحدي';
+
+  @override
+  String get headlineOutstanding => 'مذهل! 🤩';
+
+  @override
+  String get headlineExcellent => 'ممتاز! 🎉';
+
+  @override
+  String get headlineGreat => 'أحسنت! 👏';
+
+  @override
+  String get headlineNotBad => 'ليس سيئاً! 👍';
+
+  @override
+  String get headlineKeepGoing => 'واصل! 💪';
+
+  @override
+  String get headlineTryAgain => 'حاول مجدداً! 🔄';
+
+  @override
+  String get yourAnswer => 'إجابتك';
+
+  @override
+  String get points => 'النقاط';
+
+  @override
+  String get timeLabel => 'الوقت';
+
+  @override
+  String get reportQuestionAction => 'الإبلاغ عن خطأ';
+
+  @override
+  String get reportQuestionTitle => 'الإبلاغ عن هذا السؤال';
+
+  @override
+  String get reportReasonLabel => 'السبب';
+
+  @override
+  String get reasonWrongAnswer => 'الإجابة الصحيحة خاطئة';
+
+  @override
+  String get reasonAmbiguous => 'سؤال غامض أو سيئ الصياغة';
+
+  @override
+  String get reasonTypo => 'خطأ إملائي';
+
+  @override
+  String get reasonOutdated => 'معلومة قديمة';
+
+  @override
+  String get reasonOther => 'أخرى';
+
+  @override
+  String get commentOptional => 'تعليق (اختياري)';
+
+  @override
+  String get sendReport => 'إرسال البلاغ';
+
+  @override
+  String get sendFailed => 'فشل الإرسال. حاول مرة أخرى.';
+
+  @override
+  String get allQuizzes => 'كل الاختبارات';
+
+  @override
+  String get searchQuizHint => 'ابحث عن اختبار…';
+
+  @override
+  String get loadingEllipsis => 'جارٍ التحميل…';
+
+  @override
+  String get allCategories => 'كل الفئات';
+
+  @override
+  String get difficulty => 'الصعوبة';
+
+  @override
+  String get diffEasy => 'سهل';
+
+  @override
+  String get diffMedium => 'متوسط';
+
+  @override
+  String get diffHard => 'صعب';
+
+  @override
+  String get allFilter => 'الكل';
+
+  @override
+  String get noQuizFound => 'لم يُعثر على اختبار';
+
+  @override
+  String get tryAnotherFilter => 'جرّب فلتراً أو بحثاً آخر';
+
+  @override
+  String get searchCategoryHint => 'ابحث عن فئة…';
+
+  @override
+  String noResultsFor(String query) {
+    return 'لا نتائج لـ \"$query\"';
+  }
+
+  @override
+  String get loadQuizError => 'تعذّر تحميل الاختبار.';
+
+  @override
+  String get quizDetails => 'تفاصيل الاختبار';
+
+  @override
+  String get questions => 'الأسئلة';
+
+  @override
+  String get perQuestion => 'لكل سؤال';
+
+  @override
+  String get pointsPerQ => 'نقاط / سؤال';
+
+  @override
+  String get plays => 'مرات اللعب';
+
+  @override
+  String get ruleSelectOne => 'اختر إجابة واحدة لكل سؤال';
+
+  @override
+  String get ruleTimer => 'أجب قبل انتهاء الوقت';
+
+  @override
+  String rulePoints(int points) {
+    return 'اكسب $points نقطة لكل إجابة صحيحة';
+  }
+
+  @override
+  String get ruleReview => 'راجع الشروحات الكاملة بعد الاختبار';
+
+  @override
+  String get startQuiz => 'ابدأ الاختبار 🚀';
+
+  @override
+  String get tryAnotherDifficulty => 'جرّب مستوى صعوبة آخر';
+
+  @override
+  String get loadCategoriesError => 'تعذّر تحميل الفئات';
+
+  @override
+  String get noCategories => 'لا فئات';
+
+  @override
+  String get comeBackSoon => 'عد لاحقاً، محتوى جديد قادم قريباً';
 }

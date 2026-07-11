@@ -128,5 +128,72 @@
   "replay": "Replay",
   "viewMap": "View map",
   "score": "Score",
-  "correctLabel": "Correct"
+  "correctLabel": "Correct",
+  "trainingResultNote": "Practice mode — this result doesn't affect your XP or ranking.",
+  "answerReview": "Answer review",
+  "createAccount": "Create account",
+  "homeLabel": "Home",
+  "viewChallenge": "View challenge",
+  "headlineOutstanding": "Outstanding! 🤩",
+  "headlineExcellent": "Excellent! 🎉",
+  "headlineGreat": "Great job! 👏",
+  "headlineNotBad": "Not bad! 👍",
+  "headlineKeepGoing": "Keep going! 💪",
+  "headlineTryAgain": "Try again! 🔄",
+  "yourAnswer": "Your answer",
+  "points": "Points",
+  "timeLabel": "Time",
+  "reportQuestionAction": "Report an issue",
+  "reportQuestionTitle": "Report this question",
+  "reportReasonLabel": "Reason",
+  "reasonWrongAnswer": "The correct answer is wrong",
+  "reasonAmbiguous": "Ambiguous or poorly worded question",
+  "reasonTypo": "Spelling mistake",
+  "reasonOutdated": "Outdated information",
+  "reasonOther": "Other",
+  "commentOptional": "Comment (optional)",
+  "sendReport": "Send report",
+  "sendFailed": "Sending failed. Try again.",
+  "allQuizzes": "All quizzes",
+  "searchQuizHint": "Search for a quiz…",
+  "loadingEllipsis": "Loading…",
+  "allCategories": "All categories",
+  "difficulty": "Difficulty",
+  "diffEasy": "Easy",
+  "diffMedium": "Medium",
+  "diffHard": "Hard",
+  "allFilter": "All",
+  "noQuizFound": "No quiz found",
+  "tryAnotherFilter": "Try another filter or search",
+  "searchCategoryHint": "Search for a category…",
+  "noResultsFor": "No results for \"{query}\"",
+  "@noResultsFor": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "loadQuizError": "Couldn't load the quiz.",
+  "quizDetails": "Quiz details",
+  "questions": "Questions",
+  "perQuestion": "Per question",
+  "pointsPerQ": "Points / Q",
+  "plays": "Plays",
+  "ruleSelectOne": "Select one answer per question",
+  "ruleTimer": "Answer before the timer runs out",
+  "rulePoints": "Earn {points} points per correct answer",
+  "@rulePoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleReview": "Review full explanations after the quiz",
+  "startQuiz": "Start Quiz 🚀",
+  "tryAnotherDifficulty": "Try another difficulty filter",
+  "loadCategoriesError": "Couldn't load the categories",
+  "noCategories": "No categories",
+  "comeBackSoon": "Come back later, new content is on its way"
 }

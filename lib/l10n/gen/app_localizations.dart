@@ -437,6 +437,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Correct'**
   String get correctLabel;
+
+  /// No description provided for @trainingResultNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice mode — this result doesn\'t affect your XP or ranking.'**
+  String get trainingResultNote;
+
+  /// No description provided for @answerReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer review'**
+  String get answerReview;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccount;
+
+  /// No description provided for @homeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get homeLabel;
+
+  /// No description provided for @viewChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'View challenge'**
+  String get viewChallenge;
+
+  /// No description provided for @headlineOutstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding! 🤩'**
+  String get headlineOutstanding;
+
+  /// No description provided for @headlineExcellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent! 🎉'**
+  String get headlineExcellent;
+
+  /// No description provided for @headlineGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! 👏'**
+  String get headlineGreat;
+
+  /// No description provided for @headlineNotBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Not bad! 👍'**
+  String get headlineNotBad;
+
+  /// No description provided for @headlineKeepGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going! 💪'**
+  String get headlineKeepGoing;
+
+  /// No description provided for @headlineTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again! 🔄'**
+  String get headlineTryAgain;
+
+  /// No description provided for @yourAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answer'**
+  String get yourAnswer;
+
+  /// No description provided for @points.
+  ///
+  /// In en, this message translates to:
+  /// **'Points'**
+  String get points;
+
+  /// No description provided for @timeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeLabel;
+
+  /// No description provided for @reportQuestionAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Report an issue'**
+  String get reportQuestionAction;
+
+  /// No description provided for @reportQuestionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report this question'**
+  String get reportQuestionTitle;
+
+  /// No description provided for @reportReasonLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get reportReasonLabel;
+
+  /// No description provided for @reasonWrongAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The correct answer is wrong'**
+  String get reasonWrongAnswer;
+
+  /// No description provided for @reasonAmbiguous.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambiguous or poorly worded question'**
+  String get reasonAmbiguous;
+
+  /// No description provided for @reasonTypo.
+  ///
+  /// In en, this message translates to:
+  /// **'Spelling mistake'**
+  String get reasonTypo;
+
+  /// No description provided for @reasonOutdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Outdated information'**
+  String get reasonOutdated;
+
+  /// No description provided for @reasonOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get reasonOther;
+
+  /// No description provided for @commentOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment (optional)'**
+  String get commentOptional;
+
+  /// No description provided for @sendReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Send report'**
+  String get sendReport;
+
+  /// No description provided for @sendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending failed. Try again.'**
+  String get sendFailed;
+
+  /// No description provided for @allQuizzes.
+  ///
+  /// In en, this message translates to:
+  /// **'All quizzes'**
+  String get allQuizzes;
+
+  /// No description provided for @searchQuizHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a quiz…'**
+  String get searchQuizHint;
+
+  /// No description provided for @loadingEllipsis.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading…'**
+  String get loadingEllipsis;
+
+  /// No description provided for @allCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All categories'**
+  String get allCategories;
+
+  /// No description provided for @difficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get difficulty;
+
+  /// No description provided for @diffEasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get diffEasy;
+
+  /// No description provided for @diffMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get diffMedium;
+
+  /// No description provided for @diffHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get diffHard;
+
+  /// No description provided for @allFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allFilter;
+
+  /// No description provided for @noQuizFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No quiz found'**
+  String get noQuizFound;
+
+  /// No description provided for @tryAnotherFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another filter or search'**
+  String get tryAnotherFilter;
+
+  /// No description provided for @searchCategoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a category…'**
+  String get searchCategoryHint;
+
+  /// No description provided for @noResultsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'No results for \"{query}\"'**
+  String noResultsFor(String query);
+
+  /// No description provided for @loadQuizError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the quiz.'**
+  String get loadQuizError;
+
+  /// No description provided for @quizDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz details'**
+  String get quizDetails;
+
+  /// No description provided for @questions.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions'**
+  String get questions;
+
+  /// No description provided for @perQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Per question'**
+  String get perQuestion;
+
+  /// No description provided for @pointsPerQ.
+  ///
+  /// In en, this message translates to:
+  /// **'Points / Q'**
+  String get pointsPerQ;
+
+  /// No description provided for @plays.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays'**
+  String get plays;
+
+  /// No description provided for @ruleSelectOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Select one answer per question'**
+  String get ruleSelectOne;
+
+  /// No description provided for @ruleTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer before the timer runs out'**
+  String get ruleTimer;
+
+  /// No description provided for @rulePoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn {points} points per correct answer'**
+  String rulePoints(int points);
+
+  /// No description provided for @ruleReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review full explanations after the quiz'**
+  String get ruleReview;
+
+  /// No description provided for @startQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Quiz 🚀'**
+  String get startQuiz;
+
+  /// No description provided for @tryAnotherDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another difficulty filter'**
+  String get tryAnotherDifficulty;
+
+  /// No description provided for @loadCategoriesError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the categories'**
+  String get loadCategoriesError;
+
+  /// No description provided for @noCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories'**
+  String get noCategories;
+
+  /// No description provided for @comeBackSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back later, new content is on its way'**
+  String get comeBackSoon;
 }
 
 class _AppLocalizationsDelegate
