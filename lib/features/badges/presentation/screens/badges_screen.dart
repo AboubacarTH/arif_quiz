@@ -1,4 +1,5 @@
 import 'package:arif_quiz/features/badges/data/badge_repository.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -44,7 +45,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = 'Impossible de charger les succès.';
+        _error = AppLocalizations.of(context).loadBadgesError;
         _loading = false;
       });
     }
@@ -56,7 +57,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: const Text('Succès'),
+        title: Text(AppLocalizations.of(context).achievements),
       ),
       body: _loading
           ? const Center(
@@ -102,7 +103,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Progression',
+              Text(AppLocalizations.of(context).progression,
                   style: TextStyle(
                       color: context.appColors.textPrimary,
                       fontSize: 16,

@@ -661,4 +661,188 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get pendingLabel => 'قيد الانتظار';
+
+  @override
+  String get wrongPasswordOrNetwork => 'كلمة مرور خاطئة أو خطأ في الشبكة.';
+
+  @override
+  String get deleteAccountTitle => 'حذف الحساب؟';
+
+  @override
+  String get password => 'كلمة المرور';
+
+  @override
+  String get logoutTitle => 'تسجيل الخروج؟';
+
+  @override
+  String get logoutBody => 'ستحتاج إلى تسجيل الدخول مجدداً للوصول إلى حسابك.';
+
+  @override
+  String get logoutBtn => 'خروج';
+
+  @override
+  String get logOutAction => 'تسجيل الخروج';
+
+  @override
+  String get myProfile => 'ملفي الشخصي';
+
+  @override
+  String get editBtn => 'تعديل';
+
+  @override
+  String rankLabel(int rank) {
+    return 'المرتبة #$rank';
+  }
+
+  @override
+  String nextLevelIn(int level, int xp) {
+    return 'المستوى $level بعد $xp نقطة خبرة';
+  }
+
+  @override
+  String get quizzesPlayed => 'الاختبارات الملعوبة';
+
+  @override
+  String get goodAnswers => 'إجابات صحيحة';
+
+  @override
+  String get accuracy => 'الدقة';
+
+  @override
+  String get currentStreak => 'السلسلة الحالية';
+
+  @override
+  String get bestStreak => 'أفضل سلسلة';
+
+  @override
+  String get achievements => 'الإنجازات';
+
+  @override
+  String get unlockBadgesByPlaying => 'افتح الشارات باللعب';
+
+  @override
+  String get appearance => 'المظهر';
+
+  @override
+  String get themeSystem => 'النظام';
+
+  @override
+  String get themeSystemDesc => 'يتبع سمة الجهاز';
+
+  @override
+  String get themeDark => 'داكن';
+
+  @override
+  String get themeDarkDesc => 'واجهة ألعاب داكنة';
+
+  @override
+  String get themeLight => 'فاتح';
+
+  @override
+  String get themeLightDesc => 'واجهة مضيئة';
+
+  @override
+  String get recentActivity => 'النشاط الأخير';
+
+  @override
+  String get noQuizPlayed => 'لم تلعب أي اختبار';
+
+  @override
+  String get playFirstQuiz => 'العب أول اختبار لترى نتائجك هنا!';
+
+  @override
+  String get playBtn => 'العب';
+
+  @override
+  String get adminPanel => 'لوحة الإدارة';
+
+  @override
+  String get deleteMyAccount => 'حذف حسابي';
+
+  @override
+  String get fillAllFields => 'يرجى ملء جميع الحقول';
+
+  @override
+  String get enterFullName => 'أدخل اسمك الكامل';
+
+  @override
+  String get enterValidEmail => 'أدخل بريداً إلكترونياً صالحاً';
+
+  @override
+  String get updateProfileFailed => 'تعذّر تحديث الملف الشخصي. حاول مجدداً.';
+
+  @override
+  String get editProfileTitle => 'تعديل الملف الشخصي';
+
+  @override
+  String get fullName => 'الاسم الكامل';
+
+  @override
+  String get yourNameHint => 'اسمك';
+
+  @override
+  String get email => 'البريد الإلكتروني';
+
+  @override
+  String get loadHistoryError => 'تعذّر تحميل السجل.';
+
+  @override
+  String get quizHistory => 'سجل الاختبارات';
+
+  @override
+  String get noAttemptsYet => 'لا محاولات بعد';
+
+  @override
+  String get attemptsAppearHere => 'العب اختباراً وستظهر نتائجك هنا.';
+
+  @override
+  String get refresh => 'تحديث';
+
+  @override
+  String pointsShort(int points) {
+    return '+$points نقطة';
+  }
+
+  @override
+  String get loadBadgesError => 'تعذّر تحميل الإنجازات.';
+
+  @override
+  String get progression => 'التقدم';
+
+  @override
+  String get alreadyPlayedToday => 'لقد لعبت اليوم بالفعل!';
+
+  @override
+  String get dailyChallengeScreenTitle => 'التحدي اليومي';
+
+  @override
+  String get noDailyToday => 'لا تحدي اليوم';
+
+  @override
+  String get comeBackTomorrow => 'عد غداً!';
+
+  @override
+  String get todaysChallengeTag => 'تحدي اليوم';
+
+  @override
+  String renewsIn(int h, int m) {
+    return 'يتجدد بعد $hس $mد';
+  }
+
+  @override
+  String get challengeCompleted => 'اكتمل التحدي!';
+
+  @override
+  String yourScoreGrade(String score, String grade) {
+    return 'نتيجتك: $score% • التقدير $grade';
+  }
+
+  @override
+  String get bonusXp30 => '⚡ +30 نقطة خبرة إضافية';
+
+  @override
+  String get takeChallenge => 'خض التحدي';
+
+  @override
+  String get saveChanges => 'حفظ التغييرات';
 }

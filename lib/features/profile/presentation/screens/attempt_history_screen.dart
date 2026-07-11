@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
@@ -45,7 +46,7 @@ class _AttemptHistoryScreenState extends State<AttemptHistoryScreen> {
       if (!mounted) return;
       setState(() {
         _loading = false;
-        _errorMessage = 'Impossible de charger l\'historique.';
+        _errorMessage = AppLocalizations.of(context).loadHistoryError;
       });
     }
   }
@@ -70,18 +71,18 @@ class _AttemptHistoryScreenState extends State<AttemptHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.bg,
-      appBar: const QuizAppBar(title: 'Quiz History', showBack: true),
+      appBar: QuizAppBar(title: AppLocalizations.of(context).quizHistory, showBack: true),
       body: _loading
           ? const QuizListSkeleton()
           : _errorMessage != null
               ? ErrorState(message: _errorMessage!, onRetry: _loadAttempts)
               : _attempts.isEmpty
                   ? EmptyState(
-                      title: 'No attempts yet',
+                      title: AppLocalizations.of(context).noAttemptsYet,
                       subtitle:
-                          'Play a quiz and your results will appear here.',
+                          AppLocalizations.of(context).attemptsAppearHere,
                       emoji: 'Q',
-                      actionLabel: 'Refresh',
+                      actionLabel: AppLocalizations.of(context).refresh,
                       onAction: _loadAttempts,
                     )
                   : RefreshIndicator(
@@ -181,7 +182,7 @@ class _AttemptTile extends StatelessWidget {
                         _MetaText('${score.toStringAsFixed(1)}%'),
                         if (correct != null && total != null)
                           _MetaText('$correct/$total correct'),
-                        if (points != null) _MetaText('+$points pts'),
+                        if (points != null) _MetaText(AppLocalizations.of(context).pointsShort(points)),
                         if (timeTaken != null)
                           _MetaText(_formatTime(timeTaken)),
                       ],

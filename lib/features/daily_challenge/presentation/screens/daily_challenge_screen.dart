@@ -2,6 +2,7 @@
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart' show GamePhase, GamePlayController;
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -82,7 +83,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     } catch (e) {
       setState(() => _submitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().contains('409') ? 'Vous avez déjà joué aujourd\'hui !' : 'Erreur de soumission'), backgroundColor: AppColors.error),
+        SnackBar(content: Text(e.toString().contains('409') ? AppLocalizations.of(context).alreadyPlayedToday : AppLocalizations.of(context).submitError), backgroundColor: AppColors.error),
       );
     }
   }
@@ -101,7 +102,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
 
     return Scaffold(
       backgroundColor: context.appColors.bg,
-      appBar: AppBar(backgroundColor: context.appColors.bg, title: const Text('Défi Quotidien')),
+      appBar: AppBar(backgroundColor: context.appColors.bg, title: Text(AppLocalizations.of(context).dailyChallengeScreenTitle)),
       body: _daily == null ? _buildNone() : _buildInfo(),
     );
   }
@@ -112,9 +113,9 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
           children: [
             Text('📅', style: TextStyle(fontSize: 48)),
             SizedBox(height: 12),
-            Text('Pas de défi aujourd\'hui', style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700)),
+            Text(AppLocalizations.of(context).noDailyToday, style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700)),
             SizedBox(height: 8),
-            Text('Revenez demain !', style: TextStyle(color: context.appColors.textSecondary)),
+            Text(AppLocalizations.of(context).comeBackTomorrow, style: TextStyle(color: context.appColors.textSecondary)),
           ],
         ),
       );
@@ -139,7 +140,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
               children: [
                 const Text('🌟', style: TextStyle(fontSize: 40)),
                 const SizedBox(height: 12),
-                const Text('DÉFI DU JOUR', style: TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 2)),
+                Text(AppLocalizations.of(context).todaysChallengeTag, style: const TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 2)),
                 const SizedBox(height: 8),
                 Text(d.quiz.title, style: TextStyle(color: context.appColors.textPrimary, fontSize: 22, fontWeight: FontWeight.w800), textAlign: TextAlign.center),
                 const SizedBox(height: 4),
@@ -153,7 +154,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                     children: [
                       Icon(Icons.timer_outlined, size: 16, color: context.appColors.textMuted),
                       const SizedBox(width: 6),
-                      Text('Renouvelle dans ${h}h ${m}m', style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+                      Text(AppLocalizations.of(context).renewsIn(h, m), style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
                     ],
                   ),
                 ),
@@ -177,8 +178,8 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Défi complété !', style: TextStyle(color: AppColors.success, fontWeight: FontWeight.w700)),
-                        Text('Votre score : ${d.myScore?.toStringAsFixed(1) ?? '?'}% • Grade ${d.myGrade ?? '?'}',
+                        Text(AppLocalizations.of(context).challengeCompleted, style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w700)),
+                        Text(AppLocalizations.of(context).yourScoreGrade(d.myScore?.toStringAsFixed(1) ?? '?', d.myGrade ?? '?'),
                             style: TextStyle(color: context.appColors.textSecondary, fontSize: 13)),
                       ],
                     ),
@@ -196,7 +197,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
               ),
               child: Column(
                 children: [
-                  _bonusRow('⚡ +30 XP bonus', AppColors.accent),
+                  _bonusRow(AppLocalizations.of(context).bonusXp30, AppColors.accent),
                   const SizedBox(height: 8),
                   _bonusRow('🔥 Maintient ton streak', AppColors.warning),
                   const SizedBox(height: 8),
@@ -206,7 +207,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
             ),
             const SizedBox(height: 20),
             NeonButton(
-              label: 'Relever le défi',
+              label: AppLocalizations.of(context).takeChallenge,
               width: double.infinity,
               icon: Icons.play_arrow_rounded,
               color: AppColors.accent,
@@ -270,7 +271,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                 child: Text('${ctrl.timeLeft}s', style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w800)),
               ),
               const SizedBox(height: 20),
-              Align(alignment: Alignment.centerLeft, child: Text('Question ${ctrl.index + 1}', style: const TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 0.5))),
+              Align(alignment: Alignment.centerLeft, child: Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1), style: const TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 0.5))),
               const SizedBox(height: 8),
               Align(alignment: Alignment.centerLeft, child: Text(q.text, style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w700, height: 1.4))),
               const SizedBox(height: 24),

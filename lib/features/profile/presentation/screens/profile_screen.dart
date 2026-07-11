@@ -66,8 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Mot de passe incorrect ou erreur réseau.'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).wrongPasswordOrNetwork),
           backgroundColor: AppColors.error,
         ),
       );
@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Text(
-            'Supprimer le compte ?',
+            AppLocalizations.of(context).deleteAccountTitle,
             style: TextStyle(
                 color: context.appColors.textPrimary,
                 fontWeight: FontWeight.w700),
@@ -105,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 obscureText: obscure,
                 style: TextStyle(color: context.appColors.textPrimary),
                 decoration: InputDecoration(
-                  labelText: 'Mot de passe',
+                  labelText: AppLocalizations.of(context).password,
                   labelStyle:
                       TextStyle(color: context.appColors.textSecondary),
                   filled: true,
@@ -133,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TextButton(
               onPressed: () => Navigator.pop(ctx),
               child: Text(
-                'Annuler',
+                AppLocalizations.of(context).cancel,
                 style: TextStyle(color: context.appColors.textSecondary),
               ),
             ),
@@ -143,9 +143,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.pop(ctx);
                 _deleteAccount(password);
               },
-              child: const Text(
-                'Supprimer',
-                style: TextStyle(
+              child: Text(
+                AppLocalizations.of(context).deleteBtn,
+                style: const TextStyle(
                     color: AppColors.error, fontWeight: FontWeight.w700),
               ),
             ),
@@ -162,20 +162,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: context.appColors.cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
-          'Se déconnecter ?',
+          AppLocalizations.of(context).logoutTitle,
           style: TextStyle(
               color: context.appColors.textPrimary,
               fontWeight: FontWeight.w700),
         ),
         content: Text(
-          'Tu devras te reconnecter pour accéder à ton compte.',
+          AppLocalizations.of(context).logoutBody,
           style: TextStyle(color: context.appColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Annuler',
+              AppLocalizations.of(context).cancel,
               style: TextStyle(color: context.appColors.textSecondary),
             ),
           ),
@@ -184,9 +184,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.pop(ctx);
               _logout();
             },
-            child: const Text(
-              'Déconnexion',
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(context).logoutBtn,
+              style: const TextStyle(
                   color: AppColors.error, fontWeight: FontWeight.w700),
             ),
           ),
@@ -284,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Row(
           children: [
             Text(
-              'Mon Profil',
+              AppLocalizations.of(context).myProfile,
               style: TextStyle(
                 color: context.appColors.textPrimary,
                 fontSize: 22,
@@ -312,7 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: context.appColors.textSecondary, size: 15),
                       const SizedBox(width: 6),
                       Text(
-                        'Modifier',
+                        AppLocalizations.of(context).editBtn,
                         style: TextStyle(
                           color: context.appColors.textSecondary,
                           fontSize: 13,
@@ -425,7 +425,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               _HeroBadge(
                 icon: Icons.emoji_events_rounded,
-                label: 'Rang #$rank',
+                label: AppLocalizations.of(context).rankLabel(rank),
                 color: AppColors.warning,
               ),
               const SizedBox(width: 10),
@@ -465,7 +465,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  'Niveau ${user.level}',
+                  AppLocalizations.of(context).levelLabel(user.level),
                   style: const TextStyle(
                     color: AppColors.primary,
                     fontSize: 12,
@@ -497,7 +497,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Niveau ${user.level + 1} dans ${user.xpNeeded - user.xpProgress} XP',
+            AppLocalizations.of(context).nextLevelIn(user.level + 1, user.xpNeeded - user.xpProgress),
             style: TextStyle(
               color: context.appColors.textMuted,
               fontSize: 11,
@@ -513,9 +513,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildStatsRow(UserModel user) {
     return StatsRow(
       stats: [
-        StatItem('${user.quizzesTaken}', 'Quiz joués', AppColors.primary),
-        StatItem('${user.correctAnswers}', 'Bonnes rép.', AppColors.success),
-        StatItem('${user.accuracy.toStringAsFixed(0)}%', 'Précision', AppColors.info),
+        StatItem('${user.quizzesTaken}', AppLocalizations.of(context).quizzesPlayed, AppColors.primary),
+        StatItem('${user.correctAnswers}', AppLocalizations.of(context).goodAnswers, AppColors.success),
+        StatItem('${user.accuracy.toStringAsFixed(0)}%', AppLocalizations.of(context).accuracy, AppColors.info),
       ],
     ).animate().fadeIn(delay: 150.ms);
   }
@@ -529,7 +529,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: _StreakCard(
             emoji: '🔥',
             value: '${user.streak}',
-            label: 'Streak actuel',
+            label: AppLocalizations.of(context).currentStreak,
             color: AppColors.secondary,
           ),
         ),
@@ -538,7 +538,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: _StreakCard(
             emoji: '🏆',
             value: '${user.longestStreak}',
-            label: 'Meilleur streak',
+            label: AppLocalizations.of(context).bestStreak,
             color: AppColors.warning,
           ),
         ),
@@ -580,7 +580,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Succès',
+                    AppLocalizations.of(context).achievements,
                     style: TextStyle(
                       color: context.appColors.textPrimary,
                       fontWeight: FontWeight.w800,
@@ -588,7 +588,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   Text(
-                    'Débloque des badges en jouant',
+                    AppLocalizations.of(context).unlockBadgesByPlaying,
                     style: TextStyle(
                         color: context.appColors.textSecondary, fontSize: 12),
                   ),
@@ -626,7 +626,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionTitle(title: 'Apparence'),
+        _SectionTitle(title: AppLocalizations.of(context).appearance),
         const SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
@@ -640,24 +640,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 _ThemeTile(
                   icon: Icons.smartphone_rounded,
-                  label: 'Système',
-                  subtitle: 'Suit le thème de l\'appareil',
+                  label: AppLocalizations.of(context).themeSystem,
+                  subtitle: AppLocalizations.of(context).themeSystemDesc,
                   selected: themeController.isSystem,
                   onTap: () => themeController.setMode(ThemeMode.system),
                 ),
                 Divider(height: 1, color: context.appColors.border),
                 _ThemeTile(
                   icon: Icons.dark_mode_rounded,
-                  label: 'Sombre',
-                  subtitle: 'Interface gaming dark',
+                  label: AppLocalizations.of(context).themeDark,
+                  subtitle: AppLocalizations.of(context).themeDarkDesc,
                   selected: themeController.isDark,
                   onTap: () => themeController.setMode(ThemeMode.dark),
                 ),
                 Divider(height: 1, color: context.appColors.border),
                 _ThemeTile(
                   icon: Icons.light_mode_rounded,
-                  label: 'Clair',
-                  subtitle: 'Interface lumineuse',
+                  label: AppLocalizations.of(context).themeLight,
+                  subtitle: AppLocalizations.of(context).themeLightDesc,
                   selected: themeController.isLight,
                   onTap: () => themeController.setMode(ThemeMode.light),
                 ),
@@ -718,16 +718,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Row(
           children: [
-            const _SectionTitle(title: 'Activité récente'),
+            _SectionTitle(title: AppLocalizations.of(context).recentActivity),
             const Spacer(),
             GestureDetector(
               onTap: () => Navigator.push(
                 context,
                 SlideRightRoute(page: const AttemptHistoryScreen()),
               ),
-              child: const Text(
-                'Voir tout',
-                style: TextStyle(
+              child: Text(
+                AppLocalizations.of(context).seeAll,
+                style: const TextStyle(
                   color: AppColors.primary,
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -739,10 +739,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 12),
         if (attempts.isEmpty)
           EmptyState(
-            title: 'Aucun quiz joué',
-            subtitle: 'Lance ton premier quiz pour voir tes résultats ici !',
+            title: AppLocalizations.of(context).noQuizPlayed,
+            subtitle: AppLocalizations.of(context).playFirstQuiz,
             emoji: '🎯',
-            actionLabel: 'Jouer',
+            actionLabel: AppLocalizations.of(context).playBtn,
             onAction: () {},
           )
         else
@@ -767,14 +767,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.info.withValues(alpha: 0.25)),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.admin_panel_settings_rounded, color: AppColors.info, size: 18),
-            SizedBox(width: 8),
+            const Icon(Icons.admin_panel_settings_rounded, color: AppColors.info, size: 18),
+            const SizedBox(width: 8),
             Text(
-              'Panneau Admin',
-              style: TextStyle(
+              AppLocalizations.of(context).adminPanel,
+              style: const TextStyle(
                 color: AppColors.info,
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
@@ -800,14 +800,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           border:
               Border.all(color: AppColors.error.withValues(alpha: 0.25)),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout_rounded, color: AppColors.error, size: 18),
-            SizedBox(width: 8),
+            const Icon(Icons.logout_rounded, color: AppColors.error, size: 18),
+            const SizedBox(width: 8),
             Text(
-              'Se déconnecter',
-              style: TextStyle(
+              AppLocalizations.of(context).logOutAction,
+              style: const TextStyle(
                 color: AppColors.error,
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
@@ -837,7 +837,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: context.appColors.textMuted, size: 18),
             const SizedBox(width: 8),
             Text(
-              'Supprimer mon compte',
+              AppLocalizations.of(context).deleteMyAccount,
               style: TextStyle(
                 color: context.appColors.textMuted,
                 fontSize: 14,

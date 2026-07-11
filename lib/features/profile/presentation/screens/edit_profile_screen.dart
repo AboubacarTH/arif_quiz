@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/main.dart';
+﻿import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/ui.dart';
@@ -31,9 +32,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final email = _emailCtrl.text.trim();
     final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
-    if (name.isEmpty || email.isEmpty) return 'Please fill all fields';
-    if (name.length < 2) return 'Please enter your full name';
-    if (!emailPattern.hasMatch(email)) return 'Please enter a valid email';
+    if (name.isEmpty || email.isEmpty) return AppLocalizations.of(context).fillAllFields;
+    if (name.length < 2) return AppLocalizations.of(context).enterFullName;
+    if (!emailPattern.hasMatch(email)) return AppLocalizations.of(context).enterValidEmail;
 
     return null;
   }
@@ -59,7 +60,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = 'Unable to update profile. Try again.');
+      setState(() => _error = AppLocalizations.of(context).updateProfileFailed);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -76,7 +77,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.bg,
-      appBar: const QuizAppBar(title: 'Edit Profile', showBack: true),
+      appBar: QuizAppBar(title: AppLocalizations.of(context).editProfileTitle, showBack: true),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -108,8 +109,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ],
               AppTextField(
                 controller: _nameCtrl,
-                label: 'Full Name',
-                hint: 'Your name',
+                label: AppLocalizations.of(context).fullName,
+                hint: AppLocalizations.of(context).yourNameHint,
                 prefixIcon: Icons.person_outline,
                 textInputAction: TextInputAction.next,
                 onChanged: (_) => setState(() {}),
@@ -117,7 +118,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const SizedBox(height: 16),
               AppTextField(
                 controller: _emailCtrl,
-                label: 'Email',
+                label: AppLocalizations.of(context).email,
                 hint: 'you@example.com',
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: Icons.email_outlined,
@@ -126,7 +127,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               const SizedBox(height: 32),
               AppButton(
-                label: 'Save Changes',
+                label: AppLocalizations.of(context).saveChanges,
                 icon: Icons.check_rounded,
                 iconTrailing: true,
                 fullWidth: true,
