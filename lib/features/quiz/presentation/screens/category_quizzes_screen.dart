@@ -188,7 +188,7 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
             children: [
               for (final d in [null, 'easy', 'medium', 'hard'])
                 Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsetsDirectional.only(end: 8),
                   child: _DiffChip(
                     label: d == null
                         ? AppLocalizations.of(context).allFilter

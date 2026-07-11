@@ -152,7 +152,7 @@ class QuizResultScreen extends StatelessWidget {
 
                     // Review
                     Align(
-                        alignment: Alignment.centerLeft,
+                        alignment: AlignmentDirectional.centerStart,
                         child: Text(AppLocalizations.of(context).answerReview,
                             style: TextStyle(
                                 color: context.appColors.textPrimary,
@@ -427,7 +427,7 @@ class _ReviewCardState extends State<_ReviewCard> {
               if (widget.canReport) ...[
                 const SizedBox(height: 6),
                 Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: TextButton.icon(
                     onPressed: () => _showReportSheet(context, r),
                     style: TextButton.styleFrom(
@@ -632,7 +632,7 @@ class _AnswerRow extends StatelessWidget {
   const _AnswerRow(this.label, this.answer, this.color);
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 4, left: 26),
+        padding: const EdgeInsetsDirectional.only(bottom: 4, start: 26),
         child: RichText(
           text: TextSpan(
             style: const TextStyle(fontSize: 12, fontFamily: 'Nunito'),

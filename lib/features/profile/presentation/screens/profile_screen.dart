@@ -344,7 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           // Avatar
           Stack(
-            alignment: Alignment.bottomRight,
+            alignment: AlignmentDirectional.bottomEnd,
             children: [
               Container(
                 width: 84,

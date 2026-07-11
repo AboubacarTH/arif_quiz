@@ -124,7 +124,7 @@ class GameModeCard extends StatelessWidget {
                   Row(
                     children: _badges(context)
                         .map((b) => Padding(
-                              padding: const EdgeInsets.only(right: 8),
+                              padding: const EdgeInsetsDirectional.only(end: 8),
                               child: _BadgeWidget(badge: b, color: _color),
                             ))
                         .toList(),

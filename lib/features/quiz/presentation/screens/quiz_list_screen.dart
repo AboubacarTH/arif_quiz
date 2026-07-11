@@ -306,7 +306,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
                 'hard': AppLocalizations.of(context).diffHard,
               }.entries)
                 Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsetsDirectional.only(end: 8),
                   child: _FilterChip(
                     label: entry.value,
                     selected: _selectedDiff == entry.key,
@@ -332,7 +332,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
   Widget _buildCount() => Padding(
         padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
         child: Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: Text(
             AppLocalizations.of(context).quizCount(_ctrl.quizzes.length),
             style: TextStyle(color: context.appColors.textMuted, fontSize: 12),

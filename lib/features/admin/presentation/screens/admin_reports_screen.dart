@@ -318,7 +318,7 @@ class _ReportTile extends StatelessWidget {
                     r.quizTitle!,
                     style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
                     overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.right,
+                    textAlign: TextAlign.end,
                   ),
                 ),
             ],
