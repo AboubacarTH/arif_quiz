@@ -248,5 +248,81 @@
   "addBtn": "Add",
   "modeClassicShort": "Classic",
   "modeSurvivalShort": "Survival",
-  "modeSpeedShort": "Speed Round"
+  "modeSpeedShort": "Speed Round",
+  "challengesTitle": "Challenges",
+  "joinBtn": "Join",
+  "createChallenge": "Create a challenge",
+  "noChallengesYet": "No challenges yet",
+  "createOrJoin": "Create or join a challenge!",
+  "createBtn": "Create",
+  "myCreatedChallenges": "My created challenges",
+  "deleteBtn": "Delete",
+  "joinedChallenges": "Joined challenges",
+  "deleteChallengeTitle": "Delete the challenge?",
+  "deleteChallengeBody": "The challenge \"{title}\" will be permanently deleted.",
+  "@deleteChallengeBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "Cancel",
+  "challengeDeleted": "Challenge deleted",
+  "deleteError": "Error while deleting",
+  "stepSource": "Question source",
+  "stepPickCategory": "Choose a category",
+  "stepPickQuiz": "Choose a quiz",
+  "stepConfigure": "Configure the challenge",
+  "enterChallengeTitle": "Enter a title for the challenge",
+  "createError": "Error while creating",
+  "srcQuizLabel": "A specific quiz",
+  "srcQuizDesc": "10 questions from a quiz of your choice",
+  "srcCategoryLabel": "By category",
+  "srcCategoryDesc": "10 random questions from all quizzes in a category",
+  "srcAllDesc": "10 random questions from all available quizzes",
+  "whereQuestionsFrom": "Where do the questions come from?",
+  "noCategoryAvailable": "No category available",
+  "noQuizInCategory": "No quiz in this category",
+  "categoryLabel": "Category",
+  "challengeTitleLabel": "Challenge title",
+  "challengeTitleHint": "E.g.: Who knows aviation?",
+  "creating": "Creating…",
+  "createChallengeBtn": "Create the challenge",
+  "joinChallengeTitle": "Join a challenge",
+  "enterChallengeCode": "Enter the challenge code",
+  "codeHelp": "The 8-character code was shared with you by the challenge creator.",
+  "joinChallengeBtn": "Join the challenge",
+  "challengeFound": "Challenge found!",
+  "byCreator": "by {name}",
+  "@byCreator": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "codeLengthError": "The code must be 8 characters",
+  "rematchError": "Rematch failed. Try again.",
+  "rematch": "Rematch",
+  "playThisChallenge": "Play this challenge",
+  "alreadyPlayed": "You already played this challenge. Check the leaderboard below.",
+  "leaderboardCompleted": "Leaderboard ({count, plural, =1{1 completed} other{{count} completed}})",
+  "@leaderboardCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nobodyCompleted": "Nobody has completed this challenge yet.",
+  "pendingCount": "Pending ({count})",
+  "@pendingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pendingLabel": "Pending"
 }
