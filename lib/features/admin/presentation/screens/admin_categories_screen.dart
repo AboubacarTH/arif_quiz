@@ -1,4 +1,5 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
+import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -249,6 +250,7 @@ class _CategoryFormState extends State<_CategoryForm> {
   late final TextEditingController _icon;
   late final TextEditingController _color;
   late bool _isActive;
+  late final TranslationsMap _translations;
   bool _saving = false;
   String? _error;
 
@@ -256,6 +258,7 @@ class _CategoryFormState extends State<_CategoryForm> {
   void initState() {
     super.initState();
     final cat = widget.category;
+    _translations = copyTranslations(cat?.translations ?? const {});
     _name  = TextEditingController(text: cat?.name ?? '');
     _desc  = TextEditingController(text: cat?.description ?? '');
     _icon  = TextEditingController(text: cat?.icon ?? '');
@@ -279,6 +282,7 @@ class _CategoryFormState extends State<_CategoryForm> {
         'icon': _icon.text.trim().isEmpty ? null : _icon.text.trim(),
         'color': _color.text.trim(),
         'is_active': _isActive,
+        'translations': _translations,
       };
       if (widget.category == null) {
         await widget.repo.createCategory(data);
@@ -298,7 +302,8 @@ class _CategoryFormState extends State<_CategoryForm> {
       padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
       child: Form(
         key: _formKey,
-        child: Column(
+        child: SingleChildScrollView(
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -341,6 +346,27 @@ class _CategoryFormState extends State<_CategoryForm> {
               contentPadding: EdgeInsets.zero,
             ),
             const SizedBox(height: 16),
+            TranslationsSection(
+              filled: (l) => trGet(_translations, l, 'name').trim().isNotEmpty,
+              builder: (ctx, locale) => Column(
+                children: [
+                  TextFormField(
+                    initialValue: trGet(_translations, locale, 'name'),
+                    decoration: _dec('Nom ($locale)'),
+                    onChanged: (v) =>
+                        setState(() => trSet(_translations, locale, 'name', v)),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    initialValue: trGet(_translations, locale, 'description'),
+                    decoration: _dec('Description ($locale)'),
+                    onChanged: (v) =>
+                        trSet(_translations, locale, 'description', v),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -356,6 +382,7 @@ class _CategoryFormState extends State<_CategoryForm> {
               ),
             ),
           ],
+          ),
         ),
       ),
     );
@@ -375,4 +402,12 @@ class _CategoryFormState extends State<_CategoryForm> {
       ),
     );
   }
+
+  InputDecoration _dec(String label) => InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: context.appColors.surface,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
+      );
 }
