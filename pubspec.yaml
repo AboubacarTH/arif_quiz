@@ -59,6 +59,10 @@ dependencies:
   auto_size_text: ^3.0.0
   audioplayers: ^6.8.1
 
+  # Internationalisation (UI multilingue en/fr/ar/es)
+  flutter_localizations:
+    sdk: flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -76,6 +80,7 @@ flutter_launcher_icons:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/images/
     - assets/animations/

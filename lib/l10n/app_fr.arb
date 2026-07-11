@@ -1,0 +1,32 @@
+{
+  "@@locale": "fr",
+
+  "greeting": "Bonjour, {name} 👋",
+  "guest": "Invité",
+  "readyToPlay": "Prêt à jouer ?",
+
+  "categories": "Catégories",
+  "seeAll": "Voir tout",
+  "popular": "🔥 Populaires",
+  "friendsLeaderboard": "🏅 Classement amis",
+
+  "guestBannerTitle": "Sauvegarde ta progression !",
+  "guestBannerSubtitle": "Crée un compte pour débloquer XP, streak et classement.",
+  "signUp": "S'inscrire",
+  "logIn": "Se connecter",
+
+  "dailyChallengeTag": "DÉFI QUOTIDIEN",
+  "dailyChallengeTitle": "Un quiz spécial chaque jour",
+  "dailyChallengeSubtitle": "+30 XP bonus · Maintient ton streak",
+
+  "journeyTag": "MODE PARCOURS",
+  "journeyTitle": "Grimpe les niveaux de la map",
+  "journeySubtitle": "Débloque, gagne des étoiles ⭐",
+
+  "levelShort": "Niv. {level}",
+  "quizCount": "{count, plural, =0{0 quiz} =1{1 quiz} other{{count} quiz}}",
+
+  "language": "Langue",
+  "chooseLanguage": "Choisis ta langue",
+  "languageSystemNote": "S'applique aussi au contenu des quiz et questions."
+}

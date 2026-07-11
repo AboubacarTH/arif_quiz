@@ -1,0 +1,47 @@
+{
+  "@@locale": "en",
+
+  "greeting": "Hello, {name} 👋",
+  "@greeting": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "guest": "Guest",
+  "readyToPlay": "Ready to play?",
+
+  "categories": "Categories",
+  "seeAll": "See all",
+  "popular": "🔥 Popular",
+  "friendsLeaderboard": "🏅 Friends leaderboard",
+
+  "guestBannerTitle": "Save your progress!",
+  "guestBannerSubtitle": "Create an account to unlock XP, streaks and rankings.",
+  "signUp": "Sign up",
+  "logIn": "Log in",
+
+  "dailyChallengeTag": "DAILY CHALLENGE",
+  "dailyChallengeTitle": "A special quiz every day",
+  "dailyChallengeSubtitle": "+30 bonus XP · Keeps your streak alive",
+
+  "journeyTag": "JOURNEY MODE",
+  "journeyTitle": "Climb the levels of the map",
+  "journeySubtitle": "Unlock levels, earn stars ⭐",
+
+  "levelShort": "Lvl {level}",
+  "@levelShort": {
+    "placeholders": {
+      "level": {"type": "int"}
+    }
+  },
+  "quizCount": "{count, plural, =0{0 quizzes} =1{1 quiz} other{{count} quizzes}}",
+  "@quizCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "language": "Language",
+  "chooseLanguage": "Choose your language",
+  "languageSystemNote": "Also applies to quiz and question content."
+}

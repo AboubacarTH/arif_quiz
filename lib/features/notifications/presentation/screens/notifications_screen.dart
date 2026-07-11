@@ -139,7 +139,7 @@ class _NotifTile extends StatelessWidget {
                 children: [
                   Text(notif.message, style: TextStyle(color: notif.isRead ? context.appColors.textSecondary : context.appColors.textPrimary, fontSize: 13, fontWeight: notif.isRead ? FontWeight.w500 : FontWeight.w700)),
                   const SizedBox(height: 4),
-                  Text(timeago.format(notif.createdAt, locale: 'fr'), style: TextStyle(color: context.appColors.textMuted, fontSize: 11)),
+                  Text(timeago.format(notif.createdAt), style: TextStyle(color: context.appColors.textMuted, fontSize: 11)),
                 ],
               ),
             ),

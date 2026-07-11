@@ -30,7 +30,8 @@ class ApiService {
       receiveTimeout: const Duration(seconds: 15),
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept-Language': 'en',
       },
     ));
 
@@ -54,6 +55,16 @@ class ApiService {
         handler.next(error);
       },
     ));
+  }
+
+  /// Langue envoyée au backend (contenu multilingue) sur toutes les requêtes.
+  void setLocale(String code) {
+    _dio.options.headers['Accept-Language'] = code;
+  }
+
+  /// Enregistre la préférence de langue sur le profil (utilisateur connecté).
+  Future<void> syncProfileLocale(String code) async {
+    await _dio.put('/profile', data: {'locale': code});
   }
 
   static bool _isPublicAuthPath(String path) {

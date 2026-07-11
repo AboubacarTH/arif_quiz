@@ -1,0 +1,32 @@
+{
+  "@@locale": "ar",
+
+  "greeting": "مرحباً {name} 👋",
+  "guest": "زائر",
+  "readyToPlay": "مستعد للعب؟",
+
+  "categories": "الفئات",
+  "seeAll": "عرض الكل",
+  "popular": "🔥 الأكثر شعبية",
+  "friendsLeaderboard": "🏅 ترتيب الأصدقاء",
+
+  "guestBannerTitle": "احفظ تقدمك!",
+  "guestBannerSubtitle": "أنشئ حساباً لفتح نقاط الخبرة والسلسلة والترتيب.",
+  "signUp": "إنشاء حساب",
+  "logIn": "تسجيل الدخول",
+
+  "dailyChallengeTag": "التحدي اليومي",
+  "dailyChallengeTitle": "اختبار مميز كل يوم",
+  "dailyChallengeSubtitle": "+30 نقطة خبرة إضافية · حافظ على سلسلتك",
+
+  "journeyTag": "وضع المغامرة",
+  "journeyTitle": "تسلّق مستويات الخريطة",
+  "journeySubtitle": "افتح المستويات واجمع النجوم ⭐",
+
+  "levelShort": "مستوى {level}",
+  "quizCount": "{count, plural, =0{لا اختبارات} =1{اختبار واحد} =2{اختباران} few{{count} اختبارات} other{{count} اختباراً}}",
+
+  "language": "اللغة",
+  "chooseLanguage": "اختر لغتك",
+  "languageSystemNote": "تنطبق أيضاً على محتوى الاختبارات والأسئلة."
+}
