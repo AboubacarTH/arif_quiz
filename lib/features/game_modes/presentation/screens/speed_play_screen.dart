@@ -2,6 +2,7 @@ import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -30,7 +31,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
   final _repo = QuizRepository(apiService);
   GamePlayController? _ctrl;
   bool _loading = true;
-  String? _error;
+  bool _failed = false;
   bool _submitting = false;
   int? _sessionId;
 
@@ -66,7 +67,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
     } catch (e) {
       debugPrint('Challenge load error: $e');
       setState(() {
-        _error = 'Impossible de charger les questions.';
+        _failed = true;
         _loading = false;
       });
     }
@@ -131,8 +132,8 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
       if (!mounted) return;
       setState(() => _submitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Erreur lors de la soumission'),
+        SnackBar(
+            content: Text(AppLocalizations.of(context).submitError),
             backgroundColor: AppColors.error),
       );
     }
@@ -154,10 +155,10 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
             child: CircularProgressIndicator(color: AppColors.secondary)),
       );
     }
-    if (_error != null) {
+    if (_failed) {
       return Scaffold(
         backgroundColor: context.appColors.bg,
-        body: ErrorState(message: _error!, onRetry: _loadQuestions),
+        body: ErrorState(message: AppLocalizations.of(context).loadQuestionsError, onRetry: _loadQuestions),
       );
     }
     if (_submitting) {
@@ -170,7 +171,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
               const CircularProgressIndicator(color: AppColors.secondary),
               const SizedBox(height: 16),
               Text(
-                'Calcul des résultats...',
+                AppLocalizations.of(context).calculatingResults,
                 style: TextStyle(color: context.appColors.textSecondary),
               ),
             ],
@@ -310,7 +311,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                           QuestionMedia(
                               imageUrl: q.imageUrl, audioUrl: q.audioUrl),
                         Text(
-                          'Question ${ctrl.index + 1}',
+                          AppLocalizations.of(context).questionNumber(ctrl.index + 1),
                           style: const TextStyle(
                             color: AppColors.secondary,
                             fontSize: 12,

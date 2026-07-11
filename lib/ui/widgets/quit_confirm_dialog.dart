@@ -1,3 +1,4 @@
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
@@ -13,29 +14,29 @@ Future<bool> confirmQuitGame(BuildContext context) async {
       backgroundColor: ctx.appColors.cardBg,
       shape: RoundedRectangleBorder(borderRadius: AppRadius.rXl),
       title: Text(
-        'Quitter la partie ?',
+        AppLocalizations.of(context).quitGameTitle,
         style: TextStyle(
           color: ctx.appColors.textPrimary,
           fontWeight: FontWeight.w800,
         ),
       ),
       content: Text(
-        'Ta progression sera perdue.',
+        AppLocalizations.of(context).quitGameBody,
         style: TextStyle(color: ctx.appColors.textSecondary),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(ctx, false),
           child: Text(
-            'Continuer',
+            AppLocalizations.of(context).keepPlaying,
             style: TextStyle(color: ctx.appColors.textMuted),
           ),
         ),
         TextButton(
           onPressed: () => Navigator.pop(ctx, true),
-          child: const Text(
-            'Quitter',
-            style: TextStyle(
+          child: Text(
+            AppLocalizations.of(context).quit,
+            style: const TextStyle(
               color: AppColors.error,
               fontWeight: FontWeight.w700,
             ),

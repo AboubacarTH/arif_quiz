@@ -2,6 +2,7 @@
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -34,7 +35,7 @@ class QuizPlayScreen extends StatefulWidget {
 class _QuizPlayScreenState extends State<QuizPlayScreen> {
   GamePlayController? _ctrl;
   bool _initLoading = true;
-  String? _initError;
+  bool _initFailed = false;
   int? _sessionId;
   final _repo = QuizRepository(apiService);
 
@@ -47,7 +48,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
   Future<void> _loadQuestions() async {
     setState(() {
       _initLoading = true;
-      _initError = null;
+      _initFailed = false;
     });
     try {
       final List<QuestionModel> questions;
@@ -76,7 +77,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
     } catch (e) {
       debugPrint('Challenge load error: $e');
       setState(() {
-        _initError = 'Failed to load questions.';
+        _initFailed = true;
         _initLoading = false;
       });
     }
@@ -143,8 +144,8 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
       debugPrint('Challenge submit error: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Erreur lors de la soumission. Vérifie ta connexion.'),
+        SnackBar(
+            content: Text(AppLocalizations.of(context).submitError),
             backgroundColor: AppColors.error),
       );
     }
@@ -165,10 +166,12 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
           body: const Center(
               child: CircularProgressIndicator(color: AppColors.primary)));
     }
-    if (_initError != null) {
+    if (_initFailed) {
       return Scaffold(
           backgroundColor: context.appColors.bg,
-          body: ErrorState(message: _initError!, onRetry: _loadQuestions));
+          body: ErrorState(
+              message: AppLocalizations.of(context).loadQuestionsError,
+              onRetry: _loadQuestions));
     }
 
     final ctrl = _ctrl!;
@@ -249,7 +252,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                         if (q.hasMedia)
                           QuestionMedia(
                               imageUrl: q.imageUrl, audioUrl: q.audioUrl),
-                        Text('Question ${ctrl.index + 1}',
+                        Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1),
                             style: const TextStyle(
                                 color: AppColors.primary,
                                 fontSize: 12,
@@ -282,7 +285,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                 if (!ctrl.answered)
                   TextButton(
                     onPressed: ctrl.skip,
-                    child: Text('Skip →',
+                    child: Text(AppLocalizations.of(context).skip,
                         style: TextStyle(
                             color: context.appColors.textMuted, fontSize: 14)),
                   )

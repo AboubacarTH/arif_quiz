@@ -233,6 +233,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Also applies to quiz and question content.'**
   String get languageSystemNote;
+
+  /// No description provided for @questionNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {number}'**
+  String questionNumber(int number);
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip →'**
+  String get skip;
+
+  /// No description provided for @loadQuestionsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the questions.'**
+  String get loadQuestionsError;
+
+  /// No description provided for @loadLevelError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load this level.'**
+  String get loadLevelError;
+
+  /// No description provided for @invalidSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid session. Retry the level.'**
+  String get invalidSession;
+
+  /// No description provided for @submitError.
+  ///
+  /// In en, this message translates to:
+  /// **'Submission failed. Check your connection.'**
+  String get submitError;
+
+  /// No description provided for @calculatingResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating results…'**
+  String get calculatingResults;
+
+  /// No description provided for @survivalTag.
+  ///
+  /// In en, this message translates to:
+  /// **'SURVIVAL MODE'**
+  String get survivalTag;
+
+  /// No description provided for @gameOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Game Over!'**
+  String get gameOver;
+
+  /// No description provided for @survivedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{You didn\'t survive a single question} =1{You survived 1 question} other{You survived {count} questions}}'**
+  String survivedCount(int count);
+
+  /// No description provided for @seeResults.
+  ///
+  /// In en, this message translates to:
+  /// **'See results'**
+  String get seeResults;
+
+  /// No description provided for @quit.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit'**
+  String get quit;
+
+  /// No description provided for @quitGameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit the game?'**
+  String get quitGameTitle;
+
+  /// No description provided for @quitGameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress will be lost.'**
+  String get quitGameBody;
+
+  /// No description provided for @keepPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get keepPlaying;
+
+  /// No description provided for @journeyMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Journey Mode'**
+  String get journeyMapTitle;
+
+  /// No description provided for @journeyLevelProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {current} / {total}'**
+  String journeyLevelProgress(int current, int total);
+
+  /// No description provided for @journeyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Journey unavailable'**
+  String get journeyUnavailable;
+
+  /// No description provided for @comeBackLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back later'**
+  String get comeBackLater;
+
+  /// No description provided for @levelsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'🏁  {count} levels'**
+  String levelsCount(int count);
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAY'**
+  String get play;
+
+  /// No description provided for @bossShort.
+  ///
+  /// In en, this message translates to:
+  /// **'BOSS {level}'**
+  String bossShort(int level);
+
+  /// No description provided for @resultPerfect.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect!'**
+  String get resultPerfect;
+
+  /// No description provided for @resultGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Well played!'**
+  String get resultGreat;
+
+  /// No description provided for @resultPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'Level cleared'**
+  String get resultPassed;
+
+  /// No description provided for @resultAlmost.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost!'**
+  String get resultAlmost;
+
+  /// No description provided for @bossLevelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Boss · Level {level}'**
+  String bossLevelLabel(int level);
+
+  /// No description provided for @levelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level}'**
+  String levelLabel(int level);
+
+  /// No description provided for @nextLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next level'**
+  String get nextLevel;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @replay.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay'**
+  String get replay;
+
+  /// No description provided for @viewMap.
+  ///
+  /// In en, this message translates to:
+  /// **'View map'**
+  String get viewMap;
+
+  /// No description provided for @score.
+  ///
+  /// In en, this message translates to:
+  /// **'Score'**
+  String get score;
+
+  /// No description provided for @correctLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get correctLabel;
 }
 
 class _AppLocalizationsDelegate

@@ -89,4 +89,129 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get languageSystemNote => 'تنطبق أيضاً على محتوى الاختبارات والأسئلة.';
+
+  @override
+  String questionNumber(int number) {
+    return 'السؤال $number';
+  }
+
+  @override
+  String get skip => 'تخطّي ←';
+
+  @override
+  String get loadQuestionsError => 'تعذّر تحميل الأسئلة.';
+
+  @override
+  String get loadLevelError => 'تعذّر تحميل هذا المستوى.';
+
+  @override
+  String get invalidSession => 'جلسة غير صالحة. أعد المحاولة.';
+
+  @override
+  String get submitError => 'فشل الإرسال. تحقق من اتصالك.';
+
+  @override
+  String get calculatingResults => 'جارٍ حساب النتائج…';
+
+  @override
+  String get survivalTag => 'وضع البقاء';
+
+  @override
+  String get gameOver => 'انتهت اللعبة!';
+
+  @override
+  String survivedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'نجوت من $count سؤالاً',
+      few: 'نجوت من $count أسئلة',
+      two: 'نجوت من سؤالين',
+      one: 'نجوت من سؤال واحد',
+      zero: 'لم تنجُ من أي سؤال',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get seeResults => 'عرض النتائج';
+
+  @override
+  String get quit => 'خروج';
+
+  @override
+  String get quitGameTitle => 'الخروج من اللعبة؟';
+
+  @override
+  String get quitGameBody => 'سيضيع تقدمك.';
+
+  @override
+  String get keepPlaying => 'متابعة';
+
+  @override
+  String get journeyMapTitle => 'وضع المغامرة';
+
+  @override
+  String journeyLevelProgress(int current, int total) {
+    return 'المستوى $current / $total';
+  }
+
+  @override
+  String get journeyUnavailable => 'المغامرة غير متاحة';
+
+  @override
+  String get comeBackLater => 'عد لاحقاً';
+
+  @override
+  String levelsCount(int count) {
+    return '🏁  $count مستوى';
+  }
+
+  @override
+  String get play => 'العب';
+
+  @override
+  String bossShort(int level) {
+    return 'زعيم $level';
+  }
+
+  @override
+  String get resultPerfect => 'ممتاز!';
+
+  @override
+  String get resultGreat => 'أحسنت!';
+
+  @override
+  String get resultPassed => 'اجتزت المستوى';
+
+  @override
+  String get resultAlmost => 'اقتربت!';
+
+  @override
+  String bossLevelLabel(int level) {
+    return 'زعيم · المستوى $level';
+  }
+
+  @override
+  String levelLabel(int level) {
+    return 'المستوى $level';
+  }
+
+  @override
+  String get nextLevel => 'المستوى التالي';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get replay => 'إعادة اللعب';
+
+  @override
+  String get viewMap => 'عرض الخريطة';
+
+  @override
+  String get score => 'النتيجة';
+
+  @override
+  String get correctLabel => 'صحيحة';
 }

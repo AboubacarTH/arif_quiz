@@ -1,47 +1,132 @@
 {
   "@@locale": "en",
-
   "greeting": "Hello, {name} 👋",
   "@greeting": {
     "placeholders": {
-      "name": {"type": "String"}
+      "name": {
+        "type": "String"
+      }
     }
   },
   "guest": "Guest",
   "readyToPlay": "Ready to play?",
-
   "categories": "Categories",
   "seeAll": "See all",
   "popular": "🔥 Popular",
   "friendsLeaderboard": "🏅 Friends leaderboard",
-
   "guestBannerTitle": "Save your progress!",
   "guestBannerSubtitle": "Create an account to unlock XP, streaks and rankings.",
   "signUp": "Sign up",
   "logIn": "Log in",
-
   "dailyChallengeTag": "DAILY CHALLENGE",
   "dailyChallengeTitle": "A special quiz every day",
   "dailyChallengeSubtitle": "+30 bonus XP · Keeps your streak alive",
-
   "journeyTag": "JOURNEY MODE",
   "journeyTitle": "Climb the levels of the map",
   "journeySubtitle": "Unlock levels, earn stars ⭐",
-
   "levelShort": "Lvl {level}",
   "@levelShort": {
     "placeholders": {
-      "level": {"type": "int"}
+      "level": {
+        "type": "int"
+      }
     }
   },
   "quizCount": "{count, plural, =0{0 quizzes} =1{1 quiz} other{{count} quizzes}}",
   "@quizCount": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "language": "Language",
   "chooseLanguage": "Choose your language",
-  "languageSystemNote": "Also applies to quiz and question content."
+  "languageSystemNote": "Also applies to quiz and question content.",
+  "questionNumber": "Question {number}",
+  "@questionNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "skip": "Skip →",
+  "loadQuestionsError": "Couldn't load the questions.",
+  "loadLevelError": "Couldn't load this level.",
+  "invalidSession": "Invalid session. Retry the level.",
+  "submitError": "Submission failed. Check your connection.",
+  "calculatingResults": "Calculating results…",
+  "survivalTag": "SURVIVAL MODE",
+  "gameOver": "Game Over!",
+  "survivedCount": "{count, plural, =0{You didn't survive a single question} =1{You survived 1 question} other{You survived {count} questions}}",
+  "@survivedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seeResults": "See results",
+  "quit": "Quit",
+  "quitGameTitle": "Quit the game?",
+  "quitGameBody": "Your progress will be lost.",
+  "keepPlaying": "Continue",
+  "journeyMapTitle": "Journey Mode",
+  "journeyLevelProgress": "Level {current} / {total}",
+  "@journeyLevelProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "journeyUnavailable": "Journey unavailable",
+  "comeBackLater": "Come back later",
+  "levelsCount": "🏁  {count} levels",
+  "@levelsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "play": "PLAY",
+  "bossShort": "BOSS {level}",
+  "@bossShort": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "resultPerfect": "Perfect!",
+  "resultGreat": "Well played!",
+  "resultPassed": "Level cleared",
+  "resultAlmost": "Almost!",
+  "bossLevelLabel": "Boss · Level {level}",
+  "@bossLevelLabel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "levelLabel": "Level {level}",
+  "@levelLabel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "nextLevel": "Next level",
+  "retry": "Retry",
+  "replay": "Replay",
+  "viewMap": "View map",
+  "score": "Score",
+  "correctLabel": "Correct"
 }

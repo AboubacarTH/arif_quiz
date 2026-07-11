@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:arif_quiz/features/journey/bloc/journey_controller.dart';
 import 'package:arif_quiz/features/journey/data/journey_repository.dart';
 import 'package:arif_quiz/features/journey/presentation/screens/journey_play_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -211,7 +212,7 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
                     const Text('🗺️', style: TextStyle(fontSize: 15)),
                     const SizedBox(width: 6),
                     Flexible(
-                      child: Text('Mode Parcours',
+                      child: Text(AppLocalizations.of(context).journeyMapTitle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -297,9 +298,9 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
 
     final map = _ctrl.map!;
     if (map.levels.isEmpty) {
-      return const EmptyState(
-          title: 'Parcours indisponible',
-          subtitle: 'Reviens plus tard',
+      return EmptyState(
+          title: AppLocalizations.of(context).journeyUnavailable,
+          subtitle: AppLocalizations.of(context).comeBackLater,
           emoji: '🗺️');
     }
 
@@ -346,7 +347,7 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
                   left: 0,
                   right: 0,
                   child: Center(
-                    child: Text('🏁  ${map.levelCount} niveaux',
+                    child: Text(AppLocalizations.of(context).levelsCount(map.levelCount),
                         style: TextStyle(
                             color: context.appColors.textMuted,
                             fontSize: 12,
@@ -446,7 +447,7 @@ class _LevelNode extends StatelessWidget {
                 top: 150 / 2 + size / 2 + 6,
                 left: 0,
                 right: 0,
-                child: Center(child: _playPill()),
+                child: Center(child: _playPill(context)),
               ),
             // Couronne au-dessus des boss non encore terminés.
             if (level.isBoss && !completed)
@@ -591,7 +592,7 @@ class _LevelNode extends StatelessWidget {
         .rotate(duration: level.isBoss ? 3600.ms : 5200.ms);
   }
 
-  Widget _playPill() {
+  Widget _playPill(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
@@ -604,13 +605,13 @@ class _LevelNode extends StatelessWidget {
               blurRadius: 12),
         ],
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
-          SizedBox(width: 2),
-          Text('JOUER',
-              style: TextStyle(
+          const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
+          const SizedBox(width: 2),
+          Text(AppLocalizations.of(context).play,
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 11,
                   fontWeight: FontWeight.w900,
