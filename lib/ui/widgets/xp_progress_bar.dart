@@ -1,3 +1,4 @@
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -31,7 +32,7 @@ class XpProgressBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                'Niv. $level',
+                AppLocalizations.of(context).levelShort(level),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 11,

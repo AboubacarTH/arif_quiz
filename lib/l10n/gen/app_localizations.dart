@@ -1625,6 +1625,396 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save changes'**
   String get saveChanges;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get emailRequired;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get passwordRequired;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome\nBack!'**
+  String get welcomeBack;
+
+  /// No description provided for @signInSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue your quiz journey'**
+  String get signInSubtitle;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'you@example.com'**
+  String get emailHint;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
+  /// No description provided for @continueAsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without an account'**
+  String get continueAsGuest;
+
+  /// No description provided for @scoresNotSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Scores won\'t be saved'**
+  String get scoresNotSaved;
+
+  /// No description provided for @passwordMin8.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters'**
+  String get passwordMin8;
+
+  /// No description provided for @passwordsDontMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDontMatch;
+
+  /// No description provided for @registrationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed. Email may already be taken.'**
+  String get registrationFailed;
+
+  /// No description provided for @createAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an\naccount'**
+  String get createAccountTitle;
+
+  /// No description provided for @joinThousands.
+  ///
+  /// In en, this message translates to:
+  /// **'Join thousands of players'**
+  String get joinThousands;
+
+  /// No description provided for @choosePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a password'**
+  String get choosePassword;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirmPassword;
+
+  /// No description provided for @repeatPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat your password'**
+  String get repeatPassword;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @resetSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send the code. Try again.'**
+  String get resetSendFailed;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset\npassword'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to receive a reset link'**
+  String get resetPasswordSubtitle;
+
+  /// No description provided for @sendResetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send reset link'**
+  String get sendResetLink;
+
+  /// No description provided for @backToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Sign In'**
+  String get backToSignIn;
+
+  /// No description provided for @enterSixDigitCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code received by email.'**
+  String get enterSixDigitCode;
+
+  /// No description provided for @passwordResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset successfully!'**
+  String get passwordResetSuccess;
+
+  /// No description provided for @codeInvalidOrExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect or expired code. Try again.'**
+  String get codeInvalidOrExpired;
+
+  /// No description provided for @newCodeSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'A new code has been sent to {email}.'**
+  String newCodeSentTo(String email);
+
+  /// No description provided for @resendCodeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t resend the code. Try again.'**
+  String get resendCodeFailed;
+
+  /// No description provided for @newPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New\npassword'**
+  String get newPasswordTitle;
+
+  /// No description provided for @enterCodeAndNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code received at {email} and your new password.'**
+  String enterCodeAndNewPassword(String email);
+
+  /// No description provided for @verificationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get verificationCode;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @resetPasswordBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get resetPasswordBtn;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resendCode;
+
+  /// No description provided for @enterYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email address'**
+  String get enterYourEmail;
+
+  /// No description provided for @enterConfirmationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the confirmation code'**
+  String get enterConfirmationCode;
+
+  /// No description provided for @emailConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address confirmed.'**
+  String get emailConfirmed;
+
+  /// No description provided for @confirmCodeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to confirm this code.'**
+  String get confirmCodeFailed;
+
+  /// No description provided for @confirmationEmailResent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new confirmation email has been sent.'**
+  String get confirmationEmailResent;
+
+  /// No description provided for @confirmationEmailResendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to resend the confirmation email.'**
+  String get confirmationEmailResendFailed;
+
+  /// No description provided for @confirmEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Email'**
+  String get confirmEmail;
+
+  /// No description provided for @confirmEmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm\nEmail'**
+  String get confirmEmailTitle;
+
+  /// No description provided for @validateEmailSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Validate your email address to secure your account'**
+  String get validateEmailSubtitle;
+
+  /// No description provided for @confirmationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmation code'**
+  String get confirmationCode;
+
+  /// No description provided for @enterYourCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your code'**
+  String get enterYourCode;
+
+  /// No description provided for @resendEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend email'**
+  String get resendEmail;
+
+  /// No description provided for @continueBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueBtn;
+
+  /// No description provided for @signInToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue'**
+  String get signInToContinue;
+
+  /// No description provided for @guestScreenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your progress, create challenges\nand find your friends.'**
+  String get guestScreenBody;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to home'**
+  String get backToHome;
+
+  /// No description provided for @appTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge your friends. Master the quiz.'**
+  String get appTagline;
+
+  /// No description provided for @exitAppTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit the app?'**
+  String get exitAppTitle;
+
+  /// No description provided for @exitAppBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to quit ArifQuiz?'**
+  String get exitAppBody;
+
+  /// No description provided for @profileTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTab;
+
+  /// No description provided for @playNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Play Now'**
+  String get playNow;
+
+  /// No description provided for @keepPlayingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep playing'**
+  String get keepPlayingTitle;
+
+  /// No description provided for @paywallBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch a short ad or go Premium\nto play without interruptions.'**
+  String get paywallBody;
+
+  /// No description provided for @adLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad is loading…'**
+  String get adLoading;
+
+  /// No description provided for @yearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get yearly;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// No description provided for @premiumBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Arif Quiz Premium\nAd-free · All features'**
+  String get premiumBanner;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @watchAd.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch an ad (≈30s)'**
+  String get watchAd;
+
+  /// No description provided for @somethingWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong.'**
+  String get somethingWrong;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @noInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternet;
 }
 
 class _AppLocalizationsDelegate

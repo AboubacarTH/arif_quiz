@@ -1,4 +1,5 @@
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
@@ -31,21 +32,21 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
 
     if (code.isEmpty || code.length != 6) {
       setState(() {
-        _error = 'Entre le code à 6 chiffres reçu par email.';
+        _error = AppLocalizations.of(context).enterSixDigitCode;
         _success = null;
       });
       return;
     }
     if (password.length < 8) {
       setState(() {
-        _error = 'Le mot de passe doit contenir au moins 8 caractères.';
+        _error = AppLocalizations.of(context).passwordMin8;
         _success = null;
       });
       return;
     }
     if (password != confirm) {
       setState(() {
-        _error = 'Les mots de passe ne correspondent pas.';
+        _error = AppLocalizations.of(context).passwordsDontMatch;
         _success = null;
       });
       return;
@@ -64,7 +65,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
         password: password,
       );
       if (!mounted) return;
-      setState(() => _success = 'Mot de passe réinitialisé avec succès !');
+      setState(() => _success = AppLocalizations.of(context).passwordResetSuccess);
       await Future.delayed(const Duration(seconds: 1));
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
@@ -74,7 +75,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = 'Code incorrect ou expiré. Réessaie.');
+      setState(() => _error = AppLocalizations.of(context).codeInvalidOrExpired);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -90,10 +91,10 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
     try {
       await apiService.forgotPassword(widget.email);
       if (!mounted) return;
-      setState(() => _success = 'Un nouveau code a été envoyé à ${widget.email}.');
+      setState(() => _success = AppLocalizations.of(context).newCodeSentTo(widget.email));
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = 'Impossible de renvoyer le code. Réessaie.');
+      setState(() => _error = AppLocalizations.of(context).resendCodeFailed);
     } finally {
       if (mounted) setState(() => _resending = false);
     }
@@ -144,7 +145,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Nouveau\nmot de passe',
+                  AppLocalizations.of(context).newPasswordTitle,
                   style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontSize: 36,
@@ -154,7 +155,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Entre le code reçu à ${widget.email} et ton nouveau mot de passe.',
+                  AppLocalizations.of(context).enterCodeAndNewPassword(widget.email),
                   style: TextStyle(
                       color: context.appColors.textSecondary, fontSize: 16),
                 ),
@@ -177,7 +178,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
                 ],
                 AppTextField(
                   controller: _codeCtrl,
-                  label: 'Code de vérification',
+                  label: AppLocalizations.of(context).verificationCode,
                   hint: '000000',
                   keyboardType: TextInputType.number,
                   prefixIcon: Icons.pin_outlined,
@@ -186,7 +187,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _passwordCtrl,
-                  label: 'Nouveau mot de passe',
+                  label: AppLocalizations.of(context).newPassword,
                   hint: '••••••••',
                   obscureText: true,
                   prefixIcon: Icons.lock_outline_rounded,
@@ -195,7 +196,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _confirmCtrl,
-                  label: 'Confirmer le mot de passe',
+                  label: AppLocalizations.of(context).confirmPassword,
                   hint: '••••••••',
                   obscureText: true,
                   prefixIcon: Icons.lock_outline_rounded,
@@ -204,7 +205,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
                 ),
                 const SizedBox(height: 32),
                 AppButton(
-                  label: 'Réinitialiser le mot de passe',
+                  label: AppLocalizations.of(context).resetPasswordBtn,
                   icon: Icons.lock_reset_rounded,
                   iconTrailing: true,
                   fullWidth: true,
@@ -214,7 +215,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
                 ),
                 const SizedBox(height: 12),
                 AppButton(
-                  label: 'Renvoyer le code',
+                  label: AppLocalizations.of(context).resendCode,
                   icon: Icons.refresh_rounded,
                   variant: AppButtonVariant.secondary,
                   fullWidth: true,

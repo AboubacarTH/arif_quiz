@@ -1,5 +1,6 @@
 ﻿import 'package:arif_quiz/features/auth/presentation/screens/email_confirmation_screen.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
@@ -29,19 +30,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
-      return 'Please fill all fields';
+      return AppLocalizations.of(context).fillAllFields;
     }
     if (name.length < 2) {
-      return 'Please enter your full name';
+      return AppLocalizations.of(context).enterFullName;
     }
     if (!emailPattern.hasMatch(email)) {
-      return 'Please enter a valid email address';
+      return AppLocalizations.of(context).enterValidEmail;
     }
     if (password.length < 8) {
-      return 'Password must be at least 8 characters';
+      return AppLocalizations.of(context).passwordMin8;
     }
     if (password != confirmPassword) {
-      return 'Passwords do not match';
+      return AppLocalizations.of(context).passwordsDontMatch;
     }
 
     return null;
@@ -84,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(
-          () => _error = 'Registration failed. Email may already be taken.');
+          () => _error = AppLocalizations.of(context).registrationFailed);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -150,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Créer un\ncompte',
+                  AppLocalizations.of(context).createAccountTitle,
                   style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontSize: 36,
@@ -160,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Rejoins des milliers de joueurs',
+                  AppLocalizations.of(context).joinThousands,
                   style:
                       TextStyle(color: context.appColors.textSecondary, fontSize: 16),
                 ),
@@ -171,16 +172,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ],
                 AppTextField(
                   controller: _nameCtrl,
-                  label: 'Full Name',
-                  hint: 'Your name',
+                  label: AppLocalizations.of(context).fullName,
+                  hint: AppLocalizations.of(context).yourNameHint,
                   prefixIcon: Icons.person_outline,
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _emailCtrl,
-                  label: 'Email',
-                  hint: 'you@example.com',
+                  label: AppLocalizations.of(context).email,
+                  hint: AppLocalizations.of(context).emailHint,
                   keyboardType: TextInputType.emailAddress,
                   prefixIcon: Icons.email_outlined,
                   textInputAction: TextInputAction.next,
@@ -188,8 +189,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _passCtrl,
-                  label: 'Password',
-                  hint: 'Choose a password',
+                  label: AppLocalizations.of(context).password,
+                  hint: AppLocalizations.of(context).choosePassword,
                   obscureText: true,
                   prefixIcon: Icons.lock_outlined,
                   textInputAction: TextInputAction.next,
@@ -197,8 +198,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _confirmPassCtrl,
-                  label: 'Confirm Password',
-                  hint: 'Repeat your password',
+                  label: AppLocalizations.of(context).confirmPassword,
+                  hint: AppLocalizations.of(context).repeatPassword,
                   obscureText: true,
                   prefixIcon: Icons.verified_user_outlined,
                   textInputAction: TextInputAction.done,
@@ -206,7 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 32),
                 AppButton(
-                  label: 'Create Account',
+                  label: AppLocalizations.of(context).createAccount,
                   fullWidth: true,
                   size: AppButtonSize.large,
                   loading: _loading,
@@ -219,14 +220,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       Text(
-                        'Already have an account? ',
+                        AppLocalizations.of(context).alreadyHaveAccount,
                         style: TextStyle(color: context.appColors.textSecondary),
                       ),
                       GestureDetector(
                         onTap: _goToLogin,
-                        child: const Text(
-                          'Sign In',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context).logIn,
+                          style: const TextStyle(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w700,
                           ),

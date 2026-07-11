@@ -849,4 +849,215 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get saveChanges => 'Guardar cambios';
+
+  @override
+  String get emailRequired => 'El correo es obligatorio';
+
+  @override
+  String get passwordRequired => 'La contraseña es obligatoria';
+
+  @override
+  String get welcomeBack => '¡Bienvenido\nde nuevo!';
+
+  @override
+  String get signInSubtitle => 'Inicia sesión para continuar tu aventura quiz';
+
+  @override
+  String get emailHint => 'tu@ejemplo.com';
+
+  @override
+  String get forgotPassword => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get continueAsGuest => 'Continuar sin cuenta';
+
+  @override
+  String get scoresNotSaved => 'Las puntuaciones no se guardarán';
+
+  @override
+  String get passwordMin8 => 'La contraseña debe tener al menos 8 caracteres';
+
+  @override
+  String get passwordsDontMatch => 'Las contraseñas no coinciden';
+
+  @override
+  String get registrationFailed =>
+      'Registro fallido. El correo puede estar ya en uso.';
+
+  @override
+  String get createAccountTitle => 'Crear una\ncuenta';
+
+  @override
+  String get joinThousands => 'Únete a miles de jugadores';
+
+  @override
+  String get choosePassword => 'Elige una contraseña';
+
+  @override
+  String get confirmPassword => 'Confirmar contraseña';
+
+  @override
+  String get repeatPassword => 'Repite tu contraseña';
+
+  @override
+  String get alreadyHaveAccount => '¿Ya tienes cuenta? ';
+
+  @override
+  String get resetSendFailed =>
+      'No se pudo enviar el código. Inténtalo de nuevo.';
+
+  @override
+  String get resetPasswordTitle => 'Restablecer\ncontraseña';
+
+  @override
+  String get resetPasswordSubtitle =>
+      'Introduce tu correo para recibir un enlace de restablecimiento';
+
+  @override
+  String get sendResetLink => 'Enviar el enlace';
+
+  @override
+  String get backToSignIn => 'Volver a iniciar sesión';
+
+  @override
+  String get enterSixDigitCode =>
+      'Introduce el código de 6 dígitos recibido por correo.';
+
+  @override
+  String get passwordResetSuccess => '¡Contraseña restablecida con éxito!';
+
+  @override
+  String get codeInvalidOrExpired =>
+      'Código incorrecto o caducado. Inténtalo de nuevo.';
+
+  @override
+  String newCodeSentTo(String email) {
+    return 'Se ha enviado un nuevo código a $email.';
+  }
+
+  @override
+  String get resendCodeFailed =>
+      'No se pudo reenviar el código. Inténtalo de nuevo.';
+
+  @override
+  String get newPasswordTitle => 'Nueva\ncontraseña';
+
+  @override
+  String enterCodeAndNewPassword(String email) {
+    return 'Introduce el código recibido en $email y tu nueva contraseña.';
+  }
+
+  @override
+  String get verificationCode => 'Código de verificación';
+
+  @override
+  String get newPassword => 'Nueva contraseña';
+
+  @override
+  String get resetPasswordBtn => 'Restablecer contraseña';
+
+  @override
+  String get resendCode => 'Reenviar el código';
+
+  @override
+  String get enterYourEmail => 'Introduce tu dirección de correo';
+
+  @override
+  String get enterConfirmationCode => 'Introduce el código de confirmación';
+
+  @override
+  String get emailConfirmed => 'Correo electrónico confirmado.';
+
+  @override
+  String get confirmCodeFailed => 'No se pudo confirmar este código.';
+
+  @override
+  String get confirmationEmailResent =>
+      'Se ha enviado un nuevo correo de confirmación.';
+
+  @override
+  String get confirmationEmailResendFailed =>
+      'No se pudo reenviar el correo de confirmación.';
+
+  @override
+  String get confirmEmail => 'Confirmar correo';
+
+  @override
+  String get confirmEmailTitle => 'Confirmar\ncorreo';
+
+  @override
+  String get validateEmailSubtitle =>
+      'Valida tu correo para proteger tu cuenta';
+
+  @override
+  String get confirmationCode => 'Código de confirmación';
+
+  @override
+  String get enterYourCode => 'Introduce tu código';
+
+  @override
+  String get resendEmail => 'Reenviar correo';
+
+  @override
+  String get continueBtn => 'Continuar';
+
+  @override
+  String get signInToContinue => 'Inicia sesión para continuar';
+
+  @override
+  String get guestScreenBody =>
+      'Guarda tu progreso, crea desafíos\ny encuentra a tus amigos.';
+
+  @override
+  String get backToHome => 'Volver al inicio';
+
+  @override
+  String get appTagline => 'Desafía a tus amigos. Domina el quiz.';
+
+  @override
+  String get exitAppTitle => '¿Salir de la aplicación?';
+
+  @override
+  String get exitAppBody => '¿Seguro que quieres salir de ArifQuiz?';
+
+  @override
+  String get profileTab => 'Perfil';
+
+  @override
+  String get playNow => 'Jugar ahora';
+
+  @override
+  String get keepPlayingTitle => 'Sigue jugando';
+
+  @override
+  String get paywallBody =>
+      'Mira un anuncio corto o pásate a Premium\npara jugar sin interrupciones.';
+
+  @override
+  String get adLoading => 'Cargando anuncio…';
+
+  @override
+  String get yearly => 'Anual';
+
+  @override
+  String get monthly => 'Mensual';
+
+  @override
+  String get premiumBanner =>
+      'Arif Quiz Premium\nSin anuncios · Todas las funciones';
+
+  @override
+  String get restorePurchases => 'Restaurar compras';
+
+  @override
+  String get watchAd => 'Ver un anuncio (≈30s)';
+
+  @override
+  String get somethingWrong => 'Algo salió mal.';
+
+  @override
+  String get tryAgain => 'Reintentar';
+
+  @override
+  String get noInternet => 'Sin conexión a internet';
 }

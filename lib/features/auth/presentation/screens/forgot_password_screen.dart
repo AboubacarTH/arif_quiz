@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/features/auth/presentation/screens/password_reset_code_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
@@ -30,8 +31,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final email = _emailCtrl.text.trim();
     final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
-    if (email.isEmpty) return 'Please enter your email address';
-    if (!emailPattern.hasMatch(email)) return 'Please enter a valid email';
+    if (email.isEmpty) return AppLocalizations.of(context).enterYourEmail;
+    if (!emailPattern.hasMatch(email)) return AppLocalizations.of(context).enterValidEmail;
 
     return null;
   }
@@ -63,7 +64,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = 'Impossible d\'envoyer le code. Réessaie.');
+      setState(() => _error = AppLocalizations.of(context).resetSendFailed);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -114,7 +115,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Réinitialiser\nle mot de passe',
+                  AppLocalizations.of(context).resetPasswordTitle,
                   style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontSize: 36,
@@ -124,7 +125,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Entre ton email pour recevoir un lien de réinitialisation',
+                  AppLocalizations.of(context).resetPasswordSubtitle,
                   style:
                       TextStyle(color: context.appColors.textSecondary, fontSize: 16),
                 ),
@@ -147,8 +148,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ],
                 AppTextField(
                   controller: _emailCtrl,
-                  label: 'Email',
-                  hint: 'you@example.com',
+                  label: AppLocalizations.of(context).email,
+                  hint: AppLocalizations.of(context).emailHint,
                   keyboardType: TextInputType.emailAddress,
                   prefixIcon: Icons.email_outlined,
                   textInputAction: TextInputAction.done,
@@ -156,7 +157,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 const SizedBox(height: 32),
                 AppButton(
-                  label: 'Send Reset Link',
+                  label: AppLocalizations.of(context).sendResetLink,
                   icon: Icons.send_rounded,
                   iconTrailing: true,
                   fullWidth: true,
@@ -168,9 +169,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 Center(
                   child: GestureDetector(
                     onTap: () => Navigator.maybePop(context),
-                    child: const Text(
-                      'Back to Sign In',
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context).backToSignIn,
+                      style: const TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w700,
                       ),

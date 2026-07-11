@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
@@ -261,13 +262,13 @@ class _FeaturedCard extends StatelessWidget {
                 color: AppColors.primary,
                 borderRadius: AppRadius.rSm,
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
-                  SizedBox(width: 4),
-                  Text('Play Now',
-                      style: TextStyle(
+                  const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
+                  const SizedBox(width: 4),
+                  Text(AppLocalizations.of(context).playNow,
+                      style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
                           fontSize: 13)),

@@ -1,5 +1,6 @@
 ﻿import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/ui.dart';
@@ -40,8 +41,8 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
     final email = _emailCtrl.text.trim();
     final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
-    if (email.isEmpty) return 'Please enter your email address';
-    if (!emailPattern.hasMatch(email)) return 'Please enter a valid email';
+    if (email.isEmpty) return AppLocalizations.of(context).enterYourEmail;
+    if (!emailPattern.hasMatch(email)) return AppLocalizations.of(context).enterValidEmail;
 
     return null;
   }
@@ -58,7 +59,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
 
     if (_codeCtrl.text.trim().isEmpty) {
       setState(() {
-        _error = 'Please enter the confirmation code';
+        _error = AppLocalizations.of(context).enterConfirmationCode;
         _success = null;
       });
       return;
@@ -76,11 +77,11 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
         code: _codeCtrl.text.trim(),
       );
       if (!mounted) return;
-      setState(() => _success = 'Email address confirmed.');
+      setState(() => _success = AppLocalizations.of(context).emailConfirmed);
       _continue();
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = 'Unable to confirm this code.');
+      setState(() => _error = AppLocalizations.of(context).confirmCodeFailed);
     } finally {
       if (mounted) setState(() => _verifying = false);
     }
@@ -105,10 +106,10 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
     try {
       await apiService.resendEmailVerification(email: _emailCtrl.text.trim());
       if (!mounted) return;
-      setState(() => _success = 'A new confirmation email has been sent.');
+      setState(() => _success = AppLocalizations.of(context).confirmationEmailResent);
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = 'Unable to resend the confirmation email.');
+      setState(() => _error = AppLocalizations.of(context).confirmationEmailResendFailed);
     } finally {
       if (mounted) setState(() => _resending = false);
     }
@@ -138,7 +139,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
     return Scaffold(
       backgroundColor: context.appColors.bg,
       appBar: QuizAppBar(
-        title: 'Confirm Email',
+        title: AppLocalizations.of(context).confirmEmail,
         showBack: widget.showBack,
       ),
       body: SafeArea(
@@ -149,7 +150,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Confirm\nEmail',
+                  AppLocalizations.of(context).confirmEmailTitle,
                   style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontSize: 36,
@@ -159,7 +160,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Validate your email address to secure your account',
+                  AppLocalizations.of(context).validateEmailSubtitle,
                   style:
                       TextStyle(color: context.appColors.textSecondary, fontSize: 16),
                 ),
@@ -182,8 +183,8 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
                 ],
                 AppTextField(
                   controller: _emailCtrl,
-                  label: 'Email',
-                  hint: 'you@example.com',
+                  label: AppLocalizations.of(context).email,
+                  hint: AppLocalizations.of(context).emailHint,
                   keyboardType: TextInputType.emailAddress,
                   prefixIcon: Icons.email_outlined,
                   textInputAction: TextInputAction.next,
@@ -191,8 +192,8 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _codeCtrl,
-                  label: 'Confirmation Code',
-                  hint: 'Enter your code',
+                  label: AppLocalizations.of(context).confirmationCode,
+                  hint: AppLocalizations.of(context).enterYourCode,
                   keyboardType: TextInputType.number,
                   prefixIcon: Icons.pin_outlined,
                   textInputAction: TextInputAction.done,
@@ -200,7 +201,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
                 ),
                 const SizedBox(height: 32),
                 AppButton(
-                  label: 'Confirm Email',
+                  label: AppLocalizations.of(context).confirmEmail,
                   icon: Icons.verified_rounded,
                   iconTrailing: true,
                   fullWidth: true,
@@ -210,7 +211,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
                 ),
                 const SizedBox(height: 12),
                 AppButton(
-                  label: 'Resend Email',
+                  label: AppLocalizations.of(context).resendEmail,
                   icon: Icons.refresh_rounded,
                   variant: AppButtonVariant.secondary,
                   fullWidth: true,
@@ -219,7 +220,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
                 ),
                 const SizedBox(height: 12),
                 AppButton(
-                  label: widget.canContinue ? 'Continue' : 'Back to Sign In',
+                  label: widget.canContinue ? AppLocalizations.of(context).continueBtn : AppLocalizations.of(context).backToSignIn,
                   icon: Icons.arrow_forward_rounded,
                   iconTrailing: true,
                   variant: AppButtonVariant.ghost,

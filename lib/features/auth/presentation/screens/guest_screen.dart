@@ -1,3 +1,4 @@
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dart';
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
@@ -45,7 +46,7 @@ class GuestScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Connecte-toi pour continuer',
+                  AppLocalizations.of(context).signInToContinue,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: context.appColors.textPrimary,
@@ -55,7 +56,7 @@ class GuestScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Sauvegarde ta progression, crée des défis\net retrouve tes amis.',
+                  AppLocalizations.of(context).guestScreenBody,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: context.appColors.textSecondary,
@@ -74,9 +75,9 @@ class GuestScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: const Text(
-                      'Créer un compte',
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context).createAccount,
+                      style: const TextStyle(
                           color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.w700),
@@ -95,7 +96,7 @@ class GuestScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14)),
                     ),
                     child: Text(
-                      'Se connecter',
+                      AppLocalizations.of(context).logIn,
                       style: TextStyle(
                           color: context.appColors.textPrimary,
                           fontSize: 15,
@@ -118,7 +119,7 @@ class GuestScreen extends StatelessWidget {
                     );
                   },
                   child: Text(
-                    'Retour à l\'accueil',
+                    AppLocalizations.of(context).backToHome,
                     style: TextStyle(
                       color: context.appColors.textMuted,
                       fontSize: 13,

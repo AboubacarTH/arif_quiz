@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -106,7 +107,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ).animate().fadeIn(delay: 400.ms, duration: 500.ms).slideY(begin: 0.3),
                 const SizedBox(height: 8),
                 Text(
-                  'Challenge tes amis. Domine le quiz.',
+                  AppLocalizations.of(context).appTagline,
                   style: TextStyle(color: context.appColors.textSecondary, fontSize: 15),
                 ).animate().fadeIn(delay: 600.ms, duration: 500.ms),
                 const SizedBox(height: 60),
