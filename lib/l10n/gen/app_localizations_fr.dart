@@ -212,4 +212,169 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get correctLabel => 'Bonnes';
+
+  @override
+  String get trainingResultNote =>
+      'Mode entraînement — ce résultat n\'affecte ni ton XP ni le classement.';
+
+  @override
+  String get answerReview => 'Revue des réponses';
+
+  @override
+  String get createAccount => 'Créer un compte';
+
+  @override
+  String get homeLabel => 'Accueil';
+
+  @override
+  String get viewChallenge => 'Voir le défi';
+
+  @override
+  String get headlineOutstanding => 'Exceptionnel ! 🤩';
+
+  @override
+  String get headlineExcellent => 'Excellent ! 🎉';
+
+  @override
+  String get headlineGreat => 'Bien joué ! 👏';
+
+  @override
+  String get headlineNotBad => 'Pas mal ! 👍';
+
+  @override
+  String get headlineKeepGoing => 'Continue ! 💪';
+
+  @override
+  String get headlineTryAgain => 'Réessaie ! 🔄';
+
+  @override
+  String get yourAnswer => 'Ta réponse';
+
+  @override
+  String get points => 'Points';
+
+  @override
+  String get timeLabel => 'Temps';
+
+  @override
+  String get reportQuestionAction => 'Signaler une erreur';
+
+  @override
+  String get reportQuestionTitle => 'Signaler cette question';
+
+  @override
+  String get reportReasonLabel => 'Motif';
+
+  @override
+  String get reasonWrongAnswer => 'La bonne réponse est incorrecte';
+
+  @override
+  String get reasonAmbiguous => 'Question ambiguë ou mal formulée';
+
+  @override
+  String get reasonTypo => 'Faute d\'orthographe';
+
+  @override
+  String get reasonOutdated => 'Information périmée';
+
+  @override
+  String get reasonOther => 'Autre';
+
+  @override
+  String get commentOptional => 'Commentaire (optionnel)';
+
+  @override
+  String get sendReport => 'Envoyer le signalement';
+
+  @override
+  String get sendFailed => 'Échec de l\'envoi. Réessayez.';
+
+  @override
+  String get allQuizzes => 'Tous les quiz';
+
+  @override
+  String get searchQuizHint => 'Rechercher un quiz…';
+
+  @override
+  String get loadingEllipsis => 'Chargement…';
+
+  @override
+  String get allCategories => 'Toutes les catégories';
+
+  @override
+  String get difficulty => 'Difficulté';
+
+  @override
+  String get diffEasy => 'Facile';
+
+  @override
+  String get diffMedium => 'Moyen';
+
+  @override
+  String get diffHard => 'Difficile';
+
+  @override
+  String get allFilter => 'Tous';
+
+  @override
+  String get noQuizFound => 'Aucun quiz trouvé';
+
+  @override
+  String get tryAnotherFilter =>
+      'Essaie un autre filtre ou une autre recherche';
+
+  @override
+  String get searchCategoryHint => 'Rechercher une catégorie…';
+
+  @override
+  String noResultsFor(String query) {
+    return 'Aucun résultat pour « $query »';
+  }
+
+  @override
+  String get loadQuizError => 'Impossible de charger le quiz.';
+
+  @override
+  String get quizDetails => 'Détails du quiz';
+
+  @override
+  String get questions => 'Questions';
+
+  @override
+  String get perQuestion => 'Par question';
+
+  @override
+  String get pointsPerQ => 'Points / Q';
+
+  @override
+  String get plays => 'Parties';
+
+  @override
+  String get ruleSelectOne => 'Choisis une réponse par question';
+
+  @override
+  String get ruleTimer => 'Réponds avant la fin du chrono';
+
+  @override
+  String rulePoints(int points) {
+    return 'Gagne $points points par bonne réponse';
+  }
+
+  @override
+  String get ruleReview => 'Consulte les explications après le quiz';
+
+  @override
+  String get startQuiz => 'Lancer le quiz 🚀';
+
+  @override
+  String get tryAnotherDifficulty => 'Essaie un autre filtre de difficulté';
+
+  @override
+  String get loadCategoriesError => 'Impossible de charger les catégories';
+
+  @override
+  String get noCategories => 'Aucune catégorie';
+
+  @override
+  String get comeBackSoon => 'Reviens plus tard, du contenu arrive bientôt';
 }

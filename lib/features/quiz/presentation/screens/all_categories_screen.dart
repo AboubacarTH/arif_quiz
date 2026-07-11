@@ -1,4 +1,5 @@
 import 'package:arif_quiz/features/quiz/presentation/screens/category_quizzes_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -21,7 +22,7 @@ class AllCategoriesScreen extends StatefulWidget {
 class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
   List<CategoryModel> _categories = [];
   bool _loading = true;
-  String? _error;
+  bool _failed = false;
 
   @override
   void initState() {
@@ -32,7 +33,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
   Future<void> _load() async {
     setState(() {
       _loading = true;
-      _error = null;
+      _failed = false;
     });
     try {
       final raw = await apiService.getCategories();
@@ -44,7 +45,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _error = 'Impossible de charger les catégories';
+        _failed = true;
         _loading = false;
       });
     }
@@ -91,7 +92,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Catégories',
+                AppLocalizations.of(context).categories,
                 style: TextStyle(
                   color: context.appColors.textPrimary,
                   fontSize: 18,
@@ -111,13 +112,13 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
             color: AppColors.primary, strokeWidth: 2),
       );
     }
-    if (_error != null) {
-      return ErrorState(message: _error!, onRetry: _load);
+    if (_failed) {
+      return ErrorState(message: AppLocalizations.of(context).loadCategoriesError, onRetry: _load);
     }
     if (_categories.isEmpty) {
-      return const EmptyState(
-        title: 'Aucune catégorie',
-        subtitle: 'Reviens plus tard, du contenu arrive bientôt',
+      return EmptyState(
+        title: AppLocalizations.of(context).noCategories,
+        subtitle: AppLocalizations.of(context).comeBackSoon,
         emoji: '📚',
       );
     }

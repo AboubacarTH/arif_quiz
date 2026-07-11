@@ -5,6 +5,7 @@ import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dar
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/widgets/share_score_button.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -80,7 +81,7 @@ class QuizResultScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(_headline(result.score),
+                    Text(_headline(context, result.score),
                         style: TextStyle(
                             color: context.appColors.textPrimary,
                             fontSize: 24,
@@ -110,7 +111,7 @@ class QuizResultScreen extends StatelessWidget {
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                'Mode entraînement — ce résultat n\'affecte ni ton XP ni le classement.',
+                                AppLocalizations.of(context).trainingResultNote,
                                 style: TextStyle(
                                     color: context.appColors.textSecondary,
                                     fontSize: 12),
@@ -132,13 +133,13 @@ class QuizResultScreen extends StatelessWidget {
                         children: [
                           _Stat(
                               '${result.correctCount}/${result.totalQuestions}',
-                              'Correct',
+                              AppLocalizations.of(context).correctLabel,
                               AppColors.success),
                           _divider(context),
-                          _Stat('+${result.pointsEarned}', 'Points',
+                          _Stat('+${result.pointsEarned}', AppLocalizations.of(context).points,
                               AppColors.warning),
                           _divider(context),
-                          _Stat(_fmtTime(result.timeTaken), 'Time',
+                          _Stat(_fmtTime(result.timeTaken), AppLocalizations.of(context).timeLabel,
                               AppColors.info),
                         ],
                       ),
@@ -152,7 +153,7 @@ class QuizResultScreen extends StatelessWidget {
                     // Review
                     Align(
                         alignment: Alignment.centerLeft,
-                        child: Text('Answer Review',
+                        child: Text(AppLocalizations.of(context).answerReview,
                             style: TextStyle(
                                 color: context.appColors.textPrimary,
                                 fontSize: 17,
@@ -211,10 +212,10 @@ class QuizResultScreen extends StatelessWidget {
                                 color: AppColors.primary,
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: const Text(
-                                'Créer un compte',
+                              child: Text(
+                                AppLocalizations.of(context).createAccount,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700),
@@ -241,7 +242,7 @@ class QuizResultScreen extends StatelessWidget {
                                 boxShadow: AppShadows.card(context),
                               ),
                               child: Text(
-                                'Se connecter',
+                                AppLocalizations.of(context).logIn,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: context.appColors.textPrimary,
@@ -267,7 +268,7 @@ class QuizResultScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppButton(
-                      label: 'Accueil',
+                      label: AppLocalizations.of(context).homeLabel,
                       variant: AppButtonVariant.secondary,
                       onPressed: () => Navigator.pushAndRemoveUntil(
                           context,
@@ -279,7 +280,7 @@ class QuizResultScreen extends StatelessWidget {
                   Expanded(
                     child: challenge != null
                         ? AppButton(
-                            label: 'Voir le défi',
+                            label: AppLocalizations.of(context).viewChallenge,
                             icon: Icons.leaderboard_rounded,
                             onPressed: () => Navigator.pushReplacement(
                               context,
@@ -291,7 +292,7 @@ class QuizResultScreen extends StatelessWidget {
                             ),
                           )
                         : AppButton(
-                            label: 'Rejouer',
+                            label: AppLocalizations.of(context).replay,
                             icon: Icons.replay_rounded,
                             onPressed: () => Navigator.pushReplacement(
                                 context,
@@ -308,13 +309,14 @@ class QuizResultScreen extends StatelessWidget {
     );
   }
 
-  String _headline(double s) {
-    if (s >= 90) return 'Outstanding! ??';
-    if (s >= 80) return 'Excellent! ??';
-    if (s >= 70) return 'Great Job! ??';
-    if (s >= 60) return 'Not Bad! ??';
-    if (s >= 50) return 'Keep Going! ??';
-    return 'Try Again! ??';
+  String _headline(BuildContext context, double s) {
+    final l10n = AppLocalizations.of(context);
+    if (s >= 90) return l10n.headlineOutstanding;
+    if (s >= 80) return l10n.headlineExcellent;
+    if (s >= 70) return l10n.headlineGreat;
+    if (s >= 60) return l10n.headlineNotBad;
+    if (s >= 50) return l10n.headlineKeepGoing;
+    return l10n.headlineTryAgain;
   }
 
   String _fmtTime(int s) => s < 60 ? '${s}s' : '${s ~/ 60}m ${s % 60}s';
@@ -399,8 +401,8 @@ class _ReviewCardState extends State<_ReviewCard> {
             if (_expanded) ...[
               const SizedBox(height: 10),
               if (r.userAnswer != null && !r.isCorrect)
-                _AnswerRow('Your answer', r.userAnswer!, AppColors.error),
-              _AnswerRow('Correct', r.correctAnswer, AppColors.success),
+                _AnswerRow(AppLocalizations.of(context).yourAnswer, r.userAnswer!, AppColors.error),
+              _AnswerRow(AppLocalizations.of(context).correctLabel, r.correctAnswer, AppColors.success),
               if (r.explanation != null) ...[
                 const SizedBox(height: 8),
                 Container(
@@ -435,8 +437,8 @@ class _ReviewCardState extends State<_ReviewCard> {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     icon: const Icon(Icons.flag_outlined, size: 16),
-                    label: const Text('Signaler une erreur',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                    label: Text(AppLocalizations.of(context).reportQuestionAction,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
                   ),
                 ),
               ],
@@ -450,13 +452,16 @@ class _ReviewCardState extends State<_ReviewCard> {
 
 // ─── Signalement d'une question ─────────────────────────────────────────────
 
-const _reportReasons = <(String, String)>[
-  ('wrong_answer', 'La bonne réponse est incorrecte'),
-  ('ambiguous', 'Question ambiguë ou mal formulée'),
-  ('typo', 'Faute d\'orthographe'),
-  ('outdated', 'Information périmée'),
-  ('other', 'Autre'),
-];
+List<(String, String)> _reportReasons(BuildContext context) {
+  final l10n = AppLocalizations.of(context);
+  return [
+    ('wrong_answer', l10n.reasonWrongAnswer),
+    ('ambiguous', l10n.reasonAmbiguous),
+    ('typo', l10n.reasonTypo),
+    ('outdated', l10n.reasonOutdated),
+    ('other', l10n.reasonOther),
+  ];
+}
 
 void _showReportSheet(BuildContext context, QuestionResult r) {
   showModalBottomSheet(
@@ -475,7 +480,7 @@ class _ReportSheet extends StatefulWidget {
 }
 
 class _ReportSheetState extends State<_ReportSheet> {
-  String _reason = _reportReasons.first.$1;
+  String _reason = 'wrong_answer';
   final _commentCtrl = TextEditingController();
   bool _submitting = false;
 
@@ -502,8 +507,8 @@ class _ReportSheetState extends State<_ReportSheet> {
       if (!mounted) return;
       setState(() => _submitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Échec de l\'envoi. Réessayez.'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).sendFailed),
           backgroundColor: AppColors.error,
         ),
       );
@@ -541,7 +546,7 @@ class _ReportSheetState extends State<_ReportSheet> {
                 children: [
                   const Icon(Icons.flag_rounded, color: AppColors.error, size: 20),
                   const SizedBox(width: 8),
-                  Text('Signaler cette question',
+                  Text(AppLocalizations.of(context).reportQuestionTitle,
                       style: TextStyle(
                           color: context.appColors.textPrimary,
                           fontSize: 17,
@@ -555,13 +560,13 @@ class _ReportSheetState extends State<_ReportSheet> {
                   style: TextStyle(
                       color: context.appColors.textSecondary, fontSize: 13)),
               const SizedBox(height: 16),
-              Text('Motif',
+              Text(AppLocalizations.of(context).reportReasonLabel,
                   style: TextStyle(
                       color: context.appColors.textPrimary,
                       fontSize: 13,
                       fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
-              ..._reportReasons.map((reason) {
+              ..._reportReasons(context).map((reason) {
                 final selected = _reason == reason.$1;
                 return GestureDetector(
                   onTap: _submitting
@@ -599,15 +604,15 @@ class _ReportSheetState extends State<_ReportSheet> {
                 enabled: !_submitting,
                 maxLines: 3,
                 maxLength: 1000,
-                decoration: const InputDecoration(
-                  hintText: 'Commentaire (optionnel)',
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context).commentOptional,
                 ),
               ),
               const SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,
                 child: AppButton(
-                  label: 'Envoyer le signalement',
+                  label: AppLocalizations.of(context).sendReport,
                   icon: Icons.send_rounded,
                   loading: _submitting,
                   onPressed: _submitting ? null : _submit,

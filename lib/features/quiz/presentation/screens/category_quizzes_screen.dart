@@ -1,6 +1,7 @@
 import 'package:arif_quiz/features/quiz/bloc/quiz_list_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -190,12 +191,12 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
                   padding: const EdgeInsets.only(right: 8),
                   child: _DiffChip(
                     label: d == null
-                        ? 'Tous'
+                        ? AppLocalizations.of(context).allFilter
                         : d == 'easy'
-                            ? 'Facile'
+                            ? AppLocalizations.of(context).diffEasy
                             : d == 'medium'
-                                ? 'Moyen'
-                                : 'Difficile',
+                                ? AppLocalizations.of(context).diffMedium
+                                : AppLocalizations.of(context).diffHard,
                     selected: _selectedDiff == d,
                     color: d == null ? _color : AppColors.difficultyColor(d),
                     onTap: () {
@@ -231,12 +232,12 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
     }
 
     if (_ctrl.quizzes.isEmpty) {
-      return const SliverToBoxAdapter(
+      return SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.only(top: 60),
+          padding: const EdgeInsets.only(top: 60),
           child: EmptyState(
-            title: 'Aucun quiz trouvé',
-            subtitle: 'Essaie un autre filtre de difficulté',
+            title: AppLocalizations.of(context).noQuizFound,
+            subtitle: AppLocalizations.of(context).tryAnotherDifficulty,
             emoji: '🔍',
           ),
         ),
