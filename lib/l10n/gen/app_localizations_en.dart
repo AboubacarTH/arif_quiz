@@ -659,4 +659,190 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pendingLabel => 'Pending';
+
+  @override
+  String get wrongPasswordOrNetwork => 'Incorrect password or network error.';
+
+  @override
+  String get deleteAccountTitle => 'Delete account?';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get logoutTitle => 'Log out?';
+
+  @override
+  String get logoutBody =>
+      'You\'ll need to sign in again to access your account.';
+
+  @override
+  String get logoutBtn => 'Log out';
+
+  @override
+  String get logOutAction => 'Log out';
+
+  @override
+  String get myProfile => 'My Profile';
+
+  @override
+  String get editBtn => 'Edit';
+
+  @override
+  String rankLabel(int rank) {
+    return 'Rank #$rank';
+  }
+
+  @override
+  String nextLevelIn(int level, int xp) {
+    return 'Level $level in $xp XP';
+  }
+
+  @override
+  String get quizzesPlayed => 'Quizzes played';
+
+  @override
+  String get goodAnswers => 'Correct ans.';
+
+  @override
+  String get accuracy => 'Accuracy';
+
+  @override
+  String get currentStreak => 'Current streak';
+
+  @override
+  String get bestStreak => 'Best streak';
+
+  @override
+  String get achievements => 'Achievements';
+
+  @override
+  String get unlockBadgesByPlaying => 'Unlock badges by playing';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeSystemDesc => 'Follows the device theme';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeDarkDesc => 'Dark gaming interface';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeLightDesc => 'Bright interface';
+
+  @override
+  String get recentActivity => 'Recent activity';
+
+  @override
+  String get noQuizPlayed => 'No quiz played';
+
+  @override
+  String get playFirstQuiz => 'Play your first quiz to see your results here!';
+
+  @override
+  String get playBtn => 'Play';
+
+  @override
+  String get adminPanel => 'Admin panel';
+
+  @override
+  String get deleteMyAccount => 'Delete my account';
+
+  @override
+  String get fillAllFields => 'Please fill all fields';
+
+  @override
+  String get enterFullName => 'Please enter your full name';
+
+  @override
+  String get enterValidEmail => 'Please enter a valid email';
+
+  @override
+  String get updateProfileFailed => 'Unable to update profile. Try again.';
+
+  @override
+  String get editProfileTitle => 'Edit profile';
+
+  @override
+  String get fullName => 'Full name';
+
+  @override
+  String get yourNameHint => 'Your name';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get loadHistoryError => 'Couldn\'t load history.';
+
+  @override
+  String get quizHistory => 'Quiz history';
+
+  @override
+  String get noAttemptsYet => 'No attempts yet';
+
+  @override
+  String get attemptsAppearHere =>
+      'Play a quiz and your results will appear here.';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String pointsShort(int points) {
+    return '+$points pts';
+  }
+
+  @override
+  String get loadBadgesError => 'Couldn\'t load achievements.';
+
+  @override
+  String get progression => 'Progress';
+
+  @override
+  String get alreadyPlayedToday => 'You already played today!';
+
+  @override
+  String get dailyChallengeScreenTitle => 'Daily Challenge';
+
+  @override
+  String get noDailyToday => 'No challenge today';
+
+  @override
+  String get comeBackTomorrow => 'Come back tomorrow!';
+
+  @override
+  String get todaysChallengeTag => 'TODAY\'S CHALLENGE';
+
+  @override
+  String renewsIn(int h, int m) {
+    return 'Renews in ${h}h ${m}m';
+  }
+
+  @override
+  String get challengeCompleted => 'Challenge completed!';
+
+  @override
+  String yourScoreGrade(String score, String grade) {
+    return 'Your score: $score% • Grade $grade';
+  }
+
+  @override
+  String get bonusXp30 => '⚡ +30 bonus XP';
+
+  @override
+  String get takeChallenge => 'Take the challenge';
+
+  @override
+  String get saveChanges => 'Save changes';
 }

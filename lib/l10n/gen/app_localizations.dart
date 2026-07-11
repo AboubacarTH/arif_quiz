@@ -1277,6 +1277,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pending'**
   String get pendingLabel;
+
+  /// No description provided for @wrongPasswordOrNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password or network error.'**
+  String get wrongPasswordOrNetwork;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @logoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out?'**
+  String get logoutTitle;
+
+  /// No description provided for @logoutBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll need to sign in again to access your account.'**
+  String get logoutBody;
+
+  /// No description provided for @logoutBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logoutBtn;
+
+  /// No description provided for @logOutAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logOutAction;
+
+  /// No description provided for @myProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get myProfile;
+
+  /// No description provided for @editBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editBtn;
+
+  /// No description provided for @rankLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank #{rank}'**
+  String rankLabel(int rank);
+
+  /// No description provided for @nextLevelIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level} in {xp} XP'**
+  String nextLevelIn(int level, int xp);
+
+  /// No description provided for @quizzesPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Quizzes played'**
+  String get quizzesPlayed;
+
+  /// No description provided for @goodAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct ans.'**
+  String get goodAnswers;
+
+  /// No description provided for @accuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy'**
+  String get accuracy;
+
+  /// No description provided for @currentStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak'**
+  String get currentStreak;
+
+  /// No description provided for @bestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Best streak'**
+  String get bestStreak;
+
+  /// No description provided for @achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievements;
+
+  /// No description provided for @unlockBadgesByPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock badges by playing'**
+  String get unlockBadgesByPlaying;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeSystemDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows the device theme'**
+  String get themeSystemDesc;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeDarkDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark gaming interface'**
+  String get themeDarkDesc;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeLightDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Bright interface'**
+  String get themeLightDesc;
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent activity'**
+  String get recentActivity;
+
+  /// No description provided for @noQuizPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'No quiz played'**
+  String get noQuizPlayed;
+
+  /// No description provided for @playFirstQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Play your first quiz to see your results here!'**
+  String get playFirstQuiz;
+
+  /// No description provided for @playBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get playBtn;
+
+  /// No description provided for @adminPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin panel'**
+  String get adminPanel;
+
+  /// No description provided for @deleteMyAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get deleteMyAccount;
+
+  /// No description provided for @fillAllFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all fields'**
+  String get fillAllFields;
+
+  /// No description provided for @enterFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your full name'**
+  String get enterFullName;
+
+  /// No description provided for @enterValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get enterValidEmail;
+
+  /// No description provided for @updateProfileFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update profile. Try again.'**
+  String get updateProfileFailed;
+
+  /// No description provided for @editProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfileTitle;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get fullName;
+
+  /// No description provided for @yourNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get yourNameHint;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @loadHistoryError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load history.'**
+  String get loadHistoryError;
+
+  /// No description provided for @quizHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz history'**
+  String get quizHistory;
+
+  /// No description provided for @noAttemptsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No attempts yet'**
+  String get noAttemptsYet;
+
+  /// No description provided for @attemptsAppearHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Play a quiz and your results will appear here.'**
+  String get attemptsAppearHere;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @pointsShort.
+  ///
+  /// In en, this message translates to:
+  /// **'+{points} pts'**
+  String pointsShort(int points);
+
+  /// No description provided for @loadBadgesError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load achievements.'**
+  String get loadBadgesError;
+
+  /// No description provided for @progression.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get progression;
+
+  /// No description provided for @alreadyPlayedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'You already played today!'**
+  String get alreadyPlayedToday;
+
+  /// No description provided for @dailyChallengeScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Challenge'**
+  String get dailyChallengeScreenTitle;
+
+  /// No description provided for @noDailyToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No challenge today'**
+  String get noDailyToday;
+
+  /// No description provided for @comeBackTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back tomorrow!'**
+  String get comeBackTomorrow;
+
+  /// No description provided for @todaysChallengeTag.
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY\'S CHALLENGE'**
+  String get todaysChallengeTag;
+
+  /// No description provided for @renewsIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Renews in {h}h {m}m'**
+  String renewsIn(int h, int m);
+
+  /// No description provided for @challengeCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge completed!'**
+  String get challengeCompleted;
+
+  /// No description provided for @yourScoreGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Your score: {score}% • Grade {grade}'**
+  String yourScoreGrade(String score, String grade);
+
+  /// No description provided for @bonusXp30.
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ +30 bonus XP'**
+  String get bonusXp30;
+
+  /// No description provided for @takeChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Take the challenge'**
+  String get takeChallenge;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get saveChanges;
 }
 
 class _AppLocalizationsDelegate

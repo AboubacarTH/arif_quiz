@@ -324,5 +324,107 @@
       }
     }
   },
-  "pendingLabel": "Pending"
+  "pendingLabel": "Pending",
+  "wrongPasswordOrNetwork": "Incorrect password or network error.",
+  "deleteAccountTitle": "Delete account?",
+  "password": "Password",
+  "logoutTitle": "Log out?",
+  "logoutBody": "You'll need to sign in again to access your account.",
+  "logoutBtn": "Log out",
+  "logOutAction": "Log out",
+  "myProfile": "My Profile",
+  "editBtn": "Edit",
+  "rankLabel": "Rank #{rank}",
+  "@rankLabel": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "nextLevelIn": "Level {level} in {xp} XP",
+  "@nextLevelIn": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "quizzesPlayed": "Quizzes played",
+  "goodAnswers": "Correct ans.",
+  "accuracy": "Accuracy",
+  "currentStreak": "Current streak",
+  "bestStreak": "Best streak",
+  "achievements": "Achievements",
+  "unlockBadgesByPlaying": "Unlock badges by playing",
+  "appearance": "Appearance",
+  "themeSystem": "System",
+  "themeSystemDesc": "Follows the device theme",
+  "themeDark": "Dark",
+  "themeDarkDesc": "Dark gaming interface",
+  "themeLight": "Light",
+  "themeLightDesc": "Bright interface",
+  "recentActivity": "Recent activity",
+  "noQuizPlayed": "No quiz played",
+  "playFirstQuiz": "Play your first quiz to see your results here!",
+  "playBtn": "Play",
+  "adminPanel": "Admin panel",
+  "deleteMyAccount": "Delete my account",
+  "fillAllFields": "Please fill all fields",
+  "enterFullName": "Please enter your full name",
+  "enterValidEmail": "Please enter a valid email",
+  "updateProfileFailed": "Unable to update profile. Try again.",
+  "editProfileTitle": "Edit profile",
+  "fullName": "Full name",
+  "yourNameHint": "Your name",
+  "email": "Email",
+  "loadHistoryError": "Couldn't load history.",
+  "quizHistory": "Quiz history",
+  "noAttemptsYet": "No attempts yet",
+  "attemptsAppearHere": "Play a quiz and your results will appear here.",
+  "refresh": "Refresh",
+  "pointsShort": "+{points} pts",
+  "@pointsShort": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "loadBadgesError": "Couldn't load achievements.",
+  "progression": "Progress",
+  "alreadyPlayedToday": "You already played today!",
+  "dailyChallengeScreenTitle": "Daily Challenge",
+  "noDailyToday": "No challenge today",
+  "comeBackTomorrow": "Come back tomorrow!",
+  "todaysChallengeTag": "TODAY'S CHALLENGE",
+  "renewsIn": "Renews in {h}h {m}m",
+  "@renewsIn": {
+    "placeholders": {
+      "h": {
+        "type": "int"
+      },
+      "m": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeCompleted": "Challenge completed!",
+  "yourScoreGrade": "Your score: {score}% • Grade {grade}",
+  "@yourScoreGrade": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "bonusXp30": "⚡ +30 bonus XP",
+  "takeChallenge": "Take the challenge",
+  "saveChanges": "Save changes"
 }

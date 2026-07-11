@@ -661,4 +661,192 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get pendingLabel => 'En espera';
+
+  @override
+  String get wrongPasswordOrNetwork => 'Contraseña incorrecta o error de red.';
+
+  @override
+  String get deleteAccountTitle => '¿Eliminar la cuenta?';
+
+  @override
+  String get password => 'Contraseña';
+
+  @override
+  String get logoutTitle => '¿Cerrar sesión?';
+
+  @override
+  String get logoutBody =>
+      'Tendrás que iniciar sesión de nuevo para acceder a tu cuenta.';
+
+  @override
+  String get logoutBtn => 'Cerrar sesión';
+
+  @override
+  String get logOutAction => 'Cerrar sesión';
+
+  @override
+  String get myProfile => 'Mi Perfil';
+
+  @override
+  String get editBtn => 'Editar';
+
+  @override
+  String rankLabel(int rank) {
+    return 'Rango #$rank';
+  }
+
+  @override
+  String nextLevelIn(int level, int xp) {
+    return 'Nivel $level en $xp XP';
+  }
+
+  @override
+  String get quizzesPlayed => 'Quizzes jugados';
+
+  @override
+  String get goodAnswers => 'Resp. correctas';
+
+  @override
+  String get accuracy => 'Precisión';
+
+  @override
+  String get currentStreak => 'Racha actual';
+
+  @override
+  String get bestStreak => 'Mejor racha';
+
+  @override
+  String get achievements => 'Logros';
+
+  @override
+  String get unlockBadgesByPlaying => 'Desbloquea insignias jugando';
+
+  @override
+  String get appearance => 'Apariencia';
+
+  @override
+  String get themeSystem => 'Sistema';
+
+  @override
+  String get themeSystemDesc => 'Sigue el tema del dispositivo';
+
+  @override
+  String get themeDark => 'Oscuro';
+
+  @override
+  String get themeDarkDesc => 'Interfaz gaming oscura';
+
+  @override
+  String get themeLight => 'Claro';
+
+  @override
+  String get themeLightDesc => 'Interfaz luminosa';
+
+  @override
+  String get recentActivity => 'Actividad reciente';
+
+  @override
+  String get noQuizPlayed => 'Ningún quiz jugado';
+
+  @override
+  String get playFirstQuiz =>
+      '¡Juega tu primer quiz para ver tus resultados aquí!';
+
+  @override
+  String get playBtn => 'Jugar';
+
+  @override
+  String get adminPanel => 'Panel de administración';
+
+  @override
+  String get deleteMyAccount => 'Eliminar mi cuenta';
+
+  @override
+  String get fillAllFields => 'Completa todos los campos';
+
+  @override
+  String get enterFullName => 'Introduce tu nombre completo';
+
+  @override
+  String get enterValidEmail => 'Introduce un correo válido';
+
+  @override
+  String get updateProfileFailed =>
+      'No se pudo actualizar el perfil. Inténtalo de nuevo.';
+
+  @override
+  String get editProfileTitle => 'Editar perfil';
+
+  @override
+  String get fullName => 'Nombre completo';
+
+  @override
+  String get yourNameHint => 'Tu nombre';
+
+  @override
+  String get email => 'Correo electrónico';
+
+  @override
+  String get loadHistoryError => 'No se pudo cargar el historial.';
+
+  @override
+  String get quizHistory => 'Historial de quizzes';
+
+  @override
+  String get noAttemptsYet => 'Sin partidas aún';
+
+  @override
+  String get attemptsAppearHere =>
+      'Juega un quiz y tus resultados aparecerán aquí.';
+
+  @override
+  String get refresh => 'Actualizar';
+
+  @override
+  String pointsShort(int points) {
+    return '+$points pts';
+  }
+
+  @override
+  String get loadBadgesError => 'No se pudieron cargar los logros.';
+
+  @override
+  String get progression => 'Progreso';
+
+  @override
+  String get alreadyPlayedToday => '¡Ya jugaste hoy!';
+
+  @override
+  String get dailyChallengeScreenTitle => 'Desafío Diario';
+
+  @override
+  String get noDailyToday => 'Hoy no hay desafío';
+
+  @override
+  String get comeBackTomorrow => '¡Vuelve mañana!';
+
+  @override
+  String get todaysChallengeTag => 'DESAFÍO DEL DÍA';
+
+  @override
+  String renewsIn(int h, int m) {
+    return 'Se renueva en ${h}h ${m}m';
+  }
+
+  @override
+  String get challengeCompleted => '¡Desafío completado!';
+
+  @override
+  String yourScoreGrade(String score, String grade) {
+    return 'Tu puntuación: $score% • Grado $grade';
+  }
+
+  @override
+  String get bonusXp30 => '⚡ +30 XP extra';
+
+  @override
+  String get takeChallenge => 'Aceptar el desafío';
+
+  @override
+  String get saveChanges => 'Guardar cambios';
 }
