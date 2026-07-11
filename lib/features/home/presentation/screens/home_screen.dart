@@ -333,7 +333,6 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             color: context.cardElevated,
             borderRadius: AppRadius.rLg,
-            boxShadow: AppShadows.tinted(context, AppColors.primary),
           ),
           child: Row(
             children: [
@@ -416,7 +415,6 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             color: context.cardElevated,
             borderRadius: AppRadius.rLg,
-            boxShadow: AppShadows.tinted(context, AppColors.secondary),
           ),
           child: Row(
             children: [
