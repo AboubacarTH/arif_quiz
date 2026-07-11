@@ -501,4 +501,166 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get modeSpeedShort => 'Speed Round';
+
+  @override
+  String get challengesTitle => 'Défis';
+
+  @override
+  String get joinBtn => 'Rejoindre';
+
+  @override
+  String get createChallenge => 'Créer un défi';
+
+  @override
+  String get noChallengesYet => 'Pas encore de défis';
+
+  @override
+  String get createOrJoin => 'Crée ou rejoins un défi !';
+
+  @override
+  String get createBtn => 'Créer';
+
+  @override
+  String get myCreatedChallenges => 'Mes défis créés';
+
+  @override
+  String get deleteBtn => 'Supprimer';
+
+  @override
+  String get joinedChallenges => 'Défis rejoints';
+
+  @override
+  String get deleteChallengeTitle => 'Supprimer le défi ?';
+
+  @override
+  String deleteChallengeBody(String title) {
+    return 'Le défi « $title » sera définitivement supprimé.';
+  }
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get challengeDeleted => 'Défi supprimé';
+
+  @override
+  String get deleteError => 'Erreur lors de la suppression';
+
+  @override
+  String get stepSource => 'Source des questions';
+
+  @override
+  String get stepPickCategory => 'Choisir une catégorie';
+
+  @override
+  String get stepPickQuiz => 'Choisir un quiz';
+
+  @override
+  String get stepConfigure => 'Configurer le défi';
+
+  @override
+  String get enterChallengeTitle => 'Entre un titre pour le défi';
+
+  @override
+  String get createError => 'Erreur lors de la création';
+
+  @override
+  String get srcQuizLabel => 'Un quiz spécifique';
+
+  @override
+  String get srcQuizDesc => '10 questions tirées d\'un quiz de ton choix';
+
+  @override
+  String get srcCategoryLabel => 'Par catégorie';
+
+  @override
+  String get srcCategoryDesc =>
+      '10 questions aléatoires parmi tous les quiz d\'une catégorie';
+
+  @override
+  String get srcAllDesc =>
+      '10 questions aléatoires parmi tous les quiz disponibles';
+
+  @override
+  String get whereQuestionsFrom => 'D\'où viennent les questions ?';
+
+  @override
+  String get noCategoryAvailable => 'Aucune catégorie disponible';
+
+  @override
+  String get noQuizInCategory => 'Aucun quiz dans cette catégorie';
+
+  @override
+  String get categoryLabel => 'Catégorie';
+
+  @override
+  String get challengeTitleLabel => 'Titre du défi';
+
+  @override
+  String get challengeTitleHint => 'Ex : Qui connaît l\'aviation ?';
+
+  @override
+  String get creating => 'Création…';
+
+  @override
+  String get createChallengeBtn => 'Créer le défi';
+
+  @override
+  String get joinChallengeTitle => 'Rejoindre un défi';
+
+  @override
+  String get enterChallengeCode => 'Entre le code du défi';
+
+  @override
+  String get codeHelp =>
+      'Le code à 8 caractères t\'a été partagé par le créateur du défi.';
+
+  @override
+  String get joinChallengeBtn => 'Rejoindre le défi';
+
+  @override
+  String get challengeFound => 'Défi trouvé !';
+
+  @override
+  String byCreator(String name) {
+    return 'par $name';
+  }
+
+  @override
+  String get codeLengthError => 'Le code doit faire 8 caractères';
+
+  @override
+  String get rematchError => 'Revanche impossible. Réessaie.';
+
+  @override
+  String get rematch => 'Revanche';
+
+  @override
+  String get playThisChallenge => 'Jouer ce défi';
+
+  @override
+  String get alreadyPlayed =>
+      'Tu as déjà joué ce défi. Consulte le classement ci-dessous.';
+
+  @override
+  String leaderboardCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count complétés',
+      one: '1 complété',
+    );
+    return 'Classement ($_temp0)';
+  }
+
+  @override
+  String get nobodyCompleted => 'Personne n\'a encore complété ce défi.';
+
+  @override
+  String pendingCount(int count) {
+    return 'En attente ($count)';
+  }
+
+  @override
+  String get pendingLabel => 'En attente';
 }

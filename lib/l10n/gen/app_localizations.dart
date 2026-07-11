@@ -989,6 +989,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Speed Round'**
   String get modeSpeedShort;
+
+  /// No description provided for @challengesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenges'**
+  String get challengesTitle;
+
+  /// No description provided for @joinBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get joinBtn;
+
+  /// No description provided for @createChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a challenge'**
+  String get createChallenge;
+
+  /// No description provided for @noChallengesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No challenges yet'**
+  String get noChallengesYet;
+
+  /// No description provided for @createOrJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Create or join a challenge!'**
+  String get createOrJoin;
+
+  /// No description provided for @createBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get createBtn;
+
+  /// No description provided for @myCreatedChallenges.
+  ///
+  /// In en, this message translates to:
+  /// **'My created challenges'**
+  String get myCreatedChallenges;
+
+  /// No description provided for @deleteBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteBtn;
+
+  /// No description provided for @joinedChallenges.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined challenges'**
+  String get joinedChallenges;
+
+  /// No description provided for @deleteChallengeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the challenge?'**
+  String get deleteChallengeTitle;
+
+  /// No description provided for @deleteChallengeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The challenge \"{title}\" will be permanently deleted.'**
+  String deleteChallengeBody(String title);
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @challengeDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge deleted'**
+  String get challengeDeleted;
+
+  /// No description provided for @deleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error while deleting'**
+  String get deleteError;
+
+  /// No description provided for @stepSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Question source'**
+  String get stepSource;
+
+  /// No description provided for @stepPickCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a category'**
+  String get stepPickCategory;
+
+  /// No description provided for @stepPickQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a quiz'**
+  String get stepPickQuiz;
+
+  /// No description provided for @stepConfigure.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure the challenge'**
+  String get stepConfigure;
+
+  /// No description provided for @enterChallengeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a title for the challenge'**
+  String get enterChallengeTitle;
+
+  /// No description provided for @createError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error while creating'**
+  String get createError;
+
+  /// No description provided for @srcQuizLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'A specific quiz'**
+  String get srcQuizLabel;
+
+  /// No description provided for @srcQuizDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 questions from a quiz of your choice'**
+  String get srcQuizDesc;
+
+  /// No description provided for @srcCategoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'By category'**
+  String get srcCategoryLabel;
+
+  /// No description provided for @srcCategoryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 random questions from all quizzes in a category'**
+  String get srcCategoryDesc;
+
+  /// No description provided for @srcAllDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 random questions from all available quizzes'**
+  String get srcAllDesc;
+
+  /// No description provided for @whereQuestionsFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Where do the questions come from?'**
+  String get whereQuestionsFrom;
+
+  /// No description provided for @noCategoryAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No category available'**
+  String get noCategoryAvailable;
+
+  /// No description provided for @noQuizInCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'No quiz in this category'**
+  String get noQuizInCategory;
+
+  /// No description provided for @categoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get categoryLabel;
+
+  /// No description provided for @challengeTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge title'**
+  String get challengeTitleLabel;
+
+  /// No description provided for @challengeTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'E.g.: Who knows aviation?'**
+  String get challengeTitleHint;
+
+  /// No description provided for @creating.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating…'**
+  String get creating;
+
+  /// No description provided for @createChallengeBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Create the challenge'**
+  String get createChallengeBtn;
+
+  /// No description provided for @joinChallengeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a challenge'**
+  String get joinChallengeTitle;
+
+  /// No description provided for @enterChallengeCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the challenge code'**
+  String get enterChallengeCode;
+
+  /// No description provided for @codeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The 8-character code was shared with you by the challenge creator.'**
+  String get codeHelp;
+
+  /// No description provided for @joinChallengeBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Join the challenge'**
+  String get joinChallengeBtn;
+
+  /// No description provided for @challengeFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge found!'**
+  String get challengeFound;
+
+  /// No description provided for @byCreator.
+  ///
+  /// In en, this message translates to:
+  /// **'by {name}'**
+  String byCreator(String name);
+
+  /// No description provided for @codeLengthError.
+  ///
+  /// In en, this message translates to:
+  /// **'The code must be 8 characters'**
+  String get codeLengthError;
+
+  /// No description provided for @rematchError.
+  ///
+  /// In en, this message translates to:
+  /// **'Rematch failed. Try again.'**
+  String get rematchError;
+
+  /// No description provided for @rematch.
+  ///
+  /// In en, this message translates to:
+  /// **'Rematch'**
+  String get rematch;
+
+  /// No description provided for @playThisChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Play this challenge'**
+  String get playThisChallenge;
+
+  /// No description provided for @alreadyPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'You already played this challenge. Check the leaderboard below.'**
+  String get alreadyPlayed;
+
+  /// No description provided for @leaderboardCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard ({count, plural, =1{1 completed} other{{count} completed}})'**
+  String leaderboardCompleted(int count);
+
+  /// No description provided for @nobodyCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody has completed this challenge yet.'**
+  String get nobodyCompleted;
+
+  /// No description provided for @pendingCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending ({count})'**
+  String pendingCount(int count);
+
+  /// No description provided for @pendingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pendingLabel;
 }
 
 class _AppLocalizationsDelegate

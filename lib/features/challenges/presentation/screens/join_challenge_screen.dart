@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/features/challenges/bloc/challenge_controller.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/features/challenges/bloc/challenge_controller.dart';
 import 'package:arif_quiz/features/challenges/presentation/screens/challenge_detail_screen.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -38,19 +39,19 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.bg,
-      appBar: AppBar(backgroundColor: context.appColors.bg, title: const Text('Rejoindre un défi')),
+      appBar: AppBar(backgroundColor: context.appColors.bg, title: Text(AppLocalizations.of(context).joinChallengeTitle)),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Entre le code du défi',
+              AppLocalizations.of(context).enterChallengeCode,
               style: TextStyle(color: context.appColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             Text(
-              'Le code à 8 caractères t\'a été partagé par le créateur du défi.',
+              AppLocalizations.of(context).codeHelp,
               style: TextStyle(color: context.appColors.textSecondary, fontSize: 14),
             ),
             const SizedBox(height: 24),
@@ -89,7 +90,7 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
               ),
             const Spacer(),
             NeonButton(
-              label: widget.ctrl.isJoining ? 'Chargement...' : 'Rejoindre le défi',
+              label: widget.ctrl.isJoining ? AppLocalizations.of(context).loadingEllipsis : AppLocalizations.of(context).joinChallengeBtn,
               width: double.infinity,
               icon: Icons.sports_esports,
               onTap: widget.ctrl.isJoining ? null : _join,
@@ -114,7 +115,7 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
           Row(children: [
             const Icon(Icons.check_circle, color: AppColors.success, size: 18),
             const SizedBox(width: 8),
-            const Text('Défi trouvé !', style: TextStyle(color: AppColors.success, fontWeight: FontWeight.w700)),
+            Text(AppLocalizations.of(context).challengeFound, style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w700)),
           ]),
           const SizedBox(height: 10),
           Text(c.title, style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w800)),
@@ -124,7 +125,7 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
           Row(children: [
             _chip(AppColors.modeColor(c.mode), _modeLabel(c.mode)),
             const SizedBox(width: 8),
-            _chip(context.appColors.textMuted, 'par ${c.creator.name}'),
+            _chip(context.appColors.textMuted, AppLocalizations.of(context).byCreator(c.creator.name)),
           ]),
         ],
       ),
@@ -141,8 +142,8 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
       );
 
   String _modeLabel(String mode) => switch (mode) {
-        'survival' => '❤️ Survie',
-        'speed' => '⚡ Speed',
+        'survival' => '❤️ ${AppLocalizations.of(context).modeSurvivalShort}',
+        'speed' => '⚡ ${AppLocalizations.of(context).modeSpeedShort}',
         _ => '🎮 Classique',
       };
 
@@ -156,7 +157,7 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
     final code = _codeCtrl.text.trim();
     if (code.length != 8) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Le code doit faire 8 caractères')),
+        SnackBar(content: Text(AppLocalizations.of(context).codeLengthError)),
       );
       return;
     }

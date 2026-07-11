@@ -501,4 +501,164 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get modeSpeedShort => 'جولة السرعة';
+
+  @override
+  String get challengesTitle => 'التحديات';
+
+  @override
+  String get joinBtn => 'انضمام';
+
+  @override
+  String get createChallenge => 'إنشاء تحدٍّ';
+
+  @override
+  String get noChallengesYet => 'لا تحديات بعد';
+
+  @override
+  String get createOrJoin => 'أنشئ تحدياً أو انضم إلى واحد!';
+
+  @override
+  String get createBtn => 'إنشاء';
+
+  @override
+  String get myCreatedChallenges => 'التحديات التي أنشأتها';
+
+  @override
+  String get deleteBtn => 'حذف';
+
+  @override
+  String get joinedChallenges => 'التحديات المنضم إليها';
+
+  @override
+  String get deleteChallengeTitle => 'حذف التحدي؟';
+
+  @override
+  String deleteChallengeBody(String title) {
+    return 'سيُحذف التحدي \"$title\" نهائياً.';
+  }
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get challengeDeleted => 'حُذف التحدي';
+
+  @override
+  String get deleteError => 'خطأ أثناء الحذف';
+
+  @override
+  String get stepSource => 'مصدر الأسئلة';
+
+  @override
+  String get stepPickCategory => 'اختر فئة';
+
+  @override
+  String get stepPickQuiz => 'اختر اختباراً';
+
+  @override
+  String get stepConfigure => 'إعداد التحدي';
+
+  @override
+  String get enterChallengeTitle => 'أدخل عنواناً للتحدي';
+
+  @override
+  String get createError => 'خطأ أثناء الإنشاء';
+
+  @override
+  String get srcQuizLabel => 'اختبار محدد';
+
+  @override
+  String get srcQuizDesc => '10 أسئلة من اختبار تختاره';
+
+  @override
+  String get srcCategoryLabel => 'حسب الفئة';
+
+  @override
+  String get srcCategoryDesc => '10 أسئلة عشوائية من كل اختبارات فئة ما';
+
+  @override
+  String get srcAllDesc => '10 أسئلة عشوائية من كل الاختبارات المتاحة';
+
+  @override
+  String get whereQuestionsFrom => 'من أين تأتي الأسئلة؟';
+
+  @override
+  String get noCategoryAvailable => 'لا فئة متاحة';
+
+  @override
+  String get noQuizInCategory => 'لا اختبار في هذه الفئة';
+
+  @override
+  String get categoryLabel => 'الفئة';
+
+  @override
+  String get challengeTitleLabel => 'عنوان التحدي';
+
+  @override
+  String get challengeTitleHint => 'مثال: من يعرف الطيران؟';
+
+  @override
+  String get creating => 'جارٍ الإنشاء…';
+
+  @override
+  String get createChallengeBtn => 'إنشاء التحدي';
+
+  @override
+  String get joinChallengeTitle => 'الانضمام إلى تحدٍّ';
+
+  @override
+  String get enterChallengeCode => 'أدخل رمز التحدي';
+
+  @override
+  String get codeHelp => 'الرمز المكوّن من 8 أحرف شاركه معك منشئ التحدي.';
+
+  @override
+  String get joinChallengeBtn => 'الانضمام إلى التحدي';
+
+  @override
+  String get challengeFound => 'عُثر على التحدي!';
+
+  @override
+  String byCreator(String name) {
+    return 'بواسطة $name';
+  }
+
+  @override
+  String get codeLengthError => 'يجب أن يتكون الرمز من 8 أحرف';
+
+  @override
+  String get rematchError => 'تعذّرت إعادة المباراة. حاول مجدداً.';
+
+  @override
+  String get rematch => 'إعادة المباراة';
+
+  @override
+  String get playThisChallenge => 'العب هذا التحدي';
+
+  @override
+  String get alreadyPlayed => 'لقد لعبت هذا التحدي بالفعل. راجع الترتيب أدناه.';
+
+  @override
+  String leaderboardCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أكمل $count',
+      few: 'أكمل $count',
+      two: 'أكمل 2',
+      one: 'أكمل 1',
+    );
+    return 'الترتيب ($_temp0)';
+  }
+
+  @override
+  String get nobodyCompleted => 'لم يُكمل أحد هذا التحدي بعد.';
+
+  @override
+  String pendingCount(int count) {
+    return 'قيد الانتظار ($count)';
+  }
+
+  @override
+  String get pendingLabel => 'قيد الانتظار';
 }

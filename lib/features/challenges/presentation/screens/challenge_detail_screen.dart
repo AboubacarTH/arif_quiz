@@ -1,5 +1,6 @@
 ﻿import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/game_mode_select_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -54,8 +55,8 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
       if (!mounted) return;
       setState(() => _rematching = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Revanche impossible. Réessaie.'),
+        SnackBar(
+            content: Text(AppLocalizations.of(context).rematchError),
             backgroundColor: AppColors.error),
       );
     }
@@ -90,7 +91,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
                           _buildAlreadyPlayedBanner(),
                           const SizedBox(height: 12),
                           AppButton(
-                            label: 'Revanche',
+                            label: AppLocalizations.of(context).rematch,
                             icon: Icons.replay_rounded,
                             fullWidth: true,
                             loading: _rematching,
@@ -99,7 +100,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
                         ],
                       )
                     : NeonButton(
-                        label: 'Jouer ce défi',
+                        label: AppLocalizations.of(context).playThisChallenge,
                         width: double.infinity,
                         icon: Icons.play_arrow_rounded,
                         onTap: () => Navigator.push(
@@ -149,7 +150,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Tu as déjà joué ce défi. Consulte le classement ci-dessous.',
+              AppLocalizations.of(context).alreadyPlayed,
               style: TextStyle(
                 color: AppColors.success,
                 fontSize: 13,
@@ -170,7 +171,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
       SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-          child: Text('Classement (${completed.length} complété${completed.length > 1 ? 's' : ''})',
+          child: Text(AppLocalizations.of(context).leaderboardCompleted(completed.length),
               style: TextStyle(color: context.appColors.textPrimary, fontSize: 15, fontWeight: FontWeight.w700)),
         ),
       ),
@@ -178,7 +179,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text('Personne n\'a encore complété ce défi.', style: TextStyle(color: context.appColors.textMuted)),
+            child: Text(AppLocalizations.of(context).nobodyCompleted, style: TextStyle(color: context.appColors.textMuted)),
           ),
         )
       else
@@ -211,7 +212,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Text('En attente (${pending.length})',
+            child: Text(AppLocalizations.of(context).pendingCount(pending.length),
                 style: TextStyle(color: context.appColors.textSecondary, fontSize: 14, fontWeight: FontWeight.w600)),
           ),
         ),
@@ -223,7 +224,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
               return ListTile(
                 leading: CircleAvatar(radius: 16, backgroundColor: context.appColors.cardBgLight, child: Icon(Icons.hourglass_empty, size: 14, color: context.appColors.textMuted)),
                 title: Text(user['name'] ?? '', style: TextStyle(color: context.appColors.textSecondary)),
-                trailing: Text('En attente', style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+                trailing: Text(AppLocalizations.of(context).pendingLabel, style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
               );
             },
             childCount: pending.length,

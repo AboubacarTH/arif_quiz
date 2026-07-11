@@ -1,4 +1,5 @@
 import 'package:arif_quiz/features/challenges/bloc/challenge_controller.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -155,11 +156,11 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
   }
 
   List<String> get _stepTitles {
-    if (_sourceType == 'all') return ['Source des questions', 'Configurer le défi'];
+    if (_sourceType == 'all') return [AppLocalizations.of(context).stepSource, AppLocalizations.of(context).stepConfigure];
     if (_sourceType == 'category') {
-      return ['Source des questions', 'Choisir une catégorie', 'Configurer le défi'];
+      return [AppLocalizations.of(context).stepSource, AppLocalizations.of(context).stepPickCategory, AppLocalizations.of(context).stepConfigure];
     }
-    return ['Source des questions', 'Choisir une catégorie', 'Choisir un quiz', 'Configurer le défi'];
+    return [AppLocalizations.of(context).stepSource, AppLocalizations.of(context).stepPickCategory, AppLocalizations.of(context).stepPickQuiz, AppLocalizations.of(context).stepConfigure];
   }
 
   @override
@@ -310,7 +311,7 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
   Future<void> _create() async {
     if (_titleCtrl.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Entre un titre pour le défi')),
+        SnackBar(content: Text(AppLocalizations.of(context).enterChallengeTitle)),
       );
       return;
     }
@@ -327,8 +328,8 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
       Navigator.pop(context, challenge);
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Erreur lors de la création'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).createError),
           backgroundColor: AppColors.error,
         ),
       );
@@ -350,26 +351,26 @@ class _StepSource extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const sources = [
+    final sources = [
       (
         id: 'quiz',
         icon: '🎯',
-        label: 'Un quiz spécifique',
-        desc: '10 questions tirées d\'un quiz de ton choix',
+        label: AppLocalizations.of(context).srcQuizLabel,
+        desc: AppLocalizations.of(context).srcQuizDesc,
         color: AppColors.primary,
       ),
       (
         id: 'category',
         icon: '📚',
-        label: 'Par catégorie',
-        desc: '10 questions aléatoires parmi tous les quiz d\'une catégorie',
+        label: AppLocalizations.of(context).srcCategoryLabel,
+        desc: AppLocalizations.of(context).srcCategoryDesc,
         color: AppColors.secondary,
       ),
       (
         id: 'all',
         icon: '🌐',
-        label: 'Tous les quiz',
-        desc: '10 questions aléatoires parmi tous les quiz disponibles',
+        label: AppLocalizations.of(context).allQuizzes,
+        desc: AppLocalizations.of(context).srcAllDesc,
         color: AppColors.accent,
       ),
     ];
@@ -378,7 +379,7 @@ class _StepSource extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
       children: [
         Text(
-          'D\'où viennent les questions ?',
+          AppLocalizations.of(context).whereQuestionsFrom,
           style: TextStyle(
             color: context.appColors.textSecondary,
             fontSize: 13,
@@ -523,7 +524,7 @@ class _StepCategoryState extends State<_StepCategory> {
     }
     if (widget.categories.isEmpty) {
       return Center(
-        child: Text('Aucune catégorie disponible',
+        child: Text(AppLocalizations.of(context).noCategoryAvailable,
             style: TextStyle(color: context.appColors.textSecondary)),
       );
     }
@@ -553,7 +554,7 @@ class _StepCategoryState extends State<_StepCategory> {
                     style: TextStyle(
                         color: context.appColors.textPrimary, fontSize: 14),
                     decoration: InputDecoration(
-                      hintText: 'Rechercher une catégorie...',
+                      hintText: AppLocalizations.of(context).searchCategoryHint,
                       hintStyle: TextStyle(
                           color: context.appColors.textMuted, fontSize: 14),
                       border: InputBorder.none,
@@ -581,7 +582,7 @@ class _StepCategoryState extends State<_StepCategory> {
           child: filtered.isEmpty
               ? Center(
                   child: Text(
-                    'Aucun résultat pour "$_query"',
+                    AppLocalizations.of(context).noResultsFor(_query),
                     style:
                         TextStyle(color: context.appColors.textMuted),
                   ),
@@ -700,7 +701,7 @@ class _StepQuizState extends State<_StepQuiz> {
     if (widget.quizzes.isEmpty) {
       return Center(
         child: Text(
-          'Aucun quiz dans cette catégorie',
+          AppLocalizations.of(context).noQuizInCategory,
           style: TextStyle(color: context.appColors.textSecondary),
         ),
       );
@@ -731,7 +732,7 @@ class _StepQuizState extends State<_StepQuiz> {
                     style: TextStyle(
                         color: context.appColors.textPrimary, fontSize: 14),
                     decoration: InputDecoration(
-                      hintText: 'Rechercher un quiz...',
+                      hintText: AppLocalizations.of(context).searchQuizHint,
                       hintStyle: TextStyle(
                           color: context.appColors.textMuted, fontSize: 14),
                       border: InputBorder.none,
@@ -759,7 +760,7 @@ class _StepQuizState extends State<_StepQuiz> {
           child: filtered.isEmpty
               ? Center(
                   child: Text(
-                    'Aucun résultat pour "$_query"',
+                    AppLocalizations.of(context).noResultsFor(_query),
                     style: TextStyle(color: context.appColors.textMuted),
                   ),
                 )
@@ -824,7 +825,7 @@ class _StepQuizState extends State<_StepQuiz> {
                                   Row(
                                     children: [
                                       _QuizChip(
-                                          label: '10 questions',
+                                          label: AppLocalizations.of(context).questions10,
                                           color: AppColors.primary),
                                       const SizedBox(width: 6),
                                       _QuizChip(
@@ -918,10 +919,10 @@ class _StepConfig extends StatelessWidget {
     final (sourceIcon, sourceLabel, sourceColor) = switch (sourceType) {
       'category' => (
           selectedCategory?.icon ?? '📚',
-          selectedCategory?.name ?? 'Catégorie',
+          selectedCategory?.name ?? AppLocalizations.of(context).categoryLabel,
           AppColors.secondary,
         ),
-      'all' => ('🌐', 'Tous les quiz', AppColors.accent),
+      'all' => ('🌐', AppLocalizations.of(context).allQuizzes, AppColors.accent),
       _ => (
           '🎯',
           selectedQuiz?.title ?? 'Quiz',
@@ -972,7 +973,7 @@ class _StepConfig extends StatelessWidget {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        '10 questions aléatoires',
+                        AppLocalizations.of(context).randomQuestions10,
                         style: TextStyle(
                           color: context.appColors.textSecondary,
                           fontSize: 12,
@@ -988,7 +989,7 @@ class _StepConfig extends StatelessWidget {
 
           // Titre
           Text(
-            'Titre du défi',
+            AppLocalizations.of(context).challengeTitleLabel,
             style: TextStyle(
               color: context.appColors.textPrimary,
               fontSize: 14,
@@ -999,15 +1000,15 @@ class _StepConfig extends StatelessWidget {
           TextField(
             controller: titleCtrl,
             style: TextStyle(color: context.appColors.textPrimary),
-            decoration: const InputDecoration(
-              hintText: 'Ex: Qui connaît l\'aviation ?',
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context).challengeTitleHint,
             ),
           ),
           const SizedBox(height: 24),
 
           // Mode
           Text(
-            'Mode de jeu',
+            AppLocalizations.of(context).gameModeLabel,
             style: TextStyle(
               color: context.appColors.textPrimary,
               fontSize: 14,
@@ -1029,7 +1030,7 @@ class _StepConfig extends StatelessWidget {
 
           // Bouton créer
           NeonButton(
-            label: isCreating ? 'Création...' : 'Créer le défi',
+            label: isCreating ? AppLocalizations.of(context).creating : AppLocalizations.of(context).createChallengeBtn,
             width: double.infinity,
             icon: Icons.sports_esports,
             color: AppColors.modeColor(selectedMode.apiValue),

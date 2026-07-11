@@ -3,6 +3,7 @@ import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/challenges/presentation/screens/challenge_detail_screen.dart';
 import 'package:arif_quiz/features/challenges/presentation/screens/create_challenge_screen.dart';
 import 'package:arif_quiz/features/challenges/presentation/screens/join_challenge_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -42,12 +43,12 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: const Text('Défis'),
+        title: Text(AppLocalizations.of(context).challengesTitle),
         actions: [
           TextButton.icon(
             onPressed: () => _openJoin(),
             icon: const Icon(Icons.qr_code_scanner, size: 18, color: AppColors.secondary),
-            label: const Text('Rejoindre', style: TextStyle(color: AppColors.secondary)),
+            label: Text(AppLocalizations.of(context).joinBtn, style: const TextStyle(color: AppColors.secondary)),
           ),
         ],
       ),
@@ -60,7 +61,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
         onPressed: _openCreate,
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Créer un défi', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        label: Text(AppLocalizations.of(context).createChallenge, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
       ),
     );
   }
@@ -82,9 +83,9 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
               children: [
                 const Text('⚔️', style: TextStyle(fontSize: 56)),
                 const SizedBox(height: 16),
-                Text('Pas encore de défis', style: TextStyle(color: context.appColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w700)),
+                Text(AppLocalizations.of(context).noChallengesYet, style: TextStyle(color: context.appColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
-                Text('Crée ou rejoins un défi !', style: TextStyle(color: context.appColors.textSecondary)),
+                Text(AppLocalizations.of(context).createOrJoin, style: TextStyle(color: context.appColors.textSecondary)),
                 const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -92,13 +93,13 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
                     ElevatedButton.icon(
                       onPressed: _openCreate,
                       icon: const Icon(Icons.add, size: 18),
-                      label: const Text('Créer'),
+                      label: Text(AppLocalizations.of(context).createBtn),
                     ),
                     const SizedBox(width: 12),
                     OutlinedButton.icon(
                       onPressed: _openJoin,
                       icon: const Icon(Icons.link, size: 18, color: AppColors.secondary),
-                      label: const Text('Rejoindre', style: TextStyle(color: AppColors.secondary)),
+                      label: Text(AppLocalizations.of(context).joinBtn, style: const TextStyle(color: AppColors.secondary)),
                       style: OutlinedButton.styleFrom(side: const BorderSide(color: AppColors.secondary)),
                     ),
                   ],
@@ -114,7 +115,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
         if (_ctrl.created.isNotEmpty) ...[
-          _sectionHeader('Mes défis créés', _ctrl.created.length),
+          _sectionHeader(AppLocalizations.of(context).myCreatedChallenges, _ctrl.created.length),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             sliver: SliverList(
@@ -145,12 +146,12 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
                         color: AppColors.error,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.delete_outline_rounded, color: Colors.white, size: 26),
-                          SizedBox(height: 4),
-                          Text('Supprimer', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
+                          const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 26),
+                          const SizedBox(height: 4),
+                          Text(AppLocalizations.of(context).deleteBtn, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
                         ],
                       ),
                     ),
@@ -163,7 +164,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
           ),
         ],
         if (_ctrl.joined.isNotEmpty) ...[
-          _sectionHeader('Défis rejoints', _ctrl.joined.length),
+          _sectionHeader(AppLocalizations.of(context).joinedChallenges, _ctrl.joined.length),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
             sliver: SliverList(
@@ -235,21 +236,21 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
             backgroundColor: context.appColors.cardBg,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: Text(
-              'Supprimer le défi ?',
+              AppLocalizations.of(context).deleteChallengeTitle,
               style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700),
             ),
             content: Text(
-              'Le défi "${challenge.title}" sera définitivement supprimé.',
+              AppLocalizations.of(context).deleteChallengeBody(challenge.title),
               style: TextStyle(color: context.appColors.textSecondary),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: Text('Annuler', style: TextStyle(color: context.appColors.textMuted)),
+                child: Text(AppLocalizations.of(context).cancel, style: TextStyle(color: context.appColors.textMuted)),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Supprimer', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
+                child: Text(AppLocalizations.of(context).deleteBtn, style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
               ),
             ],
           ),
@@ -262,7 +263,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(success ? 'Défi supprimé' : 'Erreur lors de la suppression'),
+        content: Text(success ? AppLocalizations.of(context).challengeDeleted : AppLocalizations.of(context).deleteError),
         backgroundColor: success ? AppColors.success : AppColors.error,
       ),
     );
