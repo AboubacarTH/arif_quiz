@@ -6,6 +6,7 @@ import 'package:arif_quiz/features/home/data/home_repository.dart';
 import 'package:arif_quiz/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:arif_quiz/features/journey/presentation/screens/journey_map_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/all_categories_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/category_quizzes_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_list_screen.dart';
@@ -107,17 +108,17 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverToBoxAdapter(child: _journeyCard()),
           SliverToBoxAdapter(child: _dailyChallengeCard()),
           if (d.friendsLeaderboard.length >= 2) ...[
-            _sectionTitle('🏅 Classement amis'),
+            _sectionTitle(AppLocalizations.of(context).friendsLeaderboard),
             SliverToBoxAdapter(
                 child: _friendsLeaderboard(d.friendsLeaderboard)),
           ],
         ],
-        _sectionTitle('Catégories',
+        _sectionTitle(AppLocalizations.of(context).categories,
             topPad: 24,
-            actionLabel: 'Voir tout',
+            actionLabel: AppLocalizations.of(context).seeAll,
             onAction: _openAllCategories),
         SliverToBoxAdapter(child: _categoriesRow(d.categories)),
-        _sectionTitle('🔥 Populaires', actionLabel: 'Voir tout', onAction: _openAllQuizzes),
+        _sectionTitle(AppLocalizations.of(context).popular, actionLabel: AppLocalizations.of(context).seeAll, onAction: _openAllQuizzes),
         SliverToBoxAdapter(child: _featuredHorizontal(d.featured)),
         const SliverToBoxAdapter(child: SizedBox(height: 32)),
       ],
@@ -137,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Bonjour, ${user?.name.split(' ').first ?? 'Invité'} 👋',
+                  AppLocalizations.of(context).greeting(user?.name.split(' ').first ?? AppLocalizations.of(context).guest),
                   style: TextStyle(
                     color: context.appColors.textSecondary,
                     fontSize: 14,
@@ -145,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Prêt à jouer ?',
+                  AppLocalizations.of(context).readyToPlay,
                   style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontSize: 26,
@@ -227,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Sauvegarde ta progression !',
+                    AppLocalizations.of(context).guestBannerTitle,
                     style: TextStyle(
                       color: context.appColors.textPrimary,
                       fontSize: 13,
@@ -236,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Crée un compte pour débloquer XP, streak et classement.',
+                    AppLocalizations.of(context).guestBannerSubtitle,
                     style: TextStyle(color: context.appColors.textSecondary, fontSize: 11),
                   ),
                 ],
@@ -257,9 +258,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: AppColors.primary,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      'S\'inscrire',
-                      style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
+                    child: Text(
+                      AppLocalizations.of(context).signUp,
+                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),
@@ -271,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MaterialPageRoute(builder: (_) => const LoginScreen()));
                   },
                   child: Text(
-                    'Se connecter',
+                    AppLocalizations.of(context).logIn,
                     style: TextStyle(
                       color: AppColors.primary,
                       fontSize: 11,
@@ -353,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'DÉFI QUOTIDIEN',
+                      AppLocalizations.of(context).dailyChallengeTag,
                       style: TextStyle(
                         color: AppColors.accent,
                         fontSize: 11,
@@ -363,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Un quiz spécial chaque jour',
+                      AppLocalizations.of(context).dailyChallengeTitle,
                       style: TextStyle(
                         color: context.appColors.textPrimary,
                         fontSize: 14,
@@ -372,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '+30 XP bonus · Maintient ton streak',
+                      AppLocalizations.of(context).dailyChallengeSubtitle,
                       style: TextStyle(
                         color: context.appColors.textSecondary,
                         fontSize: 12,
@@ -436,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'MODE PARCOURS',
+                      AppLocalizations.of(context).journeyTag,
                       style: TextStyle(
                         color: AppColors.secondary,
                         fontSize: 11,
@@ -446,7 +447,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Grimpe les niveaux de la map',
+                      AppLocalizations.of(context).journeyTitle,
                       style: TextStyle(
                         color: context.appColors.textPrimary,
                         fontSize: 14,
@@ -455,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Débloque, gagne des étoiles ⭐',
+                      AppLocalizations.of(context).journeySubtitle,
                       style: TextStyle(
                         color: context.appColors.textSecondary,
                         fontSize: 12,
@@ -567,7 +568,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w700,
                       fontSize: 14),
                 ),
-                Text('Niv. $level',
+                Text(AppLocalizations.of(context).levelShort(level),
                     style: TextStyle(
                         color: context.appColors.textMuted, fontSize: 11)),
               ],
@@ -739,7 +740,7 @@ class _CategoryTile extends StatelessWidget {
             ),
             const SizedBox(height: 3),
             Text(
-              '${category.quizCount} quiz',
+              AppLocalizations.of(context).quizCount(category.quizCount),
               style: TextStyle(
                 color: color,
                 fontSize: 10,

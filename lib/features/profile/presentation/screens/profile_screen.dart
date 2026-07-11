@@ -1,5 +1,7 @@
+import 'package:arif_quiz/core/i18n/locale_controller.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_dashboard.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/features/badges/presentation/screens/badges_screen.dart';
 import 'package:arif_quiz/features/profile/data/profile_repository.dart';
 import 'package:arif_quiz/features/profile/presentation/screens/attempt_history_screen.dart';
@@ -252,6 +254,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildPremiumSection(),
                 const SizedBox(height: 24),
                 _buildThemeSection(),
+                const SizedBox(height: 24),
+                _buildLanguageSection(),
                 const SizedBox(height: 28),
                 _buildRecentActivity(d.recentAttempts),
                 if (user.role == 'admin') ...[
@@ -663,6 +667,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ],
     ).animate().fadeIn(delay: 300.ms);
+  }
+
+  // ─── Langue ──────────────────────────────────────────────────────────────────
+
+  Widget _buildLanguageSection() {
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionTitle(title: l10n.language),
+        const SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            color: context.cardElevated,
+            borderRadius: AppRadius.rLg,
+            boxShadow: AppShadows.card(context),
+          ),
+          child: ListenableBuilder(
+            listenable: localeController,
+            builder: (_, __) => Column(
+              children: [
+                for (final (i, code)
+                    in LocaleController.supportedCodes.indexed) ...[
+                  if (i > 0)
+                    Divider(height: 1, color: context.appColors.border),
+                  _ThemeTile(
+                    icon: Icons.language_rounded,
+                    label: LocaleController.labels[code] ?? code,
+                    subtitle: code == localeController.code
+                        ? l10n.languageSystemNote
+                        : null,
+                    selected: code == localeController.code,
+                    onTap: () => localeController.setLocale(code),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
+    ).animate().fadeIn(delay: 320.ms);
   }
 
   // ─── Recent activity ─────────────────────────────────────────────────────────
@@ -1168,14 +1213,14 @@ class _GetPremiumCard extends StatelessWidget {
 class _ThemeTile extends StatelessWidget {
   final IconData icon;
   final String label;
-  final String subtitle;
+  final String? subtitle;
   final bool selected;
   final VoidCallback onTap;
 
   const _ThemeTile({
     required this.icon,
     required this.label,
-    required this.subtitle,
+    this.subtitle,
     required this.selected,
     required this.onTap,
   });
@@ -1220,13 +1265,14 @@ class _ThemeTile extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: context.appColors.textMuted,
-                        fontSize: 12,
+                    if (subtitle != null)
+                      Text(
+                        subtitle!,
+                        style: TextStyle(
+                          color: context.appColors.textMuted,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),

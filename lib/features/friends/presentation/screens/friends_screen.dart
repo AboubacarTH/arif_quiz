@@ -134,7 +134,7 @@ class _FriendsScreenState extends State<FriendsScreen>
           final f = _ctrl.friends[i];
           return FriendTile(
             user: f.friend,
-            trailingText: f.since != null ? 'Depuis ${timeago.format(f.since!, locale: 'fr')}' : null,
+            trailingText: f.since != null ? 'Depuis ${timeago.format(f.since!)}' : null,
             trailing: IconButton(
               icon: Icon(Icons.more_vert, color: context.appColors.textMuted, size: 18),
               onPressed: () => _showFriendOptions(f),
@@ -241,7 +241,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        a.completedAt != null ? timeago.format(a.completedAt!, locale: 'fr') : '',
+                        a.completedAt != null ? timeago.format(a.completedAt!) : '',
                         style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
                       ),
                     ],
