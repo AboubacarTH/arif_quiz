@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -121,13 +122,13 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Supprimer ?', style: TextStyle(fontWeight: FontWeight.w800)),
-        content: Text('Supprimer "${quiz.title}" et toutes ses questions ?'),
+        title: Text(AppLocalizations.of(context).confirmDeleteTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
+        content: Text(AppLocalizations.of(context).deleteQuizBody(quiz.title)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annuler')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context).cancel)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Supprimer', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
+            child: Text(AppLocalizations.of(context).deleteBtn, style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -157,22 +158,22 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Langue du fichier',
-              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).fileLanguage,
+              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
           const SizedBox(height: 12),
-          for (final l in const [
-            (code: 'en', label: 'Anglais — nouvelles questions'),
-            (code: 'fr', label: 'Français — traductions'),
-            (code: 'ar', label: 'العربية — traductions'),
-            (code: 'es', label: 'Español — traductions'),
+          for (final l in [
+            (code: 'en', label: AppLocalizations.of(context).importLangEn),
+            (code: 'fr', label: AppLocalizations.of(context).importLangFr),
+            (code: 'ar', label: AppLocalizations.of(context).importLangAr),
+            (code: 'es', label: AppLocalizations.of(context).importLangEs),
           ])
             ListTile(
               title: Text(l.label),
               subtitle: l.code == 'en'
-                  ? const Text('Ajoutées à la suite des questions existantes',
-                      style: TextStyle(fontSize: 12))
-                  : const Text('Appliquées aux questions existantes (colonne order)',
-                      style: TextStyle(fontSize: 12)),
+                  ? Text(AppLocalizations.of(context).appendedAfterExisting,
+                      style: const TextStyle(fontSize: 12))
+                  : Text(AppLocalizations.of(context).appliedToExisting,
+                      style: const TextStyle(fontSize: 12)),
               onTap: () => Navigator.pop(ctx, l.code),
             ),
         ],
@@ -192,8 +193,8 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
     final file = picked.files.first;
     if (file.path == null) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Impossible d\'accéder au fichier sélectionné.'),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context).cantAccessFile),
             backgroundColor: AppColors.error));
       }
       return;
@@ -216,7 +217,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
       if (!mounted) return;
       Navigator.pop(context); // ferme le loader
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(res['message'] as String? ?? 'Questions importées.'),
+          content: Text(res['message'] as String? ?? AppLocalizations.of(context).questionsImportedMsg),
           backgroundColor: AppColors.success));
       _load(reset: true);
     } catch (e) {
@@ -269,7 +270,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
           TextField(
             controller: _searchCtrl,
             decoration: InputDecoration(
-              hintText: 'Rechercher un quiz...',
+              hintText: AppLocalizations.of(context).searchQuizHint,
               prefixIcon: const Icon(Icons.search_rounded, size: 20),
               suffixIcon: _searchCtrl.text.isNotEmpty
                   ? IconButton(icon: const Icon(Icons.clear_rounded, size: 18), onPressed: () { _searchCtrl.clear(); _applyFilters(); })
@@ -287,19 +288,19 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
             child: Row(
               children: [
                 _FilterChip(
-                  label: _filterCategoryId == null ? 'Catégorie' : (_categories.firstWhere((c) => c.id == _filterCategoryId, orElse: () => _categories.first).name),
+                  label: _filterCategoryId == null ? AppLocalizations.of(context).categoryLabel : (_categories.firstWhere((c) => c.id == _filterCategoryId, orElse: () => _categories.first).name),
                   active: _filterCategoryId != null,
                   onTap: () => _showCategoryFilter(),
                 ),
                 const SizedBox(width: 8),
                 _FilterChip(
-                  label: _filterDifficulty ?? 'Difficulté',
+                  label: _filterDifficulty ?? AppLocalizations.of(context).difficulty,
                   active: _filterDifficulty != null,
                   onTap: () => _showDifficultyFilter(),
                 ),
                 const SizedBox(width: 8),
                 _FilterChip(
-                  label: _filterStatus == null ? 'Statut' : (_filterStatus == 'published' ? 'Publié' : 'Brouillon'),
+                  label: _filterStatus == null ? AppLocalizations.of(context).statusLabel : (_filterStatus == 'published' ? AppLocalizations.of(context).publishedSingular : AppLocalizations.of(context).draft),
                   active: _filterStatus != null,
                   onTap: () => _showStatusFilter(),
                 ),
@@ -316,7 +317,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
                         color: AppColors.error.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Text('Réinitialiser', style: TextStyle(color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w600)),
+                      child: Text(AppLocalizations.of(context).resetFilters, style: const TextStyle(color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],
@@ -337,10 +338,10 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Filtrer par catégorie', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByCategory, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
           const SizedBox(height: 12),
           ListTile(
-            title: const Text('Toutes'),
+            title: Text(AppLocalizations.of(context).allFem),
             onTap: () { setState(() => _filterCategoryId = null); Navigator.pop(context); _applyFilters(); },
           ),
           ..._categories.map((c) => ListTile(
@@ -362,11 +363,11 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Filtrer par difficulté', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByDifficulty, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
           const SizedBox(height: 12),
           for (final d in [null, 'easy', 'medium', 'hard'])
             ListTile(
-              title: Text(d == null ? 'Toutes' : _difficultyLabel(d)),
+              title: Text(d == null ? AppLocalizations.of(context).allFem : _difficultyLabel(d)),
               trailing: _filterDifficulty == d ? const Icon(Icons.check_rounded, color: AppColors.primary) : null,
               onTap: () { setState(() => _filterDifficulty = d); Navigator.pop(context); _applyFilters(); },
             ),
@@ -384,11 +385,11 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Filtrer par statut', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByStatus, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
           const SizedBox(height: 12),
           for (final s in [null, 'published', 'draft'])
             ListTile(
-              title: Text(s == null ? 'Tous' : (s == 'published' ? 'Publié' : 'Brouillon')),
+              title: Text(s == null ? AppLocalizations.of(context).allFilter : (s == 'published' ? AppLocalizations.of(context).publishedSingular : AppLocalizations.of(context).draft)),
               trailing: _filterStatus == s ? const Icon(Icons.check_rounded, color: AppColors.primary) : null,
               onTap: () { setState(() => _filterStatus = s); Navigator.pop(context); _applyFilters(); },
             ),
@@ -400,7 +401,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
   Widget _buildList() {
     if (_loading) return const Center(child: CircularProgressIndicator(color: AppColors.primary));
     if (_error != null) return Center(child: Text(_error!, style: TextStyle(color: context.appColors.textSecondary)));
-    if (_quizzes.isEmpty) return Center(child: Text('Aucun quiz trouvé', style: TextStyle(color: context.appColors.textSecondary)));
+    if (_quizzes.isEmpty) return Center(child: Text(AppLocalizations.of(context).noQuizFound, style: TextStyle(color: context.appColors.textSecondary)));
 
     return RefreshIndicator(
       onRefresh: () => _load(reset: true),
@@ -494,7 +495,7 @@ class _QuizTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      quiz.isPublished ? 'Publié' : 'Brouillon',
+                      quiz.isPublished ? AppLocalizations.of(context).publishedSingular : AppLocalizations.of(context).draft,
                       style: TextStyle(
                         color: quiz.isPublished ? AppColors.success : AppColors.warning,
                         fontSize: 11,
@@ -523,19 +524,19 @@ class _QuizTile extends StatelessWidget {
                 TextButton.icon(
                   onPressed: onImport,
                   icon: const Icon(Icons.upload_file_rounded, size: 15),
-                  label: const Text('Importer'),
+                  label: Text(AppLocalizations.of(context).importBtn),
                   style: TextButton.styleFrom(foregroundColor: AppColors.secondary, padding: const EdgeInsets.symmetric(horizontal: 10)),
                 ),
                 TextButton.icon(
                   onPressed: onEdit,
                   icon: const Icon(Icons.edit_rounded, size: 15),
-                  label: const Text('Modifier'),
+                  label: Text(AppLocalizations.of(context).editBtn),
                   style: TextButton.styleFrom(foregroundColor: AppColors.info, padding: const EdgeInsets.symmetric(horizontal: 10)),
                 ),
                 TextButton.icon(
                   onPressed: onDelete,
                   icon: const Icon(Icons.delete_rounded, size: 15),
-                  label: const Text('Supprimer'),
+                  label: Text(AppLocalizations.of(context).deleteBtn),
                   style: TextButton.styleFrom(foregroundColor: AppColors.error, padding: const EdgeInsets.symmetric(horizontal: 10)),
                 ),
               ],
@@ -653,13 +654,13 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: Text(isEdit ? 'Modifier le quiz' : 'Nouveau quiz', style: const TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(isEdit ? AppLocalizations.of(context).editQuiz : AppLocalizations.of(context).newQuiz, style: const TextStyle(fontWeight: FontWeight.w800)),
         actions: [
           TextButton(
             onPressed: _saving ? null : _save,
             child: _saving
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: AppColors.primary, strokeWidth: 2))
-                : const Text('Enregistrer', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700)),
+                : Text(AppLocalizations.of(context).saveChanges, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -676,26 +677,26 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
               ),
               const SizedBox(height: 12),
             ],
-            _field('Titre *', _title, validator: (v) => v!.trim().isEmpty ? 'Requis' : null),
+            _field(AppLocalizations.of(context).titleRequired, _title, validator: (v) => v!.trim().isEmpty ? AppLocalizations.of(context).requiredField : null),
             const SizedBox(height: 12),
-            _field('Description', _desc, maxLines: 3),
+            _field(AppLocalizations.of(context).descriptionLabel, _desc, maxLines: 3),
             const SizedBox(height: 12),
             DropdownButtonFormField<int>(
               initialValue: _categoryId,
-              decoration: _inputDecoration('Catégorie *'),
+              decoration: _inputDecoration(AppLocalizations.of(context).categoryRequired),
               items: widget.categories.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
               onChanged: (v) => setState(() => _categoryId = v),
-              validator: (v) => v == null ? 'Requis' : null,
+              validator: (v) => v == null ? AppLocalizations.of(context).requiredField : null,
               dropdownColor: context.appColors.cardBg,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               initialValue: _difficulty,
-              decoration: _inputDecoration('Difficulté *'),
-              items: const [
-                DropdownMenuItem(value: 'easy', child: Text('Facile')),
-                DropdownMenuItem(value: 'medium', child: Text('Moyen')),
-                DropdownMenuItem(value: 'hard', child: Text('Difficile')),
+              decoration: _inputDecoration(AppLocalizations.of(context).difficultyRequired),
+              items: [
+                DropdownMenuItem(value: 'easy', child: Text(AppLocalizations.of(context).diffEasy)),
+                DropdownMenuItem(value: 'medium', child: Text(AppLocalizations.of(context).diffMedium)),
+                DropdownMenuItem(value: 'hard', child: Text(AppLocalizations.of(context).diffHard)),
               ],
               onChanged: (v) => setState(() => _difficulty = v!),
               dropdownColor: context.appColors.cardBg,
@@ -703,13 +704,13 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Expanded(child: _field('Temps (s) *', _timeLimit, keyboardType: TextInputType.number, validator: (v) {
+                Expanded(child: _field(AppLocalizations.of(context).timeSeconds, _timeLimit, keyboardType: TextInputType.number, validator: (v) {
                   final n = int.tryParse(v ?? '');
                   if (n == null || n < 5 || n > 600) return '5–600';
                   return null;
                 })),
                 const SizedBox(width: 12),
-                Expanded(child: _field('Points/question *', _points, keyboardType: TextInputType.number, validator: (v) {
+                Expanded(child: _field(AppLocalizations.of(context).pointsPerQuestionReq, _points, keyboardType: TextInputType.number, validator: (v) {
                   final n = int.tryParse(v ?? '');
                   if (n == null || n < 1 || n > 1000) return '1–1000';
                   return null;
@@ -720,25 +721,25 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
             SwitchListTile(
               value: _isPublished,
               onChanged: (v) => setState(() => _isPublished = v),
-              title: Text('Publier le quiz', style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
+              title: Text(AppLocalizations.of(context).publishQuiz, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
               activeThumbColor: AppColors.primary,
               contentPadding: EdgeInsets.zero,
             ),
             SwitchListTile(
               value: _inJourney,
               onChanged: (v) => setState(() => _inJourney = v),
-              title: Text('Inclure dans le Mode Parcours', style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
-              subtitle: Text('Ses questions alimentent la map à niveaux', style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+              title: Text(AppLocalizations.of(context).includeInJourney, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
+              subtitle: Text(AppLocalizations.of(context).journeyFeedDesc, style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
               activeThumbColor: AppColors.secondary,
               contentPadding: EdgeInsets.zero,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               initialValue: _visibility,
-              decoration: _inputDecoration('Visibilité'),
-              items: const [
-                DropdownMenuItem(value: 'public', child: Text('Public — visible par tous')),
-                DropdownMenuItem(value: 'restricted', child: Text('Restreint — utilisateurs choisis')),
+              decoration: _inputDecoration(AppLocalizations.of(context).visibilityLabel),
+              items: [
+                DropdownMenuItem(value: 'public', child: Text(AppLocalizations.of(context).publicVisible)),
+                DropdownMenuItem(value: 'restricted', child: Text(AppLocalizations.of(context).restrictedChosen)),
               ],
               onChanged: (v) => setState(() => _visibility = v ?? 'public'),
               dropdownColor: context.appColors.cardBg,
@@ -754,7 +755,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
                 children: [
                   TextFormField(
                     initialValue: trGet(_translations, locale, 'title'),
-                    decoration: _inputDecoration('Titre ($locale)'),
+                    decoration: _inputDecoration(AppLocalizations.of(context).titleLocale(locale)),
                     onChanged: (v) =>
                         setState(() => trSet(_translations, locale, 'title', v)),
                   ),
@@ -762,7 +763,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
                   TextFormField(
                     initialValue: trGet(_translations, locale, 'description'),
                     maxLines: 3,
-                    decoration: _inputDecoration('Description ($locale)'),
+                    decoration: _inputDecoration(AppLocalizations.of(context).descriptionLocale(locale)),
                     onChanged: (v) => trSet(
                         _translations, locale, 'description', v),
                   ),
@@ -782,7 +783,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
       children: [
         Row(
           children: [
-            Text('Utilisateurs autorisés',
+            Text(AppLocalizations.of(context).allowedUsers,
                 style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700, fontSize: 14)),
             const Spacer(),
             Text('${_allowedUserIds.length} sélectionné(s)',
@@ -793,7 +794,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
         OutlinedButton.icon(
           onPressed: _openUserPicker,
           icon: const Icon(Icons.person_add_alt_1_rounded, size: 18),
-          label: const Text('Choisir des utilisateurs'),
+          label: Text(AppLocalizations.of(context).chooseUsers),
           style: OutlinedButton.styleFrom(foregroundColor: AppColors.primary),
         ),
         if (_allowedUserIds.isNotEmpty) ...[
@@ -946,7 +947,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
                 onChanged: _onSearch,
                 style: TextStyle(color: context.appColors.textPrimary),
                 decoration: InputDecoration(
-                  hintText: 'Rechercher (nom, username, email)…',
+                  hintText: AppLocalizations.of(context).searchUserHint,
                   prefixIcon: const Icon(Icons.search_rounded),
                   filled: true,
                   fillColor: context.appColors.bg,
@@ -962,7 +963,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
                       child: CircularProgressIndicator(color: AppColors.primary))
                   : _results.isEmpty
                       ? Center(
-                          child: Text('Aucun utilisateur',
+                          child: Text(AppLocalizations.of(context).noUsers,
                               style: TextStyle(color: context.appColors.textMuted)))
                       : ListView.builder(
                           itemCount: _results.length,
@@ -997,7 +998,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
                     onPressed: () => Navigator.pop(context),
                     style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primary),
-                    child: Text('OK · ${widget.selected.length} sélectionné(s)'),
+                    child: Text(AppLocalizations.of(context).okSelected(widget.selected.length)),
                   ),
                 ),
               ),

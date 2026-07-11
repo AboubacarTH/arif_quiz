@@ -4,6 +4,7 @@ import 'package:arif_quiz/features/admin/presentation/screens/admin_import_scree
 import 'package:arif_quiz/features/admin/presentation/screens/admin_questions_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_quizzes_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_reports_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -47,7 +48,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: const Text('Admin', style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(AppLocalizations.of(context).adminTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
         elevation: 0,
       ),
       body: RefreshIndicator(
@@ -105,11 +106,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       mainAxisSpacing: 12,
       childAspectRatio: 1.4,
       children: [
-        _StatCard(label: 'Catégories', value: s.totalCategories, icon: Icons.category_rounded, color: AppColors.info),
-        _StatCard(label: 'Quiz total', value: s.totalQuizzes, icon: Icons.quiz_rounded, color: AppColors.primary),
-        _StatCard(label: 'Publiés', value: s.publishedQuizzes, icon: Icons.published_with_changes_rounded, color: AppColors.success),
-        _StatCard(label: 'Questions', value: s.totalQuestions, icon: Icons.help_outline_rounded, color: AppColors.secondary),
-        _StatCard(label: 'Signalements', value: s.pendingReports, icon: Icons.flag_rounded, color: AppColors.error),
+        _StatCard(label: AppLocalizations.of(context).categories, value: s.totalCategories, icon: Icons.category_rounded, color: AppColors.info),
+        _StatCard(label: AppLocalizations.of(context).totalQuizzes, value: s.totalQuizzes, icon: Icons.quiz_rounded, color: AppColors.primary),
+        _StatCard(label: AppLocalizations.of(context).published, value: s.publishedQuizzes, icon: Icons.published_with_changes_rounded, color: AppColors.success),
+        _StatCard(label: AppLocalizations.of(context).questions, value: s.totalQuestions, icon: Icons.help_outline_rounded, color: AppColors.secondary),
+        _StatCard(label: AppLocalizations.of(context).reports, value: s.pendingReports, icon: Icons.flag_rounded, color: AppColors.error),
       ],
     ).animate().fadeIn(duration: 300.ms);
   }
@@ -119,7 +120,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Gestion',
+          AppLocalizations.of(context).management,
           style: TextStyle(
             color: context.appColors.textPrimary,
             fontSize: 17,
@@ -138,8 +139,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               _NavTile(
                 icon: Icons.category_rounded,
                 color: AppColors.info,
-                label: 'Catégories',
-                subtitle: 'Ajouter, modifier, supprimer',
+                label: AppLocalizations.of(context).categories,
+                subtitle: AppLocalizations.of(context).manageCategoriesDesc,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AdminCategoriesScreen()),
@@ -150,7 +151,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 icon: Icons.quiz_rounded,
                 color: AppColors.primary,
                 label: 'Quiz',
-                subtitle: 'Gérer les quiz et leur statut',
+                subtitle: AppLocalizations.of(context).manageQuizzesDesc,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AdminQuizzesScreen()),
@@ -160,8 +161,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               _NavTile(
                 icon: Icons.help_outline_rounded,
                 color: AppColors.secondary,
-                label: 'Questions',
-                subtitle: 'Ajouter et modifier les questions',
+                label: AppLocalizations.of(context).questions,
+                subtitle: AppLocalizations.of(context).manageQuestionsDesc,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AdminQuestionsScreen()),
@@ -171,8 +172,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               _NavTile(
                 icon: Icons.upload_file_rounded,
                 color: AppColors.success,
-                label: 'Import Excel',
-                subtitle: 'Importer un quiz depuis un fichier',
+                label: AppLocalizations.of(context).importExcel,
+                subtitle: AppLocalizations.of(context).importQuizDesc,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AdminImportScreen()),
@@ -182,10 +183,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               _NavTile(
                 icon: Icons.flag_rounded,
                 color: AppColors.error,
-                label: 'Signalements',
+                label: AppLocalizations.of(context).reports,
                 subtitle: _stats != null && _stats!.pendingReports > 0
                     ? '${_stats!.pendingReports} en attente de traitement'
-                    : 'Réponses signalées par les joueurs',
+                    : AppLocalizations.of(context).reportedAnswersDesc,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AdminReportsScreen()),

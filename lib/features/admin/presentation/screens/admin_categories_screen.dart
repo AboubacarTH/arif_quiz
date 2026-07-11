@@ -1,5 +1,6 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -68,13 +69,13 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Supprimer ?', style: TextStyle(fontWeight: FontWeight.w800)),
-        content: Text('Supprimer "${cat.name}" ? Cette action est irréversible.'),
+        title: Text(AppLocalizations.of(context).confirmDeleteTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
+        content: Text(AppLocalizations.of(context).deleteCategoryBody(cat.name)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annuler')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context).cancel)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Supprimer', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
+            child: Text(AppLocalizations.of(context).deleteBtn, style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -98,7 +99,7 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: const Text('Catégories', style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(AppLocalizations.of(context).categories, style: const TextStyle(fontWeight: FontWeight.w800)),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_rounded),
@@ -114,7 +115,7 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
             child: TextField(
               controller: _searchCtrl,
               decoration: InputDecoration(
-                hintText: 'Rechercher...',
+                hintText: AppLocalizations.of(context).searchHint,
                 prefixIcon: const Icon(Icons.search_rounded, size: 20),
                 filled: true,
                 fillColor: context.appColors.cardBg,
@@ -139,7 +140,7 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
   Widget _buildList() {
     if (_loading) return const Center(child: CircularProgressIndicator(color: AppColors.primary));
     if (_error != null) return Center(child: Text(_error!, style: TextStyle(color: context.appColors.textSecondary)));
-    if (_categories.isEmpty) return Center(child: Text('Aucune catégorie', style: TextStyle(color: context.appColors.textSecondary)));
+    if (_categories.isEmpty) return Center(child: Text(AppLocalizations.of(context).noCategories, style: TextStyle(color: context.appColors.textSecondary)));
 
     return RefreshIndicator(
       onRefresh: () => _load(search: _searchCtrl.text.trim().isEmpty ? null : _searchCtrl.text.trim()),
@@ -212,7 +213,7 @@ class _CategoryTile extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
-                        child: const Text('Inactif', style: TextStyle(color: AppColors.error, fontSize: 10, fontWeight: FontWeight.w700)),
+                        child: Text(AppLocalizations.of(context).inactive, style: const TextStyle(color: AppColors.error, fontSize: 10, fontWeight: FontWeight.w700)),
                       ),
                   ],
                 ),
@@ -310,7 +311,7 @@ class _CategoryFormState extends State<_CategoryForm> {
             Row(
               children: [
                 Text(
-                  isEdit ? 'Modifier la catégorie' : 'Nouvelle catégorie',
+                  isEdit ? AppLocalizations.of(context).editCategory : AppLocalizations.of(context).newCategory,
                   style: TextStyle(color: context.appColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w800),
                 ),
                 const Spacer(),
@@ -326,22 +327,22 @@ class _CategoryFormState extends State<_CategoryForm> {
               ),
               const SizedBox(height: 12),
             ],
-            _field('Nom *', _name, validator: (v) => v!.trim().isEmpty ? 'Requis' : null),
+            _field(AppLocalizations.of(context).nameRequired, _name, validator: (v) => v!.trim().isEmpty ? AppLocalizations.of(context).requiredField : null),
             const SizedBox(height: 10),
-            _field('Description', _desc),
+            _field(AppLocalizations.of(context).descriptionLabel, _desc),
             const SizedBox(height: 10),
-            _field('Icône (emoji)', _icon, hint: '🎓'),
+            _field(AppLocalizations.of(context).iconEmoji, _icon, hint: '🎓'),
             const SizedBox(height: 10),
-            _field('Couleur (hex) *', _color, hint: '#16A34A', validator: (v) {
-              if (v == null || v.trim().isEmpty) return 'Requis';
-              if (!RegExp(r'^#[0-9A-Fa-f]{6}$').hasMatch(v.trim())) return 'Format: #RRGGBB';
+            _field(AppLocalizations.of(context).colorHex, _color, hint: '#16A34A', validator: (v) {
+              if (v == null || v.trim().isEmpty) return AppLocalizations.of(context).requiredField;
+              if (!RegExp(r'^#[0-9A-Fa-f]{6}$').hasMatch(v.trim())) return AppLocalizations.of(context).colorFormat;
               return null;
             }),
             const SizedBox(height: 10),
             SwitchListTile(
               value: _isActive,
               onChanged: (v) => setState(() => _isActive = v),
-              title: Text('Catégorie active', style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
+              title: Text(AppLocalizations.of(context).activeCategory, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
               activeThumbColor: AppColors.primary,
               contentPadding: EdgeInsets.zero,
             ),
@@ -352,14 +353,14 @@ class _CategoryFormState extends State<_CategoryForm> {
                 children: [
                   TextFormField(
                     initialValue: trGet(_translations, locale, 'name'),
-                    decoration: _dec('Nom ($locale)'),
+                    decoration: _dec(AppLocalizations.of(context).nameLocale(locale)),
                     onChanged: (v) =>
                         setState(() => trSet(_translations, locale, 'name', v)),
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     initialValue: trGet(_translations, locale, 'description'),
-                    decoration: _dec('Description ($locale)'),
+                    decoration: _dec(AppLocalizations.of(context).descriptionLocale(locale)),
                     onChanged: (v) =>
                         trSet(_translations, locale, 'description', v),
                   ),
@@ -378,7 +379,7 @@ class _CategoryFormState extends State<_CategoryForm> {
                 ),
                 child: _saving
                     ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : Text(isEdit ? 'Enregistrer' : 'Créer', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15)),
+                    : Text(isEdit ? AppLocalizations.of(context).saveChanges : AppLocalizations.of(context).createBtn, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15)),
               ),
             ),
           ],

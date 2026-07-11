@@ -1,4 +1,5 @@
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Saisie des traductions dans les formulaires admin Flutter.
@@ -60,7 +61,7 @@ class _TranslationsSectionState extends State<TranslationsSection> {
             const Icon(Icons.translate_rounded,
                 color: AppColors.secondary, size: 16),
             const SizedBox(width: 6),
-            Text('Traductions',
+            Text(AppLocalizations.of(context).translationsLabel,
                 style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontSize: 13,
@@ -68,7 +69,7 @@ class _TranslationsSectionState extends State<TranslationsSection> {
           ],
         ),
         const SizedBox(height: 2),
-        Text('Champs principaux = anglais (langue par défaut)',
+        Text(AppLocalizations.of(context).mainFieldsEnglish,
             style: TextStyle(
                 color: context.appColors.textMuted, fontSize: 11)),
         const SizedBox(height: 10),

@@ -1048,4 +1048,395 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noInternet => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get adminTitle => 'الإدارة';
+
+  @override
+  String get totalQuizzes => 'إجمالي الاختبارات';
+
+  @override
+  String get published => 'المنشورة';
+
+  @override
+  String get reports => 'البلاغات';
+
+  @override
+  String get management => 'الإدارة';
+
+  @override
+  String get manageCategoriesDesc => 'إضافة وتعديل وحذف';
+
+  @override
+  String get manageQuizzesDesc => 'إدارة الاختبارات وحالتها';
+
+  @override
+  String get manageQuestionsDesc => 'إضافة الأسئلة وتعديلها';
+
+  @override
+  String get importExcel => 'استيراد Excel';
+
+  @override
+  String get importQuizDesc => 'استيراد اختبار من ملف';
+
+  @override
+  String get reportedAnswersDesc => 'إجابات أبلغ عنها اللاعبون';
+
+  @override
+  String get confirmDeleteTitle => 'حذف؟';
+
+  @override
+  String deleteCategoryBody(String name) {
+    return 'حذف \"$name\"؟ هذا الإجراء لا رجعة فيه.';
+  }
+
+  @override
+  String get searchHint => 'بحث…';
+
+  @override
+  String get inactive => 'غير نشطة';
+
+  @override
+  String get editCategory => 'تعديل الفئة';
+
+  @override
+  String get newCategory => 'فئة جديدة';
+
+  @override
+  String get nameRequired => 'الاسم *';
+
+  @override
+  String get requiredField => 'مطلوب';
+
+  @override
+  String get descriptionLabel => 'الوصف';
+
+  @override
+  String get iconEmoji => 'الأيقونة (إيموجي)';
+
+  @override
+  String get colorHex => 'اللون (hex) *';
+
+  @override
+  String get colorFormat => 'الصيغة: #RRGGBB';
+
+  @override
+  String get activeCategory => 'فئة نشطة';
+
+  @override
+  String nameLocale(String locale) {
+    return 'الاسم ($locale)';
+  }
+
+  @override
+  String descriptionLocale(String locale) {
+    return 'الوصف ($locale)';
+  }
+
+  @override
+  String get inProgress => 'قيد المعالجة';
+
+  @override
+  String get resolved => 'تم الحل';
+
+  @override
+  String get rejected => 'مرفوض';
+
+  @override
+  String get deleteReportBody => 'سيُحذف هذا البلاغ نهائياً.';
+
+  @override
+  String get noReports => 'لا بلاغات';
+
+  @override
+  String markedCorrectAnswer(String answer) {
+    return 'الإجابة المعتمدة: $answer';
+  }
+
+  @override
+  String get anonymous => 'مجهول';
+
+  @override
+  String get questionLabel => 'السؤال';
+
+  @override
+  String get markPending => 'وضع قيد الانتظار';
+
+  @override
+  String get markInProgress => 'وضع قيد المعالجة';
+
+  @override
+  String get markResolved => 'وضع كمحلول';
+
+  @override
+  String get reject => 'رفض';
+
+  @override
+  String get selectExcelFile => 'يرجى اختيار ملف Excel.';
+
+  @override
+  String get cantAccessFile => 'تعذّر الوصول إلى الملف المحدد.';
+
+  @override
+  String get quizMetadata => 'بيانات الاختبار';
+
+  @override
+  String get titleRequired => 'العنوان *';
+
+  @override
+  String get categoryRequired => 'الفئة *';
+
+  @override
+  String get difficultyRequired => 'الصعوبة *';
+
+  @override
+  String get timeSeconds => 'الوقت (ث) *';
+
+  @override
+  String get pointsPerQuestionReq => 'نقاط/سؤال *';
+
+  @override
+  String get publishNow => 'نشر فوراً';
+
+  @override
+  String get excelFile => 'ملف Excel';
+
+  @override
+  String get tapToSelectFile => 'اضغط لاختيار ملف';
+
+  @override
+  String get acceptedFormats => 'الصيغ المقبولة: .xlsx و.xls و.csv';
+
+  @override
+  String get importing => 'جارٍ الاستيراد…';
+
+  @override
+  String get importBtn => 'استيراد';
+
+  @override
+  String get excelFormatTitle => 'صيغة ملف Excel';
+
+  @override
+  String get excelFormatColumns =>
+      'الأعمدة المطلوبة: question, type, option_a, option_b, option_c, option_d, correct_answer\nأعمدة اختيارية: explanation';
+
+  @override
+  String get importSuccess => 'نجح الاستيراد!';
+
+  @override
+  String questionsImported(int count) {
+    return 'استُورد $count سؤالاً';
+  }
+
+  @override
+  String get translationsLabel => 'الترجمات';
+
+  @override
+  String get mainFieldsEnglish =>
+      'الحقول الرئيسية = الإنجليزية (اللغة الافتراضية)';
+
+  @override
+  String get deleteQuestionBody => 'سيُحذف هذا السؤال نهائياً.';
+
+  @override
+  String get searchQuestionHint => 'ابحث عن سؤال…';
+
+  @override
+  String get typeLabel => 'النوع';
+
+  @override
+  String get resetFilters => 'إعادة تعيين';
+
+  @override
+  String get filterByQuiz => 'تصفية حسب الاختبار';
+
+  @override
+  String get filterByType => 'تصفية حسب النوع';
+
+  @override
+  String get noQuestionFound => 'لم يُعثر على سؤال';
+
+  @override
+  String get typeTrueFalse => 'صح/خطأ';
+
+  @override
+  String get typeShortAnswer => 'إجابة حرة';
+
+  @override
+  String get typeShortAnswerShort => 'حرة';
+
+  @override
+  String get editQuestion => 'تعديل السؤال';
+
+  @override
+  String get newQuestion => 'سؤال جديد';
+
+  @override
+  String get quizRequired => 'الاختبار *';
+
+  @override
+  String get typeRequired => 'النوع *';
+
+  @override
+  String get questionRequired => 'السؤال *';
+
+  @override
+  String get optionsRequired => 'الخيارات *';
+
+  @override
+  String optionN(int n) {
+    return 'الخيار $n';
+  }
+
+  @override
+  String get addOption => 'إضافة خيار';
+
+  @override
+  String get correctAnswerMatch =>
+      'الإجابة الصحيحة * (يجب أن تطابق أحد الخيارات)';
+
+  @override
+  String get correctAnswerRequired => 'الإجابة الصحيحة *';
+
+  @override
+  String get explanationOptional => 'الشرح (اختياري)';
+
+  @override
+  String get mediaOptional => 'وسائط (اختياري)';
+
+  @override
+  String get imageLabel => 'صورة';
+
+  @override
+  String get audioLabel => 'صوت';
+
+  @override
+  String get orderLabel => 'الترتيب';
+
+  @override
+  String get integerRequired => 'عدد صحيح';
+
+  @override
+  String questionLocaleHint(String locale) {
+    return 'السؤال ($locale) — فارغ = الإنجليزية';
+  }
+
+  @override
+  String translationOf(String base) {
+    return 'ترجمة «$base»';
+  }
+
+  @override
+  String correctAnswerLocale(String locale) {
+    return 'الإجابة الصحيحة ($locale)';
+  }
+
+  @override
+  String explanationLocale(String locale) {
+    return 'الشرح ($locale)';
+  }
+
+  @override
+  String get fileBtn => 'ملف';
+
+  @override
+  String uploadFailed(String error) {
+    return 'فشل الرفع: $error';
+  }
+
+  @override
+  String deleteQuizBody(String title) {
+    return 'حذف \"$title\" وجميع أسئلته؟';
+  }
+
+  @override
+  String get fileLanguage => 'لغة الملف';
+
+  @override
+  String get importLangEn => 'English — أسئلة جديدة';
+
+  @override
+  String get importLangFr => 'Français — ترجمات';
+
+  @override
+  String get importLangAr => 'العربية — ترجمات';
+
+  @override
+  String get importLangEs => 'Español — ترجمات';
+
+  @override
+  String get appendedAfterExisting => 'تُضاف بعد الأسئلة الموجودة';
+
+  @override
+  String get appliedToExisting => 'تُطبَّق على الأسئلة الموجودة (عمود order)';
+
+  @override
+  String get questionsImportedMsg => 'استُوردت الأسئلة.';
+
+  @override
+  String get statusLabel => 'الحالة';
+
+  @override
+  String get publishedSingular => 'منشور';
+
+  @override
+  String get draft => 'مسودة';
+
+  @override
+  String get filterByCategory => 'تصفية حسب الفئة';
+
+  @override
+  String get allFem => 'الكل';
+
+  @override
+  String get filterByDifficulty => 'تصفية حسب الصعوبة';
+
+  @override
+  String get filterByStatus => 'تصفية حسب الحالة';
+
+  @override
+  String get editQuiz => 'تعديل الاختبار';
+
+  @override
+  String get newQuiz => 'اختبار جديد';
+
+  @override
+  String get publishQuiz => 'نشر الاختبار';
+
+  @override
+  String get includeInJourney => 'تضمين في وضع المغامرة';
+
+  @override
+  String get journeyFeedDesc => 'أسئلته تغذي خريطة المستويات';
+
+  @override
+  String get visibilityLabel => 'الرؤية';
+
+  @override
+  String get publicVisible => 'عام — مرئي للجميع';
+
+  @override
+  String get restrictedChosen => 'مقيّد — مستخدمون محددون';
+
+  @override
+  String titleLocale(String locale) {
+    return 'العنوان ($locale)';
+  }
+
+  @override
+  String get allowedUsers => 'المستخدمون المسموح لهم';
+
+  @override
+  String get chooseUsers => 'اختيار مستخدمين';
+
+  @override
+  String get searchUserHint => 'بحث (الاسم، اسم المستخدم، البريد)…';
+
+  @override
+  String get noUsers => 'لا مستخدمين';
+
+  @override
+  String okSelected(int count) {
+    return 'موافق · $count محدد';
+  }
 }
