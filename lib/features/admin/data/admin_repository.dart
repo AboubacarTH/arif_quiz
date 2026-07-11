@@ -203,13 +203,17 @@ class AdminRepository {
     return Map<String, dynamic>.from(res.data);
   }
 
-  /// Import en masse de questions dans un quiz existant (ajout à la suite).
+  /// Import en masse de questions dans un quiz existant.
+  /// [locale] = 'en' (défaut) : nouvelles questions ajoutées à la suite ;
+  /// autre langue : lignes = traductions des questions existantes (match par order).
   Future<Map<String, dynamic>> importQuestionsToQuiz({
     required int quizId,
     required String filePath,
     required String fileName,
+    String locale = 'en',
   }) async {
     final formData = FormData.fromMap({
+      'locale': locale,
       'file': await MultipartFile.fromFile(filePath, filename: fileName),
     });
     final res =
