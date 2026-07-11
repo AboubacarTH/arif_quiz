@@ -870,6 +870,15 @@ class AdminReportModel {
       };
 }
 
+/// Traductions par locale (`{'fr': {'title': …}, …}`) renvoyées par l'API admin.
+Map<String, Map<String, dynamic>> parseTranslations(dynamic raw) {
+  if (raw is! Map) return {};
+  return raw.map((locale, values) => MapEntry(
+        locale.toString(),
+        values is Map ? Map<String, dynamic>.from(values) : <String, dynamic>{},
+      ));
+}
+
 class AdminCategoryModel {
   final int id;
   final String name;
@@ -880,6 +889,7 @@ class AdminCategoryModel {
   final bool isActive;
   final int quizzesCount;
   final int publishedQuizzesCount;
+  final Map<String, Map<String, dynamic>> translations;
 
   const AdminCategoryModel({
     required this.id,
@@ -891,6 +901,7 @@ class AdminCategoryModel {
     required this.isActive,
     required this.quizzesCount,
     required this.publishedQuizzesCount,
+    this.translations = const {},
   });
 
   factory AdminCategoryModel.fromJson(Map<String, dynamic> json) => AdminCategoryModel(
@@ -903,6 +914,7 @@ class AdminCategoryModel {
         isActive: json['is_active'] ?? true,
         quizzesCount: json['quizzes_count'] ?? 0,
         publishedQuizzesCount: json['published_quizzes_count'] ?? 0,
+        translations: parseTranslations(json['translations']),
       );
 }
 
@@ -924,6 +936,7 @@ class AdminQuizModel {
   final int questionsCount;
   final int attemptsCount;
   final AdminCategoryModel? category;
+  final Map<String, Map<String, dynamic>> translations;
 
   const AdminQuizModel({
     required this.id,
@@ -943,6 +956,7 @@ class AdminQuizModel {
     required this.questionsCount,
     required this.attemptsCount,
     this.category,
+    this.translations = const {},
   });
 
   factory AdminQuizModel.fromJson(Map<String, dynamic> json) => AdminQuizModel(
@@ -967,6 +981,7 @@ class AdminQuizModel {
         category: json['category'] != null
             ? AdminCategoryModel.fromJson(Map<String, dynamic>.from(json['category']))
             : null,
+        translations: parseTranslations(json['translations']),
       );
 }
 
@@ -983,6 +998,7 @@ class AdminQuestionModel {
   final int order;
   final int points;
   final String? quizTitle;
+  final Map<String, Map<String, dynamic>> translations;
 
   const AdminQuestionModel({
     required this.id,
@@ -997,6 +1013,7 @@ class AdminQuestionModel {
     required this.order,
     required this.points,
     this.quizTitle,
+    this.translations = const {},
   });
 
   factory AdminQuestionModel.fromJson(Map<String, dynamic> json) => AdminQuestionModel(
@@ -1012,5 +1029,6 @@ class AdminQuestionModel {
         order: json['order'] ?? 0,
         points: json['points'] ?? 10,
         quizTitle: json['quiz']?['title'],
+        translations: parseTranslations(json['translations']),
       );
 }

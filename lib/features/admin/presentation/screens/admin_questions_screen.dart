@@ -1,4 +1,5 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
+import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -432,6 +433,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
 
   int? _quizId;
   String _type = 'multiple_choice';
+  late final TranslationsMap _translations;
   bool _saving = false;
   bool _uploadingImage = false;
   bool _uploadingAudio = false;
@@ -441,6 +443,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
   void initState() {
     super.initState();
     final q = widget.question;
+    _translations = copyTranslations(q?.translations ?? const {});
     _text        = TextEditingController(text: q?.text ?? '');
     _explanation = TextEditingController(text: q?.explanation ?? '');
     _correctAnswer = TextEditingController(text: q?.correctAnswer ?? '');
@@ -499,6 +502,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
         'audio_url': _audioUrl.text.trim().isEmpty ? null : _audioUrl.text.trim(),
         'order': int.parse(_order.text.trim()),
         'points': int.parse(_points.text.trim()),
+        'translations': _translations,
       };
 
       if (widget.question == null) {
@@ -715,9 +719,87 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                 )),
               ],
             ),
+            const SizedBox(height: 20),
+            TranslationsSection(
+              filled: (l) => trGet(_translations, l, 'text').trim().isNotEmpty,
+              builder: (ctx, locale) => _buildTranslationFields(locale),
+            ),
+            const SizedBox(height: 24),
           ],
         ),
       ),
+    );
+  }
+
+  /// Champs traduits d'une locale : texte, options (miroir des options de
+  /// base), bonne réponse (parmi les options traduites) et explication.
+  Widget _buildTranslationFields(String locale) {
+    final baseOptions = _type == 'true_false'
+        ? const ['True', 'False']
+        : _optionCtrls.map((c) => c.text.trim()).where((s) => s.isNotEmpty).toList();
+    final trOptions = trGetList(_translations, locale, 'options');
+    final filledTrOptions =
+        trOptions.where((o) => o.trim().isNotEmpty).toList();
+    final trAnswer = trGet(_translations, locale, 'correct_answer');
+
+    void setOptionAt(int i, String v) {
+      final next = List<String>.from(trOptions);
+      while (next.length < baseOptions.length) {
+        next.add('');
+      }
+      next[i] = v;
+      setState(() => trSet(_translations, locale, 'options', next));
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          initialValue: trGet(_translations, locale, 'text'),
+          maxLines: 3,
+          decoration: _dec('Question ($locale) — vide = repli anglais'),
+          onChanged: (v) => setState(() => trSet(_translations, locale, 'text', v)),
+        ),
+        if (_type != 'short_answer') ...[
+          const SizedBox(height: 12),
+          for (var i = 0; i < baseOptions.length; i++) ...[
+            TextFormField(
+              initialValue: i < trOptions.length ? trOptions[i] : '',
+              decoration: _dec('Traduction de « ${baseOptions[i]} »'),
+              onChanged: (v) => setOptionAt(i, v),
+            ),
+            const SizedBox(height: 8),
+          ],
+          const SizedBox(height: 4),
+          DropdownButtonFormField<String>(
+            initialValue:
+                filledTrOptions.contains(trAnswer) ? trAnswer : null,
+            decoration: _dec('Bonne réponse ($locale)'),
+            items: filledTrOptions
+                .map((o) => DropdownMenuItem(value: o, child: Text(o)))
+                .toList(),
+            onChanged: (v) => setState(
+                () => trSet(_translations, locale, 'correct_answer', v ?? '')),
+            dropdownColor: context.appColors.cardBg,
+          ),
+        ] else ...[
+          const SizedBox(height: 12),
+          TextFormField(
+            initialValue: trAnswer,
+            decoration: _dec('Bonne réponse ($locale)'),
+            onChanged: (v) => setState(
+                () => trSet(_translations, locale, 'correct_answer', v)),
+          ),
+        ],
+        const SizedBox(height: 12),
+        TextFormField(
+          initialValue: trGet(_translations, locale, 'explanation'),
+          maxLines: 2,
+          decoration: _dec('Explication ($locale)'),
+          onChanged: (v) =>
+              trSet(_translations, locale, 'explanation', v),
+        ),
+      ],
     );
   }
 

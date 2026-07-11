@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
+import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -547,6 +548,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
   final Set<int> _allowedUserIds = {};
   // Cache id → libellé pour afficher les utilisateurs déjà assignés.
   final Map<int, String> _userLabels = {};
+  late final TranslationsMap _translations;
   bool _saving = false;
   String? _error;
 
@@ -554,6 +556,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
   void initState() {
     super.initState();
     final q = widget.quiz;
+    _translations = copyTranslations(q?.translations ?? const {});
     _title    = TextEditingController(text: q?.title ?? '');
     _desc     = TextEditingController(text: q?.description ?? '');
     _timeLimit = TextEditingController(text: (q?.timeLimit ?? 30).toString());
@@ -588,6 +591,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
         'visibility': _visibility,
         'allowed_user_ids':
             _visibility == 'restricted' ? _allowedUserIds.toList() : <int>[],
+        'translations': _translations,
       };
       if (widget.quiz == null) {
         await widget.repo.createQuiz(data);
@@ -702,6 +706,29 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
               const SizedBox(height: 12),
               _buildUserPicker(),
             ],
+            const SizedBox(height: 20),
+            TranslationsSection(
+              filled: (l) => trGet(_translations, l, 'title').trim().isNotEmpty,
+              builder: (ctx, locale) => Column(
+                children: [
+                  TextFormField(
+                    initialValue: trGet(_translations, locale, 'title'),
+                    decoration: _inputDecoration('Titre ($locale)'),
+                    onChanged: (v) =>
+                        setState(() => trSet(_translations, locale, 'title', v)),
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    initialValue: trGet(_translations, locale, 'description'),
+                    maxLines: 3,
+                    decoration: _inputDecoration('Description ($locale)'),
+                    onChanged: (v) => trSet(
+                        _translations, locale, 'description', v),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
           ],
         ),
       ),
