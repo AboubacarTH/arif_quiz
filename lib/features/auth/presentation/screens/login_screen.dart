@@ -3,6 +3,7 @@ import 'package:arif_quiz/features/auth/data/auth_repository.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dart';
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
@@ -53,8 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _validate() {
     setState(() {
-      _emailError = _emailCtrl.text.trim().isEmpty ? 'Email is required' : null;
-      _passError = _passCtrl.text.isEmpty ? 'Password is required' : null;
+      _emailError = _emailCtrl.text.trim().isEmpty ? AppLocalizations.of(context).emailRequired : null;
+      _passError = _passCtrl.text.isEmpty ? AppLocalizations.of(context).passwordRequired : null;
     });
     return _emailError == null && _passError == null;
   }
@@ -98,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 32),
                 Text(
-                  'Welcome\nBack!',
+                  AppLocalizations.of(context).welcomeBack,
                   style: TextStyle(
                     color: context.appColors.textPrimary,
                     fontSize: 36,
@@ -108,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Sign in to continue your quiz journey',
+                  AppLocalizations.of(context).signInSubtitle,
                   style:
                       TextStyle(color: context.appColors.textSecondary, fontSize: 16),
                 ),
@@ -144,8 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 AppTextField(
                   controller: _emailCtrl,
                   focusNode: _emailFocus,
-                  label: 'Email',
-                  hint: 'you@example.com',
+                  label: AppLocalizations.of(context).email,
+                  hint: AppLocalizations.of(context).emailHint,
                   keyboardType: TextInputType.emailAddress,
                   prefixIcon: Icons.email_outlined,
                   errorText: _emailError,
@@ -161,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 AppTextField(
                   controller: _passCtrl,
                   focusNode: _passFocus,
-                  label: 'Password',
+                  label: AppLocalizations.of(context).password,
                   hint: '••••••••',
                   obscureText: true,
                   prefixIcon: Icons.lock_outlined,
@@ -185,9 +186,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context).forgotPassword,
+                      style: const TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w700,
                       ),
@@ -196,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 32),
                 AppButton(
-                  label: 'Sign In',
+                  label: AppLocalizations.of(context).logIn,
                   onPressed: _auth.isLoading ? null : _login,
                   fullWidth: true,
                   size: AppButtonSize.large,
@@ -218,9 +219,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           builder: (_) => const RegisterScreen(),
                         ),
                       ),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.of(context).signUp,
+                        style: const TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w700,
                         ),
@@ -267,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: context.appColors.textSecondary, size: 18),
                         const SizedBox(width: 8),
                         Text(
-                          'Continuer sans compte',
+                          AppLocalizations.of(context).continueAsGuest,
                           style: TextStyle(
                             color: context.appColors.textSecondary,
                             fontSize: 14,
@@ -280,7 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Les scores ne seront pas sauvegardés',
+                  AppLocalizations.of(context).scoresNotSaved,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
                 ),

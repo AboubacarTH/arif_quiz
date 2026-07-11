@@ -1,3 +1,4 @@
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/core/monetization/monetization_controller.dart';
 import 'package:arif_quiz/core/subscriptions/subscription_service.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -73,7 +74,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
               .animate().scale(duration: 400.ms, curve: Curves.elasticOut),
           const SizedBox(height: 12),
           Text(
-            'Continuez à jouer',
+            AppLocalizations.of(context).keepPlayingTitle,
             style: TextStyle(
               color: context.appColors.textPrimary,
               fontSize: 22,
@@ -82,7 +83,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Regardez une courte publicité ou passez Premium\npour jouer sans interruption.',
+            AppLocalizations.of(context).paywallBody,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: context.appColors.textSecondary,
@@ -112,7 +113,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Publicité en cours de chargement…',
+                      AppLocalizations.of(context).adLoading,
                       style: TextStyle(
                           color: context.appColors.textMuted, fontSize: 13),
                     ),
@@ -148,7 +149,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
           if (_subs.yearlyProduct != null)
             _SubscribeButton(
               product: _subs.yearlyProduct!,
-              label: 'Annuel',
+              label: AppLocalizations.of(context).yearly,
               badge: '🔥 -50%',
               badgeColor: AppColors.error,
               loading: _buyingYearly,
@@ -158,7 +159,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
           if (_subs.monthlyProduct != null)
             _SubscribeButton(
               product: _subs.monthlyProduct!,
-              label: 'Mensuel',
+              label: AppLocalizations.of(context).monthly,
               loading: _buyingMonthly,
               onTap: () => _buy(_subs.monthlyProduct!, yearly: false),
             ),
@@ -177,7 +178,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Arif Quiz Premium\nSans publicité · Toutes fonctionnalités',
+                    AppLocalizations.of(context).premiumBanner,
                     style: TextStyle(
                         color: context.appColors.textPrimary, fontSize: 13),
                   ),
@@ -193,7 +194,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
               if (!mounted) return;
               if (_subs.isPremium) nav.pop();
             },
-            child: Text('Restaurer les achats',
+            child: Text(AppLocalizations.of(context).restorePurchases,
                 style: TextStyle(
                     color: context.appColors.textMuted, fontSize: 12)),
           ),
@@ -276,15 +277,15 @@ class _AdButton extends StatelessWidget {
                       strokeWidth: 2.5, color: Colors.white),
                 ),
               )
-            : const Row(
+            : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.play_circle_outline_rounded,
+                  const Icon(Icons.play_circle_outline_rounded,
                       color: Colors.white, size: 22),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
-                    'Regarder une publicité (≈30s)',
-                    style: TextStyle(
+                    AppLocalizations.of(context).watchAd,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.w700,

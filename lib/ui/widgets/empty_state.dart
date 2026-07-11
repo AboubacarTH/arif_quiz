@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class EmptyState extends StatelessWidget {
@@ -66,12 +67,12 @@ class EmptyState extends StatelessWidget {
 }
 
 class ErrorState extends StatelessWidget {
-  final String message;
+  final String? message;
   final VoidCallback? onRetry;
 
   const ErrorState({
     super.key,
-    this.message = 'Something went wrong.',
+    this.message,
     this.onRetry,
   });
 
@@ -106,7 +107,7 @@ class ErrorState extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              message,
+              message ?? AppLocalizations.of(context).somethingWrong,
               style: TextStyle(
                   color: context.appColors.textSecondary, fontSize: 14, height: 1.5),
               textAlign: TextAlign.center,
@@ -116,7 +117,7 @@ class ErrorState extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh_rounded, size: 18),
-                label: const Text('Try Again'),
+                label: Text(AppLocalizations.of(context).tryAgain),
               ),
             ],
           ],
@@ -134,13 +135,13 @@ class NoInternetBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       color: AppColors.error.withValues(alpha: 0.9),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(Icons.wifi_off_rounded, color: Colors.white, size: 16),
-          SizedBox(width: 8),
+          const Icon(Icons.wifi_off_rounded, color: Colors.white, size: 16),
+          const SizedBox(width: 8),
           Text(
-            'No internet connection',
-            style: TextStyle(
+            AppLocalizations.of(context).noInternet,
+            style: const TextStyle(
                 color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
           ),
         ],

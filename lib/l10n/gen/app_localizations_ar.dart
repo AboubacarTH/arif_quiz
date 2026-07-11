@@ -845,4 +845,207 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get saveChanges => 'حفظ التغييرات';
+
+  @override
+  String get emailRequired => 'البريد الإلكتروني مطلوب';
+
+  @override
+  String get passwordRequired => 'كلمة المرور مطلوبة';
+
+  @override
+  String get welcomeBack => 'مرحباً\nبعودتك!';
+
+  @override
+  String get signInSubtitle => 'سجّل الدخول لمواصلة رحلتك في الاختبارات';
+
+  @override
+  String get emailHint => 'you@example.com';
+
+  @override
+  String get forgotPassword => 'نسيت كلمة المرور؟';
+
+  @override
+  String get continueAsGuest => 'المتابعة دون حساب';
+
+  @override
+  String get scoresNotSaved => 'لن تُحفظ النتائج';
+
+  @override
+  String get passwordMin8 => 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل';
+
+  @override
+  String get passwordsDontMatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get registrationFailed =>
+      'فشل التسجيل. قد يكون البريد مستخدماً بالفعل.';
+
+  @override
+  String get createAccountTitle => 'إنشاء\nحساب';
+
+  @override
+  String get joinThousands => 'انضم إلى آلاف اللاعبين';
+
+  @override
+  String get choosePassword => 'اختر كلمة مرور';
+
+  @override
+  String get confirmPassword => 'تأكيد كلمة المرور';
+
+  @override
+  String get repeatPassword => 'أعد كتابة كلمة المرور';
+
+  @override
+  String get alreadyHaveAccount => 'لديك حساب بالفعل؟ ';
+
+  @override
+  String get resetSendFailed => 'تعذّر إرسال الرمز. حاول مجدداً.';
+
+  @override
+  String get resetPasswordTitle => 'إعادة تعيين\nكلمة المرور';
+
+  @override
+  String get resetPasswordSubtitle =>
+      'أدخل بريدك الإلكتروني لتلقي رابط إعادة التعيين';
+
+  @override
+  String get sendResetLink => 'إرسال الرابط';
+
+  @override
+  String get backToSignIn => 'العودة إلى تسجيل الدخول';
+
+  @override
+  String get enterSixDigitCode =>
+      'أدخل الرمز المكوّن من 6 أرقام الذي وصلك بالبريد.';
+
+  @override
+  String get passwordResetSuccess => 'أُعيد تعيين كلمة المرور بنجاح!';
+
+  @override
+  String get codeInvalidOrExpired => 'رمز خاطئ أو منتهي الصلاحية. حاول مجدداً.';
+
+  @override
+  String newCodeSentTo(String email) {
+    return 'أُرسل رمز جديد إلى $email.';
+  }
+
+  @override
+  String get resendCodeFailed => 'تعذّر إعادة إرسال الرمز. حاول مجدداً.';
+
+  @override
+  String get newPasswordTitle => 'كلمة مرور\nجديدة';
+
+  @override
+  String enterCodeAndNewPassword(String email) {
+    return 'أدخل الرمز المُرسل إلى $email وكلمة مرورك الجديدة.';
+  }
+
+  @override
+  String get verificationCode => 'رمز التحقق';
+
+  @override
+  String get newPassword => 'كلمة المرور الجديدة';
+
+  @override
+  String get resetPasswordBtn => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get resendCode => 'إعادة إرسال الرمز';
+
+  @override
+  String get enterYourEmail => 'أدخل عنوان بريدك الإلكتروني';
+
+  @override
+  String get enterConfirmationCode => 'أدخل رمز التأكيد';
+
+  @override
+  String get emailConfirmed => 'تم تأكيد البريد الإلكتروني.';
+
+  @override
+  String get confirmCodeFailed => 'تعذّر تأكيد هذا الرمز.';
+
+  @override
+  String get confirmationEmailResent => 'أُرسل بريد تأكيد جديد.';
+
+  @override
+  String get confirmationEmailResendFailed => 'تعذّر إعادة إرسال بريد التأكيد.';
+
+  @override
+  String get confirmEmail => 'تأكيد البريد';
+
+  @override
+  String get confirmEmailTitle => 'تأكيد\nالبريد';
+
+  @override
+  String get validateEmailSubtitle => 'أكّد بريدك الإلكتروني لتأمين حسابك';
+
+  @override
+  String get confirmationCode => 'رمز التأكيد';
+
+  @override
+  String get enterYourCode => 'أدخل رمزك';
+
+  @override
+  String get resendEmail => 'إعادة إرسال البريد';
+
+  @override
+  String get continueBtn => 'متابعة';
+
+  @override
+  String get signInToContinue => 'سجّل الدخول للمتابعة';
+
+  @override
+  String get guestScreenBody => 'احفظ تقدمك وأنشئ التحديات\nوابحث عن أصدقائك.';
+
+  @override
+  String get backToHome => 'العودة إلى الرئيسية';
+
+  @override
+  String get appTagline => 'تحدَّ أصدقاءك. سيطر على الاختبار.';
+
+  @override
+  String get exitAppTitle => 'الخروج من التطبيق؟';
+
+  @override
+  String get exitAppBody => 'هل أنت متأكد أنك تريد الخروج من ArifQuiz؟';
+
+  @override
+  String get profileTab => 'الملف الشخصي';
+
+  @override
+  String get playNow => 'العب الآن';
+
+  @override
+  String get keepPlayingTitle => 'واصل اللعب';
+
+  @override
+  String get paywallBody =>
+      'شاهد إعلاناً قصيراً أو اشترك في بريميوم\nللعب دون انقطاع.';
+
+  @override
+  String get adLoading => 'جارٍ تحميل الإعلان…';
+
+  @override
+  String get yearly => 'سنوي';
+
+  @override
+  String get monthly => 'شهري';
+
+  @override
+  String get premiumBanner => 'Arif Quiz Premium\nبلا إعلانات · كل الميزات';
+
+  @override
+  String get restorePurchases => 'استعادة المشتريات';
+
+  @override
+  String get watchAd => 'مشاهدة إعلان (≈30 ث)';
+
+  @override
+  String get somethingWrong => 'حدث خطأ ما.';
+
+  @override
+  String get tryAgain => 'أعد المحاولة';
+
+  @override
+  String get noInternet => 'لا يوجد اتصال بالإنترنت';
 }

@@ -4,6 +4,7 @@ import 'package:arif_quiz/features/friends/presentation/screens/friends_screen.d
 import 'package:arif_quiz/features/home/presentation/screens/home_screen.dart';
 import 'package:arif_quiz/features/profile/presentation/screens/profile_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_list_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
@@ -60,25 +61,25 @@ class _MainNavigationState extends State<MainNavigation> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
                 title: Text(
-                  'Quitter l\'application ?',
+                  AppLocalizations.of(context).exitAppTitle,
                   style: TextStyle(
                       color: context.appColors.textPrimary,
                       fontWeight: FontWeight.w700),
                 ),
                 content: Text(
-                  'Es-tu sûr de vouloir quitter ArifQuiz ?',
+                  AppLocalizations.of(context).exitAppBody,
                   style: TextStyle(color: context.appColors.textSecondary),
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(ctx, false),
-                    child: Text('Annuler',
+                    child: Text(AppLocalizations.of(context).cancel,
                         style: TextStyle(color: context.appColors.textMuted)),
                   ),
                   TextButton(
                     onPressed: () => Navigator.pop(ctx, true),
-                    child: const Text('Quitter',
-                        style: TextStyle(
+                    child: Text(AppLocalizations.of(context).quit,
+                        style: const TextStyle(
                             color: AppColors.error,
                             fontWeight: FontWeight.w700)),
                   ),
@@ -107,31 +108,31 @@ class _MainNavigationState extends State<MainNavigation> {
                 selectedFontSize: 10,
                 unselectedFontSize: 10,
                 elevation: 0,
-                items: const [
+                items: [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.home_outlined),
-                    activeIcon: Icon(Icons.home_rounded),
-                    label: 'Accueil',
+                    icon: const Icon(Icons.home_outlined),
+                    activeIcon: const Icon(Icons.home_rounded),
+                    label: AppLocalizations.of(context).homeLabel,
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.grid_view_outlined),
-                    activeIcon: Icon(Icons.grid_view_rounded),
+                    icon: const Icon(Icons.grid_view_outlined),
+                    activeIcon: const Icon(Icons.grid_view_rounded),
                     label: 'Quiz',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.sports_esports_outlined),
-                    activeIcon: Icon(Icons.sports_esports_rounded),
-                    label: 'Défis',
+                    icon: const Icon(Icons.sports_esports_outlined),
+                    activeIcon: const Icon(Icons.sports_esports_rounded),
+                    label: AppLocalizations.of(context).challengesTitle,
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.group_outlined),
-                    activeIcon: Icon(Icons.group_rounded),
-                    label: 'Amis',
+                    icon: const Icon(Icons.group_outlined),
+                    activeIcon: const Icon(Icons.group_rounded),
+                    label: AppLocalizations.of(context).friends,
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.person_outline_rounded),
-                    activeIcon: Icon(Icons.person_rounded),
-                    label: 'Profil',
+                    icon: const Icon(Icons.person_outline_rounded),
+                    activeIcon: const Icon(Icons.person_rounded),
+                    label: AppLocalizations.of(context).profileTab,
                   ),
                 ],
               ),
