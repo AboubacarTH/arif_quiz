@@ -1,5 +1,6 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -105,13 +106,13 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Supprimer ?', style: TextStyle(fontWeight: FontWeight.w800)),
-        content: const Text('Cette question sera supprimée définitivement.'),
+        title: Text(AppLocalizations.of(context).confirmDeleteTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
+        content: Text(AppLocalizations.of(context).deleteQuestionBody),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annuler')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context).cancel)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Supprimer', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
+            child: Text(AppLocalizations.of(context).deleteBtn, style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -135,7 +136,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: const Text('Questions', style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(AppLocalizations.of(context).questions, style: const TextStyle(fontWeight: FontWeight.w800)),
         actions: [
           IconButton(icon: const Icon(Icons.add_rounded), color: AppColors.primary, onPressed: () => _showForm()),
         ],
@@ -157,7 +158,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
           TextField(
             controller: _searchCtrl,
             decoration: InputDecoration(
-              hintText: 'Rechercher une question...',
+              hintText: AppLocalizations.of(context).searchQuestionHint,
               prefixIcon: const Icon(Icons.search_rounded, size: 20),
               suffixIcon: _searchCtrl.text.isNotEmpty
                   ? IconButton(icon: const Icon(Icons.clear_rounded, size: 18), onPressed: () { _searchCtrl.clear(); _load(reset: true); })
@@ -181,7 +182,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
                 ),
                 const SizedBox(width: 8),
                 _FilterChip(
-                  label: _filterType == null ? 'Type' : _typeLabel(_filterType!),
+                  label: _filterType == null ? AppLocalizations.of(context).typeLabel : _typeLabel(_filterType!),
                   active: _filterType != null,
                   onTap: _showTypeFilter,
                 ),
@@ -195,7 +196,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-                      child: const Text('Réinitialiser', style: TextStyle(color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w600)),
+                      child: Text(AppLocalizations.of(context).resetFilters, style: const TextStyle(color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],
@@ -216,10 +217,10 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Filtrer par quiz', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByQuiz, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
           const SizedBox(height: 12),
           ListTile(
-            title: const Text('Tous'),
+            title: Text(AppLocalizations.of(context).allFilter),
             onTap: () { setState(() => _filterQuizId = null); Navigator.pop(context); _load(reset: true); },
           ),
           ..._quizzes.map((q) => ListTile(
@@ -241,11 +242,11 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Filtrer par type', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByType, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
           const SizedBox(height: 12),
           for (final t in [null, 'multiple_choice', 'true_false', 'short_answer'])
             ListTile(
-              title: Text(t == null ? 'Tous' : _typeLabel(t)),
+              title: Text(t == null ? AppLocalizations.of(context).allFilter : _typeLabel(t)),
               trailing: _filterType == t ? const Icon(Icons.check_rounded, color: AppColors.primary) : null,
               onTap: () { setState(() => _filterType = t); Navigator.pop(context); _load(reset: true); },
             ),
@@ -257,7 +258,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
   Widget _buildList() {
     if (_loading) return const Center(child: CircularProgressIndicator(color: AppColors.primary));
     if (_error != null) return Center(child: Text(_error!, style: TextStyle(color: context.appColors.textSecondary)));
-    if (_questions.isEmpty) return Center(child: Text('Aucune question trouvée', style: TextStyle(color: context.appColors.textSecondary)));
+    if (_questions.isEmpty) return Center(child: Text(AppLocalizations.of(context).noQuestionFound, style: TextStyle(color: context.appColors.textSecondary)));
 
     return RefreshIndicator(
       onRefresh: () => _load(reset: true),
@@ -281,7 +282,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
     );
   }
 
-  String _typeLabel(String t) => t == 'multiple_choice' ? 'QCM' : t == 'true_false' ? 'Vrai/Faux' : 'Réponse libre';
+  String _typeLabel(String t) => t == 'multiple_choice' ? 'QCM' : t == 'true_false' ? AppLocalizations.of(context).typeTrueFalse : AppLocalizations.of(context).typeShortAnswer;
 }
 
 class _FilterChip extends StatelessWidget {
@@ -319,7 +320,7 @@ class _QuestionTile extends StatelessWidget {
 
   const _QuestionTile({required this.q, required this.onEdit, required this.onDelete});
 
-  String get _typeLabel => q.type == 'multiple_choice' ? 'QCM' : q.type == 'true_false' ? 'Vrai/Faux' : 'Réponse libre';
+  String _typeLabel(BuildContext context) => q.type == 'multiple_choice' ? 'QCM' : q.type == 'true_false' ? AppLocalizations.of(context).typeTrueFalse : AppLocalizations.of(context).typeShortAnswer;
   Color get _typeColor => q.type == 'multiple_choice' ? AppColors.info : q.type == 'true_false' ? AppColors.success : AppColors.secondary;
 
   @override
@@ -338,7 +339,7 @@ class _QuestionTile extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                   decoration: BoxDecoration(color: _typeColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
-                  child: Text(_typeLabel, style: TextStyle(color: _typeColor, fontSize: 11, fontWeight: FontWeight.w700)),
+                  child: Text(_typeLabel(context), style: TextStyle(color: _typeColor, fontSize: 11, fontWeight: FontWeight.w700)),
                 ),
                 const SizedBox(width: 8),
                 if (q.quizTitle != null)
@@ -383,13 +384,13 @@ class _QuestionTile extends StatelessWidget {
                 TextButton.icon(
                   onPressed: onEdit,
                   icon: const Icon(Icons.edit_rounded, size: 14),
-                  label: const Text('Modifier'),
+                  label: Text(AppLocalizations.of(context).editBtn),
                   style: TextButton.styleFrom(foregroundColor: AppColors.info, padding: const EdgeInsets.symmetric(horizontal: 8)),
                 ),
                 TextButton.icon(
                   onPressed: onDelete,
                   icon: const Icon(Icons.delete_rounded, size: 14),
-                  label: const Text('Supprimer'),
+                  label: Text(AppLocalizations.of(context).deleteBtn),
                   style: TextButton.styleFrom(foregroundColor: AppColors.error, padding: const EdgeInsets.symmetric(horizontal: 8)),
                 ),
               ],
@@ -524,13 +525,13 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: Text(isEdit ? 'Modifier la question' : 'Nouvelle question', style: const TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(isEdit ? AppLocalizations.of(context).editQuestion : AppLocalizations.of(context).newQuestion, style: const TextStyle(fontWeight: FontWeight.w800)),
         actions: [
           TextButton(
             onPressed: _saving ? null : _save,
             child: _saving
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: AppColors.primary, strokeWidth: 2))
-                : const Text('Enregistrer', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700)),
+                : Text(AppLocalizations.of(context).saveChanges, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -550,15 +551,15 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
             // Quiz selector
             DropdownButtonFormField<int>(
               initialValue: _quizId,
-              decoration: _dec('Quiz *'),
+              decoration: _dec(AppLocalizations.of(context).quizRequired),
               items: widget.quizzes.map((q) => DropdownMenuItem(value: q.id, child: Text(q.title, overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _quizId = v),
-              validator: (v) => v == null ? 'Requis' : null,
+              validator: (v) => v == null ? AppLocalizations.of(context).requiredField : null,
               dropdownColor: context.appColors.cardBg,
             ),
             const SizedBox(height: 12),
             // Type selector
-            Text('Type *', style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
+            Text(AppLocalizations.of(context).typeRequired, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
             const SizedBox(height: 6),
             Row(
               children: [
@@ -576,7 +577,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                             border: Border.all(color: _type == t ? AppColors.primary : context.appColors.border),
                           ),
                           child: Text(
-                            t == 'multiple_choice' ? 'QCM' : t == 'true_false' ? 'Vrai/Faux' : 'Libre',
+                            t == 'multiple_choice' ? 'QCM' : t == 'true_false' ? AppLocalizations.of(context).typeTrueFalse : AppLocalizations.of(context).typeShortAnswerShort,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: _type == t ? Colors.white : context.appColors.textSecondary,
@@ -595,13 +596,13 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
             TextFormField(
               controller: _text,
               maxLines: 3,
-              decoration: _dec('Question *'),
-              validator: (v) => v!.trim().isEmpty ? 'Requis' : null,
+              decoration: _dec(AppLocalizations.of(context).questionRequired),
+              validator: (v) => v!.trim().isEmpty ? AppLocalizations.of(context).requiredField : null,
             ),
             const SizedBox(height: 12),
             // Options (QCM only)
             if (_type == 'multiple_choice') ...[
-              Text('Options *', style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
+              Text(AppLocalizations.of(context).optionsRequired, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
               for (var i = 0; i < _optionCtrls.length; i++) ...[
                 Row(
@@ -609,7 +610,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _optionCtrls[i],
-                        decoration: _dec('Option ${i + 1}'),
+                        decoration: _dec(AppLocalizations.of(context).optionN(i + 1)),
                       ),
                     ),
                     if (_optionCtrls.length > 2)
@@ -629,20 +630,20 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                 TextButton.icon(
                   onPressed: () => setState(() => _optionCtrls.add(TextEditingController())),
                   icon: const Icon(Icons.add_rounded, size: 18),
-                  label: const Text('Ajouter une option'),
+                  label: Text(AppLocalizations.of(context).addOption),
                   style: TextButton.styleFrom(foregroundColor: AppColors.primary),
                 ),
               const SizedBox(height: 4),
               TextFormField(
                 controller: _correctAnswer,
-                decoration: _dec('Bonne réponse * (doit correspondre à une option)'),
-                validator: (v) => v!.trim().isEmpty ? 'Requis' : null,
+                decoration: _dec(AppLocalizations.of(context).correctAnswerMatch),
+                validator: (v) => v!.trim().isEmpty ? AppLocalizations.of(context).requiredField : null,
               ),
               const SizedBox(height: 12),
             ],
             // True/False
             if (_type == 'true_false') ...[
-              Text('Bonne réponse *', style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
+              Text(AppLocalizations.of(context).correctAnswerRequired, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
               Row(
                 children: [
@@ -679,8 +680,8 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
             if (_type == 'short_answer') ...[
               TextFormField(
                 controller: _correctAnswer,
-                decoration: _dec('Bonne réponse *'),
-                validator: (v) => v!.trim().isEmpty ? 'Requis' : null,
+                decoration: _dec(AppLocalizations.of(context).correctAnswerRequired),
+                validator: (v) => v!.trim().isEmpty ? AppLocalizations.of(context).requiredField : null,
               ),
               const SizedBox(height: 12),
             ],
@@ -688,29 +689,29 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
             TextFormField(
               controller: _explanation,
               maxLines: 2,
-              decoration: _dec('Explication (optionnel)'),
+              decoration: _dec(AppLocalizations.of(context).explanationOptional),
             ),
             const SizedBox(height: 16),
             // Média (image / audio)
-            Text('Média (optionnel)', style: TextStyle(color: context.appColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w800)),
+            Text(AppLocalizations.of(context).mediaOptional, style: TextStyle(color: context.appColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w800)),
             const SizedBox(height: 10),
-            _mediaField('Image', _imageUrl, 'image', _uploadingImage),
+            _mediaField(AppLocalizations.of(context).imageLabel, _imageUrl, 'image', _uploadingImage),
             const SizedBox(height: 12),
-            _mediaField('Audio', _audioUrl, 'audio', _uploadingAudio),
+            _mediaField(AppLocalizations.of(context).audioLabel, _audioUrl, 'audio', _uploadingAudio),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(child: TextFormField(
                   controller: _order,
                   keyboardType: TextInputType.number,
-                  decoration: _dec('Ordre'),
-                  validator: (v) => int.tryParse(v ?? '') == null ? 'Nombre entier' : null,
+                  decoration: _dec(AppLocalizations.of(context).orderLabel),
+                  validator: (v) => int.tryParse(v ?? '') == null ? AppLocalizations.of(context).integerRequired : null,
                 )),
                 const SizedBox(width: 12),
                 Expanded(child: TextFormField(
                   controller: _points,
                   keyboardType: TextInputType.number,
-                  decoration: _dec('Points'),
+                  decoration: _dec(AppLocalizations.of(context).points),
                   validator: (v) {
                     final n = int.tryParse(v ?? '');
                     if (n == null || n < 1 || n > 1000) return '1–1000';
@@ -757,7 +758,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
         TextFormField(
           initialValue: trGet(_translations, locale, 'text'),
           maxLines: 3,
-          decoration: _dec('Question ($locale) — vide = repli anglais'),
+          decoration: _dec(AppLocalizations.of(context).questionLocaleHint(locale)),
           onChanged: (v) => setState(() => trSet(_translations, locale, 'text', v)),
         ),
         if (_type != 'short_answer') ...[
@@ -765,7 +766,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
           for (var i = 0; i < baseOptions.length; i++) ...[
             TextFormField(
               initialValue: i < trOptions.length ? trOptions[i] : '',
-              decoration: _dec('Traduction de « ${baseOptions[i]} »'),
+              decoration: _dec(AppLocalizations.of(context).translationOf(baseOptions[i])),
               onChanged: (v) => setOptionAt(i, v),
             ),
             const SizedBox(height: 8),
@@ -774,7 +775,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
           DropdownButtonFormField<String>(
             initialValue:
                 filledTrOptions.contains(trAnswer) ? trAnswer : null,
-            decoration: _dec('Bonne réponse ($locale)'),
+            decoration: _dec(AppLocalizations.of(context).correctAnswerLocale(locale)),
             items: filledTrOptions
                 .map((o) => DropdownMenuItem(value: o, child: Text(o)))
                 .toList(),
@@ -786,7 +787,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
           const SizedBox(height: 12),
           TextFormField(
             initialValue: trAnswer,
-            decoration: _dec('Bonne réponse ($locale)'),
+            decoration: _dec(AppLocalizations.of(context).correctAnswerLocale(locale)),
             onChanged: (v) => setState(
                 () => trSet(_translations, locale, 'correct_answer', v)),
           ),
@@ -795,7 +796,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
         TextFormField(
           initialValue: trGet(_translations, locale, 'explanation'),
           maxLines: 2,
-          decoration: _dec('Explication ($locale)'),
+          decoration: _dec(AppLocalizations.of(context).explanationLocale(locale)),
           onChanged: (v) =>
               trSet(_translations, locale, 'explanation', v),
         ),
@@ -834,7 +835,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                 icon: uploading
                     ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.upload_rounded, size: 18),
-                label: Text(uploading ? '...' : 'Fichier'),
+                label: Text(uploading ? '...' : AppLocalizations.of(context).fileBtn),
                 style: OutlinedButton.styleFrom(foregroundColor: AppColors.secondary),
               ),
             ),
@@ -903,7 +904,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Upload échoué : $e'), backgroundColor: AppColors.error));
+            content: Text(AppLocalizations.of(context).uploadFailed(e.toString())), backgroundColor: AppColors.error));
       }
     } finally {
       if (mounted) {

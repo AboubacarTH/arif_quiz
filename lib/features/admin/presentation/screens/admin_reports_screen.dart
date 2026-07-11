@@ -1,5 +1,6 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_questions_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -23,13 +24,16 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
   int _lastPage = 1;
   String? _filterStatus = 'pending';
 
-  static const _statuses = <(String?, String)>[
-    (null, 'Tous'),
-    ('pending', 'En attente'),
-    ('reviewed', 'En cours'),
-    ('resolved', 'Résolu'),
-    ('dismissed', 'Rejeté'),
-  ];
+  List<(String?, String)> _statuses(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return [
+      (null, l10n.allFilter),
+      ('pending', l10n.pendingLabel),
+      ('reviewed', l10n.inProgress),
+      ('resolved', l10n.resolved),
+      ('dismissed', l10n.rejected),
+    ];
+  }
 
   @override
   void initState() {
@@ -84,13 +88,13 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Supprimer ?', style: TextStyle(fontWeight: FontWeight.w800)),
-        content: const Text('Ce signalement sera supprimé définitivement.'),
+        title: Text(AppLocalizations.of(context).confirmDeleteTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
+        content: Text(AppLocalizations.of(context).deleteReportBody),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annuler')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context).cancel)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Supprimer', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
+            child: Text(AppLocalizations.of(context).deleteBtn, style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -114,7 +118,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: const Text('Signalements', style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(AppLocalizations.of(context).reports, style: const TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: Column(
         children: [
@@ -131,7 +135,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              for (final s in _statuses) ...[
+              for (final s in _statuses(context)) ...[
                 _FilterChip(
                   label: s.$2,
                   active: _filterStatus == s.$1,
@@ -157,7 +161,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
           children: [
             Icon(Icons.flag_outlined, size: 48, color: context.appColors.textMuted),
             const SizedBox(height: 12),
-            Text('Aucun signalement', style: TextStyle(color: context.appColors.textSecondary)),
+            Text(AppLocalizations.of(context).noReports, style: TextStyle(color: context.appColors.textSecondary)),
           ],
         ),
       );
@@ -281,7 +285,7 @@ class _ReportTile extends StatelessWidget {
                 const Icon(Icons.check_circle_outline_rounded, size: 14, color: AppColors.success),
                 const SizedBox(width: 4),
                 Expanded(
-                  child: Text('Réponse marquée correcte : ${r.correctAnswer}',
+                  child: Text(AppLocalizations.of(context).markedCorrectAnswer(r.correctAnswer ?? ''),
                       style: const TextStyle(color: AppColors.success, fontSize: 12), overflow: TextOverflow.ellipsis),
                 ),
               ],
@@ -303,7 +307,7 @@ class _ReportTile extends StatelessWidget {
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  r.userName ?? 'Anonyme',
+                  r.userName ?? AppLocalizations.of(context).anonymous,
                   style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -325,7 +329,7 @@ class _ReportTile extends StatelessWidget {
               TextButton.icon(
                 onPressed: onOpenQuestion,
                 icon: const Icon(Icons.open_in_new_rounded, size: 14),
-                label: const Text('Question'),
+                label: Text(AppLocalizations.of(context).questionLabel),
                 style: TextButton.styleFrom(foregroundColor: AppColors.info, padding: const EdgeInsets.symmetric(horizontal: 6)),
               ),
               const Spacer(),
@@ -333,11 +337,11 @@ class _ReportTile extends StatelessWidget {
                 onSelected: onSetStatus,
                 color: context.appColors.cardBg,
                 icon: Icon(Icons.more_horiz_rounded, color: context.appColors.textSecondary),
-                itemBuilder: (_) => const [
-                  PopupMenuItem(value: 'pending', child: Text('Marquer en attente')),
-                  PopupMenuItem(value: 'reviewed', child: Text('Marquer en cours')),
-                  PopupMenuItem(value: 'resolved', child: Text('Marquer résolu')),
-                  PopupMenuItem(value: 'dismissed', child: Text('Rejeter')),
+                itemBuilder: (_) => [
+                  PopupMenuItem(value: 'pending', child: Text(AppLocalizations.of(context).markPending)),
+                  PopupMenuItem(value: 'reviewed', child: Text(AppLocalizations.of(context).markInProgress)),
+                  PopupMenuItem(value: 'resolved', child: Text(AppLocalizations.of(context).markResolved)),
+                  PopupMenuItem(value: 'dismissed', child: Text(AppLocalizations.of(context).reject)),
                 ],
               ),
               IconButton(

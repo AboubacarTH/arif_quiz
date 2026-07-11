@@ -2015,6 +2015,726 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No internet connection'**
   String get noInternet;
+
+  /// No description provided for @adminTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get adminTitle;
+
+  /// No description provided for @totalQuizzes.
+  ///
+  /// In en, this message translates to:
+  /// **'Total quizzes'**
+  String get totalQuizzes;
+
+  /// No description provided for @published.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get published;
+
+  /// No description provided for @reports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get reports;
+
+  /// No description provided for @management.
+  ///
+  /// In en, this message translates to:
+  /// **'Management'**
+  String get management;
+
+  /// No description provided for @manageCategoriesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Add, edit, delete'**
+  String get manageCategoriesDesc;
+
+  /// No description provided for @manageQuizzesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage quizzes and their status'**
+  String get manageQuizzesDesc;
+
+  /// No description provided for @manageQuestionsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Add and edit questions'**
+  String get manageQuestionsDesc;
+
+  /// No description provided for @importExcel.
+  ///
+  /// In en, this message translates to:
+  /// **'Excel import'**
+  String get importExcel;
+
+  /// No description provided for @importQuizDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a quiz from a file'**
+  String get importQuizDesc;
+
+  /// No description provided for @reportedAnswersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Answers reported by players'**
+  String get reportedAnswersDesc;
+
+  /// No description provided for @confirmDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete?'**
+  String get confirmDeleteTitle;
+
+  /// No description provided for @deleteCategoryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"? This action is irreversible.'**
+  String deleteCategoryBody(String name);
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search…'**
+  String get searchHint;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// No description provided for @editCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit category'**
+  String get editCategory;
+
+  /// No description provided for @newCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'New category'**
+  String get newCategory;
+
+  /// No description provided for @nameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name *'**
+  String get nameRequired;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get requiredField;
+
+  /// No description provided for @descriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get descriptionLabel;
+
+  /// No description provided for @iconEmoji.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon (emoji)'**
+  String get iconEmoji;
+
+  /// No description provided for @colorHex.
+  ///
+  /// In en, this message translates to:
+  /// **'Color (hex) *'**
+  String get colorHex;
+
+  /// No description provided for @colorFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Format: #RRGGBB'**
+  String get colorFormat;
+
+  /// No description provided for @activeCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Active category'**
+  String get activeCategory;
+
+  /// No description provided for @nameLocale.
+  ///
+  /// In en, this message translates to:
+  /// **'Name ({locale})'**
+  String nameLocale(String locale);
+
+  /// No description provided for @descriptionLocale.
+  ///
+  /// In en, this message translates to:
+  /// **'Description ({locale})'**
+  String descriptionLocale(String locale);
+
+  /// No description provided for @inProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get inProgress;
+
+  /// No description provided for @resolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get resolved;
+
+  /// No description provided for @rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
+
+  /// No description provided for @deleteReportBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This report will be permanently deleted.'**
+  String get deleteReportBody;
+
+  /// No description provided for @noReports.
+  ///
+  /// In en, this message translates to:
+  /// **'No reports'**
+  String get noReports;
+
+  /// No description provided for @markedCorrectAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer marked correct: {answer}'**
+  String markedCorrectAnswer(String answer);
+
+  /// No description provided for @anonymous.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous'**
+  String get anonymous;
+
+  /// No description provided for @questionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Question'**
+  String get questionLabel;
+
+  /// No description provided for @markPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark pending'**
+  String get markPending;
+
+  /// No description provided for @markInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark in progress'**
+  String get markInProgress;
+
+  /// No description provided for @markResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark resolved'**
+  String get markResolved;
+
+  /// No description provided for @reject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get reject;
+
+  /// No description provided for @selectExcelFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an Excel file.'**
+  String get selectExcelFile;
+
+  /// No description provided for @cantAccessFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t access the selected file.'**
+  String get cantAccessFile;
+
+  /// No description provided for @quizMetadata.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz metadata'**
+  String get quizMetadata;
+
+  /// No description provided for @titleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Title *'**
+  String get titleRequired;
+
+  /// No description provided for @categoryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Category *'**
+  String get categoryRequired;
+
+  /// No description provided for @difficultyRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty *'**
+  String get difficultyRequired;
+
+  /// No description provided for @timeSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Time (s) *'**
+  String get timeSeconds;
+
+  /// No description provided for @pointsPerQuestionReq.
+  ///
+  /// In en, this message translates to:
+  /// **'Points/question *'**
+  String get pointsPerQuestionReq;
+
+  /// No description provided for @publishNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish immediately'**
+  String get publishNow;
+
+  /// No description provided for @excelFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Excel file'**
+  String get excelFile;
+
+  /// No description provided for @tapToSelectFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select a file'**
+  String get tapToSelectFile;
+
+  /// No description provided for @acceptedFormats.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted formats: .xlsx, .xls, .csv'**
+  String get acceptedFormats;
+
+  /// No description provided for @importing.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing…'**
+  String get importing;
+
+  /// No description provided for @importBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get importBtn;
+
+  /// No description provided for @excelFormatTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Excel file format'**
+  String get excelFormatTitle;
+
+  /// No description provided for @excelFormatColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'Required columns: question, type, option_a, option_b, option_c, option_d, correct_answer\nOptional columns: explanation'**
+  String get excelFormatColumns;
+
+  /// No description provided for @importSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Import successful!'**
+  String get importSuccess;
+
+  /// No description provided for @questionsImported.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} questions imported'**
+  String questionsImported(int count);
+
+  /// No description provided for @translationsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Translations'**
+  String get translationsLabel;
+
+  /// No description provided for @mainFieldsEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Main fields = English (default language)'**
+  String get mainFieldsEnglish;
+
+  /// No description provided for @deleteQuestionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This question will be permanently deleted.'**
+  String get deleteQuestionBody;
+
+  /// No description provided for @searchQuestionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a question…'**
+  String get searchQuestionHint;
+
+  /// No description provided for @typeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get typeLabel;
+
+  /// No description provided for @resetFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get resetFilters;
+
+  /// No description provided for @filterByQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by quiz'**
+  String get filterByQuiz;
+
+  /// No description provided for @filterByType.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by type'**
+  String get filterByType;
+
+  /// No description provided for @noQuestionFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No question found'**
+  String get noQuestionFound;
+
+  /// No description provided for @typeTrueFalse.
+  ///
+  /// In en, this message translates to:
+  /// **'True/False'**
+  String get typeTrueFalse;
+
+  /// No description provided for @typeShortAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Short answer'**
+  String get typeShortAnswer;
+
+  /// No description provided for @typeShortAnswerShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get typeShortAnswerShort;
+
+  /// No description provided for @editQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit question'**
+  String get editQuestion;
+
+  /// No description provided for @newQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'New question'**
+  String get newQuestion;
+
+  /// No description provided for @quizRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz *'**
+  String get quizRequired;
+
+  /// No description provided for @typeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Type *'**
+  String get typeRequired;
+
+  /// No description provided for @questionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Question *'**
+  String get questionRequired;
+
+  /// No description provided for @optionsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Options *'**
+  String get optionsRequired;
+
+  /// No description provided for @optionN.
+  ///
+  /// In en, this message translates to:
+  /// **'Option {n}'**
+  String optionN(int n);
+
+  /// No description provided for @addOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an option'**
+  String get addOption;
+
+  /// No description provided for @correctAnswerMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answer * (must match an option)'**
+  String get correctAnswerMatch;
+
+  /// No description provided for @correctAnswerRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answer *'**
+  String get correctAnswerRequired;
+
+  /// No description provided for @explanationOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Explanation (optional)'**
+  String get explanationOptional;
+
+  /// No description provided for @mediaOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Media (optional)'**
+  String get mediaOptional;
+
+  /// No description provided for @imageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Image'**
+  String get imageLabel;
+
+  /// No description provided for @audioLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio'**
+  String get audioLabel;
+
+  /// No description provided for @orderLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Order'**
+  String get orderLabel;
+
+  /// No description provided for @integerRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Integer'**
+  String get integerRequired;
+
+  /// No description provided for @questionLocaleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Question ({locale}) — empty = English fallback'**
+  String questionLocaleHint(String locale);
+
+  /// No description provided for @translationOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation of “{base}”'**
+  String translationOf(String base);
+
+  /// No description provided for @correctAnswerLocale.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answer ({locale})'**
+  String correctAnswerLocale(String locale);
+
+  /// No description provided for @explanationLocale.
+  ///
+  /// In en, this message translates to:
+  /// **'Explanation ({locale})'**
+  String explanationLocale(String locale);
+
+  /// No description provided for @fileBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get fileBtn;
+
+  /// No description provided for @uploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload failed: {error}'**
+  String uploadFailed(String error);
+
+  /// No description provided for @deleteQuizBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{title}\" and all its questions?'**
+  String deleteQuizBody(String title);
+
+  /// No description provided for @fileLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'File language'**
+  String get fileLanguage;
+
+  /// No description provided for @importLangEn.
+  ///
+  /// In en, this message translates to:
+  /// **'English — new questions'**
+  String get importLangEn;
+
+  /// No description provided for @importLangFr.
+  ///
+  /// In en, this message translates to:
+  /// **'Français — translations'**
+  String get importLangFr;
+
+  /// No description provided for @importLangAr.
+  ///
+  /// In en, this message translates to:
+  /// **'العربية — translations'**
+  String get importLangAr;
+
+  /// No description provided for @importLangEs.
+  ///
+  /// In en, this message translates to:
+  /// **'Español — translations'**
+  String get importLangEs;
+
+  /// No description provided for @appendedAfterExisting.
+  ///
+  /// In en, this message translates to:
+  /// **'Added after existing questions'**
+  String get appendedAfterExisting;
+
+  /// No description provided for @appliedToExisting.
+  ///
+  /// In en, this message translates to:
+  /// **'Applied to existing questions (order column)'**
+  String get appliedToExisting;
+
+  /// No description provided for @questionsImportedMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions imported.'**
+  String get questionsImportedMsg;
+
+  /// No description provided for @statusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get statusLabel;
+
+  /// No description provided for @publishedSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get publishedSingular;
+
+  /// No description provided for @draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get draft;
+
+  /// No description provided for @filterByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by category'**
+  String get filterByCategory;
+
+  /// No description provided for @allFem.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allFem;
+
+  /// No description provided for @filterByDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by difficulty'**
+  String get filterByDifficulty;
+
+  /// No description provided for @filterByStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by status'**
+  String get filterByStatus;
+
+  /// No description provided for @editQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit quiz'**
+  String get editQuiz;
+
+  /// No description provided for @newQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'New quiz'**
+  String get newQuiz;
+
+  /// No description provided for @publishQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish quiz'**
+  String get publishQuiz;
+
+  /// No description provided for @includeInJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'Include in Journey Mode'**
+  String get includeInJourney;
+
+  /// No description provided for @journeyFeedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Its questions feed the level map'**
+  String get journeyFeedDesc;
+
+  /// No description provided for @visibilityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Visibility'**
+  String get visibilityLabel;
+
+  /// No description provided for @publicVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Public — visible to everyone'**
+  String get publicVisible;
+
+  /// No description provided for @restrictedChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'Restricted — chosen users'**
+  String get restrictedChosen;
+
+  /// No description provided for @titleLocale.
+  ///
+  /// In en, this message translates to:
+  /// **'Title ({locale})'**
+  String titleLocale(String locale);
+
+  /// No description provided for @allowedUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed users'**
+  String get allowedUsers;
+
+  /// No description provided for @chooseUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose users'**
+  String get chooseUsers;
+
+  /// No description provided for @searchUserHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search (name, username, email)…'**
+  String get searchUserHint;
+
+  /// No description provided for @noUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'No users'**
+  String get noUsers;
+
+  /// No description provided for @okSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'OK · {count} selected'**
+  String okSelected(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -1,4 +1,5 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -69,11 +70,11 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
   Future<void> _import() async {
     if (!_formKey.currentState!.validate()) return;
     if (_pickedFile == null) {
-      setState(() => _error = 'Veuillez sélectionner un fichier Excel.');
+      setState(() => _error = AppLocalizations.of(context).selectExcelFile);
       return;
     }
     if (_pickedFile!.path == null) {
-      setState(() => _error = 'Impossible d\'accéder au fichier sélectionné.');
+      setState(() => _error = AppLocalizations.of(context).cantAccessFile);
       return;
     }
 
@@ -111,7 +112,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: const Text('Import Excel', style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(AppLocalizations.of(context).importExcel, style: const TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
@@ -134,28 +135,28 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                     ),
                     const SizedBox(height: 12),
                   ],
-                  _sectionTitle('Métadonnées du quiz'),
+                  _sectionTitle(AppLocalizations.of(context).quizMetadata),
                   const SizedBox(height: 10),
-                  _field('Titre *', _titleCtrl, validator: (v) => v!.trim().isEmpty ? 'Requis' : null),
+                  _field(AppLocalizations.of(context).titleRequired, _titleCtrl, validator: (v) => v!.trim().isEmpty ? AppLocalizations.of(context).requiredField : null),
                   const SizedBox(height: 10),
-                  _field('Description', _descCtrl, maxLines: 2),
+                  _field(AppLocalizations.of(context).descriptionLabel, _descCtrl, maxLines: 2),
                   const SizedBox(height: 10),
                   DropdownButtonFormField<int>(
                     initialValue: _categoryId,
-                    decoration: _dec('Catégorie *'),
+                    decoration: _dec(AppLocalizations.of(context).categoryRequired),
                     items: _categories.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
                     onChanged: (v) => setState(() => _categoryId = v),
-                    validator: (v) => v == null ? 'Requis' : null,
+                    validator: (v) => v == null ? AppLocalizations.of(context).requiredField : null,
                     dropdownColor: context.appColors.cardBg,
                   ),
                   const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
                     initialValue: _difficulty,
-                    decoration: _dec('Difficulté *'),
-                    items: const [
-                      DropdownMenuItem(value: 'easy', child: Text('Facile')),
-                      DropdownMenuItem(value: 'medium', child: Text('Moyen')),
-                      DropdownMenuItem(value: 'hard', child: Text('Difficile')),
+                    decoration: _dec(AppLocalizations.of(context).difficultyRequired),
+                    items: [
+                      DropdownMenuItem(value: 'easy', child: Text(AppLocalizations.of(context).diffEasy)),
+                      DropdownMenuItem(value: 'medium', child: Text(AppLocalizations.of(context).diffMedium)),
+                      DropdownMenuItem(value: 'hard', child: Text(AppLocalizations.of(context).diffHard)),
                     ],
                     onChanged: (v) => setState(() => _difficulty = v!),
                     dropdownColor: context.appColors.cardBg,
@@ -163,12 +164,12 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      Expanded(child: _field('Temps (s) *', _timeLimitCtrl, keyboardType: TextInputType.number, validator: (v) {
+                      Expanded(child: _field(AppLocalizations.of(context).timeSeconds, _timeLimitCtrl, keyboardType: TextInputType.number, validator: (v) {
                         final n = int.tryParse(v ?? '');
                         return (n == null || n < 5 || n > 600) ? '5–600' : null;
                       })),
                       const SizedBox(width: 12),
-                      Expanded(child: _field('Points/question *', _pointsCtrl, keyboardType: TextInputType.number, validator: (v) {
+                      Expanded(child: _field(AppLocalizations.of(context).pointsPerQuestionReq, _pointsCtrl, keyboardType: TextInputType.number, validator: (v) {
                         final n = int.tryParse(v ?? '');
                         return (n == null || n < 1 || n > 1000) ? '1–1000' : null;
                       })),
@@ -177,12 +178,12 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                   SwitchListTile(
                     value: _isPublished,
                     onChanged: (v) => setState(() => _isPublished = v),
-                    title: Text('Publier immédiatement', style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
+                    title: Text(AppLocalizations.of(context).publishNow, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
                     activeThumbColor: AppColors.primary,
                     contentPadding: EdgeInsets.zero,
                   ),
                   const SizedBox(height: 16),
-                  _sectionTitle('Fichier Excel'),
+                  _sectionTitle(AppLocalizations.of(context).excelFile),
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: _pickFile,
@@ -206,7 +207,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            _pickedFile != null ? _pickedFile!.name : 'Appuyer pour sélectionner un fichier',
+                            _pickedFile != null ? _pickedFile!.name : AppLocalizations.of(context).tapToSelectFile,
                             style: TextStyle(
                               color: _pickedFile != null ? AppColors.primary : context.appColors.textSecondary,
                               fontWeight: FontWeight.w600,
@@ -223,7 +224,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                           ],
                           const SizedBox(height: 4),
                           Text(
-                            'Formats acceptés : .xlsx, .xls, .csv',
+                            AppLocalizations.of(context).acceptedFormats,
                             style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
                           ),
                         ],
@@ -240,7 +241,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                           ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                           : const Icon(Icons.upload_rounded, color: Colors.white),
                       label: Text(
-                        _importing ? 'Import en cours...' : 'Importer',
+                        _importing ? AppLocalizations.of(context).importing : AppLocalizations.of(context).importBtn,
                         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -270,11 +271,11 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
           Row(children: [
             const Icon(Icons.info_outline_rounded, color: AppColors.info, size: 18),
             const SizedBox(width: 8),
-            Text('Format du fichier Excel', style: TextStyle(color: AppColors.info, fontWeight: FontWeight.w700, fontSize: 13)),
+            Text(AppLocalizations.of(context).excelFormatTitle, style: const TextStyle(color: AppColors.info, fontWeight: FontWeight.w700, fontSize: 13)),
           ]),
           const SizedBox(height: 8),
           Text(
-            'Colonnes requises : question, type, option_a, option_b, option_c, option_d, correct_answer\nColonnes optionnelles : explanation',
+            AppLocalizations.of(context).excelFormatColumns,
             style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, height: 1.5),
           ),
         ],
@@ -297,12 +298,12 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
           Row(children: [
             const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 20),
             const SizedBox(width: 8),
-            const Text('Import réussi !', style: TextStyle(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 15)),
+            Text(AppLocalizations.of(context).importSuccess, style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 15)),
           ]),
           const SizedBox(height: 8),
           Text(res['message'] as String? ?? '', style: TextStyle(color: context.appColors.textPrimary, fontSize: 13)),
           const SizedBox(height: 6),
-          Text('${data['questions_count'] ?? 0} questions importées', style: TextStyle(color: context.appColors.textSecondary, fontSize: 12)),
+          Text(AppLocalizations.of(context).questionsImported((data['questions_count'] as int?) ?? 0), style: TextStyle(color: context.appColors.textSecondary, fontSize: 12)),
         ],
       ),
     );

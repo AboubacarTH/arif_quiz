@@ -1060,4 +1060,398 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noInternet => 'Sin conexión a internet';
+
+  @override
+  String get adminTitle => 'Admin';
+
+  @override
+  String get totalQuizzes => 'Total de quizzes';
+
+  @override
+  String get published => 'Publicados';
+
+  @override
+  String get reports => 'Reportes';
+
+  @override
+  String get management => 'Gestión';
+
+  @override
+  String get manageCategoriesDesc => 'Añadir, editar, eliminar';
+
+  @override
+  String get manageQuizzesDesc => 'Gestionar los quizzes y su estado';
+
+  @override
+  String get manageQuestionsDesc => 'Añadir y editar preguntas';
+
+  @override
+  String get importExcel => 'Importar Excel';
+
+  @override
+  String get importQuizDesc => 'Importar un quiz desde un archivo';
+
+  @override
+  String get reportedAnswersDesc => 'Respuestas reportadas por los jugadores';
+
+  @override
+  String get confirmDeleteTitle => '¿Eliminar?';
+
+  @override
+  String deleteCategoryBody(String name) {
+    return '¿Eliminar \"$name\"? Esta acción es irreversible.';
+  }
+
+  @override
+  String get searchHint => 'Buscar…';
+
+  @override
+  String get inactive => 'Inactiva';
+
+  @override
+  String get editCategory => 'Editar categoría';
+
+  @override
+  String get newCategory => 'Nueva categoría';
+
+  @override
+  String get nameRequired => 'Nombre *';
+
+  @override
+  String get requiredField => 'Obligatorio';
+
+  @override
+  String get descriptionLabel => 'Descripción';
+
+  @override
+  String get iconEmoji => 'Icono (emoji)';
+
+  @override
+  String get colorHex => 'Color (hex) *';
+
+  @override
+  String get colorFormat => 'Formato: #RRGGBB';
+
+  @override
+  String get activeCategory => 'Categoría activa';
+
+  @override
+  String nameLocale(String locale) {
+    return 'Nombre ($locale)';
+  }
+
+  @override
+  String descriptionLocale(String locale) {
+    return 'Descripción ($locale)';
+  }
+
+  @override
+  String get inProgress => 'En curso';
+
+  @override
+  String get resolved => 'Resuelto';
+
+  @override
+  String get rejected => 'Rechazado';
+
+  @override
+  String get deleteReportBody => 'Este reporte se eliminará definitivamente.';
+
+  @override
+  String get noReports => 'Sin reportes';
+
+  @override
+  String markedCorrectAnswer(String answer) {
+    return 'Respuesta marcada correcta: $answer';
+  }
+
+  @override
+  String get anonymous => 'Anónimo';
+
+  @override
+  String get questionLabel => 'Pregunta';
+
+  @override
+  String get markPending => 'Marcar pendiente';
+
+  @override
+  String get markInProgress => 'Marcar en curso';
+
+  @override
+  String get markResolved => 'Marcar resuelto';
+
+  @override
+  String get reject => 'Rechazar';
+
+  @override
+  String get selectExcelFile => 'Selecciona un archivo Excel.';
+
+  @override
+  String get cantAccessFile => 'No se puede acceder al archivo seleccionado.';
+
+  @override
+  String get quizMetadata => 'Metadatos del quiz';
+
+  @override
+  String get titleRequired => 'Título *';
+
+  @override
+  String get categoryRequired => 'Categoría *';
+
+  @override
+  String get difficultyRequired => 'Dificultad *';
+
+  @override
+  String get timeSeconds => 'Tiempo (s) *';
+
+  @override
+  String get pointsPerQuestionReq => 'Puntos/pregunta *';
+
+  @override
+  String get publishNow => 'Publicar inmediatamente';
+
+  @override
+  String get excelFile => 'Archivo Excel';
+
+  @override
+  String get tapToSelectFile => 'Toca para seleccionar un archivo';
+
+  @override
+  String get acceptedFormats => 'Formatos aceptados: .xlsx, .xls, .csv';
+
+  @override
+  String get importing => 'Importando…';
+
+  @override
+  String get importBtn => 'Importar';
+
+  @override
+  String get excelFormatTitle => 'Formato del archivo Excel';
+
+  @override
+  String get excelFormatColumns =>
+      'Columnas requeridas: question, type, option_a, option_b, option_c, option_d, correct_answer\nColumnas opcionales: explanation';
+
+  @override
+  String get importSuccess => '¡Importación exitosa!';
+
+  @override
+  String questionsImported(int count) {
+    return '$count preguntas importadas';
+  }
+
+  @override
+  String get translationsLabel => 'Traducciones';
+
+  @override
+  String get mainFieldsEnglish =>
+      'Campos principales = inglés (idioma predeterminado)';
+
+  @override
+  String get deleteQuestionBody =>
+      'Esta pregunta se eliminará definitivamente.';
+
+  @override
+  String get searchQuestionHint => 'Buscar una pregunta…';
+
+  @override
+  String get typeLabel => 'Tipo';
+
+  @override
+  String get resetFilters => 'Restablecer';
+
+  @override
+  String get filterByQuiz => 'Filtrar por quiz';
+
+  @override
+  String get filterByType => 'Filtrar por tipo';
+
+  @override
+  String get noQuestionFound => 'Ninguna pregunta encontrada';
+
+  @override
+  String get typeTrueFalse => 'Verdadero/Falso';
+
+  @override
+  String get typeShortAnswer => 'Respuesta libre';
+
+  @override
+  String get typeShortAnswerShort => 'Libre';
+
+  @override
+  String get editQuestion => 'Editar la pregunta';
+
+  @override
+  String get newQuestion => 'Nueva pregunta';
+
+  @override
+  String get quizRequired => 'Quiz *';
+
+  @override
+  String get typeRequired => 'Tipo *';
+
+  @override
+  String get questionRequired => 'Pregunta *';
+
+  @override
+  String get optionsRequired => 'Opciones *';
+
+  @override
+  String optionN(int n) {
+    return 'Opción $n';
+  }
+
+  @override
+  String get addOption => 'Añadir una opción';
+
+  @override
+  String get correctAnswerMatch =>
+      'Respuesta correcta * (debe coincidir con una opción)';
+
+  @override
+  String get correctAnswerRequired => 'Respuesta correcta *';
+
+  @override
+  String get explanationOptional => 'Explicación (opcional)';
+
+  @override
+  String get mediaOptional => 'Multimedia (opcional)';
+
+  @override
+  String get imageLabel => 'Imagen';
+
+  @override
+  String get audioLabel => 'Audio';
+
+  @override
+  String get orderLabel => 'Orden';
+
+  @override
+  String get integerRequired => 'Número entero';
+
+  @override
+  String questionLocaleHint(String locale) {
+    return 'Pregunta ($locale) — vacío = inglés';
+  }
+
+  @override
+  String translationOf(String base) {
+    return 'Traducción de «$base»';
+  }
+
+  @override
+  String correctAnswerLocale(String locale) {
+    return 'Respuesta correcta ($locale)';
+  }
+
+  @override
+  String explanationLocale(String locale) {
+    return 'Explicación ($locale)';
+  }
+
+  @override
+  String get fileBtn => 'Archivo';
+
+  @override
+  String uploadFailed(String error) {
+    return 'Fallo al subir: $error';
+  }
+
+  @override
+  String deleteQuizBody(String title) {
+    return '¿Eliminar \"$title\" y todas sus preguntas?';
+  }
+
+  @override
+  String get fileLanguage => 'Idioma del archivo';
+
+  @override
+  String get importLangEn => 'English — nuevas preguntas';
+
+  @override
+  String get importLangFr => 'Français — traducciones';
+
+  @override
+  String get importLangAr => 'العربية — traducciones';
+
+  @override
+  String get importLangEs => 'Español — traducciones';
+
+  @override
+  String get appendedAfterExisting =>
+      'Añadidas después de las preguntas existentes';
+
+  @override
+  String get appliedToExisting =>
+      'Aplicadas a las preguntas existentes (columna order)';
+
+  @override
+  String get questionsImportedMsg => 'Preguntas importadas.';
+
+  @override
+  String get statusLabel => 'Estado';
+
+  @override
+  String get publishedSingular => 'Publicado';
+
+  @override
+  String get draft => 'Borrador';
+
+  @override
+  String get filterByCategory => 'Filtrar por categoría';
+
+  @override
+  String get allFem => 'Todas';
+
+  @override
+  String get filterByDifficulty => 'Filtrar por dificultad';
+
+  @override
+  String get filterByStatus => 'Filtrar por estado';
+
+  @override
+  String get editQuiz => 'Editar el quiz';
+
+  @override
+  String get newQuiz => 'Nuevo quiz';
+
+  @override
+  String get publishQuiz => 'Publicar el quiz';
+
+  @override
+  String get includeInJourney => 'Incluir en el Modo Aventura';
+
+  @override
+  String get journeyFeedDesc => 'Sus preguntas alimentan el mapa de niveles';
+
+  @override
+  String get visibilityLabel => 'Visibilidad';
+
+  @override
+  String get publicVisible => 'Público — visible para todos';
+
+  @override
+  String get restrictedChosen => 'Restringido — usuarios elegidos';
+
+  @override
+  String titleLocale(String locale) {
+    return 'Título ($locale)';
+  }
+
+  @override
+  String get allowedUsers => 'Usuarios autorizados';
+
+  @override
+  String get chooseUsers => 'Elegir usuarios';
+
+  @override
+  String get searchUserHint => 'Buscar (nombre, username, email)…';
+
+  @override
+  String get noUsers => 'Ningún usuario';
+
+  @override
+  String okSelected(int count) {
+    return 'OK · $count seleccionado(s)';
+  }
 }

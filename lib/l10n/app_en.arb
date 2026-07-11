@@ -505,5 +505,223 @@
   "watchAd": "Watch an ad (≈30s)",
   "somethingWrong": "Something went wrong.",
   "tryAgain": "Try Again",
-  "noInternet": "No internet connection"
+  "noInternet": "No internet connection",
+  "adminTitle": "Admin",
+  "totalQuizzes": "Total quizzes",
+  "published": "Published",
+  "reports": "Reports",
+  "management": "Management",
+  "manageCategoriesDesc": "Add, edit, delete",
+  "manageQuizzesDesc": "Manage quizzes and their status",
+  "manageQuestionsDesc": "Add and edit questions",
+  "importExcel": "Excel import",
+  "importQuizDesc": "Import a quiz from a file",
+  "reportedAnswersDesc": "Answers reported by players",
+  "confirmDeleteTitle": "Delete?",
+  "deleteCategoryBody": "Delete \"{name}\"? This action is irreversible.",
+  "@deleteCategoryBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "searchHint": "Search…",
+  "inactive": "Inactive",
+  "editCategory": "Edit category",
+  "newCategory": "New category",
+  "nameRequired": "Name *",
+  "requiredField": "Required",
+  "descriptionLabel": "Description",
+  "iconEmoji": "Icon (emoji)",
+  "colorHex": "Color (hex) *",
+  "colorFormat": "Format: #RRGGBB",
+  "activeCategory": "Active category",
+  "nameLocale": "Name ({locale})",
+  "@nameLocale": {
+    "placeholders": {
+      "locale": {
+        "type": "String"
+      }
+    }
+  },
+  "descriptionLocale": "Description ({locale})",
+  "@descriptionLocale": {
+    "placeholders": {
+      "locale": {
+        "type": "String"
+      }
+    }
+  },
+  "inProgress": "In progress",
+  "resolved": "Resolved",
+  "rejected": "Rejected",
+  "deleteReportBody": "This report will be permanently deleted.",
+  "noReports": "No reports",
+  "markedCorrectAnswer": "Answer marked correct: {answer}",
+  "@markedCorrectAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "anonymous": "Anonymous",
+  "questionLabel": "Question",
+  "markPending": "Mark pending",
+  "markInProgress": "Mark in progress",
+  "markResolved": "Mark resolved",
+  "reject": "Reject",
+  "selectExcelFile": "Please select an Excel file.",
+  "cantAccessFile": "Can't access the selected file.",
+  "quizMetadata": "Quiz metadata",
+  "titleRequired": "Title *",
+  "categoryRequired": "Category *",
+  "difficultyRequired": "Difficulty *",
+  "timeSeconds": "Time (s) *",
+  "pointsPerQuestionReq": "Points/question *",
+  "publishNow": "Publish immediately",
+  "excelFile": "Excel file",
+  "tapToSelectFile": "Tap to select a file",
+  "acceptedFormats": "Accepted formats: .xlsx, .xls, .csv",
+  "importing": "Importing…",
+  "importBtn": "Import",
+  "excelFormatTitle": "Excel file format",
+  "excelFormatColumns": "Required columns: question, type, option_a, option_b, option_c, option_d, correct_answer\nOptional columns: explanation",
+  "importSuccess": "Import successful!",
+  "questionsImported": "{count} questions imported",
+  "@questionsImported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "translationsLabel": "Translations",
+  "mainFieldsEnglish": "Main fields = English (default language)",
+  "deleteQuestionBody": "This question will be permanently deleted.",
+  "searchQuestionHint": "Search a question…",
+  "typeLabel": "Type",
+  "resetFilters": "Reset",
+  "filterByQuiz": "Filter by quiz",
+  "filterByType": "Filter by type",
+  "noQuestionFound": "No question found",
+  "typeTrueFalse": "True/False",
+  "typeShortAnswer": "Short answer",
+  "typeShortAnswerShort": "Free",
+  "editQuestion": "Edit question",
+  "newQuestion": "New question",
+  "quizRequired": "Quiz *",
+  "typeRequired": "Type *",
+  "questionRequired": "Question *",
+  "optionsRequired": "Options *",
+  "optionN": "Option {n}",
+  "@optionN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "addOption": "Add an option",
+  "correctAnswerMatch": "Correct answer * (must match an option)",
+  "correctAnswerRequired": "Correct answer *",
+  "explanationOptional": "Explanation (optional)",
+  "mediaOptional": "Media (optional)",
+  "imageLabel": "Image",
+  "audioLabel": "Audio",
+  "orderLabel": "Order",
+  "integerRequired": "Integer",
+  "questionLocaleHint": "Question ({locale}) — empty = English fallback",
+  "@questionLocaleHint": {
+    "placeholders": {
+      "locale": {
+        "type": "String"
+      }
+    }
+  },
+  "translationOf": "Translation of “{base}”",
+  "@translationOf": {
+    "placeholders": {
+      "base": {
+        "type": "String"
+      }
+    }
+  },
+  "correctAnswerLocale": "Correct answer ({locale})",
+  "@correctAnswerLocale": {
+    "placeholders": {
+      "locale": {
+        "type": "String"
+      }
+    }
+  },
+  "explanationLocale": "Explanation ({locale})",
+  "@explanationLocale": {
+    "placeholders": {
+      "locale": {
+        "type": "String"
+      }
+    }
+  },
+  "fileBtn": "File",
+  "uploadFailed": "Upload failed: {error}",
+  "@uploadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteQuizBody": "Delete \"{title}\" and all its questions?",
+  "@deleteQuizBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "fileLanguage": "File language",
+  "importLangEn": "English — new questions",
+  "importLangFr": "Français — translations",
+  "importLangAr": "العربية — translations",
+  "importLangEs": "Español — translations",
+  "appendedAfterExisting": "Added after existing questions",
+  "appliedToExisting": "Applied to existing questions (order column)",
+  "questionsImportedMsg": "Questions imported.",
+  "statusLabel": "Status",
+  "publishedSingular": "Published",
+  "draft": "Draft",
+  "filterByCategory": "Filter by category",
+  "allFem": "All",
+  "filterByDifficulty": "Filter by difficulty",
+  "filterByStatus": "Filter by status",
+  "editQuiz": "Edit quiz",
+  "newQuiz": "New quiz",
+  "publishQuiz": "Publish quiz",
+  "includeInJourney": "Include in Journey Mode",
+  "journeyFeedDesc": "Its questions feed the level map",
+  "visibilityLabel": "Visibility",
+  "publicVisible": "Public — visible to everyone",
+  "restrictedChosen": "Restricted — chosen users",
+  "titleLocale": "Title ({locale})",
+  "@titleLocale": {
+    "placeholders": {
+      "locale": {
+        "type": "String"
+      }
+    }
+  },
+  "allowedUsers": "Allowed users",
+  "chooseUsers": "Choose users",
+  "searchUserHint": "Search (name, username, email)…",
+  "noUsers": "No users",
+  "okSelected": "OK · {count} selected",
+  "@okSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
