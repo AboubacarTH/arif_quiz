@@ -1,3 +1,5 @@
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/core/i18n/game_mode_l10n.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
@@ -22,13 +24,13 @@ class GameModeCard extends StatelessWidget {
         GameMode.speed => AppColors.secondary,
       };
 
-  List<_Badge> get _badges => switch (mode) {
+  List<_Badge> _badges(BuildContext context) => switch (mode) {
         GameMode.classic => [
             const _Badge(icon: Icons.timer_outlined, label: '30s / question'),
             const _Badge(icon: Icons.star_rounded, label: '×1.0 XP'),
           ],
         GameMode.survival => [
-            const _Badge(icon: Icons.favorite_rounded, label: '1 vie'),
+            _Badge(icon: Icons.favorite_rounded, label: AppLocalizations.of(context).oneLife),
             const _Badge(icon: Icons.star_rounded, label: '×1.3 XP'),
           ],
         GameMode.speed => [
@@ -79,7 +81,7 @@ class GameModeCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        mode.label,
+                        mode.localizedLabel(context),
                         style: TextStyle(
                           color: selected
                               ? _color
@@ -112,7 +114,7 @@ class GameModeCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    mode.description,
+                    mode.localizedDescription(context),
                     style: TextStyle(
                       color: context.appColors.textSecondary,
                       fontSize: 12,
@@ -120,7 +122,7 @@ class GameModeCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Row(
-                    children: _badges
+                    children: _badges(context)
                         .map((b) => Padding(
                               padding: const EdgeInsets.only(right: 8),
                               child: _BadgeWidget(badge: b, color: _color),

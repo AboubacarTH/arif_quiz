@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/features/friends/bloc/friends_controller.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/features/friends/bloc/friends_controller.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -36,7 +37,7 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: const Text('Ajouter des amis'),
+        title: Text(AppLocalizations.of(context).addFriends),
       ),
       body: Column(
         children: [
@@ -47,7 +48,7 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
               autofocus: true,
               style: TextStyle(color: context.appColors.textPrimary),
               decoration: InputDecoration(
-                hintText: 'Rechercher par nom ou @username...',
+                hintText: AppLocalizations.of(context).searchByNameHint,
                 prefixIcon: Icon(Icons.search, color: context.appColors.textMuted),
                 suffixIcon: widget.ctrl.isSearching
                     ? const Padding(
@@ -65,7 +66,7 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
           ),
           Expanded(
             child: widget.ctrl.searchResults.isEmpty && _searchCtrl.text.length >= 2
-                ? Center(child: Text('Aucun joueur trouvé', style: TextStyle(color: context.appColors.textSecondary)))
+                ? Center(child: Text(AppLocalizations.of(context).noPlayerFound, style: TextStyle(color: context.appColors.textSecondary)))
                 : ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: widget.ctrl.searchResults.length,
@@ -76,7 +77,7 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
                         final ok = await widget.ctrl.sendRequest(widget.ctrl.searchResults[i].id);
                         if (ok && mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Demande envoyée !'), backgroundColor: AppColors.success),
+                            SnackBar(content: Text(AppLocalizations.of(context).requestSent), backgroundColor: AppColors.success),
                           );
                         }
                       },
@@ -111,7 +112,7 @@ class _UserResultTile extends StatelessWidget {
       ),
       title: Text(user.name, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700)),
       subtitle: Text(
-        user.username != null ? '@${user.username} • Niv. ${user.level}' : 'Niv. ${user.level}',
+        user.username != null ? '@${user.username} • Niv. ${user.level}' : AppLocalizations.of(context).levelShort(user.level),
         style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
       ),
       trailing: _buildButton(context),
@@ -130,7 +131,7 @@ class _UserResultTile extends StatelessWidget {
     if (status == 'pending') {
       return Chip(
         label: Text(
-          user.isSender == true ? 'Envoyé' : 'Reçu',
+          user.isSender == true ? AppLocalizations.of(context).sentLabel : AppLocalizations.of(context).receivedLabel,
           style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
         ),
         backgroundColor: context.appColors.cardBgLight,
@@ -140,7 +141,7 @@ class _UserResultTile extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: onSendRequest,
       icon: const Icon(Icons.person_add, size: 14),
-      label: const Text('Ajouter', style: TextStyle(fontSize: 12)),
+      label: Text(AppLocalizations.of(context).addBtn, style: const TextStyle(fontSize: 12)),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         minimumSize: Size.zero,

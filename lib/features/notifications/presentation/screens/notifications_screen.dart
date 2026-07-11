@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/features/notifications/data/notifications_repository.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -45,7 +46,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         backgroundColor: context.appColors.bg,
         title: Row(
           children: [
-            const Text('Notifications'),
+            Text(AppLocalizations.of(context).notifications),
             if (_unreadCount > 0) ...[
               const SizedBox(width: 8),
               Container(
@@ -66,7 +67,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   _unreadCount = 0;
                 });
               },
-              child: const Text('Tout lire', style: TextStyle(color: AppColors.secondary, fontSize: 12)),
+              child: Text(AppLocalizations.of(context).markAllRead, style: const TextStyle(color: AppColors.secondary, fontSize: 12)),
             ),
         ],
       ),
@@ -79,7 +80,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     children: [
                       Text('🔔', style: TextStyle(fontSize: 48)),
                       SizedBox(height: 12),
-                      Text('Aucune notification', style: TextStyle(color: context.appColors.textSecondary)),
+                      Text(AppLocalizations.of(context).noNotifications, style: TextStyle(color: context.appColors.textSecondary)),
                     ],
                   ),
                 )
