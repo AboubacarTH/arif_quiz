@@ -377,4 +377,128 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get comeBackSoon => 'Reviens plus tard, du contenu arrive bientôt';
+
+  @override
+  String get chooseMode => 'Choisir le mode';
+
+  @override
+  String get randomQuestions10 => '10 questions aléatoires';
+
+  @override
+  String get questions10 => '10 questions';
+
+  @override
+  String get gameModeLabel => 'Mode de jeu';
+
+  @override
+  String get modeClassic => 'Mode Classique';
+
+  @override
+  String get modeClassicDesc =>
+      '10 questions aléatoires · Timer par question · Score en %';
+
+  @override
+  String get modeSurvival => 'Mode Survie';
+
+  @override
+  String get modeSurvivalDesc =>
+      '10 questions · Une mauvaise réponse et c\'est terminé · Bonus ×1.3';
+
+  @override
+  String get modeSpeed => 'Speed Round';
+
+  @override
+  String get modeSpeedDesc =>
+      '10 questions · 5 secondes par question · Bonus XP ×1.5';
+
+  @override
+  String playInMode(String mode) {
+    return 'Jouer en mode $mode';
+  }
+
+  @override
+  String get trainingMode => 'Mode entraînement';
+
+  @override
+  String get trainingSubtitle => 'Choisis le nombre de questions · sans enjeu';
+
+  @override
+  String get trainingSheetBody => 'Joue sans impacter ton XP ni le classement.';
+
+  @override
+  String get questionCountLabel => 'Nombre de questions';
+
+  @override
+  String get startBtn => 'Commencer';
+
+  @override
+  String get oneLife => '1 vie';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get markAllRead => 'Tout lire';
+
+  @override
+  String get noNotifications => 'Aucune notification';
+
+  @override
+  String get friends => 'Amis';
+
+  @override
+  String get requestsTab => 'Demandes';
+
+  @override
+  String get activityTab => 'Activité';
+
+  @override
+  String get noFriendsYet => 'Pas encore d\'amis';
+
+  @override
+  String get searchPlayersToAdd => 'Recherche des joueurs à ajouter !';
+
+  @override
+  String get addFriends => 'Ajouter des amis';
+
+  @override
+  String sinceLabel(String time) {
+    return 'Depuis $time';
+  }
+
+  @override
+  String get noPendingRequests => 'Aucune demande en attente';
+
+  @override
+  String get noRecentActivity => 'Pas d\'activité récente';
+
+  @override
+  String get removeFriend => 'Supprimer cet ami';
+
+  @override
+  String get searchByNameHint => 'Rechercher par nom ou @username…';
+
+  @override
+  String get noPlayerFound => 'Aucun joueur trouvé';
+
+  @override
+  String get requestSent => 'Demande envoyée !';
+
+  @override
+  String get sentLabel => 'Envoyé';
+
+  @override
+  String get receivedLabel => 'Reçu';
+
+  @override
+  String get addBtn => 'Ajouter';
+
+  @override
+  String get modeClassicShort => 'Classique';
+
+  @override
+  String get modeSurvivalShort => 'Survie';
+
+  @override
+  String get modeSpeedShort => 'Speed Round';
 }

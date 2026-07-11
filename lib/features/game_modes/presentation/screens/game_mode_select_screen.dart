@@ -1,6 +1,8 @@
 import 'package:arif_quiz/features/game_modes/presentation/screens/speed_play_screen.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/survival_play_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/core/i18n/game_mode_l10n.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -121,7 +123,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
           ),
           const SizedBox(width: 14),
           Text(
-            'Choisir le mode',
+            AppLocalizations.of(context).chooseMode,
             style: TextStyle(
               color: context.appColors.textPrimary,
               fontSize: 18,
@@ -138,7 +140,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
   Widget _buildQuizCard() {
     final displayTitle = widget.challengeSourceLabel
         ?? widget.quiz?.title
-        ?? '10 questions aléatoires';
+        ?? AppLocalizations.of(context).randomQuestions10;
     final diff = widget.quiz?.difficulty;
     final diffColor = diff != null ? AppColors.difficultyColor(diff) : AppColors.primary;
 
@@ -183,7 +185,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
                 Row(
                   children: [
                     _InfoChip(
-                      label: '10 questions',
+                      label: AppLocalizations.of(context).questions10,
                       icon: Icons.help_outline_rounded,
                       color: AppColors.primary,
                     ),
@@ -208,7 +210,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
   // ─── Section label ───────────────────────────────────────────────────────────
 
   Widget _buildModeLabel() => Text(
-        'Mode de jeu',
+        AppLocalizations.of(context).gameModeLabel,
         style: TextStyle(
           color: context.appColors.textPrimary,
           fontSize: 16,
@@ -222,19 +224,19 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
     final info = switch (_selected) {
       GameMode.classic => (
           icon: '🎮',
-          title: 'Mode Classique',
-          body: '10 questions aléatoires · Timer par question · Score en %',
+          title: AppLocalizations.of(context).modeClassic,
+          body: AppLocalizations.of(context).modeClassicDesc,
         ),
       GameMode.survival => (
           icon: '❤️',
-          title: 'Mode Survie',
+          title: AppLocalizations.of(context).modeSurvival,
           body:
-              '10 questions · Une mauvaise réponse et c\'est terminé · Bonus ×1.3',
+              AppLocalizations.of(context).modeSurvivalDesc,
         ),
       GameMode.speed => (
           icon: '⚡',
-          title: 'Speed Round',
-          body: '10 questions · 5 secondes par question · Bonus XP ×1.5',
+          title: AppLocalizations.of(context).modeSpeed,
+          body: AppLocalizations.of(context).modeSpeedDesc,
         ),
     };
 
@@ -288,7 +290,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
       child: NeonButton(
-        label: 'Jouer en mode ${_selected.label}',
+        label: AppLocalizations.of(context).playInMode(_selected.localizedLabel(context)),
         width: double.infinity,
         icon: Icons.play_arrow_rounded,
         color: _modeColor,
@@ -357,12 +359,12 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Mode entraînement',
+                  Text(AppLocalizations.of(context).trainingMode,
                       style: TextStyle(
                           color: context.appColors.textPrimary,
                           fontWeight: FontWeight.w800,
                           fontSize: 14)),
-                  Text('Choisis le nombre de questions · sans enjeu',
+                  Text(AppLocalizations.of(context).trainingSubtitle,
                       style: TextStyle(
                           color: context.appColors.textSecondary,
                           fontSize: 12)),
@@ -408,17 +410,17 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text('Mode entraînement',
+              Text(AppLocalizations.of(context).trainingMode,
                   style: TextStyle(
                       color: context.appColors.textPrimary,
                       fontSize: 17,
                       fontWeight: FontWeight.w800)),
               const SizedBox(height: 4),
-              Text('Joue sans impacter ton XP ni le classement.',
+              Text(AppLocalizations.of(context).trainingSheetBody,
                   style: TextStyle(
                       color: context.appColors.textSecondary, fontSize: 13)),
               const SizedBox(height: 16),
-              Text('Nombre de questions',
+              Text(AppLocalizations.of(context).questionCountLabel,
                   style: TextStyle(
                       color: context.appColors.textPrimary,
                       fontSize: 13,
@@ -453,7 +455,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
               ),
               const SizedBox(height: 20),
               NeonButton(
-                label: 'Commencer',
+                label: AppLocalizations.of(context).startBtn,
                 width: double.infinity,
                 icon: Icons.play_arrow_rounded,
                 color: AppColors.info,

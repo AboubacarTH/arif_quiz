@@ -378,4 +378,127 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get comeBackSoon => 'عد لاحقاً، محتوى جديد قادم قريباً';
+
+  @override
+  String get chooseMode => 'اختر الوضع';
+
+  @override
+  String get randomQuestions10 => '10 أسئلة عشوائية';
+
+  @override
+  String get questions10 => '10 أسئلة';
+
+  @override
+  String get gameModeLabel => 'وضع اللعب';
+
+  @override
+  String get modeClassic => 'الوضع الكلاسيكي';
+
+  @override
+  String get modeClassicDesc =>
+      '10 أسئلة عشوائية · مؤقّت لكل سؤال · النتيجة بالنسبة المئوية';
+
+  @override
+  String get modeSurvival => 'وضع البقاء';
+
+  @override
+  String get modeSurvivalDesc =>
+      '10 أسئلة · إجابة خاطئة واحدة وتنتهي اللعبة · مكافأة ×1.3';
+
+  @override
+  String get modeSpeed => 'جولة السرعة';
+
+  @override
+  String get modeSpeedDesc => '10 أسئلة · 5 ثوانٍ لكل سؤال · مكافأة خبرة ×1.5';
+
+  @override
+  String playInMode(String mode) {
+    return 'العب $mode';
+  }
+
+  @override
+  String get trainingMode => 'وضع التدريب';
+
+  @override
+  String get trainingSubtitle => 'اختر عدد الأسئلة · بلا رهانات';
+
+  @override
+  String get trainingSheetBody => 'العب دون التأثير على نقاطك أو ترتيبك.';
+
+  @override
+  String get questionCountLabel => 'عدد الأسئلة';
+
+  @override
+  String get startBtn => 'ابدأ';
+
+  @override
+  String get oneLife => 'حياة واحدة';
+
+  @override
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get markAllRead => 'قراءة الكل';
+
+  @override
+  String get noNotifications => 'لا إشعارات';
+
+  @override
+  String get friends => 'الأصدقاء';
+
+  @override
+  String get requestsTab => 'الطلبات';
+
+  @override
+  String get activityTab => 'النشاط';
+
+  @override
+  String get noFriendsYet => 'لا أصدقاء بعد';
+
+  @override
+  String get searchPlayersToAdd => 'ابحث عن لاعبين لإضافتهم!';
+
+  @override
+  String get addFriends => 'إضافة أصدقاء';
+
+  @override
+  String sinceLabel(String time) {
+    return 'منذ $time';
+  }
+
+  @override
+  String get noPendingRequests => 'لا طلبات معلّقة';
+
+  @override
+  String get noRecentActivity => 'لا نشاط حديث';
+
+  @override
+  String get removeFriend => 'حذف هذا الصديق';
+
+  @override
+  String get searchByNameHint => 'ابحث بالاسم أو @username…';
+
+  @override
+  String get noPlayerFound => 'لم يُعثر على لاعب';
+
+  @override
+  String get requestSent => 'أُرسل الطلب!';
+
+  @override
+  String get sentLabel => 'مُرسَل';
+
+  @override
+  String get receivedLabel => 'مُستلَم';
+
+  @override
+  String get addBtn => 'إضافة';
+
+  @override
+  String get modeClassicShort => 'كلاسيكي';
+
+  @override
+  String get modeSurvivalShort => 'البقاء';
+
+  @override
+  String get modeSpeedShort => 'جولة السرعة';
 }

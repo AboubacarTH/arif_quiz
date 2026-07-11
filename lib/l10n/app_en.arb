@@ -195,5 +195,58 @@
   "tryAnotherDifficulty": "Try another difficulty filter",
   "loadCategoriesError": "Couldn't load the categories",
   "noCategories": "No categories",
-  "comeBackSoon": "Come back later, new content is on its way"
+  "comeBackSoon": "Come back later, new content is on its way",
+  "chooseMode": "Choose mode",
+  "randomQuestions10": "10 random questions",
+  "questions10": "10 questions",
+  "gameModeLabel": "Game mode",
+  "modeClassic": "Classic Mode",
+  "modeClassicDesc": "10 random questions · Timer per question · Score in %",
+  "modeSurvival": "Survival Mode",
+  "modeSurvivalDesc": "10 questions · One wrong answer and it's over · ×1.3 bonus",
+  "modeSpeed": "Speed Round",
+  "modeSpeedDesc": "10 questions · 5 seconds per question · ×1.5 XP bonus",
+  "playInMode": "Play {mode}",
+  "@playInMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "trainingMode": "Practice mode",
+  "trainingSubtitle": "Choose the number of questions · no stakes",
+  "trainingSheetBody": "Play without affecting your XP or ranking.",
+  "questionCountLabel": "Number of questions",
+  "startBtn": "Start",
+  "oneLife": "1 life",
+  "notifications": "Notifications",
+  "markAllRead": "Mark all read",
+  "noNotifications": "No notifications",
+  "friends": "Friends",
+  "requestsTab": "Requests",
+  "activityTab": "Activity",
+  "noFriendsYet": "No friends yet",
+  "searchPlayersToAdd": "Search for players to add!",
+  "addFriends": "Add friends",
+  "sinceLabel": "Since {time}",
+  "@sinceLabel": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "noPendingRequests": "No pending requests",
+  "noRecentActivity": "No recent activity",
+  "removeFriend": "Remove this friend",
+  "searchByNameHint": "Search by name or @username…",
+  "noPlayerFound": "No player found",
+  "requestSent": "Request sent!",
+  "sentLabel": "Sent",
+  "receivedLabel": "Received",
+  "addBtn": "Add",
+  "modeClassicShort": "Classic",
+  "modeSurvivalShort": "Survival",
+  "modeSpeedShort": "Speed Round"
 }

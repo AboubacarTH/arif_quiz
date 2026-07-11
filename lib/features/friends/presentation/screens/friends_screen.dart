@@ -1,6 +1,7 @@
 ﻿import 'package:arif_quiz/features/friends/bloc/friends_controller.dart';
 import 'package:arif_quiz/features/friends/data/friends_repository.dart';
 import 'package:arif_quiz/features/friends/presentation/screens/add_friend_screen.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -46,7 +47,7 @@ class _FriendsScreenState extends State<FriendsScreen>
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: const Text('Amis'),
+        title: Text(AppLocalizations.of(context).friends),
         actions: [
           IconButton(
             icon: const Icon(Icons.person_add_outlined, color: AppColors.secondary),
@@ -62,12 +63,12 @@ class _FriendsScreenState extends State<FriendsScreen>
           labelColor: AppColors.primary,
           unselectedLabelColor: context.appColors.textMuted,
           tabs: [
-            const Tab(text: 'Amis'),
+            Tab(text: AppLocalizations.of(context).friends),
             Tab(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('Demandes'),
+                  Text(AppLocalizations.of(context).requestsTab),
                   if (_ctrl.pendingRequestsCount > 0) ...[
                     const SizedBox(width: 6),
                     Container(
@@ -85,7 +86,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                 ],
               ),
             ),
-            const Tab(text: 'Activité'),
+            Tab(text: AppLocalizations.of(context).activityTab),
           ],
         ),
       ),
@@ -111,14 +112,14 @@ class _FriendsScreenState extends State<FriendsScreen>
           children: [
             const Text('👥', style: TextStyle(fontSize: 48)),
             const SizedBox(height: 12),
-            Text('Pas encore d\'amis', style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700)),
+            Text(AppLocalizations.of(context).noFriendsYet, style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
-            Text('Recherche des joueurs à ajouter !', style: TextStyle(color: context.appColors.textSecondary)),
+            Text(AppLocalizations.of(context).searchPlayersToAdd, style: TextStyle(color: context.appColors.textSecondary)),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddFriendScreen(ctrl: _ctrl))),
               icon: const Icon(Icons.person_add),
-              label: const Text('Ajouter des amis'),
+              label: Text(AppLocalizations.of(context).addFriends),
             ),
           ],
         ),
@@ -134,7 +135,7 @@ class _FriendsScreenState extends State<FriendsScreen>
           final f = _ctrl.friends[i];
           return FriendTile(
             user: f.friend,
-            trailingText: f.since != null ? 'Depuis ${timeago.format(f.since!)}' : null,
+            trailingText: f.since != null ? AppLocalizations.of(context).sinceLabel(timeago.format(f.since!)) : null,
             trailing: IconButton(
               icon: Icon(Icons.more_vert, color: context.appColors.textMuted, size: 18),
               onPressed: () => _showFriendOptions(f),
@@ -153,7 +154,7 @@ class _FriendsScreenState extends State<FriendsScreen>
           children: [
             Text('📬', style: TextStyle(fontSize: 48)),
             SizedBox(height: 12),
-            Text('Aucune demande en attente', style: TextStyle(color: context.appColors.textSecondary)),
+            Text(AppLocalizations.of(context).noPendingRequests, style: TextStyle(color: context.appColors.textSecondary)),
           ],
         ),
       );
@@ -198,7 +199,7 @@ class _FriendsScreenState extends State<FriendsScreen>
           children: [
             Text('📊', style: TextStyle(fontSize: 48)),
             SizedBox(height: 12),
-            Text('Pas d\'activité récente', style: TextStyle(color: context.appColors.textSecondary)),
+            Text(AppLocalizations.of(context).noRecentActivity, style: TextStyle(color: context.appColors.textSecondary)),
           ],
         ),
       );
@@ -283,7 +284,7 @@ class _FriendsScreenState extends State<FriendsScreen>
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.person_remove_outlined, color: AppColors.error),
-              title: const Text('Supprimer cet ami', style: TextStyle(color: AppColors.error)),
+              title: Text(AppLocalizations.of(context).removeFriend, style: const TextStyle(color: AppColors.error)),
               onTap: () async {
                 Navigator.pop(context);
                 await _ctrl.removeFriend(friend.friendshipId);

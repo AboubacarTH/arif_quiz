@@ -755,6 +755,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Come back later, new content is on its way'**
   String get comeBackSoon;
+
+  /// No description provided for @chooseMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose mode'**
+  String get chooseMode;
+
+  /// No description provided for @randomQuestions10.
+  ///
+  /// In en, this message translates to:
+  /// **'10 random questions'**
+  String get randomQuestions10;
+
+  /// No description provided for @questions10.
+  ///
+  /// In en, this message translates to:
+  /// **'10 questions'**
+  String get questions10;
+
+  /// No description provided for @gameModeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Game mode'**
+  String get gameModeLabel;
+
+  /// No description provided for @modeClassic.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic Mode'**
+  String get modeClassic;
+
+  /// No description provided for @modeClassicDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 random questions · Timer per question · Score in %'**
+  String get modeClassicDesc;
+
+  /// No description provided for @modeSurvival.
+  ///
+  /// In en, this message translates to:
+  /// **'Survival Mode'**
+  String get modeSurvival;
+
+  /// No description provided for @modeSurvivalDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 questions · One wrong answer and it\'s over · ×1.3 bonus'**
+  String get modeSurvivalDesc;
+
+  /// No description provided for @modeSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed Round'**
+  String get modeSpeed;
+
+  /// No description provided for @modeSpeedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 questions · 5 seconds per question · ×1.5 XP bonus'**
+  String get modeSpeedDesc;
+
+  /// No description provided for @playInMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Play {mode}'**
+  String playInMode(String mode);
+
+  /// No description provided for @trainingMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice mode'**
+  String get trainingMode;
+
+  /// No description provided for @trainingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the number of questions · no stakes'**
+  String get trainingSubtitle;
+
+  /// No description provided for @trainingSheetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Play without affecting your XP or ranking.'**
+  String get trainingSheetBody;
+
+  /// No description provided for @questionCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of questions'**
+  String get questionCountLabel;
+
+  /// No description provided for @startBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get startBtn;
+
+  /// No description provided for @oneLife.
+  ///
+  /// In en, this message translates to:
+  /// **'1 life'**
+  String get oneLife;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get noNotifications;
+
+  /// No description provided for @friends.
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get friends;
+
+  /// No description provided for @requestsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests'**
+  String get requestsTab;
+
+  /// No description provided for @activityTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get activityTab;
+
+  /// No description provided for @noFriendsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No friends yet'**
+  String get noFriendsYet;
+
+  /// No description provided for @searchPlayersToAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for players to add!'**
+  String get searchPlayersToAdd;
+
+  /// No description provided for @addFriends.
+  ///
+  /// In en, this message translates to:
+  /// **'Add friends'**
+  String get addFriends;
+
+  /// No description provided for @sinceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Since {time}'**
+  String sinceLabel(String time);
+
+  /// No description provided for @noPendingRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending requests'**
+  String get noPendingRequests;
+
+  /// No description provided for @noRecentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent activity'**
+  String get noRecentActivity;
+
+  /// No description provided for @removeFriend.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this friend'**
+  String get removeFriend;
+
+  /// No description provided for @searchByNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or @username…'**
+  String get searchByNameHint;
+
+  /// No description provided for @noPlayerFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No player found'**
+  String get noPlayerFound;
+
+  /// No description provided for @requestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent!'**
+  String get requestSent;
+
+  /// No description provided for @sentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get sentLabel;
+
+  /// No description provided for @receivedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get receivedLabel;
+
+  /// No description provided for @addBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addBtn;
+
+  /// No description provided for @modeClassicShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic'**
+  String get modeClassicShort;
+
+  /// No description provided for @modeSurvivalShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Survival'**
+  String get modeSurvivalShort;
+
+  /// No description provided for @modeSpeedShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed Round'**
+  String get modeSpeedShort;
 }
 
 class _AppLocalizationsDelegate
