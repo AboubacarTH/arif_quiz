@@ -1,6 +1,7 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_categories_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_import_screen.dart';
+import 'package:arif_quiz/features/admin/presentation/screens/admin_journey_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_questions_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_quizzes_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_reports_screen.dart';
@@ -166,6 +167,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AdminQuestionsScreen()),
+                ).then((_) => _loadStats()),
+              ),
+              _divider(),
+              _NavTile(
+                icon: Icons.map_rounded,
+                color: AppColors.accent,
+                label: AppLocalizations.of(context).journeyMapTitle,
+                subtitle: AppLocalizations.of(context).manageJourneyDesc,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AdminJourneyScreen()),
                 ).then((_) => _loadStats()),
               ),
               _divider(),

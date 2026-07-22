@@ -607,6 +607,9 @@
   "filterByType": "Filter by type",
   "noQuestionFound": "No question found",
   "typeTrueFalse": "True/False",
+  "answerTrue": "True",
+  "answerFalse": "False",
+  "trueFalseAutoLocalized": "The two choices are shown to each player in their own language.",
   "typeShortAnswer": "Short answer",
   "typeShortAnswerShort": "Free",
   "editQuestion": "Edit question",
@@ -723,5 +726,33 @@
         "type": "int"
       }
     }
-  }
+  },
+  "addLevel": "Add a level",
+  "editLevel": "Edit level",
+  "levelPosition": "Position",
+  "levelTitle": "Level title",
+  "secondsPerQuestion": "Seconds / question",
+  "pointsPerQuestion": "Points / question",
+  "bossLevel": "Boss level",
+  "levelPublishHint": "A level without questions stays hidden on the map.",
+  "levelHasNoQuestions": "No question yet: hidden from the map.",
+  "levelNotPublished": "Not published: hidden from the map.",
+  "noJourneyLevels": "No journey level yet",
+  "noJourneyLevelsHint": "Create the first step: the players' map stays empty until then.",
+  "deleteJourneyLevelBody": "Delete « {title} » and its {count} question(s)? Player progress on this step will be lost.",
+  "@deleteJourneyLevelBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "manageJourneyDesc": "Create the levels of the map and their questions",
+  "exportQuestions": "Export questions",
+  "exportLocaleHint": "The file matches the import template: you can edit it and re-import it.",
+  "exportInProgress": "Preparing the file…",
+  "exportBtn": "Export"
 }

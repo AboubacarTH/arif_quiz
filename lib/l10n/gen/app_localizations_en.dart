@@ -1262,6 +1262,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get typeTrueFalse => 'True/False';
 
   @override
+  String get answerTrue => 'True';
+
+  @override
+  String get answerFalse => 'False';
+
+  @override
+  String get trueFalseAutoLocalized =>
+      'The two choices are shown to each player in their own language.';
+
+  @override
   String get typeShortAnswer => 'Short answer';
 
   @override
@@ -1441,4 +1451,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String okSelected(int count) {
     return 'OK · $count selected';
   }
+
+  @override
+  String get addLevel => 'Add a level';
+
+  @override
+  String get editLevel => 'Edit level';
+
+  @override
+  String get levelPosition => 'Position';
+
+  @override
+  String get levelTitle => 'Level title';
+
+  @override
+  String get secondsPerQuestion => 'Seconds / question';
+
+  @override
+  String get pointsPerQuestion => 'Points / question';
+
+  @override
+  String get bossLevel => 'Boss level';
+
+  @override
+  String get levelPublishHint =>
+      'A level without questions stays hidden on the map.';
+
+  @override
+  String get levelHasNoQuestions => 'No question yet: hidden from the map.';
+
+  @override
+  String get levelNotPublished => 'Not published: hidden from the map.';
+
+  @override
+  String get noJourneyLevels => 'No journey level yet';
+
+  @override
+  String get noJourneyLevelsHint =>
+      'Create the first step: the players\' map stays empty until then.';
+
+  @override
+  String deleteJourneyLevelBody(String title, int count) {
+    return 'Delete « $title » and its $count question(s)? Player progress on this step will be lost.';
+  }
+
+  @override
+  String get manageJourneyDesc =>
+      'Create the levels of the map and their questions';
+
+  @override
+  String get exportQuestions => 'Export questions';
+
+  @override
+  String get exportLocaleHint =>
+      'The file matches the import template: you can edit it and re-import it.';
+
+  @override
+  String get exportInProgress => 'Preparing the file…';
+
+  @override
+  String get exportBtn => 'Export';
 }

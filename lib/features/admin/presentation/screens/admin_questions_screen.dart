@@ -11,7 +11,16 @@ import 'package:flutter/material.dart';
 
 class AdminQuestionsScreen extends StatefulWidget {
   final int? initialQuizId;
-  const AdminQuestionsScreen({super.key, this.initialQuizId});
+
+  /// Ouvert depuis un niveau de parcours : l'écran ne montre alors que SES
+  /// questions et toute création lui est rattachée d'office.
+  final AdminJourneyLevelModel? journeyLevel;
+
+  const AdminQuestionsScreen({
+    super.key,
+    this.initialQuizId,
+    this.journeyLevel,
+  });
 
   @override
   State<AdminQuestionsScreen> createState() => _AdminQuestionsScreenState();
@@ -36,7 +45,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
     super.initState();
     _repo = AdminRepository(apiService);
     _filterQuizId = widget.initialQuizId;
-    _loadQuizzes();
+    if (widget.journeyLevel == null) _loadQuizzes();
     _load(reset: true);
   }
 
@@ -58,7 +67,8 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
     try {
       final result = await _repo.getQuestions(
         search: _searchCtrl.text.trim().isEmpty ? null : _searchCtrl.text.trim(),
-        quizId: _filterQuizId,
+        quizId: widget.journeyLevel == null ? _filterQuizId : null,
+        journeyLevelId: widget.journeyLevel?.id,
         type: _filterType,
         page: _page,
       );
@@ -94,6 +104,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
           question: question,
           quizzes: _quizzes,
           defaultQuizId: _filterQuizId,
+          journeyLevel: widget.journeyLevel,
           onSaved: () => _load(reset: true),
         ),
       ),
@@ -136,14 +147,19 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
       backgroundColor: context.appColors.bg,
       appBar: AppBar(
         backgroundColor: context.appColors.bg,
-        title: Text(AppLocalizations.of(context).questions, style: const TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(
+            widget.journeyLevel?.displayTitle ??
+                AppLocalizations.of(context).questions,
+            style: const TextStyle(fontWeight: FontWeight.w800)),
         actions: [
           IconButton(icon: const Icon(Icons.add_rounded), color: AppColors.primary, onPressed: () => _showForm()),
         ],
       ),
       body: Column(
         children: [
-          _buildFilters(),
+          // Filtres masqués dans le contexte d'un niveau : la liste EST déjà
+          // celle du niveau, filtrer par quiz n'a pas de sens.
+          if (widget.journeyLevel == null) _buildFilters(),
           Expanded(child: _buildList()),
         ],
       ),
@@ -323,6 +339,16 @@ class _QuestionTile extends StatelessWidget {
   String _typeLabel(BuildContext context) => q.type == 'multiple_choice' ? 'QCM' : q.type == 'true_false' ? AppLocalizations.of(context).typeTrueFalse : AppLocalizations.of(context).typeShortAnswer;
   Color get _typeColor => q.type == 'multiple_choice' ? AppColors.info : q.type == 'true_false' ? AppColors.success : AppColors.secondary;
 
+  /// Les réponses vrai/faux sont stockées en canonique (True/False) : on les
+  /// affiche à l'admin dans sa langue, comme le joueur les verra dans la sienne.
+  String _label(BuildContext context, String value) {
+    if (q.type != 'true_false') return value;
+    final parsed = TrueFalse.parse(value);
+    if (parsed == null) return value;
+    final l10n = AppLocalizations.of(context);
+    return parsed ? l10n.answerTrue : l10n.answerFalse;
+  }
+
   @override
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -356,7 +382,7 @@ class _QuestionTile extends StatelessWidget {
                 Icon(Icons.check_circle_outline_rounded, size: 14, color: AppColors.success),
                 const SizedBox(width: 4),
                 Expanded(
-                  child: Text(q.correctAnswer, style: TextStyle(color: AppColors.success, fontSize: 12), overflow: TextOverflow.ellipsis),
+                  child: Text(_label(context, q.correctAnswer), style: TextStyle(color: AppColors.success, fontSize: 12), overflow: TextOverflow.ellipsis),
                 ),
                 Text('${q.points} pts', style: TextStyle(color: context.appColors.textMuted, fontSize: 11, fontWeight: FontWeight.w600)),
               ],
@@ -373,7 +399,7 @@ class _QuestionTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: o == q.correctAnswer ? AppColors.success.withValues(alpha: 0.3) : context.appColors.border),
                   ),
-                  child: Text(o, style: TextStyle(color: o == q.correctAnswer ? AppColors.success : context.appColors.textSecondary, fontSize: 11)),
+                  child: Text(_label(context, o), style: TextStyle(color: o == q.correctAnswer ? AppColors.success : context.appColors.textSecondary, fontSize: 11)),
                 )).toList(),
               ),
             ],
@@ -407,6 +433,7 @@ class _QuestionFormScreen extends StatefulWidget {
   final AdminQuestionModel? question;
   final List<AdminQuizModel> quizzes;
   final int? defaultQuizId;
+  final AdminJourneyLevelModel? journeyLevel;
   final VoidCallback onSaved;
 
   const _QuestionFormScreen({
@@ -414,6 +441,7 @@ class _QuestionFormScreen extends StatefulWidget {
     this.question,
     required this.quizzes,
     this.defaultQuizId,
+    this.journeyLevel,
     required this.onSaved,
   });
 
@@ -452,7 +480,12 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
     _points      = TextEditingController(text: (q?.points ?? 10).toString());
     _imageUrl    = TextEditingController(text: q?.imageUrl ?? '');
     _audioUrl    = TextEditingController(text: q?.audioUrl ?? '');
-    _quizId      = q?.quizId ?? widget.defaultQuizId ?? (widget.quizzes.isNotEmpty ? widget.quizzes.first.id : null);
+    // Question de parcours : pas de quiz propriétaire (les deux s'excluent).
+    _quizId = widget.journeyLevel != null
+        ? null
+        : q?.quizId ??
+            widget.defaultQuizId ??
+            (widget.quizzes.isNotEmpty ? widget.quizzes.first.id : null);
     _type        = q?.type ?? 'multiple_choice';
 
     final opts = q?.options ?? ['', '', '', ''];
@@ -493,7 +526,8 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
           : null;
 
       final data = {
-        'quiz_id': _quizId,
+        'quiz_id': widget.journeyLevel != null ? null : _quizId,
+        'journey_level_id': widget.journeyLevel?.id,
         'text': _text.text.trim(),
         'type': _type,
         if (options != null) 'options': options,
@@ -548,15 +582,38 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
               ),
               const SizedBox(height: 12),
             ],
-            // Quiz selector
-            DropdownButtonFormField<int>(
-              initialValue: _quizId,
-              decoration: _dec(AppLocalizations.of(context).quizRequired),
-              items: widget.quizzes.map((q) => DropdownMenuItem(value: q.id, child: Text(q.title, overflow: TextOverflow.ellipsis))).toList(),
-              onChanged: (v) => setState(() => _quizId = v),
-              validator: (v) => v == null ? AppLocalizations.of(context).requiredField : null,
-              dropdownColor: context.appColors.cardBg,
-            ),
+            // Propriétaire : un quiz, ou le niveau depuis lequel on est venu.
+            if (widget.journeyLevel != null)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.secondary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.map_rounded,
+                        color: AppColors.secondary, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(widget.journeyLevel!.displayTitle,
+                          style: TextStyle(
+                              color: context.appColors.textPrimary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700)),
+                    ),
+                  ],
+                ),
+              )
+            else
+              DropdownButtonFormField<int>(
+                initialValue: _quizId,
+                decoration: _dec(AppLocalizations.of(context).quizRequired),
+                items: widget.quizzes.map((q) => DropdownMenuItem(value: q.id, child: Text(q.title, overflow: TextOverflow.ellipsis))).toList(),
+                onChanged: (v) => setState(() => _quizId = v),
+                validator: (v) => v == null ? AppLocalizations.of(context).requiredField : null,
+                dropdownColor: context.appColors.cardBg,
+              ),
             const SizedBox(height: 12),
             // Type selector
             Text(AppLocalizations.of(context).typeRequired, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
@@ -645,9 +702,12 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
             if (_type == 'true_false') ...[
               Text(AppLocalizations.of(context).correctAnswerRequired, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
+              // Valeur envoyée : canonique (True/False) ; libellé affiché :
+              // celui de la langue de l'admin. Le joueur, lui, verra les deux
+              // choix dans SA langue (le serveur les dérive de la locale).
               Row(
                 children: [
-                  for (final v in ['True', 'False'])
+                  for (final v in const ['True', 'False'])
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -656,15 +716,17 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
-                              color: _correctAnswer.text == v ? AppColors.primary : context.appColors.cardBg,
+                              color: TrueFalse.matches(_correctAnswer.text, v) ? AppColors.primary : context.appColors.cardBg,
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: _correctAnswer.text == v ? AppColors.primary : context.appColors.border),
+                              border: Border.all(color: TrueFalse.matches(_correctAnswer.text, v) ? AppColors.primary : context.appColors.border),
                             ),
                             child: Text(
-                              v,
+                              v == 'True'
+                                  ? AppLocalizations.of(context).answerTrue
+                                  : AppLocalizations.of(context).answerFalse,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: _correctAnswer.text == v ? Colors.white : context.appColors.textPrimary,
+                                color: TrueFalse.matches(_correctAnswer.text, v) ? Colors.white : context.appColors.textPrimary,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -673,6 +735,11 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                       ),
                     ),
                 ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                AppLocalizations.of(context).trueFalseAutoLocalized,
+                style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
               ),
               const SizedBox(height: 12),
             ],
@@ -734,9 +801,13 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
 
   /// Champs traduits d'une locale : texte, options (miroir des options de
   /// base), bonne réponse (parmi les options traduites) et explication.
+  ///
+  /// Une question vrai/faux n'expose que texte + explication : ses deux choix
+  /// et sa bonne réponse sont générés dans la langue du joueur.
   Widget _buildTranslationFields(String locale) {
-    final baseOptions = _type == 'true_false'
-        ? const ['True', 'False']
+    final derivedChoices = _type == 'true_false';
+    final baseOptions = derivedChoices
+        ? const <String>[]
         : _optionCtrls.map((c) => c.text.trim()).where((s) => s.isNotEmpty).toList();
     final trOptions = trGetList(_translations, locale, 'options');
     final filledTrOptions =
@@ -761,7 +832,13 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
           decoration: _dec(AppLocalizations.of(context).questionLocaleHint(locale)),
           onChanged: (v) => setState(() => trSet(_translations, locale, 'text', v)),
         ),
-        if (_type != 'short_answer') ...[
+        if (derivedChoices) ...[
+          const SizedBox(height: 8),
+          Text(
+            AppLocalizations.of(context).trueFalseAutoLocalized,
+            style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
+          ),
+        ] else if (_type == 'multiple_choice') ...[
           const SizedBox(height: 12),
           for (var i = 0; i < baseOptions.length; i++) ...[
             TextFormField(

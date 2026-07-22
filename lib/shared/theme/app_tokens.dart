@@ -17,6 +17,11 @@ abstract final class AppSpacing {
   static const double xl = 20;
   static const double xxl = 24;
   static const double xxxl = 32;
+
+  /// Respiration entre l'énoncé d'une question et ses choix, en jeu.
+  /// Les réponses suivent l'énoncé (elles ne sont plus ancrées en bas) : cet
+  /// écart doit rester assez large pour séparer nettement les deux blocs.
+  static const double questionToAnswers = 28;
 }
 
 /// Rayons de coins cohérents.

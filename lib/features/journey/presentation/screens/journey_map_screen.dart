@@ -17,6 +17,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 /// Map du Mode Parcours : un sentier d'aventure sinueux de niveaux qui se
 /// débloquent un à un (façon Candy Crush), avec fond d'ambiance animé, chemin
 /// lumineux où l'énergie circule, nœuds glossy et boss médaillons couronnés.
+///
+/// L'ascension se lit de bas en haut : le niveau 1 est posé au pied de la map
+/// et la progression grimpe vers le sommet. Concrètement, le premier niveau
+/// occupe la dernière rangée du canevas et la vue s'ouvre en bas.
 class JourneyMapScreen extends StatefulWidget {
   /// Contrôleur injectable (tests / prévisualisation). En prod, laissé nul :
   /// l'écran crée le sien et charge la map via l'API.
@@ -91,9 +95,17 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
     }
   }
 
+  /// Amène le niveau courant sous les yeux du joueur.
+  ///
+  /// La liste est en `reverse: true` : l'offset 0 est le PIED de la map
+  /// (niveau 1) et grandit à mesure qu'on monte. Le niveau d'index i est donc
+  /// à `_rowHeight * (i + 0.5) + _bottomPad` du bas ; on retranche une marge
+  /// pour le poser dans le bas de l'écran et laisser voir l'ascension à venir.
   void _scrollToCurrent(JourneyMapModel map) {
     if (!_scrollCtrl.hasClients) return;
-    final target = ((map.currentLevel - 1) * _rowHeight - 220)
+    final index = (map.currentLevel - 1).clamp(0, map.levels.length - 1);
+    final distanceFromBottom = _rowHeight * (index + 0.5) + _bottomPad;
+    final target = (distanceFromBottom - 220)
         .clamp(0.0, _scrollCtrl.position.maxScrollExtent);
     if ((_scrollCtrl.offset - target).abs() > 4) {
       _scrollCtrl.animateTo(target,
@@ -116,7 +128,13 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
       Navigator.push(
         context,
         SlideRightRoute(
-            page: JourneyPlayScreen(level: level.level, isBoss: level.isBoss)),
+          page: JourneyPlayScreen(
+            levelId: level.id,
+            levelNumber: level.level,
+            title: level.title,
+            isBoss: level.isBoss,
+          ),
+        ),
       ).then((_) => _ctrl.refresh());
     }
 
@@ -132,6 +150,17 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
 
   // Position horizontale (fraction 0..1) d'un niveau — onde sinusoïdale.
   double _xFraction(int index) => 0.5 + 0.30 * math.sin(index * 0.9);
+
+  /// Centre d'un nœud sur le canevas. L'axe vertical est inversé : l'index 0
+  /// (niveau 1) est en bas, les suivants s'élèvent — c'est toute l'idée de
+  /// l'ascension type Candy Crush.
+  Offset _centerFor(int index, int total, double width) {
+    final rowFromTop = total - 1 - index;
+    return Offset(
+      width * _xFraction(index),
+      _topPad + rowFromTop * _rowHeight + _rowHeight / 2,
+    );
+  }
 
   bool get _isDark => Theme.of(context).brightness == Brightness.dark;
 
@@ -312,13 +341,14 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
 
         final centers = <Offset>[
           for (var i = 0; i < map.levels.length; i++)
-            Offset(width * _xFraction(i),
-                _topPad + i * _rowHeight + _rowHeight / 2),
+            _centerFor(i, map.levels.length, width),
         ];
 
         return SingleChildScrollView(
           controller: _scrollCtrl,
           physics: const BouncingScrollPhysics(),
+          // L'ascension part du bas : on ouvre la vue sur le niveau 1.
+          reverse: true,
           child: SizedBox(
             width: width,
             height: canvasHeight,
@@ -341,9 +371,9 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
                 // Nœuds.
                 for (var i = 0; i < map.levels.length; i++)
                   _positionedNode(map.levels[i], centers[i], i),
-                // Bannière de fin.
+                // Bannière du sommet : la map se termine désormais en haut.
                 Positioned(
-                  top: canvasHeight - _bottomPad + 4,
+                  top: 8,
                   left: 0,
                   right: 0,
                   child: Center(
@@ -441,13 +471,31 @@ class _LevelNode extends StatelessWidget {
                 right: 0,
                 child: Center(child: _StarsArc(stars: level.stars)),
               ),
-            // Étiquette « JOUER » sous le niveau courant.
+            // Étiquette « JOUER » sous le niveau courant, sinon le titre donné
+            // par l'admin (les deux se disputeraient la même place).
             if (isCurrent)
               Positioned(
                 top: 150 / 2 + size / 2 + 6,
                 left: 0,
                 right: 0,
                 child: Center(child: _playPill(context)),
+              )
+            else if (level.title != null && !locked)
+              Positioned(
+                top: 150 / 2 + size / 2 + 8,
+                left: 4,
+                right: 4,
+                child: Text(
+                  level.title!,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: context.appColors.textSecondary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             // Couronne au-dessus des boss non encore terminés.
             if (level.isBoss && !completed)

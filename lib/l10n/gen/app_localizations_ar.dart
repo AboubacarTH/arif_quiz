@@ -1260,6 +1260,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get typeTrueFalse => 'صح/خطأ';
 
   @override
+  String get answerTrue => 'صح';
+
+  @override
+  String get answerFalse => 'خطأ';
+
+  @override
+  String get trueFalseAutoLocalized =>
+      'يُعرض الخياران على كل لاعب بلغته الخاصة.';
+
+  @override
   String get typeShortAnswer => 'إجابة حرة';
 
   @override
@@ -1439,4 +1449,62 @@ class AppLocalizationsAr extends AppLocalizations {
   String okSelected(int count) {
     return 'موافق · $count محدد';
   }
+
+  @override
+  String get addLevel => 'إضافة مستوى';
+
+  @override
+  String get editLevel => 'تعديل المستوى';
+
+  @override
+  String get levelPosition => 'الموضع';
+
+  @override
+  String get levelTitle => 'عنوان المستوى';
+
+  @override
+  String get secondsPerQuestion => 'ثوانٍ / سؤال';
+
+  @override
+  String get pointsPerQuestion => 'نقاط / سؤال';
+
+  @override
+  String get bossLevel => 'مستوى الزعيم';
+
+  @override
+  String get levelPublishHint => 'المستوى بلا أسئلة يبقى مخفيًا على الخريطة.';
+
+  @override
+  String get levelHasNoQuestions => 'لا توجد أسئلة: مخفي عن الخريطة.';
+
+  @override
+  String get levelNotPublished => 'غير منشور: مخفي عن الخريطة.';
+
+  @override
+  String get noJourneyLevels => 'لا توجد مستويات';
+
+  @override
+  String get noJourneyLevelsHint =>
+      'أنشئ المرحلة الأولى: خريطة اللاعبين تبقى فارغة بدونها.';
+
+  @override
+  String deleteJourneyLevelBody(String title, int count) {
+    return 'حذف « $title » وأسئلته ($count)؟ سيُفقد تقدم اللاعبين في هذه المرحلة.';
+  }
+
+  @override
+  String get manageJourneyDesc => 'أنشئ مراحل الخريطة وأسئلتها';
+
+  @override
+  String get exportQuestions => 'تصدير الأسئلة';
+
+  @override
+  String get exportLocaleHint =>
+      'يتبع الملف صيغة قالب الاستيراد: يمكنك تعديله وإعادة استيراده.';
+
+  @override
+  String get exportInProgress => 'جارٍ تجهيز الملف…';
+
+  @override
+  String get exportBtn => 'تصدير';
 }

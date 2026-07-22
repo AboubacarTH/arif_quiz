@@ -2412,6 +2412,24 @@ abstract class AppLocalizations {
   /// **'True/False'**
   String get typeTrueFalse;
 
+  /// No description provided for @answerTrue.
+  ///
+  /// In en, this message translates to:
+  /// **'True'**
+  String get answerTrue;
+
+  /// No description provided for @answerFalse.
+  ///
+  /// In en, this message translates to:
+  /// **'False'**
+  String get answerFalse;
+
+  /// No description provided for @trueFalseAutoLocalized.
+  ///
+  /// In en, this message translates to:
+  /// **'The two choices are shown to each player in their own language.'**
+  String get trueFalseAutoLocalized;
+
   /// No description provided for @typeShortAnswer.
   ///
   /// In en, this message translates to:
@@ -2735,6 +2753,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK · {count} selected'**
   String okSelected(int count);
+
+  /// No description provided for @addLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a level'**
+  String get addLevel;
+
+  /// No description provided for @editLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit level'**
+  String get editLevel;
+
+  /// No description provided for @levelPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Position'**
+  String get levelPosition;
+
+  /// No description provided for @levelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Level title'**
+  String get levelTitle;
+
+  /// No description provided for @secondsPerQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds / question'**
+  String get secondsPerQuestion;
+
+  /// No description provided for @pointsPerQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Points / question'**
+  String get pointsPerQuestion;
+
+  /// No description provided for @bossLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Boss level'**
+  String get bossLevel;
+
+  /// No description provided for @levelPublishHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A level without questions stays hidden on the map.'**
+  String get levelPublishHint;
+
+  /// No description provided for @levelHasNoQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'No question yet: hidden from the map.'**
+  String get levelHasNoQuestions;
+
+  /// No description provided for @levelNotPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Not published: hidden from the map.'**
+  String get levelNotPublished;
+
+  /// No description provided for @noJourneyLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'No journey level yet'**
+  String get noJourneyLevels;
+
+  /// No description provided for @noJourneyLevelsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create the first step: the players\' map stays empty until then.'**
+  String get noJourneyLevelsHint;
+
+  /// No description provided for @deleteJourneyLevelBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete « {title} » and its {count} question(s)? Player progress on this step will be lost.'**
+  String deleteJourneyLevelBody(String title, int count);
+
+  /// No description provided for @manageJourneyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create the levels of the map and their questions'**
+  String get manageJourneyDesc;
+
+  /// No description provided for @exportQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Export questions'**
+  String get exportQuestions;
+
+  /// No description provided for @exportLocaleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The file matches the import template: you can edit it and re-import it.'**
+  String get exportLocaleHint;
+
+  /// No description provided for @exportInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing the file…'**
+  String get exportInProgress;
+
+  /// No description provided for @exportBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get exportBtn;
 }
 
 class _AppLocalizationsDelegate

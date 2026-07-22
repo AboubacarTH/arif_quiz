@@ -157,20 +157,11 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                 Row(children: [
                   Expanded(
                       child: StatsCard(
-                          value: '${q.totalQuestions}',
-                          label: AppLocalizations.of(context).questions,
-                          icon: Icons.help_rounded,
-                          color: AppColors.primary)),
-                  const SizedBox(width: 12),
-                  Expanded(
-                      child: StatsCard(
                           value: '${q.timeLimit}s',
                           label: AppLocalizations.of(context).perQuestion,
                           icon: Icons.timer_rounded,
                           color: AppColors.info)),
-                ]),
-                const SizedBox(height: 12),
-                Row(children: [
+                  const SizedBox(width: 12),
                   Expanded(
                       child: StatsCard(
                           value: '+${q.pointsPerQuestion ?? 10}',

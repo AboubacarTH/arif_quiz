@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:arif_quiz/core/api/api_service.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AdminRepository {
   final ApiService _api;
@@ -111,17 +114,54 @@ class AdminRepository {
         .toList();
   }
 
+  // ── Mode Parcours : niveaux ───────────────────────────────────────────────
+
+  Future<List<AdminJourneyLevelModel>> getJourneyLevels() async {
+    final res = await _api.get('/admin/journey-levels');
+    return (res.data['data'] as List)
+        .map((e) => AdminJourneyLevelModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
+  Future<AdminJourneyLevelModel> createJourneyLevel(
+      Map<String, dynamic> data) async {
+    final res = await _api.post('/admin/journey-levels', data: data);
+    return AdminJourneyLevelModel.fromJson(res.data['data']);
+  }
+
+  Future<AdminJourneyLevelModel> updateJourneyLevel(
+      int id, Map<String, dynamic> data) async {
+    final res = await _api.put('/admin/journey-levels/$id', data: data);
+    return AdminJourneyLevelModel.fromJson(res.data['data']);
+  }
+
+  Future<void> deleteJourneyLevel(int id) async {
+    await _api.delete('/admin/journey-levels/$id');
+  }
+
+  /// Réordonne toute la map : la liste d'ids devient les positions 1..N.
+  Future<List<AdminJourneyLevelModel>> reorderJourneyLevels(
+      List<int> ids) async {
+    final res =
+        await _api.post('/admin/journey-levels/reorder', data: {'ids': ids});
+    return (res.data['data'] as List)
+        .map((e) => AdminJourneyLevelModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
   // ── Questions ─────────────────────────────────────────────────────────────
 
   Future<({List<AdminQuestionModel> questions, int lastPage, int total})> getQuestions({
     String? search,
     int? quizId,
+    int? journeyLevelId,
     String? type,
     int page = 1,
   }) async {
     final res = await _api.get('/admin/questions', queryParameters: {
       if (search != null && search.isNotEmpty) 'search': search,
       if (quizId != null) 'quiz_id': quizId,
+      if (journeyLevelId != null) 'journey_level_id': journeyLevelId,
       if (type != null) 'type': type,
       'page': page,
     });
@@ -174,6 +214,53 @@ class AdminRepository {
 
   Future<void> deleteReport(int id) async {
     await _api.delete('/admin/reports/$id');
+  }
+
+  // ── Export ────────────────────────────────────────────────────────────────
+
+  /// Exporte les questions d'un quiz au format du modèle d'import : le fichier
+  /// obtenu est directement réimportable.
+  ///
+  /// Renvoie le fichier écrit dans le dossier temporaire, prêt à être partagé.
+  Future<File> exportQuizQuestions({
+    required int quizId,
+    required String quizTitle,
+    String locale = 'en',
+  }) =>
+      _downloadExport(
+        '/admin/quizzes/$quizId/export-questions',
+        quizTitle,
+        locale,
+      );
+
+  /// Idem pour les questions d'un niveau du Mode Parcours.
+  Future<File> exportJourneyLevelQuestions({
+    required int levelId,
+    required String levelTitle,
+    String locale = 'en',
+  }) =>
+      _downloadExport(
+        '/admin/journey-levels/$levelId/export-questions',
+        levelTitle,
+        locale,
+      );
+
+  Future<File> _downloadExport(String path, String title, String locale) async {
+    final bytes = await _api.download(path, queryParameters: {'locale': locale});
+    final directory = await getTemporaryDirectory();
+    final file = File('${directory.path}/${_exportFileName(title, locale)}');
+
+    return file.writeAsBytes(bytes, flush: true);
+  }
+
+  /// Nom de fichier sûr, aligné sur celui produit par le serveur.
+  String _exportFileName(String title, String locale) {
+    final slug = title
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
+        .replaceAll(RegExp(r'^-+|-+$'), '');
+
+    return '${slug.isEmpty ? 'quiz' : slug}-questions-$locale.xlsx';
   }
 
   // ── Import ────────────────────────────────────────────────────────────────

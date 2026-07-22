@@ -27,7 +27,14 @@ android {
     defaultConfig {
         applicationId = "com.a2digit.arif_quiz"
         minSdk = flutter.minSdkVersion           // Android 5.0 — couvre 99 %+ des appareils actifs
-        targetSdk = 35        // Android 15 — exigé par le Play Store (août 2025)
+        // Android 16 — exigé par le Play Store (échéance 31 août 2026).
+        // Conséquences de ce palier, déjà absorbées par l'app :
+        //  • edge-to-edge imposé sans opt-out (déjà le cas depuis targetSdk 35,
+        //    les écrans passent par SafeArea) ;
+        //  • retour prédictif activé par défaut (géré par PopScope) ;
+        //  • sur écrans ≥ 600 dp, la contrainte d'orientation portrait devient
+        //    indicative — les écrans défilent, la rotation reste utilisable.
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 

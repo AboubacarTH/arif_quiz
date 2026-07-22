@@ -274,6 +274,19 @@ class ApiService {
     return _dio.get(path, queryParameters: queryParameters);
   }
 
+  /// Télécharge une réponse binaire (export Excel de l'admin). Le JSON par
+  /// défaut ne convient pas : Dio doit rendre les octets bruts.
+  Future<List<int>> download(String path,
+      {Map<String, dynamic>? queryParameters}) async {
+    final res = await _dio.get<List<int>>(
+      path,
+      queryParameters: queryParameters,
+      options: Options(responseType: ResponseType.bytes),
+    );
+
+    return res.data ?? const <int>[];
+  }
+
   Future<Response<dynamic>> post(String path, {dynamic data}) async {
     return _dio.post(path, data: data);
   }
