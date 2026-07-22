@@ -1273,6 +1273,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get typeTrueFalse => 'Verdadero/Falso';
 
   @override
+  String get answerTrue => 'Verdadero';
+
+  @override
+  String get answerFalse => 'Falso';
+
+  @override
+  String get trueFalseAutoLocalized =>
+      'Las dos opciones se muestran a cada jugador en su propio idioma.';
+
+  @override
   String get typeShortAnswer => 'Respuesta libre';
 
   @override
@@ -1454,4 +1464,63 @@ class AppLocalizationsEs extends AppLocalizations {
   String okSelected(int count) {
     return 'OK · $count seleccionado(s)';
   }
+
+  @override
+  String get addLevel => 'Añadir un nivel';
+
+  @override
+  String get editLevel => 'Editar el nivel';
+
+  @override
+  String get levelPosition => 'Posición';
+
+  @override
+  String get levelTitle => 'Título del nivel';
+
+  @override
+  String get secondsPerQuestion => 'Segundos / pregunta';
+
+  @override
+  String get pointsPerQuestion => 'Puntos / pregunta';
+
+  @override
+  String get bossLevel => 'Nivel jefe';
+
+  @override
+  String get levelPublishHint =>
+      'Un nivel sin preguntas permanece oculto en el mapa.';
+
+  @override
+  String get levelHasNoQuestions => 'Sin preguntas: oculto en el mapa.';
+
+  @override
+  String get levelNotPublished => 'No publicado: oculto en el mapa.';
+
+  @override
+  String get noJourneyLevels => 'Aún no hay niveles';
+
+  @override
+  String get noJourneyLevelsHint =>
+      'Crea el primer paso: el mapa de los jugadores queda vacío sin él.';
+
+  @override
+  String deleteJourneyLevelBody(String title, int count) {
+    return '¿Eliminar « $title » y sus $count pregunta(s)? Se perderá el progreso de los jugadores en este paso.';
+  }
+
+  @override
+  String get manageJourneyDesc => 'Crea los niveles del mapa y sus preguntas';
+
+  @override
+  String get exportQuestions => 'Exportar las preguntas';
+
+  @override
+  String get exportLocaleHint =>
+      'El archivo sigue el formato de la plantilla de importación: puedes editarlo y reimportarlo.';
+
+  @override
+  String get exportInProgress => 'Preparando el archivo…';
+
+  @override
+  String get exportBtn => 'Exportar';
 }

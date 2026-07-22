@@ -1,3 +1,4 @@
+import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/journey/data/journey_repository.dart';
 import 'package:arif_quiz/features/journey/presentation/screens/journey_result_screen.dart';
@@ -5,6 +6,7 @@ import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
@@ -17,10 +19,24 @@ import 'package:flutter/material.dart';
 /// [QuizPlayScreen] (timer par question, révélation, progression) mais charge
 /// et soumet via les endpoints `journey/*`, puis affiche un écran d'étoiles.
 class JourneyPlayScreen extends StatefulWidget {
-  final int level;
+  /// Identifiant du niveau administré — c'est lui que l'API attend.
+  final int levelId;
+
+  /// Rang affiché sur la map (« Niveau 3 »), distinct de [levelId] : l'admin
+  /// peut réordonner les paliers sans que les identifiants changent.
+  final int levelNumber;
+
+  /// Titre saisi par l'admin, affiché sous le badge quand il existe.
+  final String? title;
   final bool isBoss;
 
-  const JourneyPlayScreen({super.key, required this.level, this.isBoss = false});
+  const JourneyPlayScreen({
+    super.key,
+    required this.levelId,
+    required this.levelNumber,
+    this.title,
+    this.isBoss = false,
+  });
 
   @override
   State<JourneyPlayScreen> createState() => _JourneyPlayScreenState();
@@ -49,7 +65,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
       _initFailed = false;
     });
     try {
-      final data = await _repo.startLevel(widget.level);
+      final data = await _repo.startLevel(widget.levelId);
       _sessionId = data.sessionId;
       final ctrl = GamePlayController(
         mode: GameMode.classic,
@@ -99,7 +115,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
 
     try {
       final result = await _repo.submitLevel(
-        level: widget.level,
+        level: widget.levelId,
         answers: answers,
         timeTaken: timeTaken,
         sessionId: _sessionId!,
@@ -146,7 +162,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
 
     final ctrl = _ctrl!;
     final q = ctrl.currentQuestion;
-    final opts = q.options ?? ['True', 'False'];
+    final opts = q.choices(context);
 
     return PopScope(
       canPop: false,
@@ -182,7 +198,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    _LevelBadge(level: widget.level, isBoss: widget.isBoss, color: _accent),
+                    _LevelBadge(level: widget.levelNumber, isBoss: widget.isBoss, color: _accent),
                     const SizedBox(width: 12),
                     Expanded(
                       child: ClipRRect(
@@ -209,7 +225,8 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                     totalTime: ctrl.secondsPerQuestion,
                     size: 80),
                 const SizedBox(height: 24),
-                // Média (image → audio) puis question : zone flexible/scrollable.
+                // Média (image → audio), question puis réponses : le tout défile
+                // ensemble, les choix suivent directement l'énoncé.
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
@@ -232,18 +249,18 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                                 fontWeight: FontWeight.w700,
                                 height: 1.4,
                                 fontFamily: 'Nunito')),
+                        const SizedBox(height: AppSpacing.questionToAnswers),
+                        AnswerOptionsGrid(
+                          options: opts,
+                          answered: ctrl.answered,
+                          selected: ctrl.selected,
+                          isCorrect: (o) => q.isCorrect(o),
+                          onSelect: ctrl.selectAnswer,
+                        ),
                         const SizedBox(height: 12),
                       ],
                     ),
                   ),
-                ),
-                // Réponses (bornées ≤ moitié de l'écran, ancrées en bas)
-                AnswerOptionsGrid(
-                  options: opts,
-                  answered: ctrl.answered,
-                  selected: ctrl.selected,
-                  isCorrect: (o) => q.isCorrect(o),
-                  onSelect: ctrl.selectAnswer,
                 ),
                 if (!ctrl.answered)
                   TextButton(

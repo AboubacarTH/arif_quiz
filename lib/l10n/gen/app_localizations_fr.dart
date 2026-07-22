@@ -1273,6 +1273,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get typeTrueFalse => 'Vrai/Faux';
 
   @override
+  String get answerTrue => 'Vrai';
+
+  @override
+  String get answerFalse => 'Faux';
+
+  @override
+  String get trueFalseAutoLocalized =>
+      'Les deux choix sont présentés à chaque joueur dans sa propre langue.';
+
+  @override
   String get typeShortAnswer => 'Réponse libre';
 
   @override
@@ -1454,4 +1464,64 @@ class AppLocalizationsFr extends AppLocalizations {
   String okSelected(int count) {
     return 'OK · $count sélectionné(s)';
   }
+
+  @override
+  String get addLevel => 'Ajouter un niveau';
+
+  @override
+  String get editLevel => 'Modifier le niveau';
+
+  @override
+  String get levelPosition => 'Position';
+
+  @override
+  String get levelTitle => 'Titre du niveau';
+
+  @override
+  String get secondsPerQuestion => 'Secondes / question';
+
+  @override
+  String get pointsPerQuestion => 'Points / question';
+
+  @override
+  String get bossLevel => 'Niveau boss';
+
+  @override
+  String get levelPublishHint =>
+      'Un niveau sans question reste invisible sur la map.';
+
+  @override
+  String get levelHasNoQuestions => 'Aucune question : invisible sur la map.';
+
+  @override
+  String get levelNotPublished => 'Non publié : invisible sur la map.';
+
+  @override
+  String get noJourneyLevels => 'Aucun niveau de parcours';
+
+  @override
+  String get noJourneyLevelsHint =>
+      'Créez le premier palier : la map des joueurs reste vide sans lui.';
+
+  @override
+  String deleteJourneyLevelBody(String title, int count) {
+    return 'Supprimer « $title » et ses $count question(s) ? La progression des joueurs sur ce palier sera perdue.';
+  }
+
+  @override
+  String get manageJourneyDesc =>
+      'Créez les paliers de la map et leurs questions';
+
+  @override
+  String get exportQuestions => 'Exporter les questions';
+
+  @override
+  String get exportLocaleHint =>
+      'Le fichier reprend le format du modèle d\'import : vous pouvez le modifier et le réimporter.';
+
+  @override
+  String get exportInProgress => 'Préparation du fichier…';
+
+  @override
+  String get exportBtn => 'Exporter';
 }

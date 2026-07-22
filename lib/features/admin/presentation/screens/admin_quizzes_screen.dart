@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
+import 'package:arif_quiz/features/admin/presentation/widgets/export_questions_sheet.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
@@ -177,6 +178,20 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
               onTap: () => Navigator.pop(ctx, l.code),
             ),
         ],
+      ),
+    );
+  }
+
+  /// Export des questions du quiz : le fichier reprend le format du modèle
+  /// d'import, il est donc directement réimportable.
+  void _exportQuestions(AdminQuizModel quiz) {
+    ExportQuestionsSheet.show(
+      context,
+      title: quiz.title,
+      download: (locale) => _repo.exportQuizQuestions(
+        quizId: quiz.id,
+        quizTitle: quiz.title,
+        locale: locale,
       ),
     );
   }
@@ -420,6 +435,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
             onEdit: () => _showForm(quiz: _quizzes[i]),
             onToggle: () => _toggle(_quizzes[i]),
             onImport: () => _importQuestions(_quizzes[i]),
+            onExport: () => _exportQuestions(_quizzes[i]),
             onDelete: () => _delete(_quizzes[i]),
           );
         },
@@ -463,9 +479,10 @@ class _QuizTile extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onToggle;
   final VoidCallback onImport;
+  final VoidCallback onExport;
   final VoidCallback onDelete;
 
-  const _QuizTile({required this.quiz, required this.onEdit, required this.onToggle, required this.onImport, required this.onDelete});
+  const _QuizTile({required this.quiz, required this.onEdit, required this.onToggle, required this.onImport, required this.onExport, required this.onDelete});
 
   Color get _diffColor => quiz.difficulty == 'easy' ? AppColors.easy : quiz.difficulty == 'medium' ? AppColors.medium : AppColors.hard;
   String get _diffLabel => quiz.difficulty == 'easy' ? 'Facile' : quiz.difficulty == 'medium' ? 'Moyen' : 'Difficile';
@@ -526,6 +543,12 @@ class _QuizTile extends StatelessWidget {
                   icon: const Icon(Icons.upload_file_rounded, size: 15),
                   label: Text(AppLocalizations.of(context).importBtn),
                   style: TextButton.styleFrom(foregroundColor: AppColors.secondary, padding: const EdgeInsets.symmetric(horizontal: 10)),
+                ),
+                TextButton.icon(
+                  onPressed: onExport,
+                  icon: const Icon(Icons.download_rounded, size: 15),
+                  label: Text(AppLocalizations.of(context).exportBtn),
+                  style: TextButton.styleFrom(foregroundColor: AppColors.success, padding: const EdgeInsets.symmetric(horizontal: 10)),
                 ),
                 TextButton.icon(
                   onPressed: onEdit,

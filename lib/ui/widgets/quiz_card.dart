@@ -91,8 +91,6 @@ class _ListCard extends StatelessWidget {
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       _Tag(quiz.difficulty.toUpperCase(), diffColor),
-                      _Meta(Icons.help_outline_rounded,
-                          '${quiz.totalQuestions}Q'),
                       _Meta(Icons.timer_outlined, '${quiz.timeLimit}s'),
                     ],
                   ),
@@ -177,7 +175,7 @@ class _GridCard extends StatelessWidget {
             const Spacer(),
             Row(
               children: [
-                _Meta(Icons.help_outline_rounded, '${quiz.totalQuestions}Q'),
+                _Meta(Icons.timer_outlined, '${quiz.timeLimit}s'),
                 const Spacer(),
                 _Meta(Icons.play_circle_outline_rounded, '${quiz.playCount}'),
               ],
@@ -250,8 +248,6 @@ class _FeaturedCard extends StatelessWidget {
             const Spacer(),
             Row(
               children: [
-                _Meta(Icons.help_outline_rounded, '${quiz.totalQuestions} Q'),
-                const SizedBox(width: 10),
                 _Meta(Icons.timer_outlined, '${quiz.timeLimit}s'),
               ],
             ),

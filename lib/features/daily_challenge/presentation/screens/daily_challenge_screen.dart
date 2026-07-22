@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/features/daily_challenge/data/daily_challenge_repository.dart';
+import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart' show GamePhase, GamePlayController;
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
@@ -143,8 +144,6 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                 Text(AppLocalizations.of(context).todaysChallengeTag, style: const TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 2)),
                 const SizedBox(height: 8),
                 Text(d.quiz.title, style: TextStyle(color: context.appColors.textPrimary, fontSize: 22, fontWeight: FontWeight.w800), textAlign: TextAlign.center),
-                const SizedBox(height: 4),
-                Text('${d.quiz.totalQuestions} questions', style: TextStyle(color: context.appColors.textSecondary)),
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -230,7 +229,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
   Widget _buildPlayScreen() {
     final ctrl = _playCtrl;
     final q = ctrl.currentQuestion;
-    final opts = q.options ?? ['Vrai', 'Faux'];
+    final opts = q.choices(context);
     final labels = ['A', 'B', 'C', 'D'];
 
     return Scaffold(
@@ -274,10 +273,11 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
               Align(alignment: AlignmentDirectional.centerStart, child: Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1), style: const TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 0.5))),
               const SizedBox(height: 8),
               Align(alignment: AlignmentDirectional.centerStart, child: Text(q.text, style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w700, height: 1.4))),
-              const SizedBox(height: 24),
+              // Les réponses suivent directement l'énoncé, séparées par une
+              // respiration ; elles défilent si elles ne tiennent pas.
+              const SizedBox(height: AppSpacing.questionToAnswers),
               Expanded(
                 child: ListView.separated(
-                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: opts.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 10),

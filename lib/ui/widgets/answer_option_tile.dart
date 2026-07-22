@@ -255,8 +255,8 @@ class AnswerOptionsGrid extends StatelessWidget {
     final rowCount = (n / cols).ceil();
 
     // L'ensemble ne doit jamais dépasser ~la moitié de la hauteur de l'écran :
-    // les tuiles ont une hauteur fixe (elles ne s'étirent plus) et le bloc est
-    // aligné en haut de l'espace disponible.
+    // les tuiles ont une hauteur fixe (elles ne s'étirent pas) pour que le bloc
+    // reste lisible même quand une question longue le repousse vers le bas.
     final screenH = MediaQuery.sizeOf(context).height;
     final maxTotal = screenH * 0.5;
     final rowHeight =
@@ -283,9 +283,8 @@ class AnswerOptionsGrid extends StatelessWidget {
       ));
     }
 
-    // Bloc borné (≤ moitié de l'écran), ajusté à son contenu ; placé en bas de
-    // l'écran par les écrans de jeu (la zone média + question au-dessus est
-    // flexible et absorbe l'espace restant).
+    // Bloc borné (≤ moitié de l'écran), ajusté à son contenu ; les écrans de
+    // jeu le placent directement sous l'énoncé, dans la même zone scrollable.
     return Column(mainAxisSize: MainAxisSize.min, children: rows);
   }
 }

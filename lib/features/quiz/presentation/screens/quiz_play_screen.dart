@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
+﻿import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
+import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
@@ -6,6 +7,7 @@ import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
@@ -176,7 +178,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
 
     final ctrl = _ctrl!;
     final q = ctrl.currentQuestion;
-    final opts = q.options ?? ['True', 'False'];
+    final opts = q.choices(context);
 
     return PopScope(
       canPop: false,
@@ -242,8 +244,9 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                     size: 80),
                 const SizedBox(height: 28),
 
-                // Média (image → audio) puis question, dans une zone flexible
-                // et scrollable : chaque bloc prend sa taille optimale.
+                // Média (image → audio), question puis réponses : le tout défile
+                // ensemble, les choix suivent directement l'énoncé (séparés par
+                // une respiration) au lieu d'être ancrés en bas de l'écran.
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
@@ -266,19 +269,18 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                                 fontWeight: FontWeight.w700,
                                 height: 1.4,
                                 fontFamily: 'Nunito')),
+                        const SizedBox(height: AppSpacing.questionToAnswers),
+                        AnswerOptionsGrid(
+                          options: opts,
+                          answered: ctrl.answered,
+                          selected: ctrl.selected,
+                          isCorrect: (o) => q.isCorrect(o),
+                          onSelect: ctrl.selectAnswer,
+                        ),
                         const SizedBox(height: 12),
                       ],
                     ),
                   ),
-                ),
-
-                // Réponses (bornées ≤ moitié de l'écran, ancrées en bas)
-                AnswerOptionsGrid(
-                  options: opts,
-                  answered: ctrl.answered,
-                  selected: ctrl.selected,
-                  isCorrect: (o) => q.isCorrect(o),
-                  onSelect: ctrl.selectAnswer,
                 ),
 
                 // Skip

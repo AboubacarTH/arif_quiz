@@ -66,13 +66,14 @@ class JourneyResultScreen extends StatelessWidget {
                 const SizedBox(height: 28),
                 _StatsCard(result: result, accent: _accent),
                 const Spacer(),
-                if (result.nextLevelUnlocked && result.nextLevel != null)
+                if (result.nextLevelUnlocked && result.nextLevelId != null)
                   NeonButton(
                     label: AppLocalizations.of(context).nextLevel,
                     width: double.infinity,
                     icon: Icons.arrow_forward_rounded,
                     color: _accent,
-                    onTap: () => _goToLevel(context, result.nextLevel!),
+                    onTap: () => _goToLevel(context, result.nextLevelId!,
+                        result.nextLevel!, result.nextLevelIsBoss),
                   )
                 else if (!passed)
                   NeonButton(
@@ -80,7 +81,8 @@ class JourneyResultScreen extends StatelessWidget {
                     width: double.infinity,
                     icon: Icons.refresh_rounded,
                     color: _accent,
-                    onTap: () => _goToLevel(context, result.level),
+                    onTap: () =>
+                        _goToLevel(context, result.id, result.level, isBoss),
                   ),
                 const SizedBox(height: 12),
                 Row(
@@ -90,7 +92,8 @@ class JourneyResultScreen extends StatelessWidget {
                         child: _SecondaryButton(
                           label: AppLocalizations.of(context).replay,
                           icon: Icons.refresh_rounded,
-                          onTap: () => _goToLevel(context, result.level),
+                          onTap: () =>
+                        _goToLevel(context, result.id, result.level, isBoss),
                         ),
                       ),
                     if (passed) const SizedBox(width: 12),
@@ -112,11 +115,16 @@ class JourneyResultScreen extends StatelessWidget {
     );
   }
 
-  void _goToLevel(BuildContext context, int level) {
+  /// Enchaîne sur le niveau suivant. Le serveur renvoie son identifiant ET son
+  /// rang : on ne devine plus rien (le « boss tous les 5 » n'existe plus, c'est
+  /// désormais un réglage par niveau côté admin).
+  void _goToLevel(
+      BuildContext context, int levelId, int levelNumber, bool boss) {
     Navigator.pushReplacement(
       context,
       SlideRightRoute(
-        page: JourneyPlayScreen(level: level, isBoss: level % 5 == 0),
+        page: JourneyPlayScreen(
+            levelId: levelId, levelNumber: levelNumber, isBoss: boss),
       ),
     );
   }

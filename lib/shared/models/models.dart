@@ -1,3 +1,7 @@
+import 'package:arif_quiz/shared/models/true_false.dart';
+
+export 'package:arif_quiz/shared/models/true_false.dart';
+
 // ========== USER MODEL ==========
 class UserModel {
   final int id;
@@ -414,7 +418,8 @@ class QuizModel {
   final String? description;
   final String difficulty;
   final int timeLimit;
-  final int totalQuestions;
+  // Le nombre total de questions n'est volontairement pas exposé aux joueurs :
+  // l'API ne le renvoie plus pour le catalogue (cf. Quiz::$hidden côté serveur).
   final int playCount;
   final String? thumbnail;
   final CategoryModel? category;
@@ -427,7 +432,6 @@ class QuizModel {
     this.description,
     required this.difficulty,
     required this.timeLimit,
-    required this.totalQuestions,
     required this.playCount,
     this.thumbnail,
     this.category,
@@ -441,7 +445,6 @@ class QuizModel {
         description: json['description'],
         difficulty: json['difficulty'] ?? 'medium',
         timeLimit: json['time_limit'] ?? 30,
-        totalQuestions: json['total_questions'] ?? 0,
         playCount: json['play_count'] ?? 0,
         thumbnail: json['thumbnail'],
         category: json['category'] != null
@@ -496,10 +499,16 @@ class QuestionModel {
 
   /// Comparaison tolérante (casse + espaces), alignée sur la logique serveur
   /// (`strtolower(trim(...))`) pour éviter tout écart d'affichage vs score réel.
-  bool isCorrect(String? answer) =>
-      answer != null &&
-      correctAnswer != null &&
-      answer.trim().toLowerCase() == correctAnswer!.trim().toLowerCase();
+  /// Pour les questions vrai/faux, la comparaison est aussi tolérante à la
+  /// langue : « True » et « Vrai » désignent la même réponse (miroir de
+  /// `App\Support\TrueFalse::matches` côté serveur).
+  bool isCorrect(String? answer) {
+    if (answer == null || correctAnswer == null) return false;
+    if (type == 'true_false') {
+      return TrueFalse.matches(answer, correctAnswer);
+    }
+    return answer.trim().toLowerCase() == correctAnswer!.trim().toLowerCase();
+  }
 }
 
 // ========== QUIZ RESULT MODEL ==========
@@ -621,7 +630,14 @@ String gradeForScore(double score) => switch (score) {
 
 // ========== JOURNEY (Mode Parcours) ==========
 class JourneyLevelModel {
+  /// Identifiant du niveau administré — c'est lui qu'on envoie à l'API.
+  final int id;
+
+  /// Rang affiché sur la map (1, 2, 3…), recalculé côté serveur : il reste
+  /// contigu même si l'admin laisse des trous dans les positions.
   final int level;
+  final String? title;
+  final String? description;
   final String difficulty;
   final int questionCount;
   final bool isBoss;
@@ -630,7 +646,10 @@ class JourneyLevelModel {
   final double bestScore;
 
   const JourneyLevelModel({
+    required this.id,
     required this.level,
+    this.title,
+    this.description,
     required this.difficulty,
     required this.questionCount,
     required this.isBoss,
@@ -643,7 +662,12 @@ class JourneyLevelModel {
 
   factory JourneyLevelModel.fromJson(Map<String, dynamic> json) =>
       JourneyLevelModel(
+        id: json['id'] ?? json['level'] ?? 0,
         level: json['level'] ?? 0,
+        title: (json['title'] as String?)?.trim().isEmpty ?? true
+            ? null
+            : json['title'] as String,
+        description: json['description'] as String?,
         difficulty: json['difficulty'] ?? 'easy',
         questionCount: json['question_count'] ?? 0,
         isBoss: json['is_boss'] ?? false,
@@ -654,6 +678,7 @@ class JourneyLevelModel {
 }
 
 class JourneyMapModel {
+  /// Rang du dernier niveau débloqué (1-based), pas un identifiant.
   final int currentLevel;
   final int levelCount;
   final List<JourneyLevelModel> levels;
@@ -676,6 +701,10 @@ class JourneyMapModel {
 /// Résultat d'un niveau de parcours — étend le scoring standard avec les
 /// étoiles gagnées et le déblocage du niveau suivant.
 class JourneyLevelResult {
+  /// Identifiant du niveau joué (pour le rejouer).
+  final int id;
+
+  /// Rang affiché sur la map.
   final int level;
   final double score;
   final int stars;
@@ -684,10 +713,18 @@ class JourneyLevelResult {
   final int pointsEarned;
   final int xpEarned;
   final bool nextLevelUnlocked;
+
+  /// Rang affiché du niveau suivant (pour le texte « Niveau N »).
   final int? nextLevel;
+
+  /// Identifiant du niveau suivant — c'est lui qu'on rejoue.
+  final int? nextLevelId;
+  final bool nextLevelIsBoss;
+  final bool isBoss;
   final List<QuestionResult> results;
 
   const JourneyLevelResult({
+    required this.id,
     required this.level,
     required this.score,
     required this.stars,
@@ -697,12 +734,19 @@ class JourneyLevelResult {
     required this.xpEarned,
     required this.nextLevelUnlocked,
     this.nextLevel,
+    this.nextLevelId,
+    this.nextLevelIsBoss = false,
+    this.isBoss = false,
     required this.results,
   });
 
   factory JourneyLevelResult.fromJson(Map<String, dynamic> json) =>
       JourneyLevelResult(
+        id: json['id'] ?? 0,
         level: json['level'] ?? 0,
+        nextLevelId: json['next_level_id'],
+        nextLevelIsBoss: json['next_level_is_boss'] ?? false,
+        isBoss: json['is_boss'] ?? false,
         score: (json['score'] as num?)?.toDouble() ?? 0,
         stars: json['stars'] ?? 0,
         correctCount: json['correct_count'] ?? 0,
@@ -879,6 +923,58 @@ Map<String, Map<String, dynamic>> parseTranslations(dynamic raw) {
       ));
 }
 
+/// Niveau du Mode Parcours vu par l'administrateur (réglages bruts, sans
+/// progression joueur).
+class AdminJourneyLevelModel {
+  final int id;
+  final int position;
+  final String? title;
+  final String? description;
+  final String difficulty;
+  final bool isBoss;
+  final int timeLimit;
+  final int pointsPerQuestion;
+  final bool isPublished;
+  final int questionsCount;
+  final Map<String, Map<String, dynamic>> translations;
+
+  const AdminJourneyLevelModel({
+    required this.id,
+    required this.position,
+    this.title,
+    this.description,
+    required this.difficulty,
+    required this.isBoss,
+    required this.timeLimit,
+    required this.pointsPerQuestion,
+    required this.isPublished,
+    required this.questionsCount,
+    this.translations = const {},
+  });
+
+  /// Un niveau publié mais vide n'apparaît pas sur la map : il romprait la
+  /// chaîne de déblocage. L'admin doit le voir signalé.
+  bool get isPlayable => isPublished && questionsCount > 0;
+
+  String get displayTitle =>
+      (title?.trim().isNotEmpty ?? false) ? title! : 'Niveau $position';
+
+  factory AdminJourneyLevelModel.fromJson(Map<String, dynamic> json) =>
+      AdminJourneyLevelModel(
+        id: json['id'],
+        position: json['position'] ?? 0,
+        title: json['title'],
+        description: json['description'],
+        difficulty: json['difficulty'] ?? 'easy',
+        isBoss: json['is_boss'] ?? false,
+        timeLimit: json['time_limit'] ?? 30,
+        pointsPerQuestion: json['points_per_question'] ?? 10,
+        isPublished: json['is_published'] ?? false,
+        questionsCount: json['questions_count'] ?? 0,
+        translations: parseTranslations(json['translations']),
+      );
+}
+
 class AdminCategoryModel {
   final int id;
   final String name;
@@ -987,7 +1083,12 @@ class AdminQuizModel {
 
 class AdminQuestionModel {
   final int id;
+
+  /// Quiz propriétaire (0 si la question appartient à un niveau de parcours).
   final int quizId;
+
+  /// Niveau de parcours propriétaire, exclusif de [quizId].
+  final int? journeyLevelId;
   final String text;
   final String type;
   final List<String>? options;
@@ -1003,6 +1104,7 @@ class AdminQuestionModel {
   const AdminQuestionModel({
     required this.id,
     required this.quizId,
+    this.journeyLevelId,
     required this.text,
     required this.type,
     this.options,
@@ -1019,6 +1121,7 @@ class AdminQuestionModel {
   factory AdminQuestionModel.fromJson(Map<String, dynamic> json) => AdminQuestionModel(
         id: json['id'],
         quizId: json['quiz_id'] ?? 0,
+        journeyLevelId: json['journey_level_id'],
         text: json['text'] ?? '',
         type: json['type'] ?? 'multiple_choice',
         options: json['options'] != null ? List<String>.from(json['options']) : null,
