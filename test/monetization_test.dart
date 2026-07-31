@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:arif_quiz/core/ads/ads_service.dart';
 import 'package:arif_quiz/core/ads/consent_service.dart';
 import 'package:arif_quiz/core/monetization/monetization_controller.dart';
@@ -57,6 +59,10 @@ class _FakeAds implements AdsService {
     onAvailabilityChanged?.call();
   }
 
+  /// Si non nul, la publicité reste « à l'écran » jusqu'à sa complétion :
+  /// permet de simuler un second tap pendant qu'une pub est affichée.
+  Completer<void>? hold;
+
   @override
   Future<void> showRewardedAd({
     required VoidCallback onRewarded,
@@ -64,6 +70,8 @@ class _FakeAds implements AdsService {
   }) async {
     shown++;
     ready = false;
+    final pending = hold;
+    if (pending != null) await pending.future;
     if (rewardUser) {
       onRewarded();
     } else {
@@ -271,6 +279,61 @@ void main() {
 
     expect(r.granted, isFalse);
     expect(r.paywall, isTrue);
+  });
+
+  group('Non-régression : écran gelé et crédits qui débordent', () {
+    test('un second tap pendant la pub n\'ouvre pas le paywall par-dessus',
+        () async {
+      // C'est ce qui gelait l'app en test interne : le second appel ne trouvait
+      // plus de pub disponible et empilait une feuille modale sur la publicité
+      // en cours. Au retour, le jeu démarrait sous cette feuille restée
+      // ouverte — il fallait quitter l'app et revenir.
+      ads.hold = Completer<void>();
+
+      var firstGranted = false;
+      final first = ctrl.requestPlay(
+        onGranted: () => firstGranted = true,
+        onNoAd: () {},
+      );
+
+      var secondPaywall = false;
+      var secondGranted = false;
+      await ctrl.requestPlay(
+        onGranted: () => secondGranted = true,
+        onNoAd: () => secondPaywall = true,
+      );
+
+      expect(secondPaywall, isFalse, reason: 'aucun paywall par-dessus la pub');
+      expect(secondGranted, isFalse, reason: 'aucune partie lancée en double');
+
+      ads.hold!.complete();
+      await first;
+
+      expect(ads.shown, 1, reason: 'une seule publicité affichée en tout');
+      expect(firstGranted, isTrue);
+      expect(ctrl.credits, PlayCreditsService.perAd - 1);
+    });
+
+    test('le solde ne dépasse jamais 3', () async {
+      // Depuis le profil, regarder une pub alors qu'il reste des crédits
+      // cumulait : 2 + 3 = 5 parties d'avance.
+      await build(startCredits: 2);
+
+      await ctrl.watchAdForCredits(onRewarded: () {}, onFailed: () {});
+
+      expect(ctrl.credits, PlayCreditsService.maxCredits);
+      expect(PlayCreditsService.maxCredits, 3);
+    });
+
+    test('un solde gonflé par l\'ancienne version redescend au plafond',
+        () async {
+      SharedPreferences.setMockInitialValues({'play_credits': 11});
+
+      final service = PlayCreditsService();
+      await service.load();
+
+      expect(service.credits, 3);
+    });
   });
 
   group('Non-régression : le paywall figé après épuisement des crédits', () {

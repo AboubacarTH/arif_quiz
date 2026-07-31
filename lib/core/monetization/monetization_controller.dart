@@ -20,6 +20,9 @@ class MonetizationController extends ChangeNotifier {
   final SubscriptionService _subs;
   final PlayCreditsService _credits;
 
+  /// Une seule demande à la fois : voir [requestPlay].
+  bool _requestInFlight = false;
+
   // ═══════════════════════════════════════════════════════════════
   // Coupe-circuit global : passer à false rouvre l'app en accès libre
   // (aucune pub chargée, aucun paywall) — utile en démo ou si AdMob
@@ -92,6 +95,25 @@ class MonetizationController extends ChangeNotifier {
       return;
     }
 
+    // Un second appel pendant qu'une publicité est à l'écran ne trouverait plus
+    // de pub disponible et ouvrirait le paywall PAR-DESSUS la publicité en
+    // cours : à sa fermeture, le jeu démarrait sous une feuille modale restée
+    // ouverte, écran apparemment gelé qu'il fallait quitter et rouvrir. Un
+    // double tap suffisait à provoquer ça.
+    if (_requestInFlight) return;
+    _requestInFlight = true;
+
+    try {
+      await _resolvePlay(onGranted: onGranted, onNoAd: onNoAd);
+    } finally {
+      _requestInFlight = false;
+    }
+  }
+
+  Future<void> _resolvePlay({
+    required VoidCallback onGranted,
+    required VoidCallback onNoAd,
+  }) async {
     // `initialize()` n'est pas attendu au lancement : sans ce garde-fou, une
     // partie démarrée dans la première seconde verrait un solde à zéro et
     // imposerait une pub à quelqu'un qui avait déjà des crédits.
@@ -168,6 +190,21 @@ class MonetizationController extends ChangeNotifier {
       return;
     }
 
+    // Même verrou que [requestPlay] : jamais deux publicités en concurrence.
+    if (_requestInFlight) return;
+    _requestInFlight = true;
+
+    try {
+      await _watchAd(onRewarded: onRewarded, onFailed: onFailed);
+    } finally {
+      _requestInFlight = false;
+    }
+  }
+
+  Future<void> _watchAd({
+    required VoidCallback onRewarded,
+    required VoidCallback onFailed,
+  }) async {
     await _credits.load();
     final done = Completer<void>();
     void finish() {
