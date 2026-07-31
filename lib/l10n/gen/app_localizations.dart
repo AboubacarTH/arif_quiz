@@ -3000,6 +3000,12 @@ abstract class AppLocalizations {
   /// **'Ad-free games'**
   String get freePlaysTitle;
 
+  /// No description provided for @adUnavailableRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'No ad available — try again'**
+  String get adUnavailableRetry;
+
   /// No description provided for @privacyOptions.
   ///
   /// In en, this message translates to:

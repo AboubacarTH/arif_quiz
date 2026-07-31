@@ -1595,6 +1595,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get freePlaysTitle => 'Ad-free games';
 
   @override
+  String get adUnavailableRetry => 'No ad available — try again';
+
+  @override
   String get privacyOptions => 'Privacy & ads';
 
   @override

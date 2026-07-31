@@ -483,6 +483,7 @@
   "creditsRemaining": "{count, plural, =0{لا توجد جولة بدون إعلان} =1{جولة واحدة بدون إعلان} other{{count} جولات بدون إعلان}}",
   "paywallBodyCredits": "شاهد إعلانًا قصيرًا لفتح {count} جولات، أو اشترك في Premium للعب بلا انقطاع.",
   "freePlaysTitle": "جولات بدون إعلان",
+  "adUnavailableRetry": "لا يوجد إعلان متاح — أعد المحاولة",
   "privacyOptions": "الخصوصية والإعلانات",
   "privacyOptionsSubtitle": "تغيير خيار الموافقة",
   "goPremium": "اشترك في Premium",

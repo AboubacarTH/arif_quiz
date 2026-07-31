@@ -1591,6 +1591,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get freePlaysTitle => 'جولات بدون إعلان';
 
   @override
+  String get adUnavailableRetry => 'لا يوجد إعلان متاح — أعد المحاولة';
+
+  @override
   String get privacyOptions => 'الخصوصية والإعلانات';
 
   @override

@@ -799,6 +799,7 @@
     }
   },
   "freePlaysTitle": "Ad-free games",
+  "adUnavailableRetry": "No ad available — try again",
   "privacyOptions": "Privacy & ads",
   "privacyOptionsSubtitle": "Change my consent choice",
   "goPremium": "Go Premium",

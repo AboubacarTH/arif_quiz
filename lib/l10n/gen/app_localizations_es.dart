@@ -1607,6 +1607,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get freePlaysTitle => 'Partidas sin anuncios';
 
   @override
+  String get adUnavailableRetry => 'No hay anuncios disponibles — reintentar';
+
+  @override
   String get privacyOptions => 'Privacidad y anuncios';
 
   @override

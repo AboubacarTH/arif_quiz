@@ -483,6 +483,7 @@
   "creditsRemaining": "{count, plural, =0{Ninguna partida sin anuncios} =1{1 partida sin anuncios} other{{count} partidas sin anuncios}}",
   "paywallBodyCredits": "Mira un anuncio corto para desbloquear {count} partidas, o hazte Premium para jugar sin interrupciones.",
   "freePlaysTitle": "Partidas sin anuncios",
+  "adUnavailableRetry": "No hay anuncios disponibles — reintentar",
   "privacyOptions": "Privacidad y anuncios",
   "privacyOptionsSubtitle": "Cambiar mi consentimiento",
   "goPremium": "Hazte Premium",

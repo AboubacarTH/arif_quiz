@@ -37,6 +37,9 @@ class MonetizationController extends ChangeNotifier {
     // Un achat peut se conclure bien après le tap (paiement différé, restauration
     // au lancement) : l'UI doit se mettre à jour toute seule ce jour-là.
     _subs.onChanged = notifyListeners;
+    // Idem pour l'arrivée d'une publicité : le paywall ouvert « en attente »
+    // doit afficher le bouton dès qu'elle est prête, sans réouverture.
+    _ads.onAvailabilityChanged = notifyListeners;
   }
 
   bool get isPremium => _subs.isPremium;
@@ -52,6 +55,14 @@ class MonetizationController extends ChangeNotifier {
       adsEnabled && _ads.isSupported && !_ads.adsBlocked && !isPremium;
 
   bool get isAdReady => adsRequired && _ads.isAdReady;
+
+  /// Une publicité est en cours de chargement : l'UI montre un spinner plutôt
+  /// qu'un bouton mort.
+  bool get isAdLoading => adsRequired && _ads.isAdLoading;
+
+  /// Lance (ou relance) le chargement d'une publicité. Utilisé à l'ouverture du
+  /// paywall et par son bouton « Réessayer ».
+  Future<void> prepareAd() => _ads.loadRewardedAd();
 
   int get credits => _credits.credits;
   int get creditsPerAd => PlayCreditsService.perAd;
@@ -109,21 +120,34 @@ class MonetizationController extends ChangeNotifier {
     try {
       await _ads.showRewardedAd(
         onRewarded: () async {
-          await _credits.grantAdReward();
-          // La partie qui suit la pub fait partie du lot.
-          await _credits.consumeOne();
-          notifyListeners();
-          onGranted();
-          finish();
+          try {
+            await _credits.grantAdReward();
+            // La partie qui suit la pub fait partie du lot.
+            await _credits.consumeOne();
+            notifyListeners();
+            onGranted();
+          } catch (e) {
+            // Une erreur du code appelant (navigation sur un écran démonté…)
+            // ne doit ni remonter en erreur asynchrone non capturée, ni — c'est
+            // ce qui figeait le paywall — empêcher la complétion ci-dessous.
+            debugPrint('Monétisation: lancement de la partie échoué — $e');
+          } finally {
+            finish();
+          }
         },
         onFailed: () {
-          notifyListeners();
-          onNoAd();
-          finish();
+          try {
+            notifyListeners();
+            onNoAd();
+          } catch (e) {
+            debugPrint('Monétisation: ouverture du paywall échouée — $e');
+          } finally {
+            finish();
+          }
         },
       );
-    } catch (_) {
-      // Échec d'affichage : ne jamais laisser l'appelant suspendu.
+    } catch (e) {
+      debugPrint('Monétisation: publicité non aboutie — $e');
       onNoAd();
       finish();
     }
@@ -153,18 +177,29 @@ class MonetizationController extends ChangeNotifier {
     try {
       await _ads.showRewardedAd(
         onRewarded: () async {
-          await _credits.grantAdReward();
-          notifyListeners();
-          onRewarded();
-          finish();
+          try {
+            await _credits.grantAdReward();
+            notifyListeners();
+            onRewarded();
+          } catch (e) {
+            debugPrint('Monétisation: crédit non répercuté à l\'écran — $e');
+          } finally {
+            finish();
+          }
         },
         onFailed: () {
-          notifyListeners();
-          onFailed();
-          finish();
+          try {
+            notifyListeners();
+            onFailed();
+          } catch (e) {
+            debugPrint('Monétisation: retour d\'échec non traité — $e');
+          } finally {
+            finish();
+          }
         },
       );
-    } catch (_) {
+    } catch (e) {
+      debugPrint('Monétisation: publicité non aboutie — $e');
       onFailed();
       finish();
     }
