@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:arif_quiz/core/ads/consent_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -24,21 +27,47 @@ class AdsService {
   factory AdsService() => _instance;
   AdsService._();
 
+  final ConsentService _consent = ConsentService();
+
   bool _initialized = false;
   RewardedAd? _rewardedAd;
   bool _isLoadingAd = false;
 
+  /// Seul Android est configuré (App ID dans `AndroidManifest.xml`, unité
+  /// récompensée ci-dessus). Sur iOS, initialiser le SDK sans
+  /// `GADApplicationIdentifier` dans `Info.plist` fait planter l'app au
+  /// démarrage : tant que la config iOS n'existe pas, on n'y touche pas.
+  bool get isSupported => !kIsWeb && Platform.isAndroid;
+
+  /// Faux tant que le consentement n'est pas acquis (ou s'il a été refusé) :
+  /// aucune publicité ne pourra alors être servie sur cet appareil.
+  bool get canServeAds => isSupported && _consent.canRequestAds;
+
+  /// Verdict **définitif** de refus : l'utilisateur a répondu, et la réponse
+  /// interdit toute publicité. Tant que le consentement n'est pas résolu, on
+  /// ne le suppose pas — c'est ce qui distingue « pas encore » de « jamais ».
+  bool get adsBlocked =>
+      isSupported && _consent.isResolved && !_consent.canRequestAds;
+
+  ConsentService get consent => _consent;
+
   bool get isAdReady => _rewardedAd != null;
 
   Future<void> initialize() async {
-    if (_initialized) return;
+    if (_initialized || !isSupported) return;
+
+    // Le consentement passe avant tout : initialiser AdMob sans base légale
+    // est précisément ce que la politique européenne interdit.
+    final allowed = await _consent.ensureConsent();
+    if (!allowed) return;
+
     await MobileAds.instance.initialize();
     _initialized = true;
     loadRewardedAd();
   }
 
   Future<void> loadRewardedAd() async {
-    if (_isLoadingAd || _rewardedAd != null) return;
+    if (_isLoadingAd || _rewardedAd != null || !canServeAds) return;
     _isLoadingAd = true;
 
     await RewardedAd.load(
@@ -59,7 +88,9 @@ class AdsService {
 
   /// Affiche la pub récompensée.
   ///
-  /// [onRewarded] — appelé uniquement si l'utilisateur regarde jusqu'au bout.
+  /// [onRewarded] — appelé une fois la pub **fermée**, si l'utilisateur l'a
+  ///                regardée jusqu'au bout. Attendre la fermeture évite de
+  ///                pousser un écran de jeu sous une pub plein écran.
   /// [onFailed]   — appelé si la pub est indisponible, échoue, ou est fermée
   ///                sans avoir été regardée entièrement.
   Future<void> showRewardedAd({
@@ -84,8 +115,12 @@ class AdsService {
       onAdDismissedFullScreenContent: (a) {
         a.dispose();
         loadRewardedAd(); // pré-charge la suivante
-        // Si fermée sans avoir obtenu la récompense → considéré comme échec
-        if (!rewarded) onFailed();
+        if (rewarded) {
+          onRewarded();
+        } else {
+          // Fermée avant la fin → aucune récompense.
+          onFailed();
+        }
       },
       onAdFailedToShowFullScreenContent: (a, _) {
         a.dispose();
@@ -94,12 +129,7 @@ class AdsService {
       },
     );
 
-    await ad.show(
-      onUserEarnedReward: (_, __) {
-        rewarded = true;
-        onRewarded();
-      },
-    );
+    await ad.show(onUserEarnedReward: (_, __) => rewarded = true);
   }
 
   void dispose() {

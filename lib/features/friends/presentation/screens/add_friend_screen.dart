@@ -122,10 +122,11 @@ class _UserResultTile extends StatelessWidget {
   Widget _buildButton(BuildContext context) {
     final status = user.friendshipStatus;
     if (status == 'accepted') {
-      return const Chip(
-        label: Text('Ami', style: TextStyle(color: AppColors.success, fontSize: 12)),
-        backgroundColor: Color(0xFF0D2B1F),
-        side: BorderSide(color: AppColors.success, width: 1),
+      return Chip(
+        label: Text(AppLocalizations.of(context).friendSingular,
+            style: const TextStyle(color: AppColors.success, fontSize: 12)),
+        backgroundColor: const Color(0xFF0D2B1F),
+        side: const BorderSide(color: AppColors.success, width: 1),
       );
     }
     if (status == 'pending') {

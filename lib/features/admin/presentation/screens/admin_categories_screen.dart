@@ -1,10 +1,10 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
+import 'package:arif_quiz/features/admin/presentation/widgets/admin_card.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
-import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 class AdminCategoriesScreen extends StatefulWidget {
@@ -177,56 +177,41 @@ class _CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final color = _parseColor();
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: context.cardElevated,
-        borderRadius: AppRadius.rLg,
-        boxShadow: AppShadows.card(context),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: cat.icon != null
-                  ? Text(cat.icon!, style: const TextStyle(fontSize: 20))
-                  : Icon(Icons.category_rounded, color: color, size: 22),
-            ),
+    return AdminCard(
+      // Le corps entier ouvre l'édition : plus besoin d'un bouton dédié dans la
+      // rangée, qui débordait dès que les libellés s'allongeaient.
+      onTap: onEdit,
+      child: AdminCardHeader(
+        leading: AdminLeadingBox(
+          color: color,
+          child: cat.icon != null
+              ? Text(cat.icon!, style: const TextStyle(fontSize: 20))
+              : Icon(Icons.category_rounded, color: color, size: 22),
+        ),
+        title: cat.name,
+        titleMaxLines: 1,
+        subtitle: Text(
+          '${cat.quizzesCount} quiz · ${cat.publishedQuizzesCount} ${l10n.published.toLowerCase()}',
+        ),
+        badges: [
+          if (!cat.isActive)
+            AdminTag(label: l10n.inactive, color: AppColors.error),
+        ],
+        menuActions: [
+          AdminAction(
+            icon: Icons.edit_rounded,
+            label: l10n.editBtn,
+            color: AppColors.info,
+            onPressed: onEdit,
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(cat.name, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700, fontSize: 14)),
-                    const SizedBox(width: 6),
-                    if (!cat.isActive)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
-                        child: Text(AppLocalizations.of(context).inactive, style: const TextStyle(color: AppColors.error, fontSize: 10, fontWeight: FontWeight.w700)),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '${cat.quizzesCount} quiz · ${cat.publishedQuizzesCount} publiés',
-                  style: TextStyle(color: context.appColors.textSecondary, fontSize: 12),
-                ),
-              ],
-            ),
+          AdminAction(
+            icon: Icons.delete_rounded,
+            label: l10n.deleteBtn,
+            destructive: true,
+            onPressed: onDelete,
           ),
-          IconButton(icon: const Icon(Icons.edit_rounded, size: 18), color: AppColors.info, onPressed: onEdit),
-          IconButton(icon: const Icon(Icons.delete_rounded, size: 18), color: AppColors.error, onPressed: onDelete),
         ],
       ),
     );

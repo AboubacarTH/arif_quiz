@@ -1,3 +1,4 @@
+import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -90,7 +91,8 @@ class _ListCard extends StatelessWidget {
                     runSpacing: 4,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      _Tag(quiz.difficulty.toUpperCase(), diffColor),
+                      _Tag(DifficultyL10n.badge(context, quiz.difficulty),
+                          diffColor),
                       _Meta(Icons.timer_outlined, '${quiz.timeLimit}s'),
                     ],
                   ),
@@ -157,7 +159,7 @@ class _GridCard extends StatelessWidget {
                         style: const TextStyle(fontSize: 22)),
                   ),
                 ),
-                _Tag(quiz.difficulty.toUpperCase(), diffColor),
+                _Tag(DifficultyL10n.badge(context, quiz.difficulty), diffColor),
               ],
             ),
             const SizedBox(height: 12),
@@ -230,7 +232,7 @@ class _FeaturedCard extends StatelessWidget {
                         style: const TextStyle(fontSize: 26)),
                   ),
                 ),
-                _Tag(quiz.difficulty.toUpperCase(), diffColor),
+                _Tag(DifficultyL10n.badge(context, quiz.difficulty), diffColor),
               ],
             ),
             const SizedBox(height: 14),

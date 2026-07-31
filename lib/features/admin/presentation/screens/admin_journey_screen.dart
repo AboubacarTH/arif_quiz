@@ -1,5 +1,7 @@
+import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_questions_screen.dart';
+import 'package:arif_quiz/features/admin/presentation/widgets/admin_card.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/export_questions_sheet.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
@@ -273,78 +275,68 @@ class _LevelTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Opacity(
+    return AdminCard(
       opacity: level.isPlayable ? 1 : 0.72,
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        decoration: BoxDecoration(
-          color: context.cardElevated,
-          borderRadius: AppRadius.rLg,
-          boxShadow: AppShadows.card(context),
-        ),
-        child: Column(
-          children: [
-            Row(
+      onTap: onEdit,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AdminCardHeader(
+            leading: AdminLeadingBox(
+              color: _accent,
+              filled: true,
+              child: Text('${level.position}',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900)),
+            ),
+            title: level.isBoss
+                ? '👑 ${level.displayTitle}'
+                : level.displayTitle,
+            titleMaxLines: 1,
+            subtitle: Text(
+              '${level.questionsCount} Q · ${level.timeLimit}s · ${level.pointsPerQuestion} pts · ${DifficultyL10n.label(context, level.difficulty)}',
+            ),
+            // Réordonnancement gardé en flèches : un palier se déplace d'un cran
+            // en un seul tap, ce qu'un menu ne permet pas.
+            trailing: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration:
-                      BoxDecoration(color: _accent, shape: BoxShape.circle),
-                  alignment: Alignment.center,
-                  child: Text('${level.position}',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900)),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          if (level.isBoss) ...[
-                            const Text('👑',
-                                style: TextStyle(fontSize: 14)),
-                            const SizedBox(width: 4),
-                          ],
-                          Expanded(
-                            child: Text(level.displayTitle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: context.appColors.textPrimary,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 15)),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${level.questionsCount} Q · ${level.timeLimit}s · ${level.pointsPerQuestion} pts · ${level.difficulty}',
-                        style: TextStyle(
-                            color: context.appColors.textSecondary,
-                            fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
-                  children: [
-                    _MiniIcon(
-                        icon: Icons.keyboard_arrow_up_rounded, onTap: onUp),
-                    _MiniIcon(
-                        icon: Icons.keyboard_arrow_down_rounded,
-                        onTap: onDown),
-                  ],
-                ),
+                _MiniIcon(
+                    icon: Icons.keyboard_arrow_up_rounded,
+                    tooltip: l10n.moveUp,
+                    onTap: onUp),
+                _MiniIcon(
+                    icon: Icons.keyboard_arrow_down_rounded,
+                    tooltip: l10n.moveDown,
+                    onTap: onDown),
               ],
             ),
-            if (!level.isPlayable) ...[
-              const SizedBox(height: 8),
-              Row(
+            menuActions: [
+              AdminAction(
+                icon: Icons.edit_rounded,
+                label: l10n.editBtn,
+                color: AppColors.info,
+                onPressed: onEdit,
+              ),
+              AdminAction(
+                icon: Icons.delete_outline_rounded,
+                label: l10n.deleteBtn,
+                destructive: true,
+                onPressed: onDelete,
+              ),
+            ],
+          ),
+          if (!level.isPlayable) ...[
+            const SizedBox(height: AppSpacing.md),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColors.warning.withValues(alpha: 0.10),
+                borderRadius: AppRadius.rSm,
+              ),
+              child: Row(
                 children: [
                   const Icon(Icons.warning_amber_rounded,
                       color: AppColors.warning, size: 15),
@@ -360,47 +352,28 @@ class _LevelTile extends StatelessWidget {
                   ),
                 ],
               ),
-            ],
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton.icon(
-                  onPressed: onQuestions,
-                  icon: const Icon(Icons.help_outline_rounded, size: 15),
-                  label: Text(l10n.questions),
-                  style: TextButton.styleFrom(
-                      foregroundColor: AppColors.secondary,
-                      padding: const EdgeInsets.symmetric(horizontal: 8)),
-                ),
-                TextButton.icon(
-                  onPressed: onExport,
-                  icon: const Icon(Icons.download_rounded, size: 15),
-                  label: Text(l10n.exportBtn),
-                  style: TextButton.styleFrom(
-                      foregroundColor: AppColors.success,
-                      padding: const EdgeInsets.symmetric(horizontal: 8)),
-                ),
-                TextButton.icon(
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.edit_rounded, size: 15),
-                  label: Text(l10n.editBtn),
-                  style: TextButton.styleFrom(
-                      foregroundColor: AppColors.info,
-                      padding: const EdgeInsets.symmetric(horizontal: 8)),
-                ),
-                TextButton.icon(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline_rounded, size: 15),
-                  label: Text(l10n.deleteBtn),
-                  style: TextButton.styleFrom(
-                      foregroundColor: AppColors.error,
-                      padding: const EdgeInsets.symmetric(horizontal: 8)),
-                ),
-              ],
             ),
           ],
-        ),
+          const SizedBox(height: AppSpacing.md),
+          Divider(height: 1, color: context.appColors.border),
+          const SizedBox(height: AppSpacing.md),
+          AdminActionBar(
+            actions: [
+              AdminAction(
+                icon: Icons.help_outline_rounded,
+                label: l10n.questions,
+                color: AppColors.secondary,
+                onPressed: onQuestions,
+              ),
+              AdminAction(
+                icon: Icons.download_rounded,
+                label: l10n.exportBtn,
+                color: AppColors.success,
+                onPressed: onExport,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -408,20 +381,24 @@ class _LevelTile extends StatelessWidget {
 
 class _MiniIcon extends StatelessWidget {
   final IconData icon;
+  final String tooltip;
   final VoidCallback? onTap;
-  const _MiniIcon({required this.icon, required this.onTap});
+  const _MiniIcon({required this.icon, required this.tooltip, required this.onTap});
 
   @override
-  Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(2),
-          child: Icon(icon,
-              size: 20,
-              color: onTap == null
-                  ? context.appColors.textMuted.withValues(alpha: 0.4)
-                  : context.appColors.textSecondary),
+  Widget build(BuildContext context) => Tooltip(
+        message: tooltip,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Icon(icon,
+                size: 20,
+                color: onTap == null
+                    ? context.appColors.textMuted.withValues(alpha: 0.4)
+                    : context.appColors.textSecondary),
+          ),
         ),
       );
 }

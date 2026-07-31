@@ -1,4 +1,6 @@
-﻿import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
+﻿import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
+import 'package:arif_quiz/core/monetization/play_gate.dart';
+import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
@@ -22,7 +24,9 @@ class QuizDetailScreen extends StatefulWidget {
 class _QuizDetailScreenState extends State<QuizDetailScreen> {
   QuizModel? _quiz;
   bool _loading = true;
-  String? _error;
+  // Le message d'erreur est résolu au build : la langue courante ne peut pas
+  // être figée dans un `String` posé pendant l'appel réseau.
+  bool _failed = false;
 
   @override
   void initState() {
@@ -33,7 +37,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
   Future<void> _load() async {
     setState(() {
       _loading = true;
-      _error = null;
+      _failed = false;
     });
     try {
       final q = await QuizRepository(apiService).getQuiz(widget.quizId);
@@ -43,7 +47,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
       });
     } catch (_) {
       setState(() {
-        _error = 'Failed to load quiz.';
+        _failed = true;
         _loading = false;
       });
     }
@@ -57,8 +61,10 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
       body: _loading
           ? const Center(
               child: CircularProgressIndicator(color: AppColors.primary))
-          : _error != null
-              ? ErrorState(message: _error!, onRetry: _load)
+          : _failed
+              ? ErrorState(
+                  message: AppLocalizations.of(context).loadQuizFailed,
+                  onRetry: _load)
               : _buildContent(),
     );
   }
@@ -134,7 +140,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                           borderRadius: BorderRadius.circular(8),
                           border:
                               Border.all(color: diffColor.withValues(alpha: 0.3))),
-                      child: Text(q.difficulty.toUpperCase(),
+                      child: Text(DifficultyL10n.badge(context, q.difficulty),
                           style: TextStyle(
                               color: diffColor,
                               fontSize: 11,
@@ -188,7 +194,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('📌 How to Play',
+                      Text('📌 ${AppLocalizations.of(context).howToPlay}',
                           style: TextStyle(
                               color: context.appColors.textPrimary,
                               fontWeight: FontWeight.w700,
@@ -228,8 +234,11 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
             size: AppButtonSize.large,
             icon: Icons.play_arrow_rounded,
             iconTrailing: true,
-            onPressed: () => Navigator.push(
-                context, SlideUpRoute(page: QuizPlayScreen(quiz: q))),
+            onPressed: () => PlayGate.requestPlay(
+              context,
+              onGranted: () => Navigator.push(
+                  context, SlideUpRoute(page: QuizPlayScreen(quiz: q))),
+            ),
           ),
         ),
       ],

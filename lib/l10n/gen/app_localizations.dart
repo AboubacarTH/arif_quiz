@@ -1689,7 +1689,7 @@ abstract class AppLocalizations {
   /// No description provided for @registrationFailed.
   ///
   /// In en, this message translates to:
-  /// **'Registration failed. Email may already be taken.'**
+  /// **'Registration failed. This email may already be in use.'**
   String get registrationFailed;
 
   /// No description provided for @createAccountTitle.
@@ -2861,6 +2861,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export'**
   String get exportBtn;
+
+  /// No description provided for @moreActions.
+  ///
+  /// In en, this message translates to:
+  /// **'More actions'**
+  String get moreActions;
+
+  /// No description provided for @publishBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get publishBtn;
+
+  /// No description provided for @unpublishBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpublish'**
+  String get unpublishBtn;
+
+  /// No description provided for @moveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get moveUp;
+
+  /// No description provided for @moveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get moveDown;
+
+  /// No description provided for @attemptsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'attempts'**
+  String get attemptsLabel;
+
+  /// No description provided for @howToPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'How to play'**
+  String get howToPlay;
+
+  /// No description provided for @loadQuizFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load this quiz.'**
+  String get loadQuizFailed;
+
+  /// No description provided for @leaderboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get leaderboardTitle;
+
+  /// No description provided for @noRankingsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No rankings yet'**
+  String get noRankingsYet;
+
+  /// No description provided for @beFirstToFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to complete a quiz!'**
+  String get beFirstToFinish;
+
+  /// No description provided for @allRankings.
+  ///
+  /// In en, this message translates to:
+  /// **'All rankings'**
+  String get allRankings;
+
+  /// No description provided for @friendSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'Friend'**
+  String get friendSingular;
+
+  /// No description provided for @shareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing unavailable'**
+  String get shareFailed;
+
+  /// No description provided for @shareMyScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Share my score'**
+  String get shareMyScore;
+
+  /// No description provided for @codeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied!'**
+  String get codeCopied;
+
+  /// No description provided for @listenAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to the audio'**
+  String get listenAudio;
+
+  /// No description provided for @codeExampleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. X7K2PQ4R'**
+  String get codeExampleHint;
+
+  /// No description provided for @quizzesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Quizzes'**
+  String get quizzesTab;
+
+  /// No description provided for @watchAdForCredits.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch an ad → {count} games'**
+  String watchAdForCredits(int count);
+
+  /// No description provided for @creditsRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No ad-free game left} =1{1 ad-free game left} other{{count} ad-free games left}}'**
+  String creditsRemaining(int count);
+
+  /// No description provided for @paywallBodyCredits.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch a short ad to unlock {count} games, or go Premium and play without interruption.'**
+  String paywallBodyCredits(int count);
+
+  /// No description provided for @freePlaysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad-free games'**
+  String get freePlaysTitle;
+
+  /// No description provided for @privacyOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & ads'**
+  String get privacyOptions;
+
+  /// No description provided for @privacyOptionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change my consent choice'**
+  String get privacyOptionsSubtitle;
+
+  /// No description provided for @goPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Premium'**
+  String get goPremium;
+
+  /// No description provided for @goPremiumSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Play with no ads, no limits'**
+  String get goPremiumSubtitle;
+
+  /// No description provided for @orSeparator.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get orSeparator;
+
+  /// No description provided for @premiumFeatureNoAds.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Unlimited quizzes and journey, no ads'**
+  String get premiumFeatureNoAds;
+
+  /// No description provided for @premiumFeatureAllModes.
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ Every game mode, never interrupted'**
+  String get premiumFeatureAllModes;
+
+  /// No description provided for @premiumFeatureSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'❤️ You support the app\'s development'**
+  String get premiumFeatureSupport;
+
+  /// No description provided for @loadFailedRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading failed. Pull to refresh.'**
+  String get loadFailedRetry;
+
+  /// No description provided for @loadQuizzesFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load the quizzes.'**
+  String get loadQuizzesFailed;
+
+  /// No description provided for @loadLeaderboardFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load the leaderboard.'**
+  String get loadLeaderboardFailed;
+
+  /// No description provided for @loadProfileFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load the profile.'**
+  String get loadProfileFailed;
+
+  /// No description provided for @loadJourneyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load the journey.'**
+  String get loadJourneyFailed;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password. Please try again.'**
+  String get invalidCredentials;
+
+  /// No description provided for @dailyTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get dailyTag;
+
+  /// No description provided for @secondsPerQuestionBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s / question'**
+  String secondsPerQuestionBadge(int seconds);
+
+  /// No description provided for @shareScoreText.
+  ///
+  /// In en, this message translates to:
+  /// **'I scored a {grade} grade ({percent}%) on “{quiz}” 🎯 Challenge me on ArifQuiz!'**
+  String shareScoreText(String grade, String percent, String quiz);
+
+  /// No description provided for @shareChallengeText.
+  ///
+  /// In en, this message translates to:
+  /// **'I challenge you on Arif Quiz! Join my challenge “{title}” with the code: {code}'**
+  String shareChallengeText(String title, String code);
 }
 
 class _AppLocalizationsDelegate

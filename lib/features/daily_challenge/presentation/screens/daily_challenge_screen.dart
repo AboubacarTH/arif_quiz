@@ -245,7 +245,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20), border: Border.all(color: AppColors.accent.withValues(alpha: 0.4))),
-                    child: const Text('🌟 Quotidien', style: TextStyle(color: AppColors.accent, fontSize: 11, fontWeight: FontWeight.w700)),
+                    child: Text('🌟 ${AppLocalizations.of(context).dailyTag}', style: const TextStyle(color: AppColors.accent, fontSize: 11, fontWeight: FontWeight.w700)),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

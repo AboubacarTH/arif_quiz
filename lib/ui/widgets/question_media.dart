@@ -1,3 +1,4 @@
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -178,7 +179,7 @@ class _AudioPlayerBarState extends State<_AudioPlayerBar> {
                     const Icon(Icons.graphic_eq_rounded,
                         color: AppColors.secondary, size: 15),
                     const SizedBox(width: 6),
-                    Text('Écouter l\'extrait',
+                    Text(AppLocalizations.of(context).listenAudio,
                         style: TextStyle(
                             color: context.appColors.textSecondary,
                             fontSize: 12,

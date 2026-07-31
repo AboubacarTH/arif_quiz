@@ -1,4 +1,5 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
+import 'package:arif_quiz/features/admin/presentation/widgets/admin_card.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
@@ -350,80 +351,86 @@ class _QuestionTile extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        decoration: BoxDecoration(
-          color: context.cardElevated,
-          borderRadius: AppRadius.rLg,
-          boxShadow: AppShadows.card(context),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return AdminCard(
+      onTap: onEdit,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // L'énoncé fait office de titre : type et quiz d'origine le
+          // surmontent, les actions vivent dans le menu de droite.
+          AdminCardHeader(
+            title: q.text,
+            subtitle: Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                  decoration: BoxDecoration(color: _typeColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
-                  child: Text(_typeLabel(context), style: TextStyle(color: _typeColor, fontSize: 11, fontWeight: FontWeight.w700)),
-                ),
-                const SizedBox(width: 8),
-                if (q.quizTitle != null)
-                  Expanded(
-                    child: Text(q.quizTitle!, style: TextStyle(color: context.appColors.textMuted, fontSize: 11), overflow: TextOverflow.ellipsis),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(q.text, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                Icon(Icons.check_circle_outline_rounded, size: 14, color: AppColors.success),
+                Icon(Icons.check_circle_outline_rounded,
+                    size: 13, color: AppColors.success),
                 const SizedBox(width: 4),
                 Expanded(
-                  child: Text(_label(context, q.correctAnswer), style: TextStyle(color: AppColors.success, fontSize: 12), overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    _label(context, q.correctAnswer),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: AppColors.success, fontSize: 12),
+                  ),
                 ),
-                Text('${q.points} pts', style: TextStyle(color: context.appColors.textMuted, fontSize: 11, fontWeight: FontWeight.w600)),
               ],
             ),
-            if (q.options != null && q.options!.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              Wrap(
-                spacing: 4,
-                runSpacing: 4,
-                children: q.options!.map((o) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: o == q.correctAnswer ? AppColors.success.withValues(alpha: 0.1) : context.appColors.surface,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: o == q.correctAnswer ? AppColors.success.withValues(alpha: 0.3) : context.appColors.border),
-                  ),
-                  child: Text(_label(context, o), style: TextStyle(color: o == q.correctAnswer ? AppColors.success : context.appColors.textSecondary, fontSize: 11)),
-                )).toList(),
+            menuActions: [
+              AdminAction(
+                icon: Icons.edit_rounded,
+                label: l10n.editBtn,
+                color: AppColors.info,
+                onPressed: onEdit,
+              ),
+              AdminAction(
+                icon: Icons.delete_rounded,
+                label: l10n.deleteBtn,
+                destructive: true,
+                onPressed: onDelete,
               ),
             ],
-            const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton.icon(
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.edit_rounded, size: 14),
-                  label: Text(AppLocalizations.of(context).editBtn),
-                  style: TextButton.styleFrom(foregroundColor: AppColors.info, padding: const EdgeInsets.symmetric(horizontal: 8)),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              AdminTag(label: _typeLabel(context), color: _typeColor, strong: true),
+              AdminTag(label: '${q.points} pts', color: AppColors.primary),
+              if (q.quizTitle != null)
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 190),
+                  child: AdminTag(
+                    label: q.quizTitle!,
+                    color: context.appColors.textMuted,
+                    icon: Icons.folder_open_rounded,
+                  ),
                 ),
-                TextButton.icon(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_rounded, size: 14),
-                  label: Text(AppLocalizations.of(context).deleteBtn),
-                  style: TextButton.styleFrom(foregroundColor: AppColors.error, padding: const EdgeInsets.symmetric(horizontal: 8)),
+            ],
+          ),
+          if (q.options != null && q.options!.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              children: q.options!.map((o) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: o == q.correctAnswer ? AppColors.success.withValues(alpha: 0.1) : context.appColors.surface,
+                  borderRadius: AppRadius.rSm,
+                  border: Border.all(color: o == q.correctAnswer ? AppColors.success.withValues(alpha: 0.3) : context.appColors.border),
                 ),
-              ],
+                child: Text(_label(context, o), style: TextStyle(color: o == q.correctAnswer ? AppColors.success : context.appColors.textSecondary, fontSize: 11)),
+              )).toList(),
             ),
           ],
-        ),
-      );
+        ],
+      ),
+    );
+  }
 }
 
 // ─── Question Form Screen ─────────────────────────────────────────────────────

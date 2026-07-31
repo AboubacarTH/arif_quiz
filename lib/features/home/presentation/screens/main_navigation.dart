@@ -117,7 +117,7 @@ class _MainNavigationState extends State<MainNavigation> {
                   BottomNavigationBarItem(
                     icon: const Icon(Icons.grid_view_outlined),
                     activeIcon: const Icon(Icons.grid_view_rounded),
-                    label: 'Quiz',
+                    label: AppLocalizations.of(context).quizzesTab,
                   ),
                   BottomNavigationBarItem(
                     icon: const Icon(Icons.sports_esports_outlined),

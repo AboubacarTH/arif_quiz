@@ -754,5 +754,98 @@
   "exportQuestions": "Export questions",
   "exportLocaleHint": "The file matches the import template: you can edit it and re-import it.",
   "exportInProgress": "Preparing the file…",
-  "exportBtn": "Export"
+  "exportBtn": "Export",
+  "moreActions": "More actions",
+  "publishBtn": "Publish",
+  "unpublishBtn": "Unpublish",
+  "moveUp": "Move up",
+  "moveDown": "Move down",
+  "attemptsLabel": "attempts",
+  "howToPlay": "How to play",
+  "loadQuizFailed": "Unable to load this quiz.",
+  "leaderboardTitle": "Leaderboard",
+  "noRankingsYet": "No rankings yet",
+  "beFirstToFinish": "Be the first to complete a quiz!",
+  "allRankings": "All rankings",
+  "friendSingular": "Friend",
+  "shareFailed": "Sharing unavailable",
+  "shareMyScore": "Share my score",
+  "codeCopied": "Code copied!",
+  "listenAudio": "Listen to the audio",
+  "codeExampleHint": "e.g. X7K2PQ4R",
+  "quizzesTab": "Quizzes",
+  "watchAdForCredits": "Watch an ad → {count} games",
+  "@watchAdForCredits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "creditsRemaining": "{count, plural, =0{No ad-free game left} =1{1 ad-free game left} other{{count} ad-free games left}}",
+  "@creditsRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallBodyCredits": "Watch a short ad to unlock {count} games, or go Premium and play without interruption.",
+  "@paywallBodyCredits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freePlaysTitle": "Ad-free games",
+  "privacyOptions": "Privacy & ads",
+  "privacyOptionsSubtitle": "Change my consent choice",
+  "goPremium": "Go Premium",
+  "goPremiumSubtitle": "Play with no ads, no limits",
+  "orSeparator": "OR",
+  "premiumFeatureNoAds": "✅ Unlimited quizzes and journey, no ads",
+  "premiumFeatureAllModes": "⚡ Every game mode, never interrupted",
+  "premiumFeatureSupport": "❤️ You support the app's development",
+  "loadFailedRetry": "Loading failed. Pull to refresh.",
+  "loadQuizzesFailed": "Unable to load the quizzes.",
+  "loadLeaderboardFailed": "Unable to load the leaderboard.",
+  "loadProfileFailed": "Unable to load the profile.",
+  "loadJourneyFailed": "Unable to load the journey.",
+  "invalidCredentials": "Invalid email or password. Please try again.",
+  "registrationFailed": "Registration failed. This email may already be in use.",
+  "dailyTag": "Daily",
+  "secondsPerQuestionBadge": "{seconds}s / question",
+  "@secondsPerQuestionBadge": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "shareScoreText": "I scored a {grade} grade ({percent}%) on “{quiz}” 🎯 Challenge me on ArifQuiz!",
+  "@shareScoreText": {
+    "placeholders": {
+      "grade": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      },
+      "quiz": {
+        "type": "String"
+      }
+    }
+  },
+  "shareChallengeText": "I challenge you on Arif Quiz! Join my challenge “{title}” with the code: {code}",
+  "@shareChallengeText": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  }
 }

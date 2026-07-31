@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +23,10 @@ class SubscriptionService {
 
   bool _isPremium = false;
   List<ProductDetails> _products = [];
+
+  /// Notifié quand le statut premium change — y compris **hors tap** : paiement
+  /// différé validé plus tard par Google Play, restauration au lancement.
+  VoidCallback? onChanged;
 
   bool get isPremium => _isPremium;
   List<ProductDetails> get products => _products;
@@ -81,9 +86,11 @@ class SubscriptionService {
   }
 
   Future<void> _setPremium(bool value) async {
+    final changed = _isPremium != value;
     _isPremium = value;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_premiumKey, value);
+    if (changed) onChanged?.call();
   }
 
   Future<bool> buySubscription(ProductDetails product) async {

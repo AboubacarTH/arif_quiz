@@ -24,13 +24,19 @@ bool _handlingUnauthorized = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // Initialise AdMob + Play Billing en arrière-plan au démarrage
-  monetizationController.initialize();
   // Initialise Firebase Messaging (push) en arrière-plan
   messagingService.initialize();
   _wireUnauthorizedRedirect();
   _wireLocale();
   runApp(const QuizApp());
+
+  // Consentement publicitaire, AdMob et Play Billing : après la première frame.
+  // Le formulaire de consentement est une vue native greffée sur l'activité —
+  // le déclencher avant `runApp` revient à l'afficher sur un écran qui n'existe
+  // pas encore.
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    monetizationController.initialize();
+  });
 }
 
 /// Propage la langue choisie : en-tête API (contenu multilingue), messages

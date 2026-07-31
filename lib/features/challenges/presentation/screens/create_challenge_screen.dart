@@ -1,3 +1,4 @@
+import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
 import 'package:arif_quiz/features/challenges/bloc/challenge_controller.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
@@ -829,7 +830,8 @@ class _StepQuizState extends State<_StepQuiz> {
                                           color: AppColors.primary),
                                       const SizedBox(width: 6),
                                       _QuizChip(
-                                        label: q.difficulty,
+                                        label: DifficultyL10n.label(
+                                            context, q.difficulty),
                                         color: AppColors.difficultyColor(
                                             q.difficulty),
                                       ),

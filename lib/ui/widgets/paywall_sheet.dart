@@ -15,18 +15,22 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 /// ```
 class PaywallSheet extends StatefulWidget {
   final MonetizationController ctrl;
-  final VoidCallback onGranted;
+
+  /// Partie à lancer une fois l'accès obtenu. `null` = feuille ouverte hors
+  /// partie (depuis le profil) : la publicité crédite alors le solde **sans**
+  /// en consommer une, sinon le crédit gagné serait aussitôt perdu.
+  final VoidCallback? onGranted;
 
   const PaywallSheet({
     super.key,
     required this.ctrl,
-    required this.onGranted,
+    this.onGranted,
   });
 
   static Future<void> show(
     BuildContext context, {
     required MonetizationController ctrl,
-    required VoidCallback onGranted,
+    VoidCallback? onGranted,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -83,7 +87,8 @@ class _PaywallSheetState extends State<PaywallSheet> {
           ),
           const SizedBox(height: 6),
           Text(
-            AppLocalizations.of(context).paywallBody,
+            AppLocalizations.of(context)
+                .paywallBodyCredits(widget.ctrl.creditsPerAd),
             textAlign: TextAlign.center,
             style: TextStyle(
               color: context.appColors.textSecondary,
@@ -91,12 +96,33 @@ class _PaywallSheetState extends State<PaywallSheet> {
               height: 1.5,
             ),
           ),
+          if (widget.ctrl.credits > 0) ...[
+            const SizedBox(height: 10),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.success.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                AppLocalizations.of(context)
+                    .creditsRemaining(widget.ctrl.credits),
+                style: const TextStyle(
+                    color: AppColors.success,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
           const SizedBox(height: 28),
 
           // ── Bouton Pub ──────────────────────────────────────────────────
           if (widget.ctrl.isAdReady)
             _AdButton(
               loading: _loadingAd,
+              label: AppLocalizations.of(context)
+                  .watchAdForCredits(widget.ctrl.creditsPerAd),
               onTap: _watchAd,
             )
           else
@@ -134,8 +160,9 @@ class _PaywallSheetState extends State<PaywallSheet> {
             Expanded(child: Divider(color: context.appColors.border)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text('OU', style: TextStyle(
-                color: context.appColors.textMuted, fontSize: 12)),
+              child: Text(AppLocalizations.of(context).orSeparator,
+                  style: TextStyle(
+                      color: context.appColors.textMuted, fontSize: 12)),
             ),
             Expanded(child: Divider(color: context.appColors.border)),
           ]),
@@ -205,17 +232,30 @@ class _PaywallSheetState extends State<PaywallSheet> {
 
   Future<void> _watchAd() async {
     setState(() => _loadingAd = true);
-    await widget.ctrl.requestPlay(
-      onGranted: () {
-        if (mounted) {
-          Navigator.pop(context);
-          widget.onGranted();
-        }
-      },
-      onNoAd: () {
-        if (mounted) setState(() => _loadingAd = false);
-      },
-    );
+    final onGranted = widget.onGranted;
+
+    if (onGranted == null) {
+      await widget.ctrl.watchAdForCredits(
+        onRewarded: () {
+          if (mounted) Navigator.pop(context);
+        },
+        onFailed: () {
+          if (mounted) setState(() => _loadingAd = false);
+        },
+      );
+    } else {
+      await widget.ctrl.requestPlay(
+        onGranted: () {
+          if (mounted) {
+            Navigator.pop(context);
+            onGranted();
+          }
+        },
+        onNoAd: () {
+          if (mounted) setState(() => _loadingAd = false);
+        },
+      );
+    }
     if (mounted) setState(() => _loadingAd = false);
   }
 
@@ -236,7 +276,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
       if (ok && _subs.isPremium) {
         widget.ctrl.refresh();
         Navigator.pop(context);
-        widget.onGranted();
+        widget.onGranted?.call();
       }
     }
   }
@@ -246,9 +286,11 @@ class _PaywallSheetState extends State<PaywallSheet> {
 
 class _AdButton extends StatelessWidget {
   final bool loading;
+  final String label;
   final VoidCallback onTap;
 
-  const _AdButton({required this.loading, required this.onTap});
+  const _AdButton(
+      {required this.loading, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -283,12 +325,16 @@ class _AdButton extends StatelessWidget {
                   const Icon(Icons.play_circle_outline_rounded,
                       color: Colors.white, size: 22),
                   const SizedBox(width: 8),
-                  Text(
-                    AppLocalizations.of(context).watchAd,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
+                  Flexible(
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ],
@@ -326,11 +372,13 @@ class _PremiumBanner extends StatelessWidget {
             ),
           ]),
           const SizedBox(height: 8),
+          // Ne lister que des avantages réellement livrés : un paywall qui
+          // promet un classement ou des XP boostés inexistants est une
+          // publicité mensongère (et un motif de rejet Play Store).
           ...[
-            '✅ Quiz illimités sans pub',
-            '⚡ Accès à tous les modes de jeu',
-            '🏆 Classement premium exclusif',
-            '🔥 Streaks et XP boostés',
+            AppLocalizations.of(context).premiumFeatureNoAds,
+            AppLocalizations.of(context).premiumFeatureAllModes,
+            AppLocalizations.of(context).premiumFeatureSupport,
           ].map((f) => Padding(
                 padding: const EdgeInsets.only(bottom: 3),
                 child: Text(f,
