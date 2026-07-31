@@ -20,6 +20,17 @@ class _FakeAds implements AdsService {
 
   /// Consentement refusé : aucune pub ne pourra jamais être servie.
   bool blocked = false;
+  bool loading = false;
+  int loadCalls = 0;
+
+  /// Faux = l'inventaire reste vide (hors ligne, aucune pub à servir).
+  bool loadSucceeds = true;
+
+  @override
+  VoidCallback? onAvailabilityChanged;
+
+  @override
+  bool get isAdLoading => loading;
 
   @override
   bool get isSupported => true;
@@ -40,7 +51,11 @@ class _FakeAds implements AdsService {
   Future<void> initialize() async {}
 
   @override
-  Future<void> loadRewardedAd() async => ready = true;
+  Future<void> loadRewardedAd() async {
+    loadCalls++;
+    if (loadSucceeds) ready = true;
+    onAvailabilityChanged?.call();
+  }
 
   @override
   Future<void> showRewardedAd({
@@ -256,6 +271,55 @@ void main() {
 
     expect(r.granted, isFalse);
     expect(r.paywall, isTrue);
+  });
+
+  group('Non-régression : le paywall figé après épuisement des crédits', () {
+    test('la demande se termine même si le lancement de la partie échoue',
+        () async {
+      // Le paywall appelait `Navigator.pop` sur une feuille parfois déjà
+      // fermée : l'exception sautait la complétion et le bouton tournait
+      // indéfiniment, sans aucune issue pour le joueur.
+      var completed = false;
+
+      await ctrl.requestPlay(
+        onGranted: () => throw StateError('navigation impossible'),
+        onNoAd: () {},
+      ).whenComplete(() => completed = true);
+
+      expect(completed, isTrue, reason: 'ne doit jamais rester suspendu');
+      // La récompense reste acquise : la pub a bien été regardée.
+      expect(ctrl.credits, PlayCreditsService.perAd - 1);
+    });
+
+    test('l\'arrivée d\'une pub réveille l\'écran ouvert', () async {
+      // Le paywall s'ouvre faute de pub ; il doit se reconstruire tout seul
+      // dès qu'une pub devient disponible, sans que l'utilisateur le referme.
+      ads.ready = false;
+      await play(ctrl); // ouvre le paywall (onNoAd)
+
+      var notified = 0;
+      ctrl.addListener(() => notified++);
+
+      await ctrl.prepareAd();
+
+      expect(ctrl.isAdReady, isTrue);
+      expect(notified, greaterThan(0), reason: 'l\'UI doit être prévenue');
+    });
+
+    test('un échec de pub laisse toujours une action possible', () async {
+      ads.ready = false;
+      ads.loading = false;
+      ads.loadSucceeds = false; // rien à servir, même après relance
+
+      final r = await play(ctrl);
+
+      expect(r.paywall, isTrue);
+      // Ni pub prête ni chargement en cours : l'écran propose « Réessayer »
+      // plutôt qu'un spinner sans fin.
+      expect(ctrl.isAdReady, isFalse);
+      expect(ctrl.isAdLoading, isFalse);
+      expect(ads.loadCalls, greaterThan(0), reason: 'une relance est amorcée');
+    });
   });
 
   test('devenir premium notifie l\'UI sans nouveau tap', () async {

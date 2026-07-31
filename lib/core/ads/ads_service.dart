@@ -29,9 +29,22 @@ class AdsService {
 
   final ConsentService _consent = ConsentService();
 
+  /// Prévient quand la disponibilité d'une pub change (chargée, consommée,
+  /// échec de chargement). Sans ce signal, un écran ouvert alors qu'aucune pub
+  /// n'était prête reste figé sur « chargement » même une fois la pub arrivée.
+  VoidCallback? onAvailabilityChanged;
+
   bool _initialized = false;
   RewardedAd? _rewardedAd;
   bool _isLoadingAd = false;
+  DateTime? _loadStartedAt;
+
+  /// Au-delà de ce délai, une demande de chargement est considérée comme
+  /// perdue : sans ce garde-fou, un `_isLoadingAd` resté à `true` (exception
+  /// réseau, callback jamais reçu) bloquerait toute publicité **à vie**.
+  static const _loadTimeout = Duration(seconds: 60);
+
+  bool get isAdLoading => _isLoadingAd;
 
   /// Seul Android est configuré (App ID dans `AndroidManifest.xml`, unité
   /// récompensée ci-dessus). Sur iOS, initialiser le SDK sans
@@ -67,23 +80,46 @@ class AdsService {
   }
 
   Future<void> loadRewardedAd() async {
-    if (_isLoadingAd || _rewardedAd != null || !canServeAds) return;
-    _isLoadingAd = true;
+    if (_rewardedAd != null || !canServeAds) return;
+    if (_isLoadingAd && !_loadIsStale) return;
 
-    await RewardedAd.load(
-      adUnitId: _AdIds.rewardedId,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
-          _rewardedAd = ad;
-          _isLoadingAd = false;
-        },
-        onAdFailedToLoad: (_) {
-          _rewardedAd = null;
-          _isLoadingAd = false;
-        },
-      ),
-    );
+    _isLoadingAd = true;
+    _loadStartedAt = DateTime.now();
+
+    try {
+      await RewardedAd.load(
+        adUnitId: _AdIds.rewardedId,
+        request: const AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (ad) {
+            _isLoadingAd = false;
+            _setAd(ad);
+          },
+          onAdFailedToLoad: (error) {
+            debugPrint('AdMob: chargement échoué — ${error.message}');
+            _isLoadingAd = false;
+            _setAd(null);
+            // Notifie même sans changement d'état : l'écran doit pouvoir
+            // proposer « Réessayer » plutôt que de tourner dans le vide.
+            onAvailabilityChanged?.call();
+          },
+        ),
+      );
+    } catch (e) {
+      debugPrint('AdMob: demande de chargement impossible — $e');
+      _isLoadingAd = false;
+      onAvailabilityChanged?.call();
+    }
+  }
+
+  bool get _loadIsStale =>
+      _loadStartedAt == null ||
+      DateTime.now().difference(_loadStartedAt!) > _loadTimeout;
+
+  void _setAd(RewardedAd? ad) {
+    final had = _rewardedAd != null;
+    _rewardedAd = ad;
+    if (had != (ad != null)) onAvailabilityChanged?.call();
   }
 
   /// Affiche la pub récompensée.
@@ -106,30 +142,42 @@ class AdsService {
     }
 
     final ad = _rewardedAd!;
-    _rewardedAd = null;
+    _setAd(null);
 
     // Indique si la récompense a bien été accordée avant la fermeture
     var rewarded = false;
+    // Une pub ne doit jamais rendre deux verdicts : le second laisserait
+    // l'appelant dans un état incohérent.
+    var settled = false;
+    void settle(VoidCallback outcome) {
+      if (settled) return;
+      settled = true;
+      outcome();
+    }
 
     ad.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (a) {
         a.dispose();
         loadRewardedAd(); // pré-charge la suivante
-        if (rewarded) {
-          onRewarded();
-        } else {
-          // Fermée avant la fin → aucune récompense.
-          onFailed();
-        }
+        settle(rewarded ? onRewarded : onFailed);
       },
       onAdFailedToShowFullScreenContent: (a, _) {
         a.dispose();
         loadRewardedAd();
-        onFailed();
+        settle(onFailed);
       },
     );
 
-    await ad.show(onUserEarnedReward: (_, __) => rewarded = true);
+    try {
+      await ad.show(onUserEarnedReward: (_, __) => rewarded = true);
+    } catch (e) {
+      // `show()` a échoué avant d'armer quoi que ce soit : aucun callback ne
+      // viendra, il faut rendre la main nous-mêmes sous peine de tout figer.
+      debugPrint('AdMob: affichage impossible — $e');
+      ad.dispose();
+      loadRewardedAd();
+      settle(onFailed);
+    }
   }
 
   void dispose() {

@@ -483,6 +483,7 @@
   "creditsRemaining": "{count, plural, =0{Aucune partie sans pub} =1{1 partie sans pub} other{{count} parties sans pub}}",
   "paywallBodyCredits": "Regarde une courte publicité pour débloquer {count} parties, ou passe Premium pour jouer sans interruption.",
   "freePlaysTitle": "Parties sans pub",
+  "adUnavailableRetry": "Aucune publicité disponible — réessayer",
   "privacyOptions": "Confidentialité et publicité",
   "privacyOptionsSubtitle": "Modifier mon choix de consentement",
   "goPremium": "Passer Premium",

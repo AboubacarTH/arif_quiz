@@ -51,7 +51,25 @@ class _PaywallSheetState extends State<PaywallSheet> {
   bool _buyingYearly = false;
 
   @override
+  void initState() {
+    super.initState();
+    // La feuille s'ouvre justement quand aucune pub n'était disponible :
+    // sans cette relance, elle attendrait une pub que personne ne demande.
+    if (!widget.ctrl.isAdReady) widget.ctrl.prepareAd();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Le contrôleur prévient dès qu'une pub arrive (ou échoue) : la feuille se
+    // reconstruit alors seule. Sans cela, elle restait figée sur
+    // « chargement » jusqu'à sa fermeture, même une pub prête.
+    return ListenableBuilder(
+      listenable: widget.ctrl,
+      builder: (context, _) => _buildSheet(context),
+    );
+  }
+
+  Widget _buildSheet(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: context.appColors.cardBg,
@@ -125,7 +143,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
                   .watchAdForCredits(widget.ctrl.creditsPerAd),
               onTap: _watchAd,
             )
-          else
+          else if (widget.ctrl.isAdLoading)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
@@ -151,7 +169,11 @@ class _PaywallSheetState extends State<PaywallSheet> {
                   ),
                 ],
               ),
-            ),
+            )
+          else
+            // Chargement terminé sans publicité (hors ligne, inventaire vide) :
+            // proposer une relance explicite plutôt qu'un spinner éternel.
+            _RetryAdButton(onTap: () => widget.ctrl.prepareAd()),
 
           const SizedBox(height: 16),
 
@@ -339,6 +361,49 @@ class _AdButton extends StatelessWidget {
                   ),
                 ],
               ),
+      ),
+    );
+  }
+}
+
+/// Sortie de secours : aucune publicité n'a pu être chargée et plus rien ne
+/// tourne en tâche de fond. L'utilisateur garde la main.
+class _RetryAdButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _RetryAdButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: context.appColors.cardBgLight,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: context.appColors.border),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.refresh_rounded,
+                color: context.appColors.textSecondary, size: 20),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Text(
+                AppLocalizations.of(context).adUnavailableRetry,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: context.appColors.textSecondary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

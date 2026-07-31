@@ -1608,6 +1608,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get freePlaysTitle => 'Parties sans pub';
 
   @override
+  String get adUnavailableRetry => 'Aucune publicité disponible — réessayer';
+
+  @override
   String get privacyOptions => 'Confidentialité et publicité';
 
   @override
