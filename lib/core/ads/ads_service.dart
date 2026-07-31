@@ -116,10 +116,24 @@ class AdsService {
       _loadStartedAt == null ||
       DateTime.now().difference(_loadStartedAt!) > _loadTimeout;
 
+  /// Publie une annonce fraîchement chargée. Le garde-fou d'expiration peut
+  /// relancer un chargement pendant qu'un autre aboutit : sans cette
+  /// libération, l'annonce remplacée resterait en mémoire, jamais affichée et
+  /// jamais détruite.
   void _setAd(RewardedAd? ad) {
-    final had = _rewardedAd != null;
+    final previous = _rewardedAd;
+    if (previous != null && !identical(previous, ad)) previous.dispose();
     _rewardedAd = ad;
-    if (had != (ad != null)) onAvailabilityChanged?.call();
+    if ((previous != null) != (ad != null)) onAvailabilityChanged?.call();
+  }
+
+  /// Retire l'annonce du stock **sans la détruire** : elle part à l'affichage,
+  /// c'est le callback de fermeture qui la libérera.
+  RewardedAd? _takeAd() {
+    final ad = _rewardedAd;
+    _rewardedAd = null;
+    if (ad != null) onAvailabilityChanged?.call();
+    return ad;
   }
 
   /// Affiche la pub récompensée.
@@ -141,8 +155,7 @@ class AdsService {
       }
     }
 
-    final ad = _rewardedAd!;
-    _setAd(null);
+    final ad = _takeAd()!;
 
     // Indique si la récompense a bien été accordée avant la fermeture
     var rewarded = false;

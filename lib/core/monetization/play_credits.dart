@@ -11,6 +11,11 @@ class PlayCreditsService extends ChangeNotifier {
   /// Parties débloquées par publicité regardée jusqu'au bout.
   static const int perAd = 3;
 
+  /// Plafond du solde. Une publicité regardée alors qu'il reste des crédits
+  /// (possible depuis le profil) ne les cumule pas : le solde est ramené au
+  /// plafond. Sans cela on pouvait accumuler 5, 8, 11 parties d'avance.
+  static const int maxCredits = perAd;
+
   static const _key = 'play_credits';
 
   int _credits = 0;
@@ -22,7 +27,9 @@ class PlayCreditsService extends ChangeNotifier {
   Future<void> load() async {
     if (_loaded) return;
     final prefs = await SharedPreferences.getInstance();
-    _credits = prefs.getInt(_key) ?? 0;
+    // Le clamp s'applique aussi à la relecture : un solde gonflé par l'ancienne
+    // version redescend au plafond dès le premier chargement.
+    _credits = (prefs.getInt(_key) ?? 0).clamp(0, maxCredits);
     _loaded = true;
     notifyListeners();
   }
@@ -41,7 +48,10 @@ class PlayCreditsService extends ChangeNotifier {
   Future<void> reset() => _set(0);
 
   Future<void> _set(int value) async {
-    _credits = value < 0 ? 0 : value;
+    // Borné des deux côtés : un solde négatif serait un bug de comptage, un
+    // solde au-dessus du plafond une accumulation non voulue. Le clamp couvre
+    // aussi les valeurs héritées d'une version précédente, déjà en base.
+    _credits = value.clamp(0, maxCredits);
     _loaded = true;
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
