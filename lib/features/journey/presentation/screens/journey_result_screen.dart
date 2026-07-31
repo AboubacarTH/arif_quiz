@@ -1,3 +1,4 @@
+import 'package:arif_quiz/core/monetization/play_gate.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/features/journey/presentation/screens/journey_play_screen.dart';
 import 'package:arif_quiz/shared/models/models.dart';
@@ -19,16 +20,21 @@ class JourneyResultScreen extends StatelessWidget {
 
   Color get _accent => isBoss ? AppColors.error : AppColors.primary;
 
-  ({String emoji, String title}) get _headline => switch (result.stars) {
-        3 => (emoji: '🏆', title: 'Parfait !'),
-        2 => (emoji: '🎉', title: 'Bien joué !'),
-        1 => (emoji: '👍', title: 'Niveau réussi'),
-        _ => (emoji: '😕', title: 'Presque !'),
-      };
+  /// Les libellés existaient déjà en 4 langues (`resultPerfect`…) mais l'écran
+  /// gardait des chaînes françaises en dur : le titre ne suivait pas la langue.
+  ({String emoji, String title}) _headline(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return switch (result.stars) {
+      3 => (emoji: '🏆', title: l10n.resultPerfect),
+      2 => (emoji: '🎉', title: l10n.resultGreat),
+      1 => (emoji: '👍', title: l10n.resultPassed),
+      _ => (emoji: '😕', title: l10n.resultAlmost),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
-    final h = _headline;
+    final h = _headline(context);
     final passed = result.stars >= 1;
 
     return PopScope(
@@ -120,11 +126,17 @@ class JourneyResultScreen extends StatelessWidget {
   /// désormais un réglage par niveau côté admin).
   void _goToLevel(
       BuildContext context, int levelId, int levelNumber, bool boss) {
-    Navigator.pushReplacement(
+    // « Niveau suivant » et « Rejouer » lancent une partie comme les autres :
+    // sans ce passage par le portail, l'enchaînement depuis le résultat était
+    // un contournement gratuit du système de crédits.
+    PlayGate.requestPlay(
       context,
-      SlideRightRoute(
-        page: JourneyPlayScreen(
-            levelId: levelId, levelNumber: levelNumber, isBoss: boss),
+      onGranted: () => Navigator.pushReplacement(
+        context,
+        SlideRightRoute(
+          page: JourneyPlayScreen(
+              levelId: levelId, levelNumber: levelNumber, isBoss: boss),
+        ),
       ),
     );
   }

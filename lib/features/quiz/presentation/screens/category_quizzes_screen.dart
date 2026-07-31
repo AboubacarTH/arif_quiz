@@ -1,3 +1,4 @@
+import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
 import 'package:arif_quiz/features/quiz/bloc/quiz_list_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
@@ -192,11 +193,7 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
                   child: _DiffChip(
                     label: d == null
                         ? AppLocalizations.of(context).allFilter
-                        : d == 'easy'
-                            ? AppLocalizations.of(context).diffEasy
-                            : d == 'medium'
-                                ? AppLocalizations.of(context).diffMedium
-                                : AppLocalizations.of(context).diffHard,
+                        : DifficultyL10n.label(context, d),
                     selected: _selectedDiff == d,
                     color: d == null ? _color : AppColors.difficultyColor(d),
                     onTap: () {

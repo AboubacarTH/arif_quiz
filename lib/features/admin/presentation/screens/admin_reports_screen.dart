@@ -1,5 +1,6 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_questions_screen.dart';
+import 'package:arif_quiz/features/admin/presentation/widgets/admin_card.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
@@ -183,14 +184,17 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
             r: _reports[i],
             onSetStatus: (s) => _setStatus(_reports[i], s),
             onDelete: () => _delete(_reports[i]),
-            onOpenQuestion: () {
-              final quizId = _reports[i].quizId;
-              if (quizId == null) return;
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => AdminQuestionsScreen(initialQuizId: quizId)),
-              );
-            },
+            // Sans quiz rattaché il n'y a rien à ouvrir : l'action est alors
+            // absente plutôt qu'inerte.
+            onOpenQuestion: _reports[i].quizId == null
+                ? null
+                : () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AdminQuestionsScreen(
+                            initialQuizId: _reports[i].quizId),
+                      ),
+                    ),
           );
         },
       ),
@@ -238,7 +242,7 @@ class _ReportTile extends StatelessWidget {
   final AdminReportModel r;
   final ValueChanged<String> onSetStatus;
   final VoidCallback onDelete;
-  final VoidCallback onOpenQuestion;
+  final VoidCallback? onOpenQuestion;
 
   const _ReportTile({
     required this.r,
@@ -249,104 +253,114 @@ class _ReportTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final statusColor = _statusColor(r.status);
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: context.cardElevated,
-        borderRadius: AppRadius.rLg,
-        boxShadow: AppShadows.card(context),
-      ),
+    return AdminCard(
+      onTap: onOpenQuestion,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
-                child: Text(r.reasonLabel, style: const TextStyle(color: AppColors.error, fontSize: 11, fontWeight: FontWeight.w700)),
+          AdminCardHeader(
+            title: r.questionText ?? l10n.questionLabel,
+            subtitle: r.correctAnswer != null
+                ? Row(
+                    children: [
+                      const Icon(Icons.check_circle_outline_rounded,
+                          size: 13, color: AppColors.success),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          l10n.markedCorrectAnswer(r.correctAnswer ?? ''),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(color: AppColors.success, fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  )
+                : null,
+            badges: [
+              AdminTag(label: r.statusLabel, color: statusColor, strong: true),
+            ],
+            // Changement de statut et suppression : un seul point d'entrée,
+            // au lieu d'une barre d'icônes qui poussait hors de la carte.
+            menuActions: [
+              AdminAction(
+                icon: Icons.schedule_rounded,
+                label: l10n.markPending,
+                color: AppColors.warning,
+                onPressed: r.status == 'pending' ? null : () => onSetStatus('pending'),
               ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
-                child: Text(r.statusLabel, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.w700)),
+              AdminAction(
+                icon: Icons.autorenew_rounded,
+                label: l10n.markInProgress,
+                color: AppColors.info,
+                onPressed: r.status == 'reviewed' ? null : () => onSetStatus('reviewed'),
+              ),
+              AdminAction(
+                icon: Icons.check_circle_rounded,
+                label: l10n.markResolved,
+                color: AppColors.success,
+                onPressed: r.status == 'resolved' ? null : () => onSetStatus('resolved'),
+              ),
+              AdminAction(
+                icon: Icons.block_rounded,
+                label: l10n.reject,
+                color: context.appColors.textSecondary,
+                onPressed: r.status == 'dismissed' ? null : () => onSetStatus('dismissed'),
+              ),
+              AdminAction(
+                icon: Icons.delete_outline_rounded,
+                label: l10n.deleteBtn,
+                destructive: true,
+                onPressed: onDelete,
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          if (r.questionText != null)
-            Text(r.questionText!, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 13)),
-          if (r.correctAnswer != null) ...[
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(Icons.check_circle_outline_rounded, size: 14, color: AppColors.success),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(AppLocalizations.of(context).markedCorrectAnswer(r.correctAnswer ?? ''),
-                      style: const TextStyle(color: AppColors.success, fontSize: 12), overflow: TextOverflow.ellipsis),
-                ),
-              ],
-            ),
-          ],
-          if (r.comment != null && r.comment!.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: context.appColors.cardBgLight, borderRadius: BorderRadius.circular(8)),
-              child: Text(r.comment!, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, height: 1.4)),
-            ),
-          ],
-          const SizedBox(height: 8),
-          Row(
+          const SizedBox(height: AppSpacing.md),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
             children: [
-              Icon(Icons.person_outline_rounded, size: 13, color: context.appColors.textMuted),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  r.userName ?? AppLocalizations.of(context).anonymous,
-                  style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
-                  overflow: TextOverflow.ellipsis,
-                ),
+              AdminTag(label: r.reasonLabel, color: AppColors.error),
+              AdminTag(
+                label: r.userName ?? l10n.anonymous,
+                color: context.appColors.textMuted,
+                icon: Icons.person_outline_rounded,
               ),
               if (r.quizTitle != null)
-                Flexible(
-                  child: Text(
-                    r.quizTitle!,
-                    style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 190),
+                  child: AdminTag(
+                    label: r.quizTitle!,
+                    color: context.appColors.textMuted,
+                    icon: Icons.folder_open_rounded,
                   ),
                 ),
             ],
           ),
-          Divider(height: 18, color: context.appColors.border),
-          Row(
-            children: [
-              TextButton.icon(
+          if (r.comment != null && r.comment!.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: context.appColors.cardBgLight,
+                borderRadius: AppRadius.rSm,
+              ),
+              child: Text(r.comment!, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, height: 1.4)),
+            ),
+          ],
+          const SizedBox(height: AppSpacing.md),
+          Divider(height: 1, color: context.appColors.border),
+          const SizedBox(height: AppSpacing.md),
+          AdminActionBar(
+            actions: [
+              AdminAction(
+                icon: Icons.open_in_new_rounded,
+                label: l10n.questionLabel,
+                color: AppColors.info,
                 onPressed: onOpenQuestion,
-                icon: const Icon(Icons.open_in_new_rounded, size: 14),
-                label: Text(AppLocalizations.of(context).questionLabel),
-                style: TextButton.styleFrom(foregroundColor: AppColors.info, padding: const EdgeInsets.symmetric(horizontal: 6)),
-              ),
-              const Spacer(),
-              PopupMenuButton<String>(
-                onSelected: onSetStatus,
-                color: context.appColors.cardBg,
-                icon: Icon(Icons.more_horiz_rounded, color: context.appColors.textSecondary),
-                itemBuilder: (_) => [
-                  PopupMenuItem(value: 'pending', child: Text(AppLocalizations.of(context).markPending)),
-                  PopupMenuItem(value: 'reviewed', child: Text(AppLocalizations.of(context).markInProgress)),
-                  PopupMenuItem(value: 'resolved', child: Text(AppLocalizations.of(context).markResolved)),
-                  PopupMenuItem(value: 'dismissed', child: Text(AppLocalizations.of(context).reject)),
-                ],
-              ),
-              IconButton(
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.error),
               ),
             ],
           ),

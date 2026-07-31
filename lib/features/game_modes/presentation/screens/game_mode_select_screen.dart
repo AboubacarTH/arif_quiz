@@ -1,16 +1,16 @@
+import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
+import 'package:arif_quiz/core/monetization/play_gate.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/speed_play_screen.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/survival_play_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/core/i18n/game_mode_l10n.dart';
-import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/game_mode_card.dart';
 import 'package:arif_quiz/ui/widgets/neon_button.dart';
-import 'package:arif_quiz/ui/widgets/paywall_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -192,7 +192,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
                     if (diff != null) ...[
                       const SizedBox(width: 6),
                       _InfoChip(
-                        label: diff,
+                        label: DifficultyL10n.label(context, diff),
                         icon: Icons.bar_chart_rounded,
                         color: diffColor,
                       ),
@@ -301,16 +301,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
 
   // ─── Logic ───────────────────────────────────────────────────────────────────
 
-  void _startGame() {
-    monetizationController.requestPlay(
-      onGranted: _launchScreen,
-      onNoAd: () => PaywallSheet.show(
-        context,
-        ctrl: monetizationController,
-        onGranted: _launchScreen,
-      ),
-    );
-  }
+  void _startGame() => PlayGate.requestPlay(context, onGranted: _launchScreen);
 
   void _launchScreen() {
     final quiz = widget.quiz ?? QuizModel.fromJson(
@@ -474,10 +465,13 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
   void _launchTraining(int count) {
     final quiz = widget.quiz;
     if (quiz == null || !mounted) return;
-    Navigator.pushReplacement(
+    PlayGate.requestPlay(
       context,
-      SlideRightRoute(
-        page: QuizPlayScreen(quiz: quiz, training: true, questionCount: count),
+      onGranted: () => Navigator.pushReplacement(
+        context,
+        SlideRightRoute(
+          page: QuizPlayScreen(quiz: quiz, training: true, questionCount: count),
+        ),
       ),
     );
   }

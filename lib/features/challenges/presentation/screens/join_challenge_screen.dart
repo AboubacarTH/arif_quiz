@@ -66,7 +66,7 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
               textCapitalization: TextCapitalization.characters,
               maxLength: 8,
               decoration: InputDecoration(
-                hintText: 'EX: X7K2PQ4R',
+                hintText: AppLocalizations.of(context).codeExampleHint,
                 hintStyle: TextStyle(color: context.appColors.textMuted, letterSpacing: 2, fontSize: 18),
                 counterText: '',
               ),

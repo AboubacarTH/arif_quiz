@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/features/auth/bloc/auth_controller.dart';
+﻿import 'package:arif_quiz/core/i18n/auth_error_l10n.dart';
+import 'package:arif_quiz/features/auth/bloc/auth_controller.dart';
 import 'package:arif_quiz/features/auth/data/auth_repository.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dart';
@@ -115,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 40),
                 // Error banner
-                if (_auth.errorMessage != null) ...[
+                if (_auth.errorCode != null) ...[
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
@@ -129,7 +130,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: AppColors.error, size: 18),
                         const SizedBox(width: 8),
                         Expanded(
-                            child: Text(_auth.errorMessage!,
+                            child: Text(
+                                AuthErrorL10n.message(context, _auth.errorCode!),
                                 style: const TextStyle(
                                     color: AppColors.error, fontSize: 13))),
                         GestureDetector(

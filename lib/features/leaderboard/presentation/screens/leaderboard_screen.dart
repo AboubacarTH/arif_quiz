@@ -1,4 +1,5 @@
 ﻿import 'package:arif_quiz/features/leaderboard/data/leaderboard_repository.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/widgets/app_bar.dart';
@@ -36,7 +37,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.bg,
-      appBar: QuizAppBar(title: 'Leaderboard 🏆'),
+      appBar: QuizAppBar(
+          title: '${AppLocalizations.of(context).leaderboardTitle} 🏆'),
       body: RefreshIndicator(
         onRefresh: _ctrl.load,
         color: AppColors.primary,
@@ -52,12 +54,14 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           child: CircularProgressIndicator(color: AppColors.primary));
     }
     if (_ctrl.error != null) {
-      return ErrorState(message: _ctrl.error!, onRetry: _ctrl.load);
+      return ErrorState(
+          message: AppLocalizations.of(context).loadLeaderboardFailed,
+          onRetry: _ctrl.load);
     }
     if (_ctrl.entries.isEmpty) {
-      return const EmptyState(
-          title: 'No rankings yet',
-          subtitle: 'Be the first to complete a quiz!',
+      return EmptyState(
+          title: AppLocalizations.of(context).noRankingsYet,
+          subtitle: AppLocalizations.of(context).beFirstToFinish,
           emoji: '🏁');
     }
 
@@ -82,7 +86,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               Expanded(child: Divider(color: context.appColors.cardBgLight)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text('All Rankings',
+                child: Text(AppLocalizations.of(context).allRankings,
                     style: TextStyle(
                         color: context.appColors.textMuted, fontSize: 12)),
               ),

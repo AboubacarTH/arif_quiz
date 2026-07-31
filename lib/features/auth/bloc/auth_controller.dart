@@ -1,3 +1,4 @@
+import 'package:arif_quiz/core/i18n/auth_error_l10n.dart';
 import 'package:arif_quiz/features/auth/data/auth_repository.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:flutter/foundation.dart';
@@ -40,7 +41,9 @@ class AuthController extends ChangeNotifier {
       _state is AuthAuthenticated ? (_state as AuthAuthenticated).user : null;
   bool get isAuthenticated => _state is AuthAuthenticated;
   bool get isLoading => _state is AuthLoading;
-  String? get errorMessage =>
+  /// Code d'erreur stable (jamais affiché tel quel) : l'écran le traduit dans
+  /// la langue courante via [AuthErrorL10n].
+  String? get errorCode =>
       _state is AuthError ? (_state as AuthError).message : null;
 
   AuthController(this._repo);
@@ -67,7 +70,7 @@ class AuthController extends ChangeNotifier {
       _emit(AuthAuthenticated(result.user));
       return true;
     } catch (_) {
-      _emit(AuthError('Invalid email or password. Please try again.'));
+      _emit(AuthError(AuthErrorCodes.invalidCredentials));
       return false;
     }
   }
@@ -79,7 +82,7 @@ class AuthController extends ChangeNotifier {
       _emit(AuthAuthenticated(result.user));
       return true;
     } catch (_) {
-      _emit(AuthError('Registration failed. Email may already be in use.'));
+      _emit(AuthError(AuthErrorCodes.registrationFailed));
       return false;
     }
   }

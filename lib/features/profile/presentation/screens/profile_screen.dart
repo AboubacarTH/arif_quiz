@@ -224,7 +224,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_ctrl.error != null) {
       return ListView(children: [
         const SizedBox(height: 200),
-        ErrorState(message: _ctrl.error!, onRetry: _ctrl.load),
+        ErrorState(
+            message: AppLocalizations.of(context).loadProfileFailed,
+            onRetry: _ctrl.load),
       ]);
     }
 
@@ -256,6 +258,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildThemeSection(),
                 const SizedBox(height: 24),
                 _buildLanguageSection(),
+                // Ne s'affiche que là où la loi l'exige (EEE, UK, États US
+                // régulés) : ailleurs, le widget ne rend rien.
+                const _PrivacyOptionsTile(),
                 const SizedBox(height: 28),
                 _buildRecentActivity(d.recentAttempts),
                 if (user.role == 'admin') ...[
@@ -610,12 +615,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
       listenable: monetizationController,
       builder: (_, __) => monetizationController.isPremium
           ? _PremiumBadge()
-          : _GetPremiumCard(
-              onTap: () => PaywallSheet.show(
-                context,
-                ctrl: monetizationController,
-                onGranted: () {},
-              ),
+          : Column(
+              children: [
+                // Solde de parties gagnées en pub : l'utilisateur doit pouvoir
+                // le consulter sans lancer une partie pour le découvrir.
+                if (monetizationController.adsRequired) ...[
+                  _CreditsRow(credits: monetizationController.credits),
+                  const SizedBox(height: 10),
+                ],
+                _GetPremiumCard(
+                  // Hors partie : pas de `onGranted`, la pub crédite seulement.
+                  onTap: () => PaywallSheet.show(
+                    context,
+                    ctrl: monetizationController,
+                  ),
+                ),
+              ],
             ),
     ).animate().fadeIn(delay: 250.ms);
   }
@@ -1150,6 +1165,106 @@ class _PremiumBadge extends StatelessWidget {
 
 // ─── Get premium card ────────────────────────────────────────────────────────
 
+/// Point d'entrée « Confidentialité » imposé par Google là où le consentement
+/// publicitaire est requis : l'utilisateur doit pouvoir revenir sur son choix
+/// à tout moment. Invisible partout ailleurs.
+class _PrivacyOptionsTile extends StatefulWidget {
+  const _PrivacyOptionsTile();
+
+  @override
+  State<_PrivacyOptionsTile> createState() => _PrivacyOptionsTileState();
+}
+
+class _PrivacyOptionsTileState extends State<_PrivacyOptionsTile> {
+  bool _required = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _check();
+  }
+
+  Future<void> _check() async {
+    final required = await monetizationController.isPrivacyOptionsRequired();
+    if (mounted) setState(() => _required = required);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_required) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SectionTitle(title: l10n.privacyOptions),
+          const SizedBox(height: 10),
+          Container(
+            decoration: BoxDecoration(
+              color: context.cardElevated,
+              borderRadius: AppRadius.rLg,
+              boxShadow: AppShadows.card(context),
+            ),
+            child: _ThemeTile(
+              icon: Icons.privacy_tip_outlined,
+              label: l10n.privacyOptions,
+              subtitle: l10n.privacyOptionsSubtitle,
+              selected: false,
+              onTap: () async {
+                await monetizationController.showPrivacyOptions();
+                if (mounted) _check();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Solde de parties sans publicité, affiché sous le profil.
+class _CreditsRow extends StatelessWidget {
+  final int credits;
+  const _CreditsRow({required this.credits});
+
+  @override
+  Widget build(BuildContext context) {
+    final empty = credits <= 0;
+    final color = empty ? context.appColors.textMuted : AppColors.success;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+      decoration: BoxDecoration(
+        color: context.cardElevated,
+        borderRadius: AppRadius.rLg,
+        boxShadow: AppShadows.card(context),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.play_circle_outline_rounded, color: color, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              AppLocalizations.of(context).freePlaysTitle,
+              style: TextStyle(
+                color: context.appColors.textPrimary,
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Text(
+            AppLocalizations.of(context).creditsRemaining(credits),
+            style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _GetPremiumCard extends StatelessWidget {
   final VoidCallback onTap;
   const _GetPremiumCard({required this.onTap});
@@ -1183,7 +1298,7 @@ class _GetPremiumCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Passer Premium',
+                      AppLocalizations.of(context).goPremium,
                       style: TextStyle(
                         color: context.appColors.textPrimary,
                         fontWeight: FontWeight.w800,
@@ -1191,7 +1306,7 @@ class _GetPremiumCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Jouez sans pub · Toutes les fonctionnalités',
+                      AppLocalizations.of(context).goPremiumSubtitle,
                       style: TextStyle(
                           color: context.appColors.textSecondary,
                           fontSize: 12),

@@ -115,25 +115,33 @@ class _QuizListScreenState extends State<QuizListScreen> {
             'Quiz')
         : AppLocalizations.of(context).allQuizzes;
 
+    // Cet écran sert à la fois d'onglet (racine de la pile, rien à dépiler) et
+    // de page poussée depuis l'accueil. En onglet, `Navigator.pop` remontait au
+    // `PopScope` de MainNavigation et ouvrait la popup « Quitter l'application »
+    // : la flèche n'a de sens que s'il y a vraiment une page en dessous.
+    final canGoBack = Navigator.of(context).canPop();
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: context.cardElevated,
-                borderRadius: AppRadius.rMd,
-                boxShadow: AppShadows.card(context),
+          if (canGoBack) ...[
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: context.cardElevated,
+                  borderRadius: AppRadius.rMd,
+                  boxShadow: AppShadows.card(context),
+                ),
+                child: Icon(Icons.arrow_back_ios_new_rounded,
+                    color: context.appColors.textSecondary, size: 16),
               ),
-              child: Icon(Icons.arrow_back_ios_new_rounded,
-                  color: context.appColors.textSecondary, size: 16),
             ),
-          ),
-          const SizedBox(width: 12),
+            const SizedBox(width: 12),
+          ],
           Expanded(
             child: Text(
               title,
@@ -350,7 +358,9 @@ class _QuizListScreenState extends State<QuizListScreen> {
       );
     }
     if (_ctrl.error != null) {
-      return ErrorState(message: _ctrl.error!, onRetry: _ctrl.load);
+      return ErrorState(
+          message: AppLocalizations.of(context).loadQuizzesFailed,
+          onRetry: _ctrl.load);
     }
     if (_ctrl.quizzes.isEmpty) {
       return EmptyState(

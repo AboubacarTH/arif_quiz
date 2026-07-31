@@ -26,7 +26,9 @@ class GameModeCard extends StatelessWidget {
 
   List<_Badge> _badges(BuildContext context) => switch (mode) {
         GameMode.classic => [
-            const _Badge(icon: Icons.timer_outlined, label: '30s / question'),
+            _Badge(
+                icon: Icons.timer_outlined,
+                label: AppLocalizations.of(context).secondsPerQuestionBadge(30)),
             const _Badge(icon: Icons.star_rounded, label: '×1.0 XP'),
           ],
         GameMode.survival => [
@@ -34,7 +36,9 @@ class GameModeCard extends StatelessWidget {
             const _Badge(icon: Icons.star_rounded, label: '×1.3 XP'),
           ],
         GameMode.speed => [
-            const _Badge(icon: Icons.bolt_rounded, label: '5s / question'),
+            _Badge(
+                icon: Icons.bolt_rounded,
+                label: AppLocalizations.of(context).secondsPerQuestionBadge(5)),
             const _Badge(icon: Icons.star_rounded, label: '×1.5 XP'),
           ],
       };

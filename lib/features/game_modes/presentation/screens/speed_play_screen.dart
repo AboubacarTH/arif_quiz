@@ -259,8 +259,9 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                         border: Border.all(
                             color: AppColors.secondary.withValues(alpha: 0.4)),
                       ),
-                      child: const Text('⚡ SPEED',
-                          style: TextStyle(
+                      child: Text(
+                          '⚡ ${AppLocalizations.of(context).modeSpeedShort.toUpperCase()}',
+                          style: const TextStyle(
                               color: AppColors.secondary,
                               fontSize: 11,
                               fontWeight: FontWeight.w800,

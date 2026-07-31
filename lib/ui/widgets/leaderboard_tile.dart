@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+﻿import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
@@ -175,7 +176,7 @@ class LeaderboardTile extends StatelessWidget {
                   ),
                 ],
               ),
-              Text('points',
+              Text(AppLocalizations.of(context).points.toLowerCase(),
                   style: TextStyle(color: context.appColors.textMuted, fontSize: 10)),
             ],
           ),

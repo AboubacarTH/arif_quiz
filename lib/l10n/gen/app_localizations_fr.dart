@@ -886,7 +886,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get registrationFailed =>
-      'Inscription impossible. L\'e-mail est peut-être déjà utilisé.';
+      'Inscription impossible. Cet e-mail est peut-être déjà utilisé.';
 
   @override
   String get createAccountTitle => 'Créer un\ncompte';
@@ -1524,4 +1524,150 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get exportBtn => 'Exporter';
+
+  @override
+  String get moreActions => 'Plus d\'actions';
+
+  @override
+  String get publishBtn => 'Publier';
+
+  @override
+  String get unpublishBtn => 'Dépublier';
+
+  @override
+  String get moveUp => 'Monter';
+
+  @override
+  String get moveDown => 'Descendre';
+
+  @override
+  String get attemptsLabel => 'essais';
+
+  @override
+  String get howToPlay => 'Comment jouer';
+
+  @override
+  String get loadQuizFailed => 'Impossible de charger ce quiz.';
+
+  @override
+  String get leaderboardTitle => 'Classement';
+
+  @override
+  String get noRankingsYet => 'Aucun classement pour l\'instant';
+
+  @override
+  String get beFirstToFinish => 'Sois le premier à terminer un quiz !';
+
+  @override
+  String get allRankings => 'Tout le classement';
+
+  @override
+  String get friendSingular => 'Ami';
+
+  @override
+  String get shareFailed => 'Partage impossible';
+
+  @override
+  String get shareMyScore => 'Partager mon score';
+
+  @override
+  String get codeCopied => 'Code copié !';
+
+  @override
+  String get listenAudio => 'Écouter l\'audio';
+
+  @override
+  String get codeExampleHint => 'ex. X7K2PQ4R';
+
+  @override
+  String get quizzesTab => 'Quiz';
+
+  @override
+  String watchAdForCredits(int count) {
+    return 'Regarder une pub → $count parties';
+  }
+
+  @override
+  String creditsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count parties sans pub',
+      one: '1 partie sans pub',
+      zero: 'Aucune partie sans pub',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String paywallBodyCredits(int count) {
+    return 'Regarde une courte publicité pour débloquer $count parties, ou passe Premium pour jouer sans interruption.';
+  }
+
+  @override
+  String get freePlaysTitle => 'Parties sans pub';
+
+  @override
+  String get privacyOptions => 'Confidentialité et publicité';
+
+  @override
+  String get privacyOptionsSubtitle => 'Modifier mon choix de consentement';
+
+  @override
+  String get goPremium => 'Passer Premium';
+
+  @override
+  String get goPremiumSubtitle => 'Joue sans publicité, sans limite';
+
+  @override
+  String get orSeparator => 'OU';
+
+  @override
+  String get premiumFeatureNoAds =>
+      '✅ Quiz et parcours illimités, sans publicité';
+
+  @override
+  String get premiumFeatureAllModes =>
+      '⚡ Tous les modes de jeu, sans interruption';
+
+  @override
+  String get premiumFeatureSupport =>
+      '❤️ Tu soutiens le développement de l\'app';
+
+  @override
+  String get loadFailedRetry => 'Chargement impossible. Tire pour rafraîchir.';
+
+  @override
+  String get loadQuizzesFailed => 'Impossible de charger les quiz.';
+
+  @override
+  String get loadLeaderboardFailed => 'Impossible de charger le classement.';
+
+  @override
+  String get loadProfileFailed => 'Impossible de charger le profil.';
+
+  @override
+  String get loadJourneyFailed => 'Impossible de charger le parcours.';
+
+  @override
+  String get invalidCredentials =>
+      'E-mail ou mot de passe incorrect. Réessaie.';
+
+  @override
+  String get dailyTag => 'Quotidien';
+
+  @override
+  String secondsPerQuestionBadge(int seconds) {
+    return '${seconds}s / question';
+  }
+
+  @override
+  String shareScoreText(String grade, String percent, String quiz) {
+    return 'J\'ai décroché un grade $grade ($percent%) sur « $quiz » 🎯 Défie-moi sur ArifQuiz !';
+  }
+
+  @override
+  String shareChallengeText(String title, String code) {
+    return 'Je te défie sur Arif Quiz ! Rejoins mon défi « $title » avec le code : $code';
+  }
 }

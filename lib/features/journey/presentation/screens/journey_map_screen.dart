@@ -10,7 +10,7 @@ import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
-import 'package:arif_quiz/ui/widgets/paywall_sheet.dart';
+import 'package:arif_quiz/core/monetization/play_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -138,14 +138,7 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
       ).then((_) => _ctrl.refresh());
     }
 
-    monetizationController.requestPlay(
-      onGranted: launch,
-      onNoAd: () => PaywallSheet.show(
-        context,
-        ctrl: monetizationController,
-        onGranted: launch,
-      ),
-    );
+    PlayGate.requestPlay(context, onGranted: launch);
   }
 
   // Position horizontale (fraction 0..1) d'un niveau — onde sinusoïdale.
@@ -319,7 +312,9 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
   Widget _buildBody() {
     if (_ctrl.isLoading || _ctrl.map == null) {
       if (_ctrl.error != null) {
-        return ErrorState(message: _ctrl.error!, onRetry: _ctrl.load);
+        return ErrorState(
+            message: AppLocalizations.of(context).loadJourneyFailed,
+            onRetry: _ctrl.load);
       }
       return const Center(
           child: CircularProgressIndicator(color: AppColors.secondary));

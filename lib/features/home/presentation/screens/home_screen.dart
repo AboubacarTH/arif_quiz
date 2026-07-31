@@ -91,7 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_ctrl.error != null) {
       return ListView(children: [
         const SizedBox(height: 200),
-        ErrorState(message: _ctrl.error!, onRetry: _ctrl.load),
+        // Le message du contrôleur reste technique (sans context, donc sans
+        // langue) : l'écran affiche la version traduite.
+        ErrorState(
+            message: AppLocalizations.of(context).loadFailedRetry,
+            onRetry: _ctrl.load),
       ]);
     }
 

@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/shared/models/models.dart';
+﻿import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class ChallengeCard extends StatelessWidget {
                     border: Border.all(color: modeColor.withValues(alpha: 0.4)),
                   ),
                   child: Text(
-                    _modeLabel(challenge.mode),
+                    _modeLabel(context, challenge.mode),
                     style: TextStyle(
                       color: modeColor,
                       fontSize: 11,
@@ -160,7 +161,10 @@ class ChallengeCard extends StatelessWidget {
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: challenge.code));
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Code copié !'), duration: Duration(seconds: 1)),
+                        SnackBar(
+                            content:
+                                Text(AppLocalizations.of(context).codeCopied),
+                            duration: const Duration(seconds: 1)),
                       );
                     },
                     icon: Icon(Icons.copy_rounded, size: 18, color: context.appColors.textSecondary),
@@ -168,7 +172,8 @@ class ChallengeCard extends StatelessWidget {
                   IconButton(
                     onPressed: () {
                       Share.share(
-                        'Je te défie sur Arif Quiz ! Rejoins mon défi "${challenge.title}" avec le code : ${challenge.code}',
+                        AppLocalizations.of(context).shareChallengeText(
+                            challenge.title, challenge.code),
                       );
                     },
                     icon: const Icon(Icons.share_rounded, size: 18, color: AppColors.secondary),
@@ -182,9 +187,14 @@ class ChallengeCard extends StatelessWidget {
     );
   }
 
-  String _modeLabel(String mode) => switch (mode) {
-        'survival' => '❤️ Survie',
-        'speed' => '⚡ Speed',
-        _ => '🎮 Classique',
-      };
+  /// Les libellés de mode existent déjà en 4 langues : seuls les emojis
+  /// restent en dur ici.
+  String _modeLabel(BuildContext context, String mode) {
+    final l10n = AppLocalizations.of(context);
+    return switch (mode) {
+      'survival' => '❤️ ${l10n.modeSurvivalShort}',
+      'speed' => '⚡ ${l10n.modeSpeedShort}',
+      _ => '🎮 ${l10n.modeClassicShort}',
+    };
+  }
 }

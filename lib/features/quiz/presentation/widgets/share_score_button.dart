@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/widgets/app_button.dart';
@@ -33,6 +34,9 @@ class _ShareScoreButtonState extends State<ShareScoreButton> {
 
   Future<void> _share() async {
     if (_sharing) return;
+    // Résolu avant tout await : le texte partagé doit suivre la langue de
+    // l'interface, et le context n'est plus sûr après les sauts asynchrones.
+    final l10n = AppLocalizations.of(context);
     setState(() => _sharing = true);
     try {
       // Laisse un frame se peindre pour garantir un RepaintBoundary prêt.
@@ -54,16 +58,14 @@ class _ShareScoreButtonState extends State<ShareScoreButton> {
       final pct = widget.result.score.toStringAsFixed(0);
       await Share.shareXFiles(
         [XFile(file.path)],
-        text:
-            'J\'ai décroché un grade $grade ($pct%) sur « ${widget.quiz.title} » 🎯 '
-            'Défie-moi sur ArifQuiz !',
+        text: l10n.shareScoreText(grade, pct, widget.quiz.title),
       );
     } catch (e) {
       debugPrint('Share score error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Partage impossible'),
+          SnackBar(
+              content: Text(l10n.shareFailed),
               backgroundColor: AppColors.error),
         );
       }
@@ -91,7 +93,7 @@ class _ShareScoreButtonState extends State<ShareScoreButton> {
           ),
         ),
         AppButton(
-          label: 'Partager mon score',
+          label: AppLocalizations.of(context).shareMyScore,
           icon: Icons.ios_share_rounded,
           variant: AppButtonVariant.secondary,
           fullWidth: true,

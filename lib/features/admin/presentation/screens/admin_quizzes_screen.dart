@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
+import 'package:arif_quiz/features/admin/presentation/widgets/admin_card.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/export_questions_sheet.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
@@ -443,7 +445,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
     );
   }
 
-  String _difficultyLabel(String d) => d == 'easy' ? 'Facile' : d == 'medium' ? 'Moyen' : 'Difficile';
+  String _difficultyLabel(String d) => DifficultyL10n.label(context, d);
 }
 
 class _FilterChip extends StatelessWidget {
@@ -485,104 +487,97 @@ class _QuizTile extends StatelessWidget {
   const _QuizTile({required this.quiz, required this.onEdit, required this.onToggle, required this.onImport, required this.onExport, required this.onDelete});
 
   Color get _diffColor => quiz.difficulty == 'easy' ? AppColors.easy : quiz.difficulty == 'medium' ? AppColors.medium : AppColors.hard;
-  String get _diffLabel => quiz.difficulty == 'easy' ? 'Facile' : quiz.difficulty == 'medium' ? 'Moyen' : 'Difficile';
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        decoration: BoxDecoration(
-          color: context.cardElevated,
-          borderRadius: AppRadius.rLg,
-          boxShadow: AppShadows.card(context),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(quiz.title, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700, fontSize: 14)),
-                ),
-                GestureDetector(
-                  onTap: onToggle,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: (quiz.isPublished ? AppColors.success : AppColors.warning).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      quiz.isPublished ? AppLocalizations.of(context).publishedSingular : AppLocalizations.of(context).draft,
-                      style: TextStyle(
-                        color: quiz.isPublished ? AppColors.success : AppColors.warning,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final statusColor = quiz.isPublished ? AppColors.success : AppColors.warning;
+    return AdminCard(
+      onTap: onEdit,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AdminCardHeader(
+            leading: AdminLeadingBox(
+              color: _diffColor,
+              child: Icon(Icons.quiz_rounded, color: _diffColor, size: 22),
             ),
-            const SizedBox(height: 6),
-            Wrap(
-              spacing: 8,
-              children: [
-                if (quiz.category != null)
-                  _Tag(label: quiz.category!.name, color: AppColors.info),
-                _Tag(label: _diffLabel, color: _diffColor),
-                _Tag(label: '${quiz.questionsCount} questions', color: AppColors.primary),
-                _Tag(label: '${quiz.attemptsCount} essais', color: context.appColors.textMuted),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton.icon(
-                  onPressed: onImport,
-                  icon: const Icon(Icons.upload_file_rounded, size: 15),
-                  label: Text(AppLocalizations.of(context).importBtn),
-                  style: TextButton.styleFrom(foregroundColor: AppColors.secondary, padding: const EdgeInsets.symmetric(horizontal: 10)),
-                ),
-                TextButton.icon(
-                  onPressed: onExport,
-                  icon: const Icon(Icons.download_rounded, size: 15),
-                  label: Text(AppLocalizations.of(context).exportBtn),
-                  style: TextButton.styleFrom(foregroundColor: AppColors.success, padding: const EdgeInsets.symmetric(horizontal: 10)),
-                ),
-                TextButton.icon(
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.edit_rounded, size: 15),
-                  label: Text(AppLocalizations.of(context).editBtn),
-                  style: TextButton.styleFrom(foregroundColor: AppColors.info, padding: const EdgeInsets.symmetric(horizontal: 10)),
-                ),
-                TextButton.icon(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_rounded, size: 15),
-                  label: Text(AppLocalizations.of(context).deleteBtn),
-                  style: TextButton.styleFrom(foregroundColor: AppColors.error, padding: const EdgeInsets.symmetric(horizontal: 10)),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-}
-
-class _Tag extends StatelessWidget {
-  final String label;
-  final Color color;
-  const _Tag({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(label, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600)),
-      );
+            title: quiz.title,
+            subtitle: quiz.category != null ? Text(quiz.category!.name) : null,
+            badges: [
+              AdminTag(
+                label: quiz.isPublished ? l10n.publishedSingular : l10n.draft,
+                color: statusColor,
+                strong: true,
+                onTap: onToggle,
+              ),
+            ],
+            menuActions: [
+              AdminAction(
+                icon: Icons.edit_rounded,
+                label: l10n.editBtn,
+                color: AppColors.info,
+                onPressed: onEdit,
+              ),
+              AdminAction(
+                icon: quiz.isPublished
+                    ? Icons.visibility_off_rounded
+                    : Icons.publish_rounded,
+                label: quiz.isPublished ? l10n.unpublishBtn : l10n.publishBtn,
+                color: statusColor,
+                onPressed: onToggle,
+              ),
+              AdminAction(
+                icon: Icons.delete_rounded,
+                label: l10n.deleteBtn,
+                destructive: true,
+                onPressed: onDelete,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              AdminTag(
+                  label: DifficultyL10n.label(context, quiz.difficulty),
+                  color: _diffColor),
+              AdminTag(
+                label: '${quiz.questionsCount} ${l10n.questions.toLowerCase()}',
+                color: AppColors.primary,
+              ),
+              AdminTag(
+                label: '${quiz.attemptsCount} ${l10n.attemptsLabel.toLowerCase()}',
+                color: context.appColors.textMuted,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Divider(height: 1, color: context.appColors.border),
+          const SizedBox(height: AppSpacing.md),
+          // Actions fréquentes en puces : le Wrap les renvoie à la ligne au lieu
+          // de les pousser hors de l'écran.
+          AdminActionBar(
+            actions: [
+              AdminAction(
+                icon: Icons.upload_file_rounded,
+                label: l10n.importBtn,
+                color: AppColors.secondary,
+                onPressed: onImport,
+              ),
+              AdminAction(
+                icon: Icons.download_rounded,
+                label: l10n.exportBtn,
+                color: AppColors.success,
+                onPressed: onExport,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 // ─── Quiz Form Screen ─────────────────────────────────────────────────────────

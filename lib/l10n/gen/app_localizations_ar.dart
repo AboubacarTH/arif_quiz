@@ -878,7 +878,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get registrationFailed =>
-      'فشل التسجيل. قد يكون البريد مستخدماً بالفعل.';
+      'تعذّر إنشاء الحساب. قد يكون هذا البريد مستخدمًا بالفعل.';
 
   @override
   String get createAccountTitle => 'إنشاء\nحساب';
@@ -1507,4 +1507,147 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get exportBtn => 'تصدير';
+
+  @override
+  String get moreActions => 'إجراءات أخرى';
+
+  @override
+  String get publishBtn => 'نشر';
+
+  @override
+  String get unpublishBtn => 'إلغاء النشر';
+
+  @override
+  String get moveUp => 'تحريك لأعلى';
+
+  @override
+  String get moveDown => 'تحريك لأسفل';
+
+  @override
+  String get attemptsLabel => 'محاولات';
+
+  @override
+  String get howToPlay => 'طريقة اللعب';
+
+  @override
+  String get loadQuizFailed => 'تعذّر تحميل هذا الاختبار.';
+
+  @override
+  String get leaderboardTitle => 'الترتيب';
+
+  @override
+  String get noRankingsYet => 'لا يوجد ترتيب بعد';
+
+  @override
+  String get beFirstToFinish => 'كن أول من ينهي اختبارًا!';
+
+  @override
+  String get allRankings => 'الترتيب الكامل';
+
+  @override
+  String get friendSingular => 'صديق';
+
+  @override
+  String get shareFailed => 'تعذّرت المشاركة';
+
+  @override
+  String get shareMyScore => 'مشاركة نتيجتي';
+
+  @override
+  String get codeCopied => 'تم نسخ الرمز!';
+
+  @override
+  String get listenAudio => 'الاستماع إلى الصوت';
+
+  @override
+  String get codeExampleHint => 'مثال: X7K2PQ4R';
+
+  @override
+  String get quizzesTab => 'الاختبارات';
+
+  @override
+  String watchAdForCredits(int count) {
+    return 'شاهد إعلانًا ← $count جولات';
+  }
+
+  @override
+  String creditsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count جولات بدون إعلان',
+      one: 'جولة واحدة بدون إعلان',
+      zero: 'لا توجد جولة بدون إعلان',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String paywallBodyCredits(int count) {
+    return 'شاهد إعلانًا قصيرًا لفتح $count جولات، أو اشترك في Premium للعب بلا انقطاع.';
+  }
+
+  @override
+  String get freePlaysTitle => 'جولات بدون إعلان';
+
+  @override
+  String get privacyOptions => 'الخصوصية والإعلانات';
+
+  @override
+  String get privacyOptionsSubtitle => 'تغيير خيار الموافقة';
+
+  @override
+  String get goPremium => 'اشترك في Premium';
+
+  @override
+  String get goPremiumSubtitle => 'العب دون إعلانات ودون حدود';
+
+  @override
+  String get orSeparator => 'أو';
+
+  @override
+  String get premiumFeatureNoAds => '✅ اختبارات ومسار بلا حدود، دون إعلانات';
+
+  @override
+  String get premiumFeatureAllModes => '⚡ جميع أوضاع اللعب، دون انقطاع';
+
+  @override
+  String get premiumFeatureSupport => '❤️ أنت تدعم تطوير التطبيق';
+
+  @override
+  String get loadFailedRetry => 'تعذّر التحميل. اسحب للتحديث.';
+
+  @override
+  String get loadQuizzesFailed => 'تعذّر تحميل الاختبارات.';
+
+  @override
+  String get loadLeaderboardFailed => 'تعذّر تحميل الترتيب.';
+
+  @override
+  String get loadProfileFailed => 'تعذّر تحميل الملف الشخصي.';
+
+  @override
+  String get loadJourneyFailed => 'تعذّر تحميل المسار.';
+
+  @override
+  String get invalidCredentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة. حاول مجددًا.';
+
+  @override
+  String get dailyTag => 'يومي';
+
+  @override
+  String secondsPerQuestionBadge(int seconds) {
+    return '$seconds ث / سؤال';
+  }
+
+  @override
+  String shareScoreText(String grade, String percent, String quiz) {
+    return 'حصلت على تقدير $grade ($percent%) في «$quiz» 🎯 تحدَّني على ArifQuiz!';
+  }
+
+  @override
+  String shareChallengeText(String title, String code) {
+    return 'أتحدّاك على Arif Quiz! انضم إلى تحدّي «$title» بالرمز: $code';
+  }
 }

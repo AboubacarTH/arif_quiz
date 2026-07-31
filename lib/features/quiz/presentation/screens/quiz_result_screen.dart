@@ -413,7 +413,7 @@ class _ReviewCardState extends State<_ReviewCard> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('?? ', style: TextStyle(fontSize: 13)),
+                      const Text('💡 ', style: TextStyle(fontSize: 13)),
                       Expanded(
                           child: Text(r.explanation!,
                               style: TextStyle(
