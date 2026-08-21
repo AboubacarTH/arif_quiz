@@ -539,5 +539,6 @@
   "alreadyPlayedTag": "Jugado",
   "noDailyChallengeToday": "Hoy no hay desafío",
   "dailyBackTomorrow": "Mañana llega un nuevo cuestionario",
-  "dailyDoneScore": "Completado — sacaste {score}%"
+  "dailyDoneScore": "Completado — sacaste {score}%",
+  "journeyChapter": "Capítulo {number}"
 }

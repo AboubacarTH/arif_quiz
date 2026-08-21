@@ -3341,6 +3341,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Done — you scored {score}%'**
   String dailyDoneScore(int score);
+
+  /// No description provided for @journeyChapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter {number}'**
+  String journeyChapter(int number);
 }
 
 class _AppLocalizationsDelegate

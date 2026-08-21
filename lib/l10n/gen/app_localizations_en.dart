@@ -1798,4 +1798,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String dailyDoneScore(int score) {
     return 'Done — you scored $score%';
   }
+
+  @override
+  String journeyChapter(int number) {
+    return 'Chapter $number';
+  }
 }

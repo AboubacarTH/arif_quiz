@@ -1792,4 +1792,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String dailyDoneScore(int score) {
     return 'انتهى — نتيجتك $score%';
   }
+
+  @override
+  String journeyChapter(int number) {
+    return 'الفصل $number';
+  }
 }

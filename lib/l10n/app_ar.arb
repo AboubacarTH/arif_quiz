@@ -539,5 +539,6 @@
   "alreadyPlayedTag": "تمت المشاركة",
   "noDailyChallengeToday": "لا يوجد تحدٍّ اليوم",
   "dailyBackTomorrow": "اختبار جديد غداً",
-  "dailyDoneScore": "انتهى — نتيجتك {score}%"
+  "dailyDoneScore": "انتهى — نتيجتك {score}%",
+  "journeyChapter": "الفصل {number}"
 }

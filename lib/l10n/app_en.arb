@@ -939,5 +939,13 @@
         "type": "int"
       }
     }
+  },
+  "journeyChapter": "Chapter {number}",
+  "@journeyChapter": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
   }
 }
