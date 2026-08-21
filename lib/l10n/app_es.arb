@@ -545,5 +545,6 @@
   "challengeClosed": "Finalizado",
   "challengeExpired": "Caducado",
   "selectedCount": "{count} seleccionado(s)",
-  "friendAdded": "{name} añadido"
+  "friendAdded": "{name} añadido",
+  "reportSent": "Informe enviado"
 }

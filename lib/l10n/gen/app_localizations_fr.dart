@@ -1836,4 +1836,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String friendAdded(String name) {
     return '$name ajouté';
   }
+
+  @override
+  String get reportSent => 'Signalement envoyé';
 }

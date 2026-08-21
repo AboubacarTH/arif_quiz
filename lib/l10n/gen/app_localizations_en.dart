@@ -1822,4 +1822,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String friendAdded(String name) {
     return '$name added';
   }
+
+  @override
+  String get reportSent => 'Report sent';
 }

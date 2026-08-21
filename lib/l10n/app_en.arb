@@ -966,5 +966,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "reportSent": "Report sent"
 }

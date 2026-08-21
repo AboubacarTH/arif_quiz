@@ -464,7 +464,10 @@ class _ReportSheetState extends State<_ReportSheet> {
       if (!mounted) return;
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: AppColors.success),
+        SnackBar(
+            content: Text(
+                message ?? AppLocalizations.of(context).reportSent),
+            backgroundColor: AppColors.success),
       );
     } catch (_) {
       if (!mounted) return;

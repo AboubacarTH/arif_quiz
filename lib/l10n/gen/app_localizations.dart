@@ -3377,6 +3377,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} added'**
   String friendAdded(String name);
+
+  /// No description provided for @reportSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Report sent'**
+  String get reportSent;
 }
 
 class _AppLocalizationsDelegate

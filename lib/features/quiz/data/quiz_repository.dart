@@ -63,7 +63,7 @@ class QuizRepository {
       _api.getQuizLeaderboard(quizId);
 
   /// Signale une question (réponse incorrecte, ambiguë, etc.) aux admins.
-  Future<String> reportQuestion({
+  Future<String?> reportQuestion({
     required int questionId,
     required String reason,
     String? comment,
@@ -73,7 +73,10 @@ class QuizRepository {
       'reason': reason,
       if (comment != null && comment.trim().isNotEmpty) 'comment': comment.trim(),
     });
-    return (res.data is Map ? res.data['message'] as String? : null) ??
-        'Signalement envoyé';
+    // Le serveur renvoie un message deja traduit (il lit l'en-tete
+    // Accept-Language). Un repli reste possible s'il n'en renvoie pas : il
+    // appartient a l'ecran, pas a la couche de donnees, qui n'a pas a porter
+    // du texte d'interface — et surtout pas dans une seule langue.
+    return res.data is Map ? res.data['message'] as String? : null;
   }
 }

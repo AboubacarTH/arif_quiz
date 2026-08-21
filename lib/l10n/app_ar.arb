@@ -545,5 +545,6 @@
   "challengeClosed": "منتهٍ",
   "challengeExpired": "منتهي الصلاحية",
   "selectedCount": "{count} محدّد",
-  "friendAdded": "تمت إضافة {name}"
+  "friendAdded": "تمت إضافة {name}",
+  "reportSent": "تمّ إرسال البلاغ"
 }

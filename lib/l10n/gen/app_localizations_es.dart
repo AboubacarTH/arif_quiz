@@ -1836,4 +1836,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String friendAdded(String name) {
     return '$name añadido';
   }
+
+  @override
+  String get reportSent => 'Informe enviado';
 }
