@@ -3,6 +3,7 @@ import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dar
 import 'package:arif_quiz/features/daily_challenge/data/daily_challenge_repository.dart';
 import 'package:arif_quiz/features/daily_challenge/presentation/screens/daily_challenge_screen.dart';
 import 'package:arif_quiz/features/home/bloc/home_controller.dart';
+import 'package:arif_quiz/features/home/presentation/widgets/home_skeleton.dart';
 import 'package:arif_quiz/features/home/data/home_repository.dart';
 import 'package:arif_quiz/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:arif_quiz/features/journey/presentation/screens/journey_map_screen.dart';
@@ -19,7 +20,6 @@ import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/ui/widgets/quiz_card.dart';
-import 'package:arif_quiz/ui/widgets/shimmer_loading.dart';
 import 'package:arif_quiz/ui/widgets/streak_badge.dart';
 import 'package:arif_quiz/ui/widgets/xp_progress_bar.dart';
 import 'package:flutter/material.dart';
@@ -73,21 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBody() {
     if (_ctrl.isLoading) {
       return CustomScrollView(slivers: [
-        SliverToBoxAdapter(child: _header(null)),
-        const SliverToBoxAdapter(child: SizedBox(height: 24)),
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: CategoryRowSkeleton(),
-          ),
-        ),
-        const SliverToBoxAdapter(child: SizedBox(height: 28)),
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: QuizListSkeleton(count: 3),
-          ),
-        ),
+        const SliverToBoxAdapter(child: HomeHeaderSkeleton()),
+        const SliverToBoxAdapter(child: HomeSkeleton()),
       ]);
     }
 
@@ -613,9 +600,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _categoriesRow(List<CategoryModel> cats) {
     return SizedBox(
-      height: 132,
+      height: kHomeCategoryRow,
       child: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(20, 2, 20, 16),
+        padding: kHomeRowPadding,
         clipBehavior: Clip.none,
         scrollDirection: Axis.horizontal,
         itemCount: cats.length,
@@ -631,9 +618,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // ─── Featured horizontal ─────────────────────────────────────────────────────
 
   Widget _featuredHorizontal(List<QuizModel> quizzes) => SizedBox(
-        height: 222,
+        height: kHomeFeaturedRow,
         child: ListView.separated(
-          padding: const EdgeInsets.fromLTRB(20, 2, 20, 16),
+          padding: kHomeRowPadding,
           clipBehavior: Clip.none,
           scrollDirection: Axis.horizontal,
           itemCount: quizzes.length,

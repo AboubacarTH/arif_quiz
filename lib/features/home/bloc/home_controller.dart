@@ -55,7 +55,11 @@ class HomeController extends ChangeNotifier {
   HomeController(this._repo, this._daily);
 
   Future<void> load() async {
-    _emit(HomeLoading());
+    // Un RAFRAICHISSEMENT ne vide pas l'écran : le contenu déjà affiché reste
+    // en place pendant que les données se rechargent, et l'indicateur de
+    // rafraîchissement suffit à dire qu'il se passe quelque chose. Le squelette
+    // n'a de sens qu'au tout premier chargement, quand il n'y a rien à montrer.
+    if (data == null) _emit(HomeLoading());
     try {
       final results = await Future.wait([
         _repo.getCategories(),
@@ -85,12 +89,13 @@ class HomeController extends ChangeNotifier {
         daily: daily,
       ));
     } catch (_) {
-      _emit(HomeError('Failed to load. Pull to refresh.'));
+      // Un échec de rafraîchissement ne doit pas effacer une page qui marche.
+      if (data == null) _emit(HomeError('Failed to load. Pull to refresh.'));
     }
   }
 
   Future<void> loadGuest() async {
-    _emit(HomeLoading());
+    if (data == null) _emit(HomeLoading());
     try {
       final results = await Future.wait([
         _repo.getCategories(),
