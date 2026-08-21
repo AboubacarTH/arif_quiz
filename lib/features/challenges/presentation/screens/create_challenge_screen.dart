@@ -222,6 +222,9 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
                         questionsCount: _questionsCount,
                         onCountChanged: (n) =>
                             setState(() => _questionsCount = n),
+                        audience: _audience,
+                        onAudienceChanged: (a) =>
+                            setState(() => _audience = a),
                         onCreate: _create,
                       ),
                   },
@@ -312,6 +315,10 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
   /// littéraux, tout en circulant dans les réponses comme si elle se réglait.
   int _questionsCount = 10;
 
+  /// À qui le défi s'adresse. Sur code par défaut : c'est le geste le moins
+  /// engageant, et le seul qui ne s'efface pas au bout de 24 h.
+  String _audience = 'private';
+
   Future<void> _create() async {
     if (_titleCtrl.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -327,6 +334,7 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
       mode: _selectedMode.apiValue,
       title: _titleCtrl.text.trim(),
       questionsCount: _questionsCount,
+      audience: _audience,
     );
 
     if (challenge != null && mounted) {
@@ -879,8 +887,10 @@ class _StepConfig extends StatelessWidget {
   final CategoryModel? selectedCategory;
   final bool isCreating;
   final int questionsCount;
+  final String audience;
   final ValueChanged<GameMode> onModeChanged;
   final ValueChanged<int> onCountChanged;
+  final ValueChanged<String> onAudienceChanged;
   final VoidCallback onCreate;
 
   const _StepConfig({
@@ -892,8 +902,10 @@ class _StepConfig extends StatelessWidget {
     required this.selectedCategory,
     required this.isCreating,
     required this.questionsCount,
+    required this.audience,
     required this.onModeChanged,
     required this.onCountChanged,
+    required this.onAudienceChanged,
     required this.onCreate,
   });
 
@@ -1002,6 +1014,41 @@ class _StepConfig extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
+          // Public
+          Text(
+            AppLocalizations.of(context).challengeAudienceLabel,
+            style: context.type.titleMedium
+                .copyWith(color: context.appColors.textPrimary),
+          ),
+          const SizedBox(height: 10),
+          for (final option in _audienceOptions(context))
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: _AudienceCard(
+                option: option,
+                selected: audience == option.value,
+                onTap: () => onAudienceChanged(option.value),
+              ),
+            ),
+          if (audience != 'private') ...[
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Icon(Icons.schedule_rounded,
+                    size: 14, color: context.appColors.textMuted),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    AppLocalizations.of(context).audienceExpiryNote,
+                    style: context.type.labelSmall
+                        .copyWith(color: context.appColors.textMuted),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: 24),
+
           // Mode
           Text(
             AppLocalizations.of(context).gameModeLabel,
@@ -1069,4 +1116,130 @@ class _CountChip extends StatelessWidget {
           ),
         ),
       );
+}
+
+// ─── Public du défi ──────────────────────────────────────────────────────────
+
+@immutable
+class _AudienceOption {
+  final String value;
+  final IconData icon;
+  final String label;
+  final String description;
+
+  const _AudienceOption({
+    required this.value,
+    required this.icon,
+    required this.label,
+    required this.description,
+  });
+}
+
+List<_AudienceOption> _audienceOptions(BuildContext context) {
+  final l10n = AppLocalizations.of(context);
+  return [
+    _AudienceOption(
+      value: 'private',
+      icon: Icons.key_rounded,
+      label: l10n.audiencePrivate,
+      description: l10n.audiencePrivateDesc,
+    ),
+    _AudienceOption(
+      value: 'friends',
+      icon: Icons.group_rounded,
+      label: l10n.audienceFriends,
+      description: l10n.audienceFriendsDesc,
+    ),
+    _AudienceOption(
+      value: 'global',
+      icon: Icons.public_rounded,
+      label: l10n.audienceGlobal,
+      description: l10n.audienceGlobalDesc,
+    ),
+  ];
+}
+
+class _AudienceCard extends StatelessWidget {
+  final _AudienceOption option;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _AudienceCard({
+    required this.option,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected
+          ? AppColors.primary.withValues(alpha: 0.10)
+          : context.cardElevated,
+      borderRadius: AppRadius.rLg,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadius.rLg,
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            borderRadius: AppRadius.rLg,
+            border: Border.all(
+              color: selected ? AppColors.primary : Colors.transparent,
+              width: 1.5,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.primary
+                      .withValues(alpha: selected ? 0.16 : 0.08),
+                  borderRadius: AppRadius.rMd,
+                ),
+                child: Icon(option.icon,
+                    size: 20,
+                    color: selected
+                        ? AppColors.primary
+                        : context.appColors.textSecondary),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      option.label,
+                      style: context.type.titleMedium.copyWith(
+                          color: selected
+                              ? AppColors.primary
+                              : context.appColors.textPrimary),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(option.description,
+                        style: context.type.labelSmall
+                            .copyWith(color: context.appColors.textSecondary)),
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              // La place de la coche est réservée même quand elle n'est pas
+              // là : sans quoi la description se redécoupait à chaque
+              // sélection et la carte sautait sous le doigt.
+              SizedBox(
+                width: 22,
+                child: selected
+                    ? const Icon(Icons.check_circle_rounded,
+                        color: AppColors.primary, size: 22)
+                    : null,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

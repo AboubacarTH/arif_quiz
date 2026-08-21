@@ -180,6 +180,9 @@ class ChallengeModel {
   final QuizModel? quiz;
   final CategoryModel? category;
   final String sourceType; // 'quiz' | 'category' | 'all'
+
+  /// À qui le défi s'adresse : 'private' (sur code), 'friends', 'global'.
+  final String audience;
   final String mode;
   final String title;
   final String status;
@@ -197,6 +200,7 @@ class ChallengeModel {
     this.quiz,
     this.category,
     this.sourceType = 'quiz',
+    this.audience = 'private',
     required this.mode,
     required this.title,
     required this.status,
@@ -219,6 +223,7 @@ class ChallengeModel {
             ? CategoryModel.fromJson(Map<String, dynamic>.from(json['category']))
             : null,
         sourceType: json['source_type'] ?? 'quiz',
+        audience: json['audience'] ?? 'private',
         mode: json['mode'] ?? 'classic',
         title: json['title'] ?? '',
         status: json['status'] ?? 'open',
@@ -251,6 +256,7 @@ class ChallengeModel {
         quiz: quiz,
         category: category,
         sourceType: sourceType,
+        audience: audience,
         mode: mode,
         title: title,
         status: status,
@@ -264,6 +270,16 @@ class ChallengeModel {
 
   bool get isExpired => expiresAt != null && expiresAt!.isBefore(DateTime.now());
   bool get isOpen => status == 'open' && !isExpired;
+
+  /// Un défi annoncé (amis / global) ne vit que 24 h : le temps restant est
+  /// l'information la plus utile de sa carte.
+  bool get isAnnounced => audience != 'private';
+
+  int? get hoursLeft {
+    if (expiresAt == null || isExpired) return null;
+    final left = expiresAt!.difference(DateTime.now()).inHours;
+    return left < 1 ? 1 : left;
+  }
   bool get canDelete =>
       createdAt != null && DateTime.now().difference(createdAt!).inHours >= 24;
 }

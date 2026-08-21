@@ -983,5 +983,30 @@
       }
     }
   },
-  "allDifficulties": "All levels"
+  "allDifficulties": "All levels",
+  "challengeAudienceLabel": "Who can play",
+  "audiencePrivate": "By code",
+  "audiencePrivateDesc": "Only people you give the code to",
+  "audienceFriends": "My friends",
+  "audienceFriendsDesc": "Your friends see it and join without a code",
+  "audienceGlobal": "Everyone",
+  "audienceGlobalDesc": "Anyone can find it and join",
+  "audienceExpiryNote": "Announced challenges disappear after 24 hours.",
+  "friendsChallengesTab": "Friends",
+  "globalChallengesTab": "Everyone",
+  "myChallengesTab": "Mine",
+  "noFriendChallenges": "No challenge from your friends",
+  "noFriendChallengesHint": "When a friend launches one, it lands here.",
+  "noGlobalChallenges": "No public challenge right now",
+  "noGlobalChallengesHint": "Launch one and see who takes it on.",
+  "joinChallengeAction": "Join",
+  "expiresIn": "Ends in {hours} h",
+  "@expiresIn": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "joinChallengeError": "Invalid code, or the challenge no longer exists"
 }

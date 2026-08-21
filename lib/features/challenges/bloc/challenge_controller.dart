@@ -9,27 +9,44 @@ class ChallengeController extends ChangeNotifier {
 
   List<ChallengeModel> created = [];
   List<ChallengeModel> joined = [];
+
+  /// Fils de découverte : des défis qu'on peut rejoindre sans code.
+  List<ChallengeModel> friendsFeed = [];
+  List<ChallengeModel> globalFeed = [];
+
+  /// Vrai tant que rien n'a jamais été chargé. C'est la seule situation où
+  /// l'écran n'a rien à montrer et doit donc afficher un squelette : un
+  /// rafraîchissement garde les listes en place.
+  bool get isFirstLoad =>
+      created.isEmpty && joined.isEmpty && friendsFeed.isEmpty && globalFeed.isEmpty;
   ChallengeModel? currentChallenge;
   bool isLoading = false;
   bool isCreating = false;
   bool isJoining = false;
   String? error;
 
-  Future<void> loadMyChallenges() async {
-    isLoading = true;
+  /// [showSkeleton] : seul le tout premier chargement vide l'écran. Tirer pour
+  /// rafraîchir laisse les listes en place pendant le rechargement.
+  Future<void> loadMyChallenges({bool showSkeleton = true}) async {
+    if (showSkeleton) isLoading = true;
     error = null;
     notifyListeners();
     try {
       final data = await _repo.getMyChallenges();
       created = data['created'] ?? [];
       joined = data['joined'] ?? [];
+      friendsFeed = data['friends'] ?? [];
+      globalFeed = data['global'] ?? [];
     } catch (e) {
-      error = e.toString();
+      // Un échec de rafraîchissement n'efface pas ce qui est affiché.
+      if (isFirstLoad) error = e.toString();
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
+
+  Future<void> refresh() => loadMyChallenges(showSkeleton: false);
 
   Future<ChallengeModel?> createChallenge({
     required String sourceType,
@@ -38,6 +55,7 @@ class ChallengeController extends ChangeNotifier {
     required String mode,
     required String title,
     required int questionsCount,
+    required String audience,
   }) async {
     isCreating = true;
     notifyListeners();
@@ -49,6 +67,7 @@ class ChallengeController extends ChangeNotifier {
         mode: mode,
         title: title,
         questionsCount: questionsCount,
+        audience: audience,
       );
       created.insert(0, challenge);
       notifyListeners();
@@ -62,6 +81,10 @@ class ChallengeController extends ChangeNotifier {
     }
   }
 
+  /// Sentinelle posée dans [error] quand une jonction échoue : l'écran la
+  /// reconnaît et affiche le message traduit.
+  static const joinFailed = '__join_failed__';
+
   Future<ChallengeModel?> joinChallenge(String code) async {
     isJoining = true;
     error = null;
@@ -74,7 +97,9 @@ class ChallengeController extends ChangeNotifier {
       notifyListeners();
       return challenge;
     } catch (e) {
-      error = 'Code invalide ou défi introuvable';
+      // Le contrôleur ne parle aucune langue : il signale l'échec, l'écran le
+      // traduit.
+      error = joinFailed;
       return null;
     } finally {
       isJoining = false;

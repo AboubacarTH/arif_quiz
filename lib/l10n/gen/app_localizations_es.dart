@@ -1847,4 +1847,62 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get allDifficulties => 'Todos los niveles';
+
+  @override
+  String get challengeAudienceLabel => 'Quién puede jugar';
+
+  @override
+  String get audiencePrivate => 'Con código';
+
+  @override
+  String get audiencePrivateDesc => 'Solo a quienes des el código';
+
+  @override
+  String get audienceFriends => 'Mis amigos';
+
+  @override
+  String get audienceFriendsDesc => 'Tus amigos lo ven y se unen sin código';
+
+  @override
+  String get audienceGlobal => 'Todo el mundo';
+
+  @override
+  String get audienceGlobalDesc => 'Cualquiera puede encontrarlo y unirse';
+
+  @override
+  String get audienceExpiryNote =>
+      'Los desafíos anunciados desaparecen a las 24 horas.';
+
+  @override
+  String get friendsChallengesTab => 'Amigos';
+
+  @override
+  String get globalChallengesTab => 'Todos';
+
+  @override
+  String get myChallengesTab => 'Los míos';
+
+  @override
+  String get noFriendChallenges => 'Ningún desafío de tus amigos';
+
+  @override
+  String get noFriendChallengesHint =>
+      'Cuando un amigo lance uno, aparecerá aquí.';
+
+  @override
+  String get noGlobalChallenges => 'Ningún desafío público ahora mismo';
+
+  @override
+  String get noGlobalChallengesHint => 'Lanza uno y mira quién lo acepta.';
+
+  @override
+  String get joinChallengeAction => 'Unirme';
+
+  @override
+  String expiresIn(int hours) {
+    return 'Termina en $hours h';
+  }
+
+  @override
+  String get joinChallengeError => 'Código inválido o desafío inexistente';
 }

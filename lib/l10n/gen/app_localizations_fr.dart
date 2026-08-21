@@ -1847,4 +1847,64 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get allDifficulties => 'Toutes difficultés';
+
+  @override
+  String get challengeAudienceLabel => 'Qui peut jouer';
+
+  @override
+  String get audiencePrivate => 'Sur code';
+
+  @override
+  String get audiencePrivateDesc => 'Seulement ceux à qui tu donnes le code';
+
+  @override
+  String get audienceFriends => 'Mes amis';
+
+  @override
+  String get audienceFriendsDesc =>
+      'Tes amis le voient et le rejoignent sans code';
+
+  @override
+  String get audienceGlobal => 'Tout le monde';
+
+  @override
+  String get audienceGlobalDesc =>
+      'N’importe qui peut le trouver et le rejoindre';
+
+  @override
+  String get audienceExpiryNote =>
+      'Les défis annoncés disparaissent au bout de 24 heures.';
+
+  @override
+  String get friendsChallengesTab => 'Amis';
+
+  @override
+  String get globalChallengesTab => 'Tout le monde';
+
+  @override
+  String get myChallengesTab => 'Les miens';
+
+  @override
+  String get noFriendChallenges => 'Aucun défi de tes amis';
+
+  @override
+  String get noFriendChallengesHint =>
+      'Dès qu’un ami en lance un, il apparaît ici.';
+
+  @override
+  String get noGlobalChallenges => 'Aucun défi public en ce moment';
+
+  @override
+  String get noGlobalChallengesHint => 'Lances-en un et vois qui le relève.';
+
+  @override
+  String get joinChallengeAction => 'Rejoindre';
+
+  @override
+  String expiresIn(int hours) {
+    return 'Se termine dans $hours h';
+  }
+
+  @override
+  String get joinChallengeError => 'Code invalide ou défi introuvable';
 }

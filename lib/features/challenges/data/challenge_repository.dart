@@ -6,12 +6,21 @@ class ChallengeRepository {
 
   ChallengeRepository(this._api);
 
+  /// Les quatre listes de l'écran Défis : ce que j'ai créé, ce que j'ai
+  /// rejoint, et les deux fils de découverte — amis et global.
   Future<Map<String, List<ChallengeModel>>> getMyChallenges() async {
     final res = await _api.get('/challenges');
-    final data = res.data['data'];
+    final data = Map<String, dynamic>.from(res.data['data'] ?? {});
+
+    List<ChallengeModel> parse(String key) => ((data[key] ?? []) as List)
+        .map((e) => ChallengeModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+
     return {
-      'created': (data['created'] as List).map((e) => ChallengeModel.fromJson(e)).toList(),
-      'joined': (data['joined'] as List).map((e) => ChallengeModel.fromJson(e)).toList(),
+      'created': parse('created'),
+      'joined': parse('joined'),
+      'friends': parse('friends'),
+      'global': parse('global'),
     };
   }
 
@@ -22,6 +31,7 @@ class ChallengeRepository {
     required String mode,
     required String title,
     required int questionsCount,
+    required String audience,
   }) async {
     final res = await _api.post('/challenges', data: {
       'source_type': sourceType,
@@ -30,6 +40,7 @@ class ChallengeRepository {
       'mode': mode,
       'title': title,
       'questions_count': questionsCount,
+      'audience': audience,
     });
     return ChallengeModel.fromJson(res.data['data']);
   }

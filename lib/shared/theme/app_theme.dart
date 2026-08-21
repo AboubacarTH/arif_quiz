@@ -293,6 +293,15 @@ class AppTheme {
           unselectedLabelColor: cs.textMuted,
           indicatorColor: AppColors.primary,
           dividerColor: cs.border,
+          // Sans style explicite, l'onglet héritait du `titleSmall` par défaut
+          // de Material (14) : sur un téléphone réglé en grande police, un
+          // libellé de trois mots débordait de son tiers d'écran et se faisait
+          // trancher. Un cran plus bas et des marges serrées lui laissent la
+          // place de grandir.
+          labelStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+          unselectedLabelStyle:
+              const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          labelPadding: const EdgeInsets.symmetric(horizontal: 4),
         ),
       );
 }

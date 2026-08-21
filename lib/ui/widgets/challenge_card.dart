@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/core/i18n/challenge_status_l10n.dart';
@@ -12,11 +13,22 @@ class ChallengeCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool showShareCode;
 
+  /// Dans un fil de découverte, la première question est « qui me défie ? ».
+  /// Sur mes propres défis, la réponse est moi : inutile de l'afficher.
+  final bool showCreator;
+
+  /// Le geste principal de la carte quand elle vit dans un fil.
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
   const ChallengeCard({
     super.key,
     required this.challenge,
     this.onTap,
     this.showShareCode = false,
+    this.showCreator = false,
+    this.actionLabel,
+    this.onAction,
   });
 
   @override
@@ -59,21 +71,13 @@ class ChallengeCard extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: challenge.isOpen
-                        ? AppColors.success.withValues(alpha: 0.15)
-                        : context.appColors.textMuted.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppRadius.xs),
-                  ),
-                  child: Text(
-                    ChallengeStatusL10n.label(context, challenge),
-                    style: context.type.labelSmall.copyWith(color: challenge.isOpen ? AppColors.success : context.appColors.textMuted, fontWeight: FontWeight.w600),
-                  ),
-                ),
+                _statusPill(context),
               ],
             ),
+            if (showCreator) ...[
+              const SizedBox(height: 10),
+              _creatorLine(context),
+            ],
             const SizedBox(height: 10),
             Text(
               challenge.title,
@@ -120,6 +124,17 @@ class ChallengeCard extends StatelessWidget {
                 ],
               ],
             ),
+            if (onAction != null) ...[
+              const SizedBox(height: 14),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: onAction,
+                  child: Text(actionLabel ??
+                      AppLocalizations.of(context).joinChallengeAction),
+                ),
+              ),
+            ],
             if (showShareCode) ...[
               const SizedBox(height: 12),
               Divider(color: context.appColors.border, height: 1),
@@ -173,6 +188,88 @@ class ChallengeCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  /// Un défi annoncé n'a que 24 h à vivre : le temps restant dit plus que
+  /// « ouvert », qui va de soi tant qu'il est là.
+  Widget _statusPill(BuildContext context) {
+    final hours = challenge.isAnnounced ? challenge.hoursLeft : null;
+
+    if (hours != null) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: AppColors.warning.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.schedule_rounded,
+                size: 12, color: AppColors.warning),
+            const SizedBox(width: 4),
+            Text(
+              AppLocalizations.of(context).expiresIn(hours),
+              style: context.type.labelSmall.copyWith(
+                  color: AppColors.warning, fontWeight: FontWeight.w700),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: challenge.isOpen
+            ? AppColors.success.withValues(alpha: 0.15)
+            : context.appColors.textMuted.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppRadius.xs),
+      ),
+      child: Text(
+        ChallengeStatusL10n.label(context, challenge),
+        style: context.type.labelSmall.copyWith(
+            color: challenge.isOpen
+                ? AppColors.success
+                : context.appColors.textMuted,
+            fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+
+  Widget _creatorLine(BuildContext context) {
+    final creator = challenge.creator;
+    final hasPhoto = creator.avatar != null && creator.avatar!.startsWith('http');
+
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 12,
+          backgroundColor: hasPhoto
+              ? context.appColors.cardBgLight
+              : AppColors.primary.withValues(alpha: 0.2),
+          backgroundImage:
+              hasPhoto ? CachedNetworkImageProvider(creator.avatar!) : null,
+          child: hasPhoto
+              ? null
+              : Text(
+                  creator.name.isNotEmpty ? creator.name[0].toUpperCase() : '?',
+                  style: context.type.labelSmall.copyWith(
+                      color: AppColors.primary, fontWeight: FontWeight.w800),
+                ),
+        ),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            creator.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.type.labelMedium
+                .copyWith(color: context.appColors.textSecondary),
+          ),
+        ),
+      ],
     );
   }
 

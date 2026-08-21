@@ -3395,6 +3395,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All levels'**
   String get allDifficulties;
+
+  /// No description provided for @challengeAudienceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Who can play'**
+  String get challengeAudienceLabel;
+
+  /// No description provided for @audiencePrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'By code'**
+  String get audiencePrivate;
+
+  /// No description provided for @audiencePrivateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Only people you give the code to'**
+  String get audiencePrivateDesc;
+
+  /// No description provided for @audienceFriends.
+  ///
+  /// In en, this message translates to:
+  /// **'My friends'**
+  String get audienceFriends;
+
+  /// No description provided for @audienceFriendsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your friends see it and join without a code'**
+  String get audienceFriendsDesc;
+
+  /// No description provided for @audienceGlobal.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone'**
+  String get audienceGlobal;
+
+  /// No description provided for @audienceGlobalDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone can find it and join'**
+  String get audienceGlobalDesc;
+
+  /// No description provided for @audienceExpiryNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Announced challenges disappear after 24 hours.'**
+  String get audienceExpiryNote;
+
+  /// No description provided for @friendsChallengesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get friendsChallengesTab;
+
+  /// No description provided for @globalChallengesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone'**
+  String get globalChallengesTab;
+
+  /// No description provided for @myChallengesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Mine'**
+  String get myChallengesTab;
+
+  /// No description provided for @noFriendChallenges.
+  ///
+  /// In en, this message translates to:
+  /// **'No challenge from your friends'**
+  String get noFriendChallenges;
+
+  /// No description provided for @noFriendChallengesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When a friend launches one, it lands here.'**
+  String get noFriendChallengesHint;
+
+  /// No description provided for @noGlobalChallenges.
+  ///
+  /// In en, this message translates to:
+  /// **'No public challenge right now'**
+  String get noGlobalChallenges;
+
+  /// No description provided for @noGlobalChallengesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Launch one and see who takes it on.'**
+  String get noGlobalChallengesHint;
+
+  /// No description provided for @joinChallengeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get joinChallengeAction;
+
+  /// No description provided for @expiresIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends in {hours} h'**
+  String expiresIn(int hours);
+
+  /// No description provided for @joinChallengeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid code, or the challenge no longer exists'**
+  String get joinChallengeError;
 }
 
 class _AppLocalizationsDelegate

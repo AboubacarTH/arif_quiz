@@ -1827,4 +1827,60 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get allDifficulties => 'كل المستويات';
+
+  @override
+  String get challengeAudienceLabel => 'من يمكنه اللعب';
+
+  @override
+  String get audiencePrivate => 'برمز';
+
+  @override
+  String get audiencePrivateDesc => 'فقط من تعطيه الرمز';
+
+  @override
+  String get audienceFriends => 'أصدقائي';
+
+  @override
+  String get audienceFriendsDesc => 'يراه أصدقاؤك وينضمّون بلا رمز';
+
+  @override
+  String get audienceGlobal => 'الجميع';
+
+  @override
+  String get audienceGlobalDesc => 'يمكن لأي أحد أن يجده وينضمّ';
+
+  @override
+  String get audienceExpiryNote => 'تختفي التحدّيات المُعلَنة بعد 24 ساعة.';
+
+  @override
+  String get friendsChallengesTab => 'الأصدقاء';
+
+  @override
+  String get globalChallengesTab => 'الجميع';
+
+  @override
+  String get myChallengesTab => 'تحدّياتي';
+
+  @override
+  String get noFriendChallenges => 'لا يوجد تحدّ من أصدقائك';
+
+  @override
+  String get noFriendChallengesHint => 'عندما يطلق صديق تحدّياً سيظهر هنا.';
+
+  @override
+  String get noGlobalChallenges => 'لا يوجد تحدّ عام حالياً';
+
+  @override
+  String get noGlobalChallengesHint => 'أطلق واحداً وانظر من يقبله.';
+
+  @override
+  String get joinChallengeAction => 'انضمام';
+
+  @override
+  String expiresIn(int hours) {
+    return 'ينتهي خلال $hours ساعة';
+  }
+
+  @override
+  String get joinChallengeError => 'رمز غير صالح أو التحدّي غير موجود';
 }

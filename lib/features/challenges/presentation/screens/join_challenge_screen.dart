@@ -81,7 +81,11 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
             if (widget.ctrl.error != null)
               Padding(
                 padding: const EdgeInsets.only(top: 12),
-                child: Text(widget.ctrl.error!, style: const TextStyle(color: AppColors.error)),
+                child: Text(
+                    widget.ctrl.error == ChallengeController.joinFailed
+                        ? AppLocalizations.of(context).joinChallengeError
+                        : widget.ctrl.error!,
+                    style: const TextStyle(color: AppColors.error)),
               ),
             const Spacer(),
             AppButton(
