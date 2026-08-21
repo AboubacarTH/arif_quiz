@@ -547,5 +547,6 @@
   "reportSent": "تمّ إرسال البلاغ",
   "questionsCountLabel": "عدد الأسئلة",
   "questionsCount": "{count} أسئلة",
-  "randomQuestionsCount": "{count} أسئلة عشوائية"
+  "randomQuestionsCount": "{count} أسئلة عشوائية",
+  "allDifficulties": "كل المستويات"
 }

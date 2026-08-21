@@ -547,5 +547,6 @@
   "reportSent": "Signalement envoyé",
   "questionsCountLabel": "Nombre de questions",
   "questionsCount": "{count} questions",
-  "randomQuestionsCount": "{count} questions aléatoires"
+  "randomQuestionsCount": "{count} questions aléatoires",
+  "allDifficulties": "Toutes difficultés"
 }

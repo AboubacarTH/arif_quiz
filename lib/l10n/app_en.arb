@@ -982,5 +982,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "allDifficulties": "All levels"
 }

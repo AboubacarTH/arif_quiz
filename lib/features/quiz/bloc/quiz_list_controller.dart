@@ -37,10 +37,14 @@ class QuizListController extends ChangeNotifier {
 
   QuizListController(this._repo);
 
-  Future<void> load({bool reset = true}) async {
+  /// [showSkeleton] distingue deux gestes qui se ressemblent mais n'ont pas le
+  /// même sens. Changer un filtre invalide ce qui est affiché : le squelette
+  /// est alors juste. RAFRAÎCHIR redemande la même chose : vider l'écran pour
+  /// le remplir a l'identique ne fait que le faire clignoter.
+  Future<void> load({bool reset = true, bool showSkeleton = true}) async {
     if (reset) {
       _page = 1;
-      _emit(QuizListLoading());
+      if (showSkeleton) _emit(QuizListLoading());
     }
     try {
       final res = await _repo.getQuizzes(
@@ -58,9 +62,16 @@ class QuizListController extends ChangeNotifier {
         total: res.total,
       ));
     } catch (_) {
-      _emit(QuizListError('Failed to load quizzes.'));
+      // Un échec de rafraîchissement ne doit pas effacer une liste qui marche.
+      if (_state is! QuizListLoaded) {
+        _emit(QuizListError('Failed to load quizzes.'));
+      }
     }
   }
+
+  /// Tirer pour rafraîchir : mêmes filtres, la liste reste à l'écran pendant
+  /// que les résultats se rechargent.
+  Future<void> refresh() => load(showSkeleton: false);
 
   Future<void> loadMore() async {
     if (!hasMore || _loadingMore) return;

@@ -3389,6 +3389,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} random questions'**
   String randomQuestionsCount(int count);
+
+  /// No description provided for @allDifficulties.
+  ///
+  /// In en, this message translates to:
+  /// **'All levels'**
+  String get allDifficulties;
 }
 
 class _AppLocalizationsDelegate

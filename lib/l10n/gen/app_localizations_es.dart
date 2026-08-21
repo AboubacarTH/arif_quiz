@@ -1844,4 +1844,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String randomQuestionsCount(int count) {
     return '$count preguntas al azar';
   }
+
+  @override
+  String get allDifficulties => 'Todos los niveles';
 }

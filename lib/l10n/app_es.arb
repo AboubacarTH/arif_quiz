@@ -547,5 +547,6 @@
   "reportSent": "Informe enviado",
   "questionsCountLabel": "Número de preguntas",
   "questionsCount": "{count} preguntas",
-  "randomQuestionsCount": "{count} preguntas al azar"
+  "randomQuestionsCount": "{count} preguntas al azar",
+  "allDifficulties": "Todos los niveles"
 }

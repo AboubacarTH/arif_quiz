@@ -1830,4 +1830,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String randomQuestionsCount(int count) {
     return '$count random questions';
   }
+
+  @override
+  String get allDifficulties => 'All levels';
 }
