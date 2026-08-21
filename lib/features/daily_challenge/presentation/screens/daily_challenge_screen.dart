@@ -32,6 +32,11 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
   // Play state
   bool _playing = false;
   bool _submitting = false;
+
+  /// Session ouverte à la récupération des questions : c'est elle qui dit au
+  /// serveur quel sous-ensemble du quiz a été joué. L'écran la jetait, et la
+  /// correction portait alors sur le quiz entier.
+  int? _sessionId;
   late GamePlayController _playCtrl;
 
   @override
@@ -51,6 +56,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     setState(() => _loading = true);
     try {
       final data = await _quizRepo.getQuizQuestions(_daily!.quiz.id);
+      _sessionId = data.sessionId;
       _playCtrl = GamePlayController(
         mode: GameMode.classic,
         questions: data.questions,
@@ -76,6 +82,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
       final result = await _dailyRepo.submit(
         answers: Map<String, String>.from(_playCtrl.answers),
         timeTaken: _playCtrl.totalTime,
+        sessionId: _sessionId,
       );
       if (!mounted) return;
       Navigator.pushReplacement(
