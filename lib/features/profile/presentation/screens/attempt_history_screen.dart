@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
+import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -81,7 +81,7 @@ class _AttemptHistoryScreenState extends State<AttemptHistoryScreen> {
                       title: AppLocalizations.of(context).noAttemptsYet,
                       subtitle:
                           AppLocalizations.of(context).attemptsAppearHere,
-                      emoji: 'Q',
+                      icon: Icons.history_rounded,
                       actionLabel: AppLocalizations.of(context).refresh,
                       onAction: _loadAttempts,
                     )
@@ -124,7 +124,7 @@ class _AttemptTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         onTap: quizId == null
             ? null
             : () => Navigator.push(
@@ -148,15 +148,11 @@ class _AttemptTile extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: gradeColor.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Text(
                   grade,
-                  style: TextStyle(
-                    color: gradeColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: context.type.headlineMedium.copyWith(color: gradeColor, fontWeight: FontWeight.w800),
                 ),
               ),
               const SizedBox(width: 12),
@@ -166,11 +162,7 @@ class _AttemptTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
-                        color: context.appColors.textPrimary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -191,10 +183,7 @@ class _AttemptTile extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         _formatDate(attempt['created_at'].toString()),
-                        style: TextStyle(
-                          color: context.appColors.textMuted,
-                          fontSize: 11,
-                        ),
+                        style: context.type.labelSmall.copyWith(color: context.appColors.textMuted),
                       ),
                     ],
                   ],
@@ -249,11 +238,7 @@ class _MetaText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
-        color: context.appColors.textSecondary,
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-      ),
+      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600),
     );
   }
 }

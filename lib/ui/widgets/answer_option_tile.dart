@@ -112,16 +112,12 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
         height: 30,
         decoration: BoxDecoration(
           color: _labelBg,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
         ),
         alignment: Alignment.center,
         child: Text(
           widget.label,
-          style: TextStyle(
-            color: _labelFg,
-            fontSize: 13,
-            fontWeight: FontWeight.w800,
-          ),
+          style: context.type.labelLarge.copyWith(color: _labelFg, fontWeight: FontWeight.w800),
         ),
       );
 
@@ -165,11 +161,7 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
         Expanded(
           child: Text(
             widget.option,
-            style: TextStyle(
-              color: _textColor,
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
+            style: context.type.titleMedium.copyWith(color: _textColor, fontWeight: FontWeight.w600),
           ),
         ),
         if (_trailingIcon != null) _trailingIcon!,
@@ -197,12 +189,7 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
               textAlign: TextAlign.center,
               maxLines: 4,
               minFontSize: 11,
-              style: TextStyle(
-                color: _textColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                height: 1.15,
-              ),
+              style: context.type.titleLarge.copyWith(color: _textColor, height: 1.15),
             ),
           ),
         ),

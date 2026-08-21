@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String greeting(String name) {
-    return 'Hello, $name 👋';
+    return 'Hello, $name';
   }
 
   @override
@@ -26,10 +26,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seeAll => 'See all';
 
   @override
-  String get popular => '🔥 Popular';
+  String get popular => 'Popular';
 
   @override
-  String get friendsLeaderboard => '🏅 Friends leaderboard';
+  String get friendsLeaderboard => 'Friends leaderboard';
 
   @override
   String get guestBannerTitle => 'Save your progress!';
@@ -60,7 +60,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get journeyTitle => 'Climb the levels of the map';
 
   @override
-  String get journeySubtitle => 'Unlock levels, earn stars ⭐';
+  String get journeySubtitle => 'Unlock levels, earn stars';
 
   @override
   String levelShort(int level) {
@@ -160,7 +160,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String levelsCount(int count) {
-    return '🏁  $count levels';
+    return '$count levels';
   }
 
   @override
@@ -228,22 +228,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewChallenge => 'View challenge';
 
   @override
-  String get headlineOutstanding => 'Outstanding! 🤩';
+  String get headlineOutstanding => 'Outstanding!';
 
   @override
-  String get headlineExcellent => 'Excellent! 🎉';
+  String get headlineExcellent => 'Excellent!';
 
   @override
-  String get headlineGreat => 'Great job! 👏';
+  String get headlineGreat => 'Great job!';
 
   @override
-  String get headlineNotBad => 'Not bad! 👍';
+  String get headlineNotBad => 'Not bad!';
 
   @override
-  String get headlineKeepGoing => 'Keep going! 💪';
+  String get headlineKeepGoing => 'Keep going!';
 
   @override
-  String get headlineTryAgain => 'Try again! 🔄';
+  String get headlineTryAgain => 'Try again!';
 
   @override
   String get yourAnswer => 'Your answer';
@@ -361,7 +361,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ruleReview => 'Review full explanations after the quiz';
 
   @override
-  String get startQuiz => 'Start Quiz 🚀';
+  String get startQuiz => 'Start Quiz';
 
   @override
   String get tryAnotherDifficulty => 'Try another difficulty filter';
@@ -838,7 +838,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get bonusXp30 => '⚡ +30 bonus XP';
+  String get bonusXp30 => '+30 bonus XP';
 
   @override
   String get takeChallenge => 'Take the challenge';
@@ -1613,13 +1613,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orSeparator => 'OR';
 
   @override
-  String get premiumFeatureNoAds => '✅ Unlimited quizzes and journey, no ads';
+  String get premiumFeatureNoAds => 'Unlimited quizzes and journey, no ads';
 
   @override
-  String get premiumFeatureAllModes => '⚡ Every game mode, never interrupted';
+  String get premiumFeatureAllModes => 'Every game mode, never interrupted';
 
   @override
-  String get premiumFeatureSupport => '❤️ You support the app\'s development';
+  String get premiumFeatureSupport => 'You support the app\'s development';
 
   @override
   String get loadFailedRetry => 'Loading failed. Pull to refresh.';
@@ -1657,4 +1657,134 @@ class AppLocalizationsEn extends AppLocalizations {
   String shareChallengeText(String title, String code) {
     return 'I challenge you on Arif Quiz! Join my challenge “$title” with the code: $code';
   }
+
+  @override
+  String get adminDailyChallenge => 'Daily challenge';
+
+  @override
+  String get manageDailyChallengeDesc =>
+      'Schedule which quiz runs on which day';
+
+  @override
+  String get dailyChallengeCalendarHint =>
+      'A day with no quiz means no challenge at all for players.';
+
+  @override
+  String get scheduleDay => 'Schedule a day';
+
+  @override
+  String get changeQuizBtn => 'Change';
+
+  @override
+  String get unscheduleBtn => 'Unschedule';
+
+  @override
+  String get unscheduleConfirmTitle => 'Unschedule this day?';
+
+  @override
+  String unscheduleConfirmBody(String date, int count) {
+    return '$date will no longer have a challenge. The $count attempt(s) already played are kept.';
+  }
+
+  @override
+  String get noChallengeTodayTitle => 'No challenge scheduled for today';
+
+  @override
+  String get noChallengeTodayBody =>
+      'The « Daily challenge » card stays visible in the app, but it opens an empty screen until a quiz is set on today\'s date.';
+
+  @override
+  String get scheduleToday => 'Schedule today';
+
+  @override
+  String get upcomingSection => 'Upcoming';
+
+  @override
+  String get historySection => 'History';
+
+  @override
+  String get emptyCalendar =>
+      'The calendar is empty: players will not be offered any challenge.';
+
+  @override
+  String freeDaysLabel(int count, int horizon) {
+    return '$count free day(s) in the next $horizon days';
+  }
+
+  @override
+  String get noSchedulableQuiz => 'No quiz can be scheduled';
+
+  @override
+  String get noSchedulableQuizHint =>
+      'A daily challenge needs a published quiz with at least one question.';
+
+  @override
+  String get challengeQuizUnpublished =>
+      'Quiz unpublished since: players will see no challenge that day.';
+
+  @override
+  String get challengeQuizEmpty =>
+      'Quiz with no question: players will see no challenge that day.';
+
+  @override
+  String attemptsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count attempts',
+      one: '1 attempt',
+      zero: 'no attempt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fillRotation => 'Fill a rotation';
+
+  @override
+  String get rotationHint =>
+      'The selected quizzes rotate in the order you pick them. Already scheduled days are kept unless you ask to overwrite them.';
+
+  @override
+  String get firstDay => 'First day';
+
+  @override
+  String get numberOfDays => 'Number of days';
+
+  @override
+  String get rotationQuizzes => 'Quizzes in the rotation';
+
+  @override
+  String get overwriteScheduled => 'Overwrite days already scheduled';
+
+  @override
+  String rotationDone(int created, int updated, int skipped) {
+    return '$created day(s) scheduled, $updated updated, $skipped already taken and kept.';
+  }
+
+  @override
+  String fillDays(int count) {
+    return 'Fill $count day(s)';
+  }
+
+  @override
+  String get chooseQuiz => 'Choose a quiz';
+
+  @override
+  String get dateLabel => 'Date';
+
+  @override
+  String get scheduleBtn => 'Schedule';
+
+  @override
+  String get oops => 'Oops!';
+
+  @override
+  String get bonusKeepsStreak => 'Keeps your streak alive';
+
+  @override
+  String get bonusDailyLeaderboard => 'Daily leaderboard';
+
+  @override
+  String get alreadyPlayedTag => 'Played';
 }

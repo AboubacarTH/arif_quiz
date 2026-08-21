@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
+import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
 import 'package:arif_quiz/core/monetization/play_gate.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.dart';
@@ -106,16 +106,13 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                         ),
                         child: Center(
                           child: Text(q.category?.icon ?? '📝',
-                              style: const TextStyle(fontSize: 40)),
+                              style: AppType.score),
                         ),
                       ),
                       const SizedBox(height: 10),
                       if (q.category != null)
                         Text(q.category!.name,
-                            style: TextStyle(
-                                color: catColor,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14)),
+                            style: context.type.titleMedium.copyWith(color: catColor)),
                     ],
                   ),
                 ),
@@ -126,25 +123,18 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                   children: [
                     Expanded(
                         child: Text(q.title,
-                            style: TextStyle(
-                                color: context.appColors.textPrimary,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'Nunito'))),
+                            style: context.type.headlineLarge.copyWith(color: context.appColors.textPrimary))),
                     const SizedBox(width: 10),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 5),
                       decoration: BoxDecoration(
                           color: diffColor.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppRadius.xs),
                           border:
                               Border.all(color: diffColor.withValues(alpha: 0.3))),
                       child: Text(DifficultyL10n.badge(context, q.difficulty),
-                          style: TextStyle(
-                              color: diffColor,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w800)),
+                          style: context.type.labelSmall.copyWith(color: diffColor)),
                     ),
                   ],
                 ),
@@ -152,10 +142,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                 if (q.description != null) ...[
                   const SizedBox(height: 10),
                   Text(q.description!,
-                      style: TextStyle(
-                          color: context.appColors.textSecondary,
-                          fontSize: 14,
-                          height: 1.6)),
+                      style: context.type.bodyLarge.copyWith(color: context.appColors.textSecondary, height: 1.6)),
                 ],
                 const SizedBox(height: 24),
 
@@ -194,11 +181,8 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('📌 ${AppLocalizations.of(context).howToPlay}',
-                          style: TextStyle(
-                              color: context.appColors.textPrimary,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15)),
+                      Text(AppLocalizations.of(context).howToPlay,
+                          style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary)),
                       const SizedBox(height: 12),
                       ...[
                         AppLocalizations.of(context).ruleSelectOne,
@@ -212,9 +196,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                                   color: AppColors.success, size: 16),
                               const SizedBox(width: 8),
                               Text(s,
-                                  style: TextStyle(
-                                      color: context.appColors.textSecondary,
-                                      fontSize: 13)),
+                                  style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
                             ]),
                           )),
                     ],

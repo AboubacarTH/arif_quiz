@@ -135,7 +135,7 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
                 ),
                 const SizedBox(height: 28),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
                   child: Image.asset(
                     'assets/images/arifquiz_192.png',
                     width: 72,
@@ -146,18 +146,12 @@ class _PasswordResetCodeScreenState extends State<PasswordResetCodeScreen> {
                 const SizedBox(height: 24),
                 Text(
                   AppLocalizations.of(context).newPasswordTitle,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 36,
-                    fontWeight: FontWeight.w800,
-                    height: 1.1,
-                  ),
+                  style: AppType.score.copyWith(color: context.appColors.textPrimary, height: 1.1),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   AppLocalizations.of(context).enterCodeAndNewPassword(widget.email),
-                  style: TextStyle(
-                      color: context.appColors.textSecondary, fontSize: 16),
+                  style: context.type.titleLarge.copyWith(color: context.appColors.textSecondary),
                 ),
                 const SizedBox(height: 36),
                 if (_error != null) ...[
@@ -248,7 +242,7 @@ class _Message extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         border: Border.all(color: color.withValues(alpha: 0.28)),
       ),
       child: Row(
@@ -258,7 +252,7 @@ class _Message extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: TextStyle(color: color, fontSize: 14),
+              style: context.type.bodyLarge.copyWith(color: color),
             ),
           ),
         ],

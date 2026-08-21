@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
@@ -40,16 +40,21 @@ class ChallengeCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: modeColor.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.xs),
                     border: Border.all(color: modeColor.withValues(alpha: 0.4)),
                   ),
-                  child: Text(
-                    _modeLabel(context, challenge.mode),
-                    style: TextStyle(
-                      color: modeColor,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(_modeIcon(challenge.mode),
+                          size: 12, color: modeColor),
+                      const SizedBox(width: 4),
+                      Text(
+                        _modeLabel(context, challenge.mode),
+                        style: context.type.labelSmall.copyWith(
+                            color: modeColor, fontWeight: FontWeight.w700),
+                      ),
+                    ],
                   ),
                 ),
                 const Spacer(),
@@ -59,15 +64,11 @@ class ChallengeCard extends StatelessWidget {
                     color: challenge.isOpen
                         ? AppColors.success.withValues(alpha: 0.15)
                         : context.appColors.textMuted.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.xs),
                   ),
                   child: Text(
                     challenge.isOpen ? 'Ouvert' : challenge.status,
-                    style: TextStyle(
-                      color: challenge.isOpen ? AppColors.success : context.appColors.textMuted,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: context.type.labelSmall.copyWith(color: challenge.isOpen ? AppColors.success : context.appColors.textMuted, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -75,18 +76,14 @@ class ChallengeCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               challenge.title,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
             Text(
               challenge.sourceLabel,
-              style: TextStyle(color: context.appColors.textSecondary, fontSize: 13),
+              style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -97,14 +94,14 @@ class ChallengeCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   '${challenge.participantsCount} participant${challenge.participantsCount > 1 ? 's' : ''}',
-                  style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+                  style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
                 ),
                 const SizedBox(width: 12),
                 Icon(Icons.quiz_outlined, size: 14, color: context.appColors.textMuted),
                 const SizedBox(width: 4),
                 Text(
                   '${challenge.questionsCount} questions',
-                  style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+                  style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
                 ),
                 if (challenge.myCompleted) ...[
                   const Spacer(),
@@ -112,15 +109,11 @@ class ChallengeCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: AppColors.success.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.xs),
                     ),
-                    child: const Text(
-                      '✓ Joué',
-                      style: TextStyle(
-                        color: AppColors.success,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    child: Text(
+                      AppLocalizations.of(context).alreadyPlayedTag,
+                      style: context.type.labelSmall.copyWith(color: AppColors.success, fontWeight: FontWeight.w700),
                     ),
                   ),
                 ],
@@ -137,7 +130,7 @@ class ChallengeCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         color: context.appColors.cardBgLight,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                       ),
                       child: Row(
                         children: [
@@ -145,12 +138,7 @@ class ChallengeCard extends StatelessWidget {
                           const SizedBox(width: 6),
                           Text(
                             challenge.code,
-                            style: const TextStyle(
-                              color: AppColors.accent,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 2,
-                            ),
+                            style: context.type.titleLarge.copyWith(color: AppColors.accent, fontWeight: FontWeight.w800, letterSpacing: 2),
                           ),
                         ],
                       ),
@@ -187,14 +175,21 @@ class ChallengeCard extends StatelessWidget {
     );
   }
 
-  /// Les libellés de mode existent déjà en 4 langues : seuls les emojis
-  /// restent en dur ici.
+  /// Le libellé reste une chaîne traduisible ; le glyphe est une icône posée
+  /// à côté. Coller les deux dans la même chaîne empêchait de styler l'un sans
+  /// l'autre, et plaçait l'emoji à gauche même en arabe.
   String _modeLabel(BuildContext context, String mode) {
     final l10n = AppLocalizations.of(context);
     return switch (mode) {
-      'survival' => '❤️ ${l10n.modeSurvivalShort}',
-      'speed' => '⚡ ${l10n.modeSpeedShort}',
-      _ => '🎮 ${l10n.modeClassicShort}',
+      'survival' => l10n.modeSurvivalShort,
+      'speed' => l10n.modeSpeedShort,
+      _ => l10n.modeClassicShort,
     };
   }
+
+  IconData _modeIcon(String mode) => switch (mode) {
+        'survival' => Icons.favorite_rounded,
+        'speed' => Icons.bolt_rounded,
+        _ => Icons.sports_esports_rounded,
+      };
 }

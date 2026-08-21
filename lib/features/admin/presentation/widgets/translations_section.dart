@@ -1,3 +1,4 @@
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -62,16 +63,12 @@ class _TranslationsSectionState extends State<TranslationsSection> {
                 color: AppColors.secondary, size: 16),
             const SizedBox(width: 6),
             Text(AppLocalizations.of(context).translationsLabel,
-                style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800)),
+                style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
           ],
         ),
         const SizedBox(height: 2),
         Text(AppLocalizations.of(context).mainFieldsEnglish,
-            style: TextStyle(
-                color: context.appColors.textMuted, fontSize: 11)),
+            style: context.type.labelSmall.copyWith(color: context.appColors.textMuted)),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -88,7 +85,7 @@ class _TranslationsSectionState extends State<TranslationsSection> {
                         color: _active == l.code
                             ? AppColors.secondary
                             : context.appColors.cardBg,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                         border: Border.all(
                             color: _active == l.code
                                 ? AppColors.secondary
@@ -96,13 +93,9 @@ class _TranslationsSectionState extends State<TranslationsSection> {
                       ),
                       child: Text(
                         l.label,
-                        style: TextStyle(
-                          color: _active == l.code
+                        style: context.type.labelMedium.copyWith(color: _active == l.code
                               ? Colors.white
-                              : context.appColors.textSecondary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
+                              : context.appColors.textSecondary),
                       ),
                     ),
                     if (widget.filled?.call(l.code) ?? false)

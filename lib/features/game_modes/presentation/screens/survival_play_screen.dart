@@ -230,7 +230,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
                   height: 36,
                   decoration: BoxDecoration(
                     color: context.appColors.cardBg,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
                   child: Icon(
                     Icons.close_rounded,
@@ -242,7 +242,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(AppRadius.xs),
                   child: LinearProgressIndicator(
                     value: ctrl.progress,
                     backgroundColor: context.appColors.cardBg,
@@ -255,7 +255,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
               Text(
                 '${ctrl.index + 1}/${ctrl.questions.length}',
                 style:
-                    TextStyle(color: context.appColors.textSecondary, fontSize: 13),
+                    context.type.bodyMedium.copyWith(color: context.appColors.textSecondary),
               ),
             ],
           ),
@@ -264,25 +264,20 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('❤️', style: TextStyle(fontSize: 22)),
+              const Icon(Icons.favorite_rounded, size: 22, color: AppColors.error),
               const SizedBox(width: 8),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: AppColors.error.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
                   border:
                       Border.all(color: AppColors.error.withValues(alpha: 0.4)),
                 ),
                 child: Text(
                   AppLocalizations.of(context).survivalTag,
-                  style: const TextStyle(
-                    color: AppColors.error,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1,
-                  ),
+                  style: context.type.labelSmall.copyWith(color: AppColors.error, letterSpacing: 1),
                 ),
               ),
               const SizedBox(width: 8),
@@ -291,7 +286,7 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
                   color: context.appColors.cardBg,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
                 ),
                 child: Text(
                   '${ctrl.timeLeft} s',
@@ -315,22 +310,12 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
                     QuestionMedia(imageUrl: q.imageUrl, audioUrl: q.audioUrl),
                   Text(
                     AppLocalizations.of(context).questionNumber(ctrl.index + 1),
-                    style: const TextStyle(
-                      color: AppColors.error,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
+                    style: context.type.labelMedium.copyWith(color: AppColors.error, letterSpacing: 0.5),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     q.text,
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      height: 1.4,
-                    ),
+                    style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, height: 1.4),
                   ),
                   const SizedBox(height: AppSpacing.questionToAnswers),
                   AnswerOptionsGrid(
@@ -358,21 +343,19 @@ class _SurvivalPlayScreenState extends State<SurvivalPlayScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('💔', style: TextStyle(fontSize: 64)).animate().shake(),
+            const Icon(Icons.heart_broken_rounded, size: 64, color: AppColors.error)
+                .animate()
+                .shake(),
             const SizedBox(height: 20),
             Text(
               AppLocalizations.of(context).gameOver,
-              style: const TextStyle(
-                color: AppColors.error,
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
-              ),
+              style: context.type.displayMedium.copyWith(color: AppColors.error),
             ),
             const SizedBox(height: 8),
             Text(
               AppLocalizations.of(context).survivedCount(survived),
               style:
-                  TextStyle(color: context.appColors.textSecondary, fontSize: 16),
+                  context.type.titleLarge.copyWith(color: context.appColors.textSecondary),
             ),
             const SizedBox(height: 32),
             ElevatedButton.icon(

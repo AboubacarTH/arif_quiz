@@ -70,10 +70,10 @@ class GameModeCard extends StatelessWidget {
               height: 52,
               decoration: BoxDecoration(
                 color: _color.withValues(alpha: selected ? 0.2 : 0.12),
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Center(
-                child: Text(mode.icon, style: const TextStyle(fontSize: 26)),
+                child: Icon(mode.icon, color: _color, size: 26),
               ),
             ),
             const SizedBox(width: 14),
@@ -86,13 +86,9 @@ class GameModeCard extends StatelessWidget {
                     children: [
                       Text(
                         mode.localizedLabel(context),
-                        style: TextStyle(
-                          color: selected
+                        style: context.type.titleMedium.copyWith(color: selected
                               ? _color
-                              : context.appColors.textPrimary,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                        ),
+                              : context.appColors.textPrimary, fontWeight: FontWeight.w800),
                       ),
                       if (mode == GameMode.speed) ...[
                         const SizedBox(width: 6),
@@ -101,16 +97,11 @@ class GameModeCard extends StatelessWidget {
                               horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: AppColors.secondary.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(AppRadius.xs),
                           ),
-                          child: const Text(
+                          child: Text(
                             'BEST XP',
-                            style: TextStyle(
-                              color: AppColors.secondary,
-                              fontSize: 9,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 0.5,
-                            ),
+                            style: context.type.labelSmall.copyWith(color: AppColors.secondary, letterSpacing: 0.5),
                           ),
                         ),
                       ],
@@ -119,10 +110,7 @@ class GameModeCard extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     mode.localizedDescription(context),
-                    style: TextStyle(
-                      color: context.appColors.textSecondary,
-                      fontSize: 12,
-                    ),
+                    style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -177,7 +165,7 @@ class _BadgeWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Row(
@@ -187,11 +175,7 @@ class _BadgeWidget extends StatelessWidget {
             const SizedBox(width: 3),
             Text(
               badge.label,
-              style: TextStyle(
-                color: color,
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w700),
             ),
           ],
         ),

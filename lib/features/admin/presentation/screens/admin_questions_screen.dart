@@ -117,7 +117,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         title: Text(AppLocalizations.of(context).confirmDeleteTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
         content: Text(AppLocalizations.of(context).deleteQuestionBody),
         actions: [
@@ -182,8 +182,8 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
                   : null,
               filled: true,
               fillColor: context.appColors.cardBg,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: context.appColors.border)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: context.appColors.border)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
             ),
             onChanged: (_) => _load(reset: true),
           ),
@@ -212,8 +212,8 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
                     }),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-                      child: Text(AppLocalizations.of(context).resetFilters, style: const TextStyle(color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w600)),
+                      decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppRadius.lg)),
+                      child: Text(AppLocalizations.of(context).resetFilters, style: context.type.labelMedium.copyWith(color: AppColors.error, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],
@@ -234,7 +234,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          Text(AppLocalizations.of(context).filterByQuiz, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByQuiz, style: context.type.titleLarge.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           ListTile(
             title: Text(AppLocalizations.of(context).allFilter),
@@ -259,7 +259,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          Text(AppLocalizations.of(context).filterByType, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByType, style: context.type.titleLarge.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           for (final t in [null, 'multiple_choice', 'true_false', 'short_answer'])
             ListTile(
@@ -315,16 +315,12 @@ class _FilterChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: active ? AppColors.primary.withValues(alpha: 0.12) : context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(color: active ? AppColors.primary : context.appColors.border),
           ),
           child: Text(
             label,
-            style: TextStyle(
-              color: active ? AppColors.primary : context.appColors.textSecondary,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            style: context.type.labelMedium.copyWith(color: active ? AppColors.primary : context.appColors.textSecondary, fontWeight: FontWeight.w600),
           ),
         ),
       );
@@ -372,7 +368,7 @@ class _QuestionTile extends StatelessWidget {
                     _label(context, q.correctAnswer),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: AppColors.success, fontSize: 12),
+                    style: context.type.labelMedium.copyWith(color: AppColors.success),
                   ),
                 ),
               ],
@@ -423,7 +419,7 @@ class _QuestionTile extends StatelessWidget {
                   borderRadius: AppRadius.rSm,
                   border: Border.all(color: o == q.correctAnswer ? AppColors.success.withValues(alpha: 0.3) : context.appColors.border),
                 ),
-                child: Text(_label(context, o), style: TextStyle(color: o == q.correctAnswer ? AppColors.success : context.appColors.textSecondary, fontSize: 11)),
+                child: Text(_label(context, o), style: context.type.labelSmall.copyWith(color: o == q.correctAnswer ? AppColors.success : context.appColors.textSecondary)),
               )).toList(),
             ),
           ],
@@ -584,8 +580,8 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
             if (_error != null) ...[
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                child: Text(_error!, style: const TextStyle(color: AppColors.error, fontSize: 13)),
+                decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppRadius.md)),
+                child: Text(_error!, style: context.type.bodyMedium.copyWith(color: AppColors.error)),
               ),
               const SizedBox(height: 12),
             ],
@@ -595,7 +591,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: AppColors.secondary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Row(
                   children: [
@@ -604,10 +600,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(widget.journeyLevel!.displayTitle,
-                          style: TextStyle(
-                              color: context.appColors.textPrimary,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700)),
+                          style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary)),
                     ),
                   ],
                 ),
@@ -623,7 +616,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
               ),
             const SizedBox(height: 12),
             // Type selector
-            Text(AppLocalizations.of(context).typeRequired, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
+            Text(AppLocalizations.of(context).typeRequired, style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600)),
             const SizedBox(height: 6),
             Row(
               children: [
@@ -637,17 +630,13 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
                             color: _type == t ? AppColors.primary : context.appColors.cardBg,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(AppRadius.sm),
                             border: Border.all(color: _type == t ? AppColors.primary : context.appColors.border),
                           ),
                           child: Text(
                             t == 'multiple_choice' ? 'QCM' : t == 'true_false' ? AppLocalizations.of(context).typeTrueFalse : AppLocalizations.of(context).typeShortAnswerShort,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: _type == t ? Colors.white : context.appColors.textSecondary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: context.type.labelMedium.copyWith(color: _type == t ? Colors.white : context.appColors.textSecondary),
                           ),
                         ),
                       ),
@@ -666,7 +655,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
             const SizedBox(height: 12),
             // Options (QCM only)
             if (_type == 'multiple_choice') ...[
-              Text(AppLocalizations.of(context).optionsRequired, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
+              Text(AppLocalizations.of(context).optionsRequired, style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
               for (var i = 0; i < _optionCtrls.length; i++) ...[
                 Row(
@@ -707,7 +696,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
             ],
             // True/False
             if (_type == 'true_false') ...[
-              Text(AppLocalizations.of(context).correctAnswerRequired, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
+              Text(AppLocalizations.of(context).correctAnswerRequired, style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
               // Valeur envoyée : canonique (True/False) ; libellé affiché :
               // celui de la langue de l'admin. Le joueur, lui, verra les deux
@@ -724,7 +713,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color: TrueFalse.matches(_correctAnswer.text, v) ? AppColors.primary : context.appColors.cardBg,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                               border: Border.all(color: TrueFalse.matches(_correctAnswer.text, v) ? AppColors.primary : context.appColors.border),
                             ),
                             child: Text(
@@ -746,7 +735,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
               const SizedBox(height: 6),
               Text(
                 AppLocalizations.of(context).trueFalseAutoLocalized,
-                style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
+                style: context.type.labelSmall.copyWith(color: context.appColors.textMuted),
               ),
               const SizedBox(height: 12),
             ],
@@ -767,7 +756,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
             ),
             const SizedBox(height: 16),
             // Média (image / audio)
-            Text(AppLocalizations.of(context).mediaOptional, style: TextStyle(color: context.appColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w800)),
+            Text(AppLocalizations.of(context).mediaOptional, style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
             const SizedBox(height: 10),
             _mediaField(AppLocalizations.of(context).imageLabel, _imageUrl, 'image', _uploadingImage),
             const SizedBox(height: 12),
@@ -843,7 +832,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
           const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context).trueFalseAutoLocalized,
-            style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
+            style: context.type.labelSmall.copyWith(color: context.appColors.textMuted),
           ),
         ] else if (_type == 'multiple_choice') ...[
           const SizedBox(height: 12),
@@ -892,8 +881,8 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
         labelText: label,
         filled: true,
         fillColor: context.appColors.cardBg,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
       );
 
   Widget _mediaField(String label, TextEditingController ctrl, String type, bool uploading) {
@@ -929,7 +918,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
           const SizedBox(height: 8),
           if (isImage)
             ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               child: CachedNetworkImage(
                 imageUrl: ctrl.text.trim(),
                 height: 110,
@@ -947,7 +936,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                   child: Text(ctrl.text.trim(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
                 ),
               ],
             ),

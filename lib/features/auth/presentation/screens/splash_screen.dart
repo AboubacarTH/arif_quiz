@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -72,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
+                    borderRadius: BorderRadius.circular(AppRadius.xl),
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.primary.withValues(alpha: 0.5),
@@ -82,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(28),
+                    borderRadius: BorderRadius.circular(AppRadius.xl),
                     child: Image.asset(
                       'assets/images/arifquiz_192.png',
                       width: 100,
@@ -99,23 +100,19 @@ class _SplashScreenState extends State<SplashScreen> {
                 // Title
                 Text(
                   'Arif Quiz',
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 38,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: AppType.score.copyWith(color: context.appColors.textPrimary),
                 ).animate().fadeIn(delay: 400.ms, duration: 500.ms).slideY(begin: 0.3),
                 const SizedBox(height: 8),
                 Text(
                   AppLocalizations.of(context).appTagline,
-                  style: TextStyle(color: context.appColors.textSecondary, fontSize: 15),
+                  style: context.type.bodyLarge.copyWith(color: context.appColors.textSecondary),
                 ).animate().fadeIn(delay: 600.ms, duration: 500.ms),
                 const SizedBox(height: 60),
                 // Loading indicator
                 SizedBox(
                   width: 120,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(AppRadius.xxs),
                     child: LinearProgressIndicator(
                       backgroundColor: context.appColors.cardBgLight,
                       valueColor: const AlwaysStoppedAnimation(AppColors.primary),

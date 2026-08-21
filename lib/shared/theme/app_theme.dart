@@ -106,6 +106,20 @@ class AppColors {
   static const textSecondary = Color(0xFFC9BCA0);
   static const textMuted = Color(0xFF8A7F68);
 
+  // ── Podium ──
+  // Or, argent, bronze : trois valeurs, une seule fois. Elles etaient recopiees
+  // dans trois fichiers avec des teintes qui divergeaient d'un ecran a l'autre.
+  static const rankGold = Color(0xFFD4A017);
+  static const rankSilver = Color(0xFF8E8E93);
+  static const rankBronze = Color(0xFFB06A34);
+
+  static Color rankColor(int rank) => switch (rank) {
+        1 => rankGold,
+        2 => rankSilver,
+        3 => rankBronze,
+        _ => textMuted,
+      };
+
   static Color gradeColor(String grade) => switch (grade) {
         'S' => gradeS,
         'A' => gradeA,
@@ -178,7 +192,8 @@ class AppTheme {
           iconTheme: IconThemeData(color: cs.textPrimary),
           titleTextStyle: TextStyle(
             color: cs.textPrimary,
-            fontSize: 18,
+            fontSize: 19, // headlineMedium
+
             fontWeight: FontWeight.w800,
             fontFamily: 'Nunito',
           ),
@@ -198,7 +213,7 @@ class AppTheme {
                 horizontal: AppSpacing.xxxl, vertical: AppSpacing.lg),
             shape: RoundedRectangleBorder(borderRadius: AppRadius.rMd),
             textStyle: const TextStyle(
-              fontSize: 16,
+              fontSize: 15, // titleMedium
               fontWeight: FontWeight.w700,
               fontFamily: 'Nunito',
             ),
@@ -233,44 +248,7 @@ class AppTheme {
           labelStyle: TextStyle(color: cs.textSecondary),
           hintStyle: TextStyle(color: cs.textMuted),
         ),
-        textTheme: TextTheme(
-          displayLarge: TextStyle(
-              color: cs.textPrimary,
-              fontWeight: FontWeight.w800,
-              fontSize: 32,
-              height: 1.1,
-              letterSpacing: -0.5),
-          displayMedium: TextStyle(
-              color: cs.textPrimary,
-              fontWeight: FontWeight.w800,
-              fontSize: 28,
-              height: 1.1,
-              letterSpacing: -0.4),
-          headlineLarge: TextStyle(
-              color: cs.textPrimary,
-              fontWeight: FontWeight.w800,
-              fontSize: 24,
-              height: 1.15,
-              letterSpacing: -0.3),
-          headlineMedium: TextStyle(
-              color: cs.textPrimary,
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-              height: 1.2,
-              letterSpacing: -0.2),
-          titleLarge: TextStyle(
-              color: cs.textPrimary,
-              fontWeight: FontWeight.w700,
-              fontSize: 17,
-              height: 1.25),
-          titleMedium: TextStyle(
-              color: cs.textPrimary, fontWeight: FontWeight.w600, fontSize: 15),
-          bodyLarge: TextStyle(color: cs.textPrimary, fontSize: 15, height: 1.4),
-          bodyMedium:
-              TextStyle(color: cs.textSecondary, fontSize: 13, height: 1.45),
-          labelLarge: TextStyle(
-              color: cs.textPrimary, fontWeight: FontWeight.w700, fontSize: 13),
-        ),
+        textTheme: _textTheme(cs),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: cs.cardBg,
           selectedItemColor: AppColors.primary,
@@ -322,3 +300,121 @@ class AppTheme {
 // ─── Supprimé : plus de dégradés dans l'app ─────────────────────────────────
 // AppGradients a été retiré. Utiliser AppColors.primary / AppColors.secondary
 // comme couleurs pleines à la place.
+
+// ─── Échelle typographique ──────────────────────────────────────────────────
+//
+// NEUF tailles, pas une de plus. Avant la refonte, l'app en comptait 29 (dont
+// des demi-crans : 11,5 / 12,5 / 13,5 / 14,5) posées à la main dans 594
+// `TextStyle` — le `textTheme` n'était appelé qu'une seule fois dans tout le
+// projet. C'est ce qui empêchait deux écrans de s'accorder.
+//
+//   32  displayLarge    écran de résultat, grand titre d'accueil
+//   26  displayMedium   titre d'écran héros
+//   22  headlineLarge   titre de section fort
+//   19  headlineMedium  titre de carte
+//   17  titleLarge      titre de liste, entrée de menu
+//   15  titleMedium / bodyLarge     sous-titre · texte courant
+//   13  bodyMedium / labelLarge     texte secondaire · libellé de bouton
+//   12  labelMedium     étiquette, méta
+//   11  labelSmall      micro-étiquette, badge, puce
+//
+// Un écran n'écrit plus `fontSize:`. Il prend un rôle (`context.type.titleLarge`)
+// et ne redéfinit que ce qui porte du sens : la couleur, parfois la graisse.
+//
+// SEULE exception documentée : les chiffres de score des écrans de résultat,
+// où le nombre EST l'illustration. Ils passent par `AppType.score` /
+// `AppType.scoreHero`, et nulle part ailleurs.
+
+TextTheme _textTheme(AppColorScheme cs) => TextTheme(
+      displayLarge: TextStyle(
+          color: cs.textPrimary,
+          fontWeight: FontWeight.w800,
+          fontSize: 32,
+          height: 1.05,
+          letterSpacing: -0.5),
+      displayMedium: TextStyle(
+          color: cs.textPrimary,
+          fontWeight: FontWeight.w800,
+          fontSize: 26,
+          height: 1.1,
+          letterSpacing: -0.4),
+      headlineLarge: TextStyle(
+          color: cs.textPrimary,
+          fontWeight: FontWeight.w800,
+          fontSize: 22,
+          height: 1.15,
+          letterSpacing: -0.3),
+      headlineMedium: TextStyle(
+          color: cs.textPrimary,
+          fontWeight: FontWeight.w700,
+          fontSize: 19,
+          height: 1.2,
+          letterSpacing: -0.2),
+      titleLarge: TextStyle(
+          color: cs.textPrimary,
+          fontWeight: FontWeight.w700,
+          fontSize: 17,
+          height: 1.25),
+      titleMedium: TextStyle(
+          color: cs.textPrimary,
+          fontWeight: FontWeight.w700,
+          fontSize: 15,
+          height: 1.3),
+      bodyLarge: TextStyle(color: cs.textPrimary, fontSize: 15, height: 1.45),
+      bodyMedium: TextStyle(color: cs.textSecondary, fontSize: 13, height: 1.5),
+      labelLarge: TextStyle(
+          color: cs.textPrimary, fontWeight: FontWeight.w700, fontSize: 13),
+      labelMedium: TextStyle(
+          color: cs.textSecondary,
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+          letterSpacing: 0.2),
+      labelSmall: TextStyle(
+          color: cs.textMuted,
+          fontWeight: FontWeight.w800,
+          fontSize: 11,
+          letterSpacing: 0.6),
+    );
+
+/// Accès court à l'échelle depuis n'importe quel widget : `context.type.titleLarge`.
+///
+/// Les rôles sont non-nuls : le thème de l'app les définit tous, et un écran qui
+/// tombe sur un `null!` est un bug de thème, pas un cas à gérer.
+extension AppTypeExt on BuildContext {
+  AppTypeScale get type => AppTypeScale(Theme.of(this).textTheme);
+}
+
+class AppTypeScale {
+  final TextTheme _t;
+  const AppTypeScale(this._t);
+
+  TextStyle get displayLarge => _t.displayLarge!;
+  TextStyle get displayMedium => _t.displayMedium!;
+  TextStyle get headlineLarge => _t.headlineLarge!;
+  TextStyle get headlineMedium => _t.headlineMedium!;
+  TextStyle get titleLarge => _t.titleLarge!;
+  TextStyle get titleMedium => _t.titleMedium!;
+  TextStyle get bodyLarge => _t.bodyLarge!;
+  TextStyle get bodyMedium => _t.bodyMedium!;
+  TextStyle get labelLarge => _t.labelLarge!;
+  TextStyle get labelMedium => _t.labelMedium!;
+  TextStyle get labelSmall => _t.labelSmall!;
+}
+
+/// Chiffres de score : la seule entorse à l'échelle, réservée aux écrans de
+/// résultat où le nombre porte l'écran à lui seul.
+abstract final class AppType {
+  static const score = TextStyle(
+      fontSize: 44,
+      fontWeight: FontWeight.w800,
+      height: 1,
+      letterSpacing: -1.5,
+      fontFeatures: [FontFeature.tabularFigures()]);
+
+  static const scoreHero = TextStyle(
+      fontSize: 64,
+      fontWeight: FontWeight.w800,
+      height: 0.95,
+      letterSpacing: -2.5,
+      fontFeatures: [FontFeature.tabularFigures()]);
+}

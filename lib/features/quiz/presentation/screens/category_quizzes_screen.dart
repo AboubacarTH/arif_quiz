@@ -1,3 +1,4 @@
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
 import 'package:arif_quiz/features/quiz/bloc/quiz_list_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
@@ -97,7 +98,7 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
                     height: 38,
                     decoration: BoxDecoration(
                       color: _color.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
                       border: Border.all(color: _color.withValues(alpha: 0.25)),
                     ),
                     child: Icon(Icons.arrow_back_ios_new_rounded,
@@ -114,14 +115,14 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
                       height: 64,
                       decoration: BoxDecoration(
                         color: _color.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                         border:
                             Border.all(color: _color.withValues(alpha: 0.3)),
                       ),
                       child: Center(
                         child: Text(
                           widget.category.icon ?? '📚',
-                          style: const TextStyle(fontSize: 32),
+                          style: context.type.displayLarge,
                         ),
                       ),
                     ),
@@ -132,11 +133,7 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
                         children: [
                           Text(
                             widget.category.name,
-                            style: TextStyle(
-                              color: context.appColors.textPrimary,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w800,
-                            ),
+                            style: context.type.headlineLarge.copyWith(color: context.appColors.textPrimary),
                           ),
                           const SizedBox(height: 4),
                           Container(
@@ -144,15 +141,11 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
                                 horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: _color.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(AppRadius.lg),
                             ),
                             child: Text(
                               '${widget.category.quizCount} quiz${widget.category.quizCount != 1 ? 'zes' : ''}',
-                              style: TextStyle(
-                                color: _color,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                              ),
+                              style: context.type.labelMedium.copyWith(color: _color),
                             ),
                           ),
                         ],
@@ -165,10 +158,7 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
                   const SizedBox(height: 12),
                   Text(
                     widget.category.description!,
-                    style: TextStyle(
-                      color: context.appColors.textSecondary,
-                      fontSize: 13,
-                    ),
+                    style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary),
                   ),
                 ],
               ],
@@ -235,7 +225,7 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
           child: EmptyState(
             title: AppLocalizations.of(context).noQuizFound,
             subtitle: AppLocalizations.of(context).tryAnotherDifficulty,
-            emoji: '🔍',
+            icon: Icons.search_off_rounded,
           ),
         ),
       );
@@ -298,7 +288,7 @@ class _DiffChip extends StatelessWidget {
             color: selected
                 ? color.withValues(alpha: 0.2)
                 : context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: selected ? color : context.appColors.cardBgLight,
               width: selected ? 1.5 : 1,
@@ -306,11 +296,7 @@ class _DiffChip extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: TextStyle(
-              color: selected ? color : context.appColors.textSecondary,
-              fontSize: 12,
-              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-            ),
+            style: context.type.labelMedium.copyWith(color: selected ? color : context.appColors.textSecondary),
           ),
         ),
       );

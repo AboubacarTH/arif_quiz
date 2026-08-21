@@ -1,3 +1,4 @@
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/core/monetization/monetization_controller.dart';
 import 'package:arif_quiz/core/subscriptions/subscription_service.dart';
@@ -86,33 +87,26 @@ class _PaywallSheetState extends State<PaywallSheet> {
             width: 40, height: 4,
             decoration: BoxDecoration(
               color: context.appColors.border,
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(AppRadius.xxs),
             ),
           ),
           const SizedBox(height: 24),
 
           // Titre
-          const Text('🎮', style: TextStyle(fontSize: 48))
+          const Icon(Icons.videogame_asset_rounded,
+              size: 48, color: AppColors.primary)
               .animate().scale(duration: 400.ms, curve: Curves.elasticOut),
           const SizedBox(height: 12),
           Text(
             AppLocalizations.of(context).keepPlayingTitle,
-            style: TextStyle(
-              color: context.appColors.textPrimary,
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-            ),
+            style: context.type.headlineLarge.copyWith(color: context.appColors.textPrimary),
           ),
           const SizedBox(height: 6),
           Text(
             AppLocalizations.of(context)
                 .paywallBodyCredits(widget.ctrl.creditsPerAd),
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: context.appColors.textSecondary,
-              fontSize: 14,
-              height: 1.5,
-            ),
+            style: context.type.bodyLarge.copyWith(color: context.appColors.textSecondary, height: 1.5),
           ),
           if (widget.ctrl.credits > 0) ...[
             const SizedBox(height: 10),
@@ -121,15 +115,12 @@ class _PaywallSheetState extends State<PaywallSheet> {
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.success.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppRadius.lg),
               ),
               child: Text(
                 AppLocalizations.of(context)
                     .creditsRemaining(widget.ctrl.credits),
-                style: const TextStyle(
-                    color: AppColors.success,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700),
+                style: context.type.labelMedium.copyWith(color: AppColors.success),
               ),
             ),
           ],
@@ -148,7 +139,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: context.appColors.cardBgLight,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Row(
                 children: [
@@ -158,8 +149,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
                   Expanded(
                     child: Text(
                       AppLocalizations.of(context).adLoading,
-                      style: TextStyle(
-                          color: context.appColors.textMuted, fontSize: 13),
+                      style: context.type.bodyMedium.copyWith(color: context.appColors.textMuted),
                     ),
                   ),
                   const SizedBox(
@@ -183,8 +173,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Text(AppLocalizations.of(context).orSeparator,
-                  style: TextStyle(
-                      color: context.appColors.textMuted, fontSize: 12)),
+                  style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
             ),
             Expanded(child: Divider(color: context.appColors.border)),
           ]),
@@ -199,7 +188,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
             _SubscribeButton(
               product: _subs.yearlyProduct!,
               label: AppLocalizations.of(context).yearly,
-              badge: '🔥 -50%',
+              badge: '-50%',
               badgeColor: AppColors.error,
               loading: _buyingYearly,
               onTap: () => _buy(_subs.yearlyProduct!, yearly: true),
@@ -218,7 +207,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
               ),
               child: Row(children: [
@@ -228,8 +217,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
                 Expanded(
                   child: Text(
                     AppLocalizations.of(context).premiumBanner,
-                    style: TextStyle(
-                        color: context.appColors.textPrimary, fontSize: 13),
+                    style: context.type.bodyMedium.copyWith(color: context.appColors.textPrimary),
                   ),
                 ),
               ]),
@@ -244,8 +232,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
               if (_subs.isPremium) nav.pop();
             },
             child: Text(AppLocalizations.of(context).restorePurchases,
-                style: TextStyle(
-                    color: context.appColors.textMuted, fontSize: 12)),
+                style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
           ),
         ],
       ),
@@ -324,7 +311,7 @@ class _AdButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           color: AppColors.secondary,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             BoxShadow(
               color: AppColors.secondary.withValues(alpha: 0.35),
@@ -352,11 +339,7 @@ class _AdButton extends StatelessWidget {
                       label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: context.type.titleMedium.copyWith(color: Colors.white),
                     ),
                   ),
                 ],
@@ -382,7 +365,7 @@ class _RetryAdButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: context.appColors.cardBgLight,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: context.appColors.border),
         ),
         child: Row(
@@ -395,11 +378,7 @@ class _RetryAdButton extends StatelessWidget {
               child: Text(
                 AppLocalizations.of(context).adUnavailableRetry,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: context.appColors.textSecondary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: context.type.labelLarge.copyWith(color: context.appColors.textSecondary),
               ),
             ),
           ],
@@ -417,7 +396,7 @@ class _PremiumBanner extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
       child: Column(
@@ -429,11 +408,7 @@ class _PremiumBanner extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               'Arif Quiz Premium',
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontWeight: FontWeight.w800,
-                fontSize: 15,
-              ),
+              style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
             ),
           ]),
           const SizedBox(height: 8),
@@ -445,10 +420,25 @@ class _PremiumBanner extends StatelessWidget {
             AppLocalizations.of(context).premiumFeatureAllModes,
             AppLocalizations.of(context).premiumFeatureSupport,
           ].map((f) => Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                child: Text(f,
-                    style: TextStyle(
-                        color: context.appColors.textSecondary, fontSize: 12)),
+                padding: const EdgeInsets.only(bottom: 4),
+                // Les libellés portaient leur puce en emoji ; la coche est
+                // maintenant une icône, alignée sur la première ligne du texte.
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Icon(Icons.check_rounded,
+                          size: 14, color: AppColors.success),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(f,
+                          style: context.type.labelMedium.copyWith(
+                              color: context.appColors.textSecondary)),
+                    ),
+                  ],
+                ),
               )),
         ],
       ),
@@ -482,7 +472,7 @@ class _SubscribeButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         decoration: BoxDecoration(
           color: AppColors.primary,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             BoxShadow(
               color: AppColors.primary.withValues(alpha: 0.4),
@@ -507,16 +497,11 @@ class _SubscribeButton extends StatelessWidget {
                       children: [
                         Text(
                           'Premium $label',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15,
-                          ),
+                          style: context.type.titleMedium.copyWith(color: Colors.white, fontWeight: FontWeight.w800),
                         ),
                         Text(
                           product.price,
-                          style: const TextStyle(
-                              color: Colors.white70, fontSize: 12),
+                          style: context.type.labelMedium.copyWith(color: Colors.white70),
                         ),
                       ],
                     ),
@@ -527,13 +512,10 @@ class _SubscribeButton extends StatelessWidget {
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: badgeColor ?? AppColors.accent,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                       ),
                       child: Text(badge!,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700)),
+                          style: context.type.labelSmall.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
                     ),
                 ],
               ),

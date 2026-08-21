@@ -145,11 +145,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
           Expanded(
             child: Text(
               title,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-              ),
+              style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -224,7 +220,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
               else
                 Text(
                   selected?.icon ?? '📚',
-                  style: const TextStyle(fontSize: 18),
+                  style: context.type.headlineMedium,
                 ),
               const SizedBox(width: 10),
               Expanded(
@@ -232,15 +228,9 @@ class _QuizListScreenState extends State<QuizListScreen> {
                   _categoriesLoading
                       ? AppLocalizations.of(context).loadingEllipsis
                       : selected?.name ?? AppLocalizations.of(context).allCategories,
-                  style: TextStyle(
-                    color: _selectedCatId != null
+                  style: context.type.titleMedium.copyWith(color: _selectedCatId != null
                         ? selectedColor
-                        : context.appColors.textSecondary,
-                    fontSize: 14,
-                    fontWeight: _selectedCatId != null
-                        ? FontWeight.w700
-                        : FontWeight.w500,
-                  ),
+                        : context.appColors.textSecondary),
                 ),
               ),
               if (_selectedCatId != null)
@@ -343,7 +333,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
           alignment: AlignmentDirectional.centerStart,
           child: Text(
             AppLocalizations.of(context).quizCount(_ctrl.quizzes.length),
-            style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+            style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
           ),
         ),
       );
@@ -366,7 +356,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
       return EmptyState(
         title: AppLocalizations.of(context).noQuizFound,
         subtitle: AppLocalizations.of(context).tryAnotherFilter,
-        emoji: '🔍',
+        icon: Icons.search_off_rounded,
       );
     }
 
@@ -452,7 +442,7 @@ class _CategorySheetState extends State<_CategorySheet> {
           height: 4,
           decoration: BoxDecoration(
             color: context.appColors.border,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(AppRadius.xxs),
           ),
         ),
         // Header
@@ -462,11 +452,7 @@ class _CategorySheetState extends State<_CategorySheet> {
             children: [
               Text(
                 AppLocalizations.of(context).categories,
-                style: TextStyle(
-                  color: context.appColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
               ),
               const Spacer(),
               if (widget.selectedId != null)
@@ -474,11 +460,7 @@ class _CategorySheetState extends State<_CategorySheet> {
                   onTap: () => widget.onSelect(null),
                   child: Text(
                     AppLocalizations.of(context).seeAll,
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: context.type.labelLarge.copyWith(color: AppColors.primary),
                   ),
                 ),
             ],
@@ -491,7 +473,7 @@ class _CategorySheetState extends State<_CategorySheet> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: context.appColors.bg,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(color: context.appColors.border),
             ),
             child: Row(
@@ -503,12 +485,10 @@ class _CategorySheetState extends State<_CategorySheet> {
                   child: TextField(
                     controller: _searchCtrl,
                     autofocus: false,
-                    style: TextStyle(
-                        color: context.appColors.textPrimary, fontSize: 14),
+                    style: context.type.bodyLarge.copyWith(color: context.appColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(context).searchCategoryHint,
-                      hintStyle: TextStyle(
-                          color: context.appColors.textMuted, fontSize: 14),
+                      hintStyle: context.type.bodyLarge.copyWith(color: context.appColors.textMuted),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
@@ -560,7 +540,7 @@ class _CategorySheetState extends State<_CategorySheet> {
                           color: isSelected
                               ? color.withValues(alpha: 0.1)
                               : Colors.transparent,
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                           border: Border.all(
                             color: isSelected
                                 ? color.withValues(alpha: 0.4)
@@ -575,11 +555,11 @@ class _CategorySheetState extends State<_CategorySheet> {
                               height: 40,
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                               ),
                               child: Center(
                                 child: Text(cat.icon ?? '📚',
-                                    style: const TextStyle(fontSize: 20)),
+                                    style: context.type.headlineMedium),
                               ),
                             ),
                             const SizedBox(width: 14),
@@ -589,23 +569,16 @@ class _CategorySheetState extends State<_CategorySheet> {
                                 children: [
                                   Text(
                                     cat.name,
-                                    style: TextStyle(
-                                      color: isSelected
+                                    style: context.type.titleMedium.copyWith(color: isSelected
                                           ? color
-                                          : context.appColors.textPrimary,
-                                      fontSize: 14,
-                                      fontWeight: isSelected
+                                          : context.appColors.textPrimary, fontWeight: isSelected
                                           ? FontWeight.w800
-                                          : FontWeight.w600,
-                                    ),
+                                          : FontWeight.w600),
                                   ),
                                   if (cat.quizCount > 0)
                                     Text(
                                       '${cat.quizCount} quiz${cat.quizCount > 1 ? 'zes' : ''}',
-                                      style: TextStyle(
-                                        color: context.appColors.textMuted,
-                                        fontSize: 12,
-                                      ),
+                                      style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
                                     ),
                                 ],
                               ),
@@ -657,7 +630,7 @@ class _FilterChip extends StatelessWidget {
             color: selected
                 ? color.withValues(alpha: 0.18)
                 : context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: selected ? color : context.appColors.border,
               width: selected ? 1.5 : 1,
@@ -665,11 +638,7 @@ class _FilterChip extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: TextStyle(
-              color: selected ? color : context.appColors.textSecondary,
-              fontSize: 12,
-              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-            ),
+            style: context.type.labelMedium.copyWith(color: selected ? color : context.appColors.textSecondary),
           ),
         ),
       );

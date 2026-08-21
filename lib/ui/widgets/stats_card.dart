@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
@@ -42,22 +42,14 @@ class StatsCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             value,
-            style: TextStyle(
-              color: color,
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-            ),
+            style: context.type.headlineLarge.copyWith(color: color),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 2),
           Text(
             label,
-            style: TextStyle(
-              color: context.appColors.textSecondary,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
+            style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w500),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -65,10 +57,7 @@ class StatsCard extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               subtitle!,
-              style: TextStyle(
-                color: color.withValues(alpha: 0.7),
-                fontSize: 11,
-              ),
+              style: context.type.labelSmall.copyWith(color: color.withValues(alpha: 0.7)),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -159,11 +148,7 @@ class _StatCell extends StatelessWidget {
         children: [
           Text(
             stat.value,
-            style: TextStyle(
-              color: stat.color,
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-            ),
+            style: context.type.headlineLarge.copyWith(color: stat.color),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
@@ -171,7 +156,7 @@ class _StatCell extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             stat.label,
-            style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+            style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,

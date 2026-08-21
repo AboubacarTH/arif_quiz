@@ -231,24 +231,20 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
               children: [
                 Row(
                   children: [
-                    const Text('🗺️', style: TextStyle(fontSize: 15)),
+                    const Icon(Icons.map_rounded, size: 15, color: AppColors.accent),
                     const SizedBox(width: 6),
                     Flexible(
                       child: Text(AppLocalizations.of(context).journeyMapTitle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: context.appColors.textPrimary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 0.2)),
+                          style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w900, letterSpacing: 0.2)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 6),
                 // Barre de progression globale.
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(AppRadius.xxs),
                   child: Stack(
                     children: [
                       Container(
@@ -280,7 +276,7 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
                 AppColors.secondary.withValues(alpha: 0.22),
                 AppColors.secondaryLight.withValues(alpha: 0.16),
               ]),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppRadius.lg),
               border:
                   Border.all(color: AppColors.secondaryLight.withValues(alpha: 0.4)),
             ),
@@ -290,15 +286,9 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
                     color: AppColors.secondaryLight, size: 16),
                 const SizedBox(width: 5),
                 Text('$totalStars',
-                    style: TextStyle(
-                        color: context.appColors.textPrimary,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w900)),
+                    style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w900)),
                 Text('/$maxStars',
-                    style: TextStyle(
-                        color: context.appColors.textMuted,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700)),
+                    style: context.type.labelSmall.copyWith(color: context.appColors.textMuted, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -325,7 +315,7 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
       return EmptyState(
           title: AppLocalizations.of(context).journeyUnavailable,
           subtitle: AppLocalizations.of(context).comeBackLater,
-          emoji: '🗺️');
+          icon: Icons.map_rounded);
     }
 
     return LayoutBuilder(
@@ -373,10 +363,7 @@ class _JourneyMapScreenState extends State<JourneyMapScreen>
                   right: 0,
                   child: Center(
                     child: Text(AppLocalizations.of(context).levelsCount(map.levelCount),
-                        style: TextStyle(
-                            color: context.appColors.textMuted,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700)),
+                        style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
                   ),
                 ),
               ],
@@ -485,11 +472,7 @@ class _LevelNode extends StatelessWidget {
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: context.appColors.textSecondary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: context.type.labelSmall.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w700),
                 ),
               ),
             // Couronne au-dessus des boss non encore terminés.
@@ -499,7 +482,8 @@ class _LevelNode extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: Center(
-                  child: const Text('👑', style: TextStyle(fontSize: 22))
+                  child: const Icon(Icons.workspace_premium_rounded,
+                          size: 22, color: AppColors.secondaryLight)
                       .animate(onPlay: (c) => c.repeat(reverse: true))
                       .moveY(begin: 0, end: -3, duration: 1100.ms, curve: Curves.easeInOut),
                 ),
@@ -641,7 +625,7 @@ class _LevelNode extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: const LinearGradient(
             colors: [AppColors.secondary, AppColors.secondaryLight]),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
               color: AppColors.secondaryLight.withValues(alpha: 0.5),
@@ -654,11 +638,7 @@ class _LevelNode extends StatelessWidget {
           const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
           const SizedBox(width: 2),
           Text(AppLocalizations.of(context).play,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 0.5)),
+              style: context.type.labelSmall.copyWith(color: Colors.white, fontWeight: FontWeight.w900, letterSpacing: 0.5)),
         ],
       ),
     )

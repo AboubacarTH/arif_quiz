@@ -105,7 +105,7 @@ abstract class AppLocalizations {
   /// No description provided for @greeting.
   ///
   /// In en, this message translates to:
-  /// **'Hello, {name} 👋'**
+  /// **'Hello, {name}'**
   String greeting(String name);
 
   /// No description provided for @guest.
@@ -135,13 +135,13 @@ abstract class AppLocalizations {
   /// No description provided for @popular.
   ///
   /// In en, this message translates to:
-  /// **'🔥 Popular'**
+  /// **'Popular'**
   String get popular;
 
   /// No description provided for @friendsLeaderboard.
   ///
   /// In en, this message translates to:
-  /// **'🏅 Friends leaderboard'**
+  /// **'Friends leaderboard'**
   String get friendsLeaderboard;
 
   /// No description provided for @guestBannerTitle.
@@ -201,7 +201,7 @@ abstract class AppLocalizations {
   /// No description provided for @journeySubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Unlock levels, earn stars ⭐'**
+  /// **'Unlock levels, earn stars'**
   String get journeySubtitle;
 
   /// No description provided for @levelShort.
@@ -351,7 +351,7 @@ abstract class AppLocalizations {
   /// No description provided for @levelsCount.
   ///
   /// In en, this message translates to:
-  /// **'🏁  {count} levels'**
+  /// **'{count} levels'**
   String levelsCount(int count);
 
   /// No description provided for @play.
@@ -471,37 +471,37 @@ abstract class AppLocalizations {
   /// No description provided for @headlineOutstanding.
   ///
   /// In en, this message translates to:
-  /// **'Outstanding! 🤩'**
+  /// **'Outstanding!'**
   String get headlineOutstanding;
 
   /// No description provided for @headlineExcellent.
   ///
   /// In en, this message translates to:
-  /// **'Excellent! 🎉'**
+  /// **'Excellent!'**
   String get headlineExcellent;
 
   /// No description provided for @headlineGreat.
   ///
   /// In en, this message translates to:
-  /// **'Great job! 👏'**
+  /// **'Great job!'**
   String get headlineGreat;
 
   /// No description provided for @headlineNotBad.
   ///
   /// In en, this message translates to:
-  /// **'Not bad! 👍'**
+  /// **'Not bad!'**
   String get headlineNotBad;
 
   /// No description provided for @headlineKeepGoing.
   ///
   /// In en, this message translates to:
-  /// **'Keep going! 💪'**
+  /// **'Keep going!'**
   String get headlineKeepGoing;
 
   /// No description provided for @headlineTryAgain.
   ///
   /// In en, this message translates to:
-  /// **'Try again! 🔄'**
+  /// **'Try again!'**
   String get headlineTryAgain;
 
   /// No description provided for @yourAnswer.
@@ -729,7 +729,7 @@ abstract class AppLocalizations {
   /// No description provided for @startQuiz.
   ///
   /// In en, this message translates to:
-  /// **'Start Quiz 🚀'**
+  /// **'Start Quiz'**
   String get startQuiz;
 
   /// No description provided for @tryAnotherDifficulty.
@@ -1611,7 +1611,7 @@ abstract class AppLocalizations {
   /// No description provided for @bonusXp30.
   ///
   /// In en, this message translates to:
-  /// **'⚡ +30 bonus XP'**
+  /// **'+30 bonus XP'**
   String get bonusXp30;
 
   /// No description provided for @takeChallenge.
@@ -3039,19 +3039,19 @@ abstract class AppLocalizations {
   /// No description provided for @premiumFeatureNoAds.
   ///
   /// In en, this message translates to:
-  /// **'✅ Unlimited quizzes and journey, no ads'**
+  /// **'Unlimited quizzes and journey, no ads'**
   String get premiumFeatureNoAds;
 
   /// No description provided for @premiumFeatureAllModes.
   ///
   /// In en, this message translates to:
-  /// **'⚡ Every game mode, never interrupted'**
+  /// **'Every game mode, never interrupted'**
   String get premiumFeatureAllModes;
 
   /// No description provided for @premiumFeatureSupport.
   ///
   /// In en, this message translates to:
-  /// **'❤️ You support the app\'s development'**
+  /// **'You support the app\'s development'**
   String get premiumFeatureSupport;
 
   /// No description provided for @loadFailedRetry.
@@ -3113,6 +3113,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I challenge you on Arif Quiz! Join my challenge “{title}” with the code: {code}'**
   String shareChallengeText(String title, String code);
+
+  /// No description provided for @adminDailyChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily challenge'**
+  String get adminDailyChallenge;
+
+  /// No description provided for @manageDailyChallengeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule which quiz runs on which day'**
+  String get manageDailyChallengeDesc;
+
+  /// No description provided for @dailyChallengeCalendarHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A day with no quiz means no challenge at all for players.'**
+  String get dailyChallengeCalendarHint;
+
+  /// No description provided for @scheduleDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule a day'**
+  String get scheduleDay;
+
+  /// No description provided for @changeQuizBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get changeQuizBtn;
+
+  /// No description provided for @unscheduleBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Unschedule'**
+  String get unscheduleBtn;
+
+  /// No description provided for @unscheduleConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unschedule this day?'**
+  String get unscheduleConfirmTitle;
+
+  /// No description provided for @unscheduleConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} will no longer have a challenge. The {count} attempt(s) already played are kept.'**
+  String unscheduleConfirmBody(String date, int count);
+
+  /// No description provided for @noChallengeTodayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No challenge scheduled for today'**
+  String get noChallengeTodayTitle;
+
+  /// No description provided for @noChallengeTodayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The « Daily challenge » card stays visible in the app, but it opens an empty screen until a quiz is set on today\'s date.'**
+  String get noChallengeTodayBody;
+
+  /// No description provided for @scheduleToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule today'**
+  String get scheduleToday;
+
+  /// No description provided for @upcomingSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get upcomingSection;
+
+  /// No description provided for @historySection.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get historySection;
+
+  /// No description provided for @emptyCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'The calendar is empty: players will not be offered any challenge.'**
+  String get emptyCalendar;
+
+  /// No description provided for @freeDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} free day(s) in the next {horizon} days'**
+  String freeDaysLabel(int count, int horizon);
+
+  /// No description provided for @noSchedulableQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'No quiz can be scheduled'**
+  String get noSchedulableQuiz;
+
+  /// No description provided for @noSchedulableQuizHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A daily challenge needs a published quiz with at least one question.'**
+  String get noSchedulableQuizHint;
+
+  /// No description provided for @challengeQuizUnpublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz unpublished since: players will see no challenge that day.'**
+  String get challengeQuizUnpublished;
+
+  /// No description provided for @challengeQuizEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz with no question: players will see no challenge that day.'**
+  String get challengeQuizEmpty;
+
+  /// No description provided for @attemptsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{no attempt} =1{1 attempt} other{{count} attempts}}'**
+  String attemptsCount(int count);
+
+  /// No description provided for @fillRotation.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill a rotation'**
+  String get fillRotation;
+
+  /// No description provided for @rotationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected quizzes rotate in the order you pick them. Already scheduled days are kept unless you ask to overwrite them.'**
+  String get rotationHint;
+
+  /// No description provided for @firstDay.
+  ///
+  /// In en, this message translates to:
+  /// **'First day'**
+  String get firstDay;
+
+  /// No description provided for @numberOfDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of days'**
+  String get numberOfDays;
+
+  /// No description provided for @rotationQuizzes.
+  ///
+  /// In en, this message translates to:
+  /// **'Quizzes in the rotation'**
+  String get rotationQuizzes;
+
+  /// No description provided for @overwriteScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Overwrite days already scheduled'**
+  String get overwriteScheduled;
+
+  /// No description provided for @rotationDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{created} day(s) scheduled, {updated} updated, {skipped} already taken and kept.'**
+  String rotationDone(int created, int updated, int skipped);
+
+  /// No description provided for @fillDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill {count} day(s)'**
+  String fillDays(int count);
+
+  /// No description provided for @chooseQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a quiz'**
+  String get chooseQuiz;
+
+  /// No description provided for @dateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get dateLabel;
+
+  /// No description provided for @scheduleBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get scheduleBtn;
+
+  /// No description provided for @oops.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops!'**
+  String get oops;
+
+  /// No description provided for @bonusKeepsStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps your streak alive'**
+  String get bonusKeepsStreak;
+
+  /// No description provided for @bonusDailyLeaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily leaderboard'**
+  String get bonusDailyLeaderboard;
+
+  /// No description provided for @alreadyPlayedTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Played'**
+  String get alreadyPlayedTag;
 }
 
 class _AppLocalizationsDelegate

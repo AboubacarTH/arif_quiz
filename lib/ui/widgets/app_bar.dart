@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
@@ -54,12 +54,7 @@ class QuizAppBar extends StatelessWidget implements PreferredSizeWidget {
           : leading,
       title: Text(
         title,
-        style: TextStyle(
-          color: context.appColors.textPrimary,
-          fontSize: 18,
-          fontWeight: FontWeight.w800,
-          fontFamily: 'Nunito',
-        ),
+        style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
@@ -111,22 +106,14 @@ class SliverQuizAppBar extends StatelessWidget {
           children: [
             Text(
               title,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-              ),
+              style: context.type.headlineLarge.copyWith(color: context.appColors.textPrimary),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             if (subtitle != null)
               Text(
                 subtitle!,
-                style: TextStyle(
-                  color: context.appColors.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w400),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

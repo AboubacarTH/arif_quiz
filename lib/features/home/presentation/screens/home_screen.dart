@@ -13,6 +13,7 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_list_screen.da
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/ui/widgets/rank_badge.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
@@ -143,20 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   AppLocalizations.of(context).greeting(user?.name.split(' ').first ?? AppLocalizations.of(context).guest),
-                  style: TextStyle(
-                    color: context.appColors.textSecondary,
-                    fontSize: 14,
-                  ),
+                  style: context.type.bodyLarge.copyWith(color: context.appColors.textSecondary),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   AppLocalizations.of(context).readyToPlay,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    height: 1.1,
-                  ),
+                  style: context.type.displayMedium.copyWith(color: context.appColors.textPrimary, height: 1.1),
                 ),
               ],
             ),
@@ -167,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: AppColors.accent.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppRadius.lg),
               border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
             ),
             child: Row(
@@ -176,11 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 5),
                 Text(
                   '${user?.totalPoints ?? 0}',
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 13,
-                  ),
+                  style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                 ),
               ],
             ),
@@ -225,7 +214,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Row(
           children: [
-            const Text('🏆', style: TextStyle(fontSize: 28)),
+            const Icon(Icons.emoji_events_rounded,
+                    size: 26, color: AppColors.secondary),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -233,16 +223,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     AppLocalizations.of(context).guestBannerTitle,
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     AppLocalizations.of(context).guestBannerSubtitle,
-                    style: TextStyle(color: context.appColors.textSecondary, fontSize: 11),
+                    style: context.type.labelSmall.copyWith(color: context.appColors.textSecondary),
                   ),
                 ],
               ),
@@ -260,11 +246,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: Text(
                       AppLocalizations.of(context).signUp,
-                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
+                      style: context.type.labelMedium.copyWith(color: Colors.white),
                     ),
                   ),
                 ),
@@ -277,11 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   child: Text(
                     AppLocalizations.of(context).logIn,
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: context.type.labelSmall.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -345,10 +327,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 48,
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: const Center(
-                  child: Text('🌟', style: TextStyle(fontSize: 24)),
+                  child: Icon(Icons.auto_awesome_rounded,
+                      size: 24, color: AppColors.primary),
                 ),
               ),
               const SizedBox(width: 14),
@@ -358,29 +341,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       AppLocalizations.of(context).dailyChallengeTag,
-                      style: TextStyle(
-                        color: AppColors.accent,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                      ),
+                      style: context.type.labelSmall.copyWith(color: AppColors.accent, letterSpacing: 1.2),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       AppLocalizations.of(context).dailyChallengeTitle,
-                      style: TextStyle(
-                        color: context.appColors.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       AppLocalizations.of(context).dailyChallengeSubtitle,
-                      style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 12,
-                      ),
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],
                 ),
@@ -391,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 32,
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: const Icon(
                   Icons.chevron_right_rounded,
@@ -427,10 +398,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 48,
                 decoration: BoxDecoration(
                   color: AppColors.secondary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: const Center(
-                  child: Text('🗺️', style: TextStyle(fontSize: 24)),
+                  child: Icon(Icons.map_rounded, size: 24, color: AppColors.accent),
                 ),
               ),
               const SizedBox(width: 14),
@@ -440,29 +411,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       AppLocalizations.of(context).journeyTag,
-                      style: TextStyle(
-                        color: AppColors.secondary,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                      ),
+                      style: context.type.labelSmall.copyWith(color: AppColors.secondary, letterSpacing: 1.2),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       AppLocalizations.of(context).journeyTitle,
-                      style: TextStyle(
-                        color: context.appColors.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       AppLocalizations.of(context).journeySubtitle,
-                      style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 12,
-                      ),
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],
                 ),
@@ -473,7 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 32,
                 decoration: BoxDecoration(
                   color: AppColors.secondary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: const Icon(
                   Icons.chevron_right_rounded,
@@ -521,16 +480,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final points = (e['total_points'] as num?)?.toInt() ?? 0;
     final level = (e['level'] as num?)?.toInt() ?? 1;
 
-    final Widget rankWidget = switch (rank) {
-      1 => const Text('🥇', style: TextStyle(fontSize: 20)),
-      2 => const Text('🥈', style: TextStyle(fontSize: 20)),
-      3 => const Text('🥉', style: TextStyle(fontSize: 20)),
-      _ => Text('$rank',
-          style: TextStyle(
-              color: context.appColors.textMuted,
-              fontWeight: FontWeight.w700,
-              fontSize: 13)),
-    };
+    final Widget rankWidget = RankBadge(rank: rank, size: 28);
 
     return Container(
       color: isMe
@@ -565,24 +515,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   isMe ? '$name (toi)' : name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14),
+                  style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
                 ),
                 Text(AppLocalizations.of(context).levelShort(level),
-                    style: TextStyle(
-                        color: context.appColors.textMuted, fontSize: 11)),
+                    style: context.type.labelSmall.copyWith(color: context.appColors.textMuted)),
               ],
             ),
           ),
           const Icon(Icons.star_rounded, color: AppColors.accent, size: 14),
           const SizedBox(width: 3),
           Text('$points',
-              style: const TextStyle(
-                  color: AppColors.accent,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13)),
+              style: context.type.labelLarge.copyWith(color: AppColors.accent, fontWeight: FontWeight.w800)),
         ],
       ),
     );
@@ -604,11 +547,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Text(
                   title,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                 ),
               ),
               if (actionLabel != null && onAction != null)
@@ -616,11 +555,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: onAction,
                   child: Text(
                     actionLabel,
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: context.type.labelLarge.copyWith(color: AppColors.primary),
                   ),
                 ),
             ],
@@ -720,22 +655,17 @@ class _CategoryTile extends StatelessWidget {
               height: 46,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.14),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Center(
                 child: Text(category.icon ?? '📚',
-                    style: const TextStyle(fontSize: 24)),
+                    style: context.type.headlineLarge),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               category.name,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                height: 1.1,
-              ),
+              style: context.type.labelSmall.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w700, height: 1.1),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -743,11 +673,7 @@ class _CategoryTile extends StatelessWidget {
             const SizedBox(height: 3),
             Text(
               AppLocalizations.of(context).quizCount(category.quizCount),
-              style: TextStyle(
-                color: color,
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w700),
             ),
           ],
         ),

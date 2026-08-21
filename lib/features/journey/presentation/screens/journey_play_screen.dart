@@ -192,7 +192,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                         height: 36,
                         decoration: BoxDecoration(
                             color: context.appColors.cardBg,
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(AppRadius.sm)),
                         child: Icon(Icons.close_rounded,
                             color: context.appColors.textSecondary, size: 18),
                       ),
@@ -202,7 +202,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                         child: LinearProgressIndicator(
                           value: ctrl.progress,
                           backgroundColor: context.appColors.cardBg,
@@ -213,10 +213,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                     ),
                     const SizedBox(width: 12),
                     Text('${ctrl.index + 1}/${ctrl.questions.length}',
-                        style: TextStyle(
-                            color: context.appColors.textSecondary,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600)),
+                        style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600)),
                   ],
                 ),
                 const SizedBox(height: 28),
@@ -236,19 +233,10 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                           QuestionMedia(
                               imageUrl: q.imageUrl, audioUrl: q.audioUrl),
                         Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1),
-                            style: TextStyle(
-                                color: _accent,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.5)),
+                            style: context.type.labelMedium.copyWith(color: _accent, letterSpacing: 0.5)),
                         const SizedBox(height: 8),
                         Text(q.text,
-                            style: TextStyle(
-                                color: context.appColors.textPrimary,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                height: 1.4,
-                                fontFamily: 'Nunito')),
+                            style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, height: 1.4)),
                         const SizedBox(height: AppSpacing.questionToAnswers),
                         AnswerOptionsGrid(
                           options: opts,
@@ -266,8 +254,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                   TextButton(
                     onPressed: ctrl.skip,
                     child: Text(AppLocalizations.of(context).skip,
-                        style: TextStyle(
-                            color: context.appColors.textMuted, fontSize: 14)),
+                        style: context.type.bodyLarge.copyWith(color: context.appColors.textMuted)),
                   )
                 else
                   const SizedBox(height: 48),
@@ -292,16 +279,16 @@ class _LevelBadge extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(isBoss ? '👑' : '🎯', style: const TextStyle(fontSize: 13)),
+            Icon(isBoss ? Icons.workspace_premium_rounded : Icons.my_location_rounded,
+                    size: 13, color: Colors.white),
             const SizedBox(width: 5),
             Text(isBoss ? AppLocalizations.of(context).bossShort(level) : AppLocalizations.of(context).levelShort(level),
-                style: TextStyle(
-                    color: color, fontSize: 12, fontWeight: FontWeight.w800)),
+                style: context.type.labelMedium.copyWith(color: color, fontWeight: FontWeight.w800)),
           ],
         ),
       );

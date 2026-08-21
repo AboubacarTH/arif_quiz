@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:arif_quiz/shared/models/true_false.dart';
 
 export 'package:arif_quiz/shared/models/true_false.dart';
@@ -618,7 +620,7 @@ class QuizAttemptResult {
   }
 }
 
-/// Barème de note partagé, aligné sur le serveur (`QuizAttemptController::getGrade`).
+/// Barème de note partagé, aligné sur le serveur (`QuizAttempt::gradeFor`).
 String gradeForScore(double score) => switch (score) {
       >= 90 => 'S',
       >= 80 => 'A',
@@ -781,10 +783,12 @@ enum GameMode {
         speed => '5 secondes par question, bonus XP ×1.5',
       };
 
-  String get icon => switch (this) {
-        classic => '🎮',
-        survival => '❤️',
-        speed => '⚡',
+  /// Glyphe du mode. C'est une icone, pas un emoji : les emoji ne suivent ni la
+  /// couleur du theme ni la taille du texte, et changent de dessin selon l'OS.
+  IconData get icon => switch (this) {
+        classic => Icons.sports_esports_rounded,
+        survival => Icons.favorite_rounded,
+        speed => Icons.bolt_rounded,
       };
 }
 
@@ -1134,4 +1138,128 @@ class AdminQuestionModel {
         quizTitle: json['quiz']?['title'],
         translations: parseTranslations(json['translations']),
       );
+}
+
+// ========== ADMIN DAILY CHALLENGE MODELS ==========
+
+/// Un quiz éligible à une programmation : publié et pourvu de questions.
+class AdminSchedulableQuizModel {
+  final int id;
+  final String title;
+  final String difficulty;
+  final int questionsCount;
+  final String? categoryName;
+
+  const AdminSchedulableQuizModel({
+    required this.id,
+    required this.title,
+    required this.difficulty,
+    required this.questionsCount,
+    this.categoryName,
+  });
+
+  factory AdminSchedulableQuizModel.fromJson(Map<String, dynamic> json) =>
+      AdminSchedulableQuizModel(
+        id: json['id'],
+        title: json['title'] ?? '',
+        difficulty: json['difficulty'] ?? 'easy',
+        questionsCount: json['questions_count'] ?? 0,
+        categoryName: json['category']?['name'],
+      );
+}
+
+/// Une date du calendrier du défi du jour.
+class AdminDailyChallengeModel {
+  final int id;
+  final DateTime challengeDate;
+  final bool isToday;
+  final bool isPast;
+
+  /// Faux si le quiz a été dépublié ou vidé après la programmation : ce jour-là
+  /// les joueurs ne verraient aucun défi.
+  final bool isPlayable;
+  final int attemptsCount;
+  final int? quizId;
+  final String? quizTitle;
+  final String difficulty;
+  final int questionsCount;
+  final bool quizIsPublished;
+  final String? categoryName;
+
+  const AdminDailyChallengeModel({
+    required this.id,
+    required this.challengeDate,
+    required this.isToday,
+    required this.isPast,
+    required this.isPlayable,
+    required this.attemptsCount,
+    this.quizId,
+    this.quizTitle,
+    required this.difficulty,
+    required this.questionsCount,
+    required this.quizIsPublished,
+    this.categoryName,
+  });
+
+  /// `Y-m-d` : le format attendu par l'API, indépendant du fuseau.
+  String get dateKey =>
+      '${challengeDate.year.toString().padLeft(4, '0')}-'
+      '${challengeDate.month.toString().padLeft(2, '0')}-'
+      '${challengeDate.day.toString().padLeft(2, '0')}';
+
+  factory AdminDailyChallengeModel.fromJson(Map<String, dynamic> json) {
+    final quiz = json['quiz'] as Map<String, dynamic>?;
+    return AdminDailyChallengeModel(
+      id: json['id'],
+      challengeDate:
+          DateTime.tryParse(json['challenge_date'] ?? '') ?? DateTime.now(),
+      isToday: json['is_today'] ?? false,
+      isPast: json['is_past'] ?? false,
+      isPlayable: json['is_playable'] ?? false,
+      attemptsCount: json['attempts_count'] ?? 0,
+      quizId: quiz?['id'],
+      quizTitle: quiz?['title'],
+      difficulty: quiz?['difficulty'] ?? 'easy',
+      questionsCount: quiz?['questions_count'] ?? 0,
+      quizIsPublished: quiz?['is_published'] ?? false,
+      categoryName: quiz?['category']?['name'],
+    );
+  }
+}
+
+/// Le calendrier complet renvoyé par l'admin, avec les trous à venir.
+class AdminDailyChallengeCalendar {
+  final List<AdminDailyChallengeModel> upcoming;
+  final List<AdminDailyChallengeModel> past;
+
+  /// Jours à venir sans défi programmé, en `Y-m-d`.
+  final List<String> missingDates;
+  final bool todayScheduled;
+  final int horizonDays;
+
+  const AdminDailyChallengeCalendar({
+    required this.upcoming,
+    required this.past,
+    required this.missingDates,
+    required this.todayScheduled,
+    required this.horizonDays,
+  });
+
+  factory AdminDailyChallengeCalendar.fromJson(Map<String, dynamic> json) {
+    final data = Map<String, dynamic>.from(json['data'] ?? {});
+    final meta = Map<String, dynamic>.from(json['meta'] ?? {});
+    List<AdminDailyChallengeModel> parse(String key) =>
+        ((data[key] ?? []) as List)
+            .map((e) =>
+                AdminDailyChallengeModel.fromJson(Map<String, dynamic>.from(e)))
+            .toList();
+
+    return AdminDailyChallengeCalendar(
+      upcoming: parse('upcoming'),
+      past: parse('past'),
+      missingDates: List<String>.from(meta['missing_dates'] ?? const []),
+      todayScheduled: meta['today_scheduled'] ?? false,
+      horizonDays: meta['horizon_days'] ?? 30,
+    );
+  }
 }

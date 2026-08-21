@@ -6,7 +6,7 @@ import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/widgets/game_mode_card.dart';
-import 'package:arif_quiz/ui/widgets/neon_button.dart';
+import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:arif_quiz/ui/widgets/shimmer_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -262,11 +262,7 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
           Expanded(
             child: Text(
               title,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-              ),
+              style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -297,7 +293,7 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
                   color: done || active
                       ? AppColors.primary
                       : context.appColors.border,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(AppRadius.xxs),
                 ),
               ),
             ),
@@ -355,21 +351,21 @@ class _StepSource extends StatelessWidget {
     final sources = [
       (
         id: 'quiz',
-        icon: '🎯',
+        icon: Icons.my_location_rounded,
         label: AppLocalizations.of(context).srcQuizLabel,
         desc: AppLocalizations.of(context).srcQuizDesc,
         color: AppColors.primary,
       ),
       (
         id: 'category',
-        icon: '📚',
+        icon: Icons.category_rounded,
         label: AppLocalizations.of(context).srcCategoryLabel,
         desc: AppLocalizations.of(context).srcCategoryDesc,
         color: AppColors.secondary,
       ),
       (
         id: 'all',
-        icon: '🌐',
+        icon: Icons.public_rounded,
         label: AppLocalizations.of(context).allQuizzes,
         desc: AppLocalizations.of(context).srcAllDesc,
         color: AppColors.accent,
@@ -381,10 +377,7 @@ class _StepSource extends StatelessWidget {
       children: [
         Text(
           AppLocalizations.of(context).whereQuestionsFrom,
-          style: TextStyle(
-            color: context.appColors.textSecondary,
-            fontSize: 13,
-          ),
+          style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary),
         ),
         const SizedBox(height: 16),
         ...sources.asMap().entries.map((entry) {
@@ -417,11 +410,10 @@ class _StepSource extends StatelessWidget {
                       height: 52,
                       decoration: BoxDecoration(
                         color: src.color.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                       child: Center(
-                        child: Text(src.icon,
-                            style: const TextStyle(fontSize: 26)),
+                        child: Icon(src.icon, size: 26, color: src.color),
                       ),
                     ),
                     const SizedBox(width: 14),
@@ -431,21 +423,14 @@ class _StepSource extends StatelessWidget {
                         children: [
                           Text(
                             src.label,
-                            style: TextStyle(
-                              color: selected
+                            style: context.type.titleMedium.copyWith(color: selected
                                   ? src.color
-                                  : context.appColors.textPrimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                            ),
+                                  : context.appColors.textPrimary, fontWeight: FontWeight.w800),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             src.desc,
-                            style: TextStyle(
-                              color: context.appColors.textSecondary,
-                              fontSize: 12,
-                            ),
+                            style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                           ),
                         ],
                       ),
@@ -541,7 +526,7 @@ class _StepCategoryState extends State<_StepCategory> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: context.appColors.cardBg,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(color: context.appColors.border),
             ),
             child: Row(
@@ -552,12 +537,10 @@ class _StepCategoryState extends State<_StepCategory> {
                 Expanded(
                   child: TextField(
                     controller: _searchCtrl,
-                    style: TextStyle(
-                        color: context.appColors.textPrimary, fontSize: 14),
+                    style: context.type.bodyLarge.copyWith(color: context.appColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(context).searchCategoryHint,
-                      hintStyle: TextStyle(
-                          color: context.appColors.textMuted, fontSize: 14),
+                      hintStyle: context.type.bodyLarge.copyWith(color: context.appColors.textMuted),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
@@ -614,15 +597,11 @@ class _StepCategoryState extends State<_StepCategory> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(cat.icon ?? '📚',
-                                style: const TextStyle(fontSize: 32)),
+                                style: context.type.displayLarge),
                             const SizedBox(height: 8),
                             Text(
                               cat.name,
-                              style: TextStyle(
-                                color: context.appColors.textPrimary,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700,
-                              ),
+                              style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary),
                               textAlign: TextAlign.center,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -630,11 +609,7 @@ class _StepCategoryState extends State<_StepCategory> {
                             const SizedBox(height: 2),
                             Text(
                               '${cat.quizCount} quiz${cat.quizCount != 1 ? 'zes' : ''}',
-                              style: TextStyle(
-                                color: color,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -719,7 +694,7 @@ class _StepQuizState extends State<_StepQuiz> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: context.appColors.cardBg,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(color: context.appColors.border),
             ),
             child: Row(
@@ -730,12 +705,10 @@ class _StepQuizState extends State<_StepQuiz> {
                 Expanded(
                   child: TextField(
                     controller: _searchCtrl,
-                    style: TextStyle(
-                        color: context.appColors.textPrimary, fontSize: 14),
+                    style: context.type.bodyLarge.copyWith(color: context.appColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(context).searchQuizHint,
-                      hintStyle: TextStyle(
-                          color: context.appColors.textMuted, fontSize: 14),
+                      hintStyle: context.type.bodyLarge.copyWith(color: context.appColors.textMuted),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
@@ -796,12 +769,12 @@ class _StepQuizState extends State<_StepQuiz> {
                               height: 46,
                               decoration: BoxDecoration(
                                 color: catColor.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(13),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                               ),
                               child: Center(
                                 child: Text(
                                   widget.category.icon ?? '📚',
-                                  style: const TextStyle(fontSize: 22),
+                                  style: context.type.headlineLarge,
                                 ),
                               ),
                             ),
@@ -812,13 +785,9 @@ class _StepQuizState extends State<_StepQuiz> {
                                 children: [
                                   Text(
                                     q.title,
-                                    style: TextStyle(
-                                      color: selected
+                                    style: context.type.titleMedium.copyWith(color: selected
                                           ? catColor
-                                          : context.appColors.textPrimary,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                          : context.appColors.textPrimary),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -882,12 +851,11 @@ class _QuizChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
         ),
         child: Text(
           label,
-          style: TextStyle(
-              color: color, fontSize: 10, fontWeight: FontWeight.w700),
+          style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w700),
         ),
       );
 }
@@ -920,13 +888,17 @@ class _StepConfig extends StatelessWidget {
   Widget build(BuildContext context) {
     final (sourceIcon, sourceLabel, sourceColor) = switch (sourceType) {
       'category' => (
-          selectedCategory?.icon ?? '📚',
+          Icons.category_rounded,
           selectedCategory?.name ?? AppLocalizations.of(context).categoryLabel,
           AppColors.secondary,
         ),
-      'all' => ('🌐', AppLocalizations.of(context).allQuizzes, AppColors.accent),
+      'all' => (
+          Icons.public_rounded,
+          AppLocalizations.of(context).allQuizzes,
+          AppColors.accent,
+        ),
       _ => (
-          '🎯',
+          Icons.my_location_rounded,
           selectedQuiz?.title ?? 'Quiz',
           AppColors.primary,
         ),
@@ -952,10 +924,10 @@ class _StepConfig extends StatelessWidget {
                   height: 44,
                   decoration: BoxDecoration(
                     color: sourceColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
                   child: Center(
-                    child: Text(sourceIcon, style: const TextStyle(fontSize: 22)),
+                    child: Icon(sourceIcon, size: 22, color: sourceColor),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -965,21 +937,14 @@ class _StepConfig extends StatelessWidget {
                     children: [
                       Text(
                         sourceLabel,
-                        style: TextStyle(
-                          color: context.appColors.textPrimary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 3),
                       Text(
                         AppLocalizations.of(context).randomQuestions10,
-                        style: TextStyle(
-                          color: context.appColors.textSecondary,
-                          fontSize: 12,
-                        ),
+                        style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                       ),
                     ],
                   ),
@@ -992,11 +957,7 @@ class _StepConfig extends StatelessWidget {
           // Titre
           Text(
             AppLocalizations.of(context).challengeTitleLabel,
-            style: TextStyle(
-              color: context.appColors.textPrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
+            style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
           ),
           const SizedBox(height: 8),
           TextField(
@@ -1011,11 +972,7 @@ class _StepConfig extends StatelessWidget {
           // Mode
           Text(
             AppLocalizations.of(context).gameModeLabel,
-            style: TextStyle(
-              color: context.appColors.textPrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
+            style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
           ),
           const SizedBox(height: 10),
           ...GameMode.values.map(
@@ -1031,12 +988,12 @@ class _StepConfig extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Bouton créer
-          NeonButton(
+          AppButton(
             label: isCreating ? AppLocalizations.of(context).creating : AppLocalizations.of(context).createChallengeBtn,
-            width: double.infinity,
+            fullWidth: true,
             icon: Icons.sports_esports,
-            color: AppColors.modeColor(selectedMode.apiValue),
-            onTap: isCreating ? null : onCreate,
+            tint: AppColors.modeColor(selectedMode.apiValue),
+            onPressed: isCreating ? null : onCreate,
           ),
         ],
       ),

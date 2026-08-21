@@ -214,7 +214,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                         height: 36,
                         decoration: BoxDecoration(
                           color: context.appColors.cardBg,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
                         ),
                         child: Icon(
                           Icons.close_rounded,
@@ -226,7 +226,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                         child: LinearProgressIndicator(
                           value: ctrl.progress,
                           backgroundColor: context.appColors.cardBg,
@@ -239,10 +239,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     const SizedBox(width: 12),
                     Text(
                       '${ctrl.index + 1}/${ctrl.questions.length}',
-                      style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 13,
-                      ),
+                      style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],
                 ),
@@ -255,22 +252,18 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppColors.secondary.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                         border: Border.all(
                             color: AppColors.secondary.withValues(alpha: 0.4)),
                       ),
                       child: Text(
-                          '⚡ ${AppLocalizations.of(context).modeSpeedShort.toUpperCase()}',
-                          style: const TextStyle(
-                              color: AppColors.secondary,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 1)),
+                          AppLocalizations.of(context).modeSpeedShort.toUpperCase(),
+                          style: context.type.labelSmall.copyWith(color: AppColors.secondary, letterSpacing: 1)),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 800),
                           child: LinearProgressIndicator(
@@ -291,15 +284,11 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     const SizedBox(width: 12),
                     Text(
                       '${ctrl.timeLeft} s',
-                      style: TextStyle(
-                        color: timerPercent > 0.5
+                      style: context.type.titleLarge.copyWith(color: timerPercent > 0.5
                             ? AppColors.secondary
                             : timerPercent > 0.25
                                 ? AppColors.warning
-                                : AppColors.error,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 16,
-                      ),
+                                : AppColors.error, fontWeight: FontWeight.w800),
                     ),
                   ],
                 ),
@@ -316,22 +305,12 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                               imageUrl: q.imageUrl, audioUrl: q.audioUrl),
                         Text(
                           AppLocalizations.of(context).questionNumber(ctrl.index + 1),
-                          style: const TextStyle(
-                            color: AppColors.secondary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.5,
-                          ),
+                          style: context.type.labelMedium.copyWith(color: AppColors.secondary, letterSpacing: 0.5),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           q.text,
-                          style: TextStyle(
-                            color: context.appColors.textPrimary,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            height: 1.4,
-                          ),
+                          style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, height: 1.4),
                         ),
                         const SizedBox(height: AppSpacing.questionToAnswers),
                         AnswerOptionsGrid(

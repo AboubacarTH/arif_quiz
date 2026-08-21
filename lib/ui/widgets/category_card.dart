@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -37,17 +37,13 @@ class CategoryChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(category.icon ?? '📚', style: const TextStyle(fontSize: 16)),
+            Text(category.icon ?? '📚', style: context.type.titleLarge),
             const SizedBox(width: 6),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 140),
               child: Text(
                 category.name,
-                style: TextStyle(
-                  color: selected ? color : context.appColors.textSecondary,
-                  fontSize: 13,
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                ),
+                style: context.type.labelLarge.copyWith(color: selected ? color : context.appColors.textSecondary),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -87,26 +83,22 @@ class CategoryCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(category.icon ?? '📚', style: const TextStyle(fontSize: 32)),
+            Text(category.icon ?? '📚', style: context.type.displayLarge),
             const SizedBox(height: 8),
             AutoSizeText(
               category.name,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 12, // 👈 Taille maximale de départ
-                fontWeight: FontWeight.w600,
-              ),
+              style: context.type.labelMedium.copyWith(color: context.appColors.textPrimary, // taille maximale de départ
+                fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
-              maxLines: 2, // 👈 Reste sur une seule ligne
+              maxLines: 2, // reste sur une seule ligne
               minFontSize:
-                  10, // 👈 Taille minimale autorisée avant d'afficher les "..."
+                  10, // taille minimale avant l'ellipse
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 2),
             Text(
               '${category.quizCount} quiz${category.quizCount != 1 ? 'zes' : ''}',
-              style: TextStyle(
-                  color: color, fontSize: 10, fontWeight: FontWeight.w600),
+              style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w600),
             ),
           ],
         ),

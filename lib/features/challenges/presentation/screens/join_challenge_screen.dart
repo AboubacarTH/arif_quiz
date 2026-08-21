@@ -4,7 +4,7 @@ import 'package:arif_quiz/features/challenges/presentation/screens/challenge_det
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
-import 'package:arif_quiz/ui/widgets/neon_button.dart';
+import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 
 class JoinChallengeScreen extends StatefulWidget {
@@ -47,27 +47,22 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
           children: [
             Text(
               AppLocalizations.of(context).enterChallengeCode,
-              style: TextStyle(color: context.appColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w700),
+              style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary),
             ),
             const SizedBox(height: 8),
             Text(
               AppLocalizations.of(context).codeHelp,
-              style: TextStyle(color: context.appColors.textSecondary, fontSize: 14),
+              style: context.type.bodyLarge.copyWith(color: context.appColors.textSecondary),
             ),
             const SizedBox(height: 24),
             TextField(
               controller: _codeCtrl,
-              style: const TextStyle(
-                color: AppColors.accent,
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 4,
-              ),
+              style: context.type.headlineLarge.copyWith(color: AppColors.accent, letterSpacing: 4),
               textCapitalization: TextCapitalization.characters,
               maxLength: 8,
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context).codeExampleHint,
-                hintStyle: TextStyle(color: context.appColors.textMuted, letterSpacing: 2, fontSize: 18),
+                hintStyle: context.type.headlineMedium.copyWith(color: context.appColors.textMuted, letterSpacing: 2),
                 counterText: '',
               ),
               onChanged: (val) {
@@ -89,11 +84,11 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
                 child: Text(widget.ctrl.error!, style: const TextStyle(color: AppColors.error)),
               ),
             const Spacer(),
-            NeonButton(
+            AppButton(
               label: widget.ctrl.isJoining ? AppLocalizations.of(context).loadingEllipsis : AppLocalizations.of(context).joinChallengeBtn,
-              width: double.infinity,
+              fullWidth: true,
               icon: Icons.sports_esports,
-              onTap: widget.ctrl.isJoining ? null : _join,
+              onPressed: widget.ctrl.isJoining ? null : _join,
             ),
           ],
         ),
@@ -118,9 +113,9 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
             Text(AppLocalizations.of(context).challengeFound, style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w700)),
           ]),
           const SizedBox(height: 10),
-          Text(c.title, style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w800)),
+          Text(c.title, style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          Text(c.sourceLabel, style: TextStyle(color: context.appColors.textSecondary, fontSize: 13)),
+          Text(c.sourceLabel, style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
           const SizedBox(height: 8),
           Row(children: [
             _chip(AppColors.modeColor(c.mode), _modeLabel(c.mode)),
@@ -136,15 +131,15 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
         ),
-        child: Text(text, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
+        child: Text(text, style: context.type.labelMedium.copyWith(color: color, fontWeight: FontWeight.w600)),
       );
 
   String _modeLabel(String mode) => switch (mode) {
-        'survival' => '❤️ ${AppLocalizations.of(context).modeSurvivalShort}',
-        'speed' => '⚡ ${AppLocalizations.of(context).modeSpeedShort}',
-        _ => '🎮 Classique',
+        'survival' => AppLocalizations.of(context).modeSurvivalShort,
+        'speed' => AppLocalizations.of(context).modeSpeedShort,
+        _ => AppLocalizations.of(context).modeClassicShort,
       };
 
   Future<void> _previewChallenge(String code) async {

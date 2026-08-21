@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         builder: (ctx, setStateDialog) => AlertDialog(
           backgroundColor: context.appColors.cardBg,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
           title: Text(
             AppLocalizations.of(context).deleteAccountTitle,
             style: TextStyle(
@@ -111,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   filled: true,
                   fillColor: context.appColors.bg,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                     borderSide: BorderSide(color: context.appColors.border),
                   ),
                   suffixIcon: IconButton(
@@ -160,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         title: Text(
           AppLocalizations.of(context).logoutTitle,
           style: TextStyle(
@@ -290,11 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             Text(
               AppLocalizations.of(context).myProfile,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-              ),
+              style: context.type.headlineLarge.copyWith(color: context.appColors.textPrimary),
             ),
             const Spacer(),
             if (user != null)
@@ -318,11 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(width: 6),
                       Text(
                         AppLocalizations.of(context).editBtn,
-                        style: TextStyle(
-                          color: context.appColors.textSecondary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -365,11 +357,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Center(
                   child: Text(
                     user.name[0].toUpperCase(),
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 36,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: AppType.score.copyWith(color: AppColors.primary),
                   ),
                 ),
               ),
@@ -385,11 +373,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Center(
                   child: Text(
                     '${user.level}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: context.type.labelSmall.copyWith(color: Colors.white),
                   ),
                 ),
               ),
@@ -398,30 +382,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 12),
           Text(
             user.name,
-            style: TextStyle(
-              color: context.appColors.textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-            ),
+            style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
           ),
           if (user.username != null && user.username!.isNotEmpty) ...[
             const SizedBox(height: 2),
             Text(
               '@${user.username}',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
+              style: context.type.bodyMedium.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
             ),
           ],
           const SizedBox(height: 2),
           Text(
             user.email,
-            style: TextStyle(
-              color: context.appColors.textSecondary,
-              fontSize: 12,
-            ),
+            style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
           ),
           const SizedBox(height: 14),
           // Rank + Points badges
@@ -467,31 +440,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.xs),
                 ),
                 child: Text(
                   AppLocalizations.of(context).levelLabel(user.level),
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: context.type.labelMedium.copyWith(color: AppColors.primary, fontWeight: FontWeight.w800),
                 ),
               ),
               const Spacer(),
               Text(
                 '${user.xpProgress} / ${user.xpNeeded} XP',
-                style: TextStyle(
-                  color: context.appColors.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600),
               ),
             ],
           ),
           const SizedBox(height: 10),
           ClipRRect(
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(AppRadius.xs),
             child: LinearProgressIndicator(
               value: percent,
               minHeight: 10,
@@ -503,10 +468,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 6),
           Text(
             AppLocalizations.of(context).nextLevelIn(user.level + 1, user.xpNeeded - user.xpProgress),
-            style: TextStyle(
-              color: context.appColors.textMuted,
-              fontSize: 11,
-            ),
+            style: context.type.labelSmall.copyWith(color: context.appColors.textMuted),
           ),
         ],
       ),
@@ -532,7 +494,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Expanded(
           child: _StreakCard(
-            emoji: '🔥',
+            icon: Icons.local_fire_department_rounded,
             value: '${user.streak}',
             label: AppLocalizations.of(context).currentStreak,
             color: AppColors.secondary,
@@ -541,7 +503,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(width: 12),
         Expanded(
           child: _StreakCard(
-            emoji: '🏆',
+            icon: Icons.emoji_events_rounded,
             value: '${user.longestStreak}',
             label: AppLocalizations.of(context).bestStreak,
             color: AppColors.warning,
@@ -574,10 +536,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: 44,
               decoration: BoxDecoration(
                 color: AppColors.secondary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               alignment: Alignment.center,
-              child: const Text('🏅', style: TextStyle(fontSize: 22)),
+              child: const Icon(Icons.military_tech_rounded,
+              size: 22, color: AppColors.secondary),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -586,16 +549,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Text(
                     AppLocalizations.of(context).achievements,
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14,
-                    ),
+                    style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                   ),
                   Text(
                     AppLocalizations.of(context).unlockBadgesByPlaying,
-                    style: TextStyle(
-                        color: context.appColors.textSecondary, fontSize: 12),
+                    style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                   ),
                 ],
               ),
@@ -742,11 +700,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               child: Text(
                 AppLocalizations.of(context).seeAll,
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: context.type.labelLarge.copyWith(color: AppColors.primary),
               ),
             ),
           ],
@@ -756,7 +710,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           EmptyState(
             title: AppLocalizations.of(context).noQuizPlayed,
             subtitle: AppLocalizations.of(context).playFirstQuiz,
-            emoji: '🎯',
+            icon: Icons.quiz_rounded,
             actionLabel: AppLocalizations.of(context).playBtn,
             onAction: () {},
           )
@@ -779,7 +733,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: AppColors.info.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: AppColors.info.withValues(alpha: 0.25)),
         ),
         child: Row(
@@ -789,11 +743,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context).adminPanel,
-              style: const TextStyle(
-                color: AppColors.info,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.titleMedium.copyWith(color: AppColors.info),
             ),
           ],
         ),
@@ -811,7 +761,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: AppColors.error.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border:
               Border.all(color: AppColors.error.withValues(alpha: 0.25)),
         ),
@@ -822,11 +772,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context).logOutAction,
-              style: const TextStyle(
-                color: AppColors.error,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.titleMedium.copyWith(color: AppColors.error),
             ),
           ],
         ),
@@ -842,7 +788,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: context.appColors.border),
         ),
         child: Row(
@@ -853,11 +799,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context).deleteMyAccount,
-              style: TextStyle(
-                color: context.appColors.textMuted,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: context.type.titleMedium.copyWith(color: context.appColors.textMuted, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -885,7 +827,7 @@ class _HeroBadge extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Row(
@@ -895,11 +837,7 @@ class _HeroBadge extends StatelessWidget {
             const SizedBox(width: 5),
             Text(
               label,
-              style: TextStyle(
-                color: color,
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.labelLarge.copyWith(color: color),
             ),
           ],
         ),
@@ -909,13 +847,13 @@ class _HeroBadge extends StatelessWidget {
 // ─── Streak card ─────────────────────────────────────────────────────────────
 
 class _StreakCard extends StatelessWidget {
-  final String emoji;
+  final IconData icon;
   final String value;
   final String label;
   final Color color;
 
   const _StreakCard({
-    required this.emoji,
+    required this.icon,
     required this.value,
     required this.label,
     required this.color,
@@ -926,31 +864,23 @@ class _StreakCard extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 26)),
+            Icon(icon, size: 26, color: color),
             const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   value,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: context.type.headlineLarge.copyWith(color: color),
                 ),
                 Text(
                   label,
-                  style: TextStyle(
-                    color: context.appColors.textSecondary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: context.type.labelSmall.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -968,11 +898,7 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
         title,
-        style: TextStyle(
-          color: context.appColors.textPrimary,
-          fontSize: 16,
-          fontWeight: FontWeight.w800,
-        ),
+        style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
       );
 }
 
@@ -1021,16 +947,12 @@ class _AttemptTile extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppRadius.md),
             ),
             alignment: Alignment.center,
             child: Text(
               grade,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.w800,
-                fontSize: 20,
-              ),
+              style: context.type.headlineMedium.copyWith(color: color, fontWeight: FontWeight.w800),
             ),
           ),
           const SizedBox(width: 12),
@@ -1041,11 +963,7 @@ class _AttemptTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
+                  style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -1054,18 +972,11 @@ class _AttemptTile extends StatelessWidget {
                   children: [
                     Text(
                       '${score.toStringAsFixed(0)}%',
-                      style: TextStyle(
-                        color: color,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                      ),
+                      style: context.type.labelMedium.copyWith(color: color),
                     ),
                     Text(
                       '  ·  $correct/$total bonnes',
-                      style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 12,
-                      ),
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],
                 ),
@@ -1077,19 +988,12 @@ class _AttemptTile extends StatelessWidget {
                     const SizedBox(width: 3),
                     Text(
                       '+$points pts',
-                      style: const TextStyle(
-                        color: AppColors.warning,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
+                      style: context.type.labelMedium.copyWith(color: AppColors.warning, fontWeight: FontWeight.w600),
                     ),
                     if (date != null) ...[
                       Text(
                         '  ·  ${_formatDate(date)}',
-                        style: TextStyle(
-                          color: context.appColors.textMuted,
-                          fontSize: 11,
-                        ),
+                        style: context.type.labelSmall.copyWith(color: context.appColors.textMuted),
                       ),
                     ],
                   ],
@@ -1120,7 +1024,7 @@ class _PremiumBadge extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: AppColors.accent.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border:
               Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
         ),
@@ -1131,7 +1035,7 @@ class _PremiumBadge extends StatelessWidget {
               height: 44,
               decoration: BoxDecoration(
                 color: AppColors.accent.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: const Icon(Icons.workspace_premium_rounded,
                   color: AppColors.accent, size: 24),
@@ -1142,18 +1046,12 @@ class _PremiumBadge extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Arif Quiz Premium ✨',
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14,
-                    ),
+                    'Arif Quiz Premium',
+                    style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                   ),
                   Text(
                     'Merci pour ton soutien — sans pub !',
-                    style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 12),
+                    style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                   ),
                 ],
               ),
@@ -1248,16 +1146,12 @@ class _CreditsRow extends StatelessWidget {
           Expanded(
             child: Text(
               AppLocalizations.of(context).freePlaysTitle,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-              ),
+              style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
             ),
           ),
           Text(
             AppLocalizations.of(context).creditsRemaining(credits),
-            style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700),
+            style: context.type.labelMedium.copyWith(color: color),
           ),
         ],
       ),
@@ -1287,7 +1181,7 @@ class _GetPremiumCard extends StatelessWidget {
                 height: 44,
                 decoration: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: const Icon(Icons.workspace_premium_rounded,
                     color: Colors.white, size: 24),
@@ -1299,17 +1193,11 @@ class _GetPremiumCard extends StatelessWidget {
                   children: [
                     Text(
                       AppLocalizations.of(context).goPremium,
-                      style: TextStyle(
-                        color: context.appColors.textPrimary,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
-                      ),
+                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                     ),
                     Text(
                       AppLocalizations.of(context).goPremiumSubtitle,
-                      style: TextStyle(
-                          color: context.appColors.textSecondary,
-                          fontSize: 12),
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],
                 ),
@@ -1343,7 +1231,7 @@ class _ThemeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
           child: Row(
@@ -1355,7 +1243,7 @@ class _ThemeTile extends StatelessWidget {
                   color: selected
                       ? AppColors.primary.withValues(alpha: 0.15)
                       : context.appColors.cardBgLight,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Icon(
                   icon,
@@ -1372,21 +1260,14 @@ class _ThemeTile extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: TextStyle(
-                        color: selected
+                      style: context.type.titleMedium.copyWith(color: selected
                             ? AppColors.primary
-                            : context.appColors.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
+                            : context.appColors.textPrimary),
                     ),
                     if (subtitle != null)
                       Text(
                         subtitle!,
-                        style: TextStyle(
-                          color: context.appColors.textMuted,
-                          fontSize: 12,
-                        ),
+                        style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
                       ),
                   ],
                 ),

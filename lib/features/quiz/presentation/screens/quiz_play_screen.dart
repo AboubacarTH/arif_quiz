@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
+import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
 import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
@@ -209,7 +209,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                         height: 36,
                         decoration: BoxDecoration(
                             color: context.appColors.cardBg,
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(AppRadius.sm)),
                         child: Icon(Icons.close_rounded,
                             color: context.appColors.textSecondary, size: 18),
                       ),
@@ -217,7 +217,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                         child: LinearProgressIndicator(
                           value: ctrl.progress,
                           backgroundColor: context.appColors.cardBg,
@@ -229,10 +229,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                     ),
                     const SizedBox(width: 12),
                     Text('${ctrl.index + 1}/${ctrl.questions.length}',
-                        style: TextStyle(
-                            color: context.appColors.textSecondary,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600)),
+                        style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600)),
                   ],
                 ),
                 const SizedBox(height: 28),
@@ -256,19 +253,10 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                           QuestionMedia(
                               imageUrl: q.imageUrl, audioUrl: q.audioUrl),
                         Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1),
-                            style: const TextStyle(
-                                color: AppColors.primary,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.5)),
+                            style: context.type.labelMedium.copyWith(color: AppColors.primary, letterSpacing: 0.5)),
                         const SizedBox(height: 8),
                         Text(q.text,
-                            style: TextStyle(
-                                color: context.appColors.textPrimary,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                height: 1.4,
-                                fontFamily: 'Nunito')),
+                            style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, height: 1.4)),
                         const SizedBox(height: AppSpacing.questionToAnswers),
                         AnswerOptionsGrid(
                           options: opts,
@@ -288,8 +276,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                   TextButton(
                     onPressed: ctrl.skip,
                     child: Text(AppLocalizations.of(context).skip,
-                        style: TextStyle(
-                            color: context.appColors.textMuted, fontSize: 14)),
+                        style: context.type.bodyLarge.copyWith(color: context.appColors.textMuted)),
                   )
                 else
                   const SizedBox(height: 48),

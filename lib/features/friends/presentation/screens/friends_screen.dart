@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/features/friends/bloc/friends_controller.dart';
+import 'package:arif_quiz/features/friends/bloc/friends_controller.dart';
 import 'package:arif_quiz/features/friends/data/friends_repository.dart';
 import 'package:arif_quiz/features/friends/presentation/screens/add_friend_screen.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
@@ -79,7 +79,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                       ),
                       child: Text(
                         '${_ctrl.pendingRequestsCount}',
-                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700),
+                        style: context.type.labelSmall.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
                       ),
                     ),
                   ],
@@ -110,9 +110,9 @@ class _FriendsScreenState extends State<FriendsScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('👥', style: TextStyle(fontSize: 48)),
+            const Icon(Icons.group_rounded, size: 48, color: AppColors.primary),
             const SizedBox(height: 12),
-            Text(AppLocalizations.of(context).noFriendsYet, style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700)),
+            Text(AppLocalizations.of(context).noFriendsYet, style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary)),
             const SizedBox(height: 8),
             Text(AppLocalizations.of(context).searchPlayersToAdd, style: TextStyle(color: context.appColors.textSecondary)),
             const SizedBox(height: 20),
@@ -152,7 +152,8 @@ class _FriendsScreenState extends State<FriendsScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('📬', style: TextStyle(fontSize: 48)),
+            Icon(Icons.mark_email_unread_rounded,
+                        size: 48, color: AppColors.secondary),
             SizedBox(height: 12),
             Text(AppLocalizations.of(context).noPendingRequests, style: TextStyle(color: context.appColors.textSecondary)),
           ],
@@ -197,7 +198,7 @@ class _FriendsScreenState extends State<FriendsScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('📊', style: TextStyle(fontSize: 48)),
+            Icon(Icons.insights_rounded, size: 48, color: AppColors.info),
             SizedBox(height: 12),
             Text(AppLocalizations.of(context).noRecentActivity, style: TextStyle(color: context.appColors.textSecondary)),
           ],
@@ -237,13 +238,13 @@ class _FriendsScreenState extends State<FriendsScreen>
                     children: [
                       Text(
                         '${a.user.name} • ${a.quiz.title}',
-                        style: TextStyle(color: context.appColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w600),
+                        style: context.type.bodyMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w600),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         a.completedAt != null ? timeago.format(a.completedAt!) : '',
-                        style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
+                        style: context.type.labelSmall.copyWith(color: context.appColors.textMuted),
                       ),
                     ],
                   ),
@@ -252,11 +253,11 @@ class _FriendsScreenState extends State<FriendsScreen>
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: AppColors.primary.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                   ),
                   child: Text(
                     '${a.score.toStringAsFixed(0)}%',
-                    style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w800, fontSize: 13),
+                    style: context.type.labelLarge.copyWith(color: AppColors.primary, fontWeight: FontWeight.w800),
                   ),
                 ),
               ],
@@ -280,7 +281,7 @@ class _FriendsScreenState extends State<FriendsScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(friend.friend.name,
-                style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700)),
+                style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary)),
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.person_remove_outlined, color: AppColors.error),

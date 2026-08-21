@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/features/challenges/bloc/challenge_controller.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:arif_quiz/features/challenges/bloc/challenge_controller.dart';
 import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/challenges/presentation/screens/challenge_detail_screen.dart';
 import 'package:arif_quiz/features/challenges/presentation/screens/create_challenge_screen.dart';
@@ -81,9 +82,10 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('⚔️', style: TextStyle(fontSize: 56)),
+                const Icon(Icons.sports_kabaddi_rounded,
+                  size: 56, color: AppColors.primary),
                 const SizedBox(height: 16),
-                Text(AppLocalizations.of(context).noChallengesYet, style: TextStyle(color: context.appColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w700)),
+                Text(AppLocalizations.of(context).noChallengesYet, style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary)),
                 const SizedBox(height: 8),
                 Text(AppLocalizations.of(context).createOrJoin, style: TextStyle(color: context.appColors.textSecondary)),
                 const SizedBox(height: 24),
@@ -144,14 +146,14 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
                       margin: const EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
                         color: AppColors.error,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 26),
                           const SizedBox(height: 4),
-                          Text(AppLocalizations.of(context).deleteBtn, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
+                          Text(AppLocalizations.of(context).deleteBtn, style: context.type.labelSmall.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
                         ],
                       ),
                     ),
@@ -190,15 +192,15 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
           child: Row(
             children: [
-              Text(title, style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700)),
+              Text(title, style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary)),
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: context.appColors.cardBgLight,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
-                child: Text('$count', style: TextStyle(color: context.appColors.textMuted, fontSize: 12, fontWeight: FontWeight.w600)),
+                child: Text('$count', style: context.type.labelMedium.copyWith(color: context.appColors.textMuted, fontWeight: FontWeight.w600)),
               ),
             ],
           ),
@@ -234,7 +236,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
           context: context,
           builder: (ctx) => AlertDialog(
             backgroundColor: context.appColors.cardBg,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
             title: Text(
               AppLocalizations.of(context).deleteChallengeTitle,
               style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700),

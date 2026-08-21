@@ -1,5 +1,6 @@
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_categories_screen.dart';
+import 'package:arif_quiz/features/admin/presentation/screens/admin_daily_challenges_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_import_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_journey_screen.dart';
 import 'package:arif_quiz/features/admin/presentation/screens/admin_questions_screen.dart';
@@ -122,11 +123,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       children: [
         Text(
           AppLocalizations.of(context).management,
-          style: TextStyle(
-            color: context.appColors.textPrimary,
-            fontSize: 17,
-            fontWeight: FontWeight.w800,
-          ),
+          style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 12),
         Container(
@@ -178,6 +175,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AdminJourneyScreen()),
+                ).then((_) => _loadStats()),
+              ),
+              _divider(),
+              _NavTile(
+                icon: Icons.event_available_rounded,
+                color: AppColors.warning,
+                label: AppLocalizations.of(context).adminDailyChallenge,
+                subtitle: AppLocalizations.of(context).manageDailyChallengeDesc,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const AdminDailyChallengesScreen()),
                 ).then((_) => _loadStats()),
               ),
               _divider(),
@@ -240,15 +249,11 @@ class _StatCard extends StatelessWidget {
               children: [
                 Text(
                   value.toString(),
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: context.type.displayMedium.copyWith(color: context.appColors.textPrimary),
                 ),
                 Text(
                   label,
-                  style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600),
+                  style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -280,7 +285,7 @@ class _NavTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
@@ -290,7 +295,7 @@ class _NavTile extends StatelessWidget {
                 height: 42,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Icon(icon, color: color, size: 22),
               ),
@@ -299,8 +304,8 @@ class _NavTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700, fontSize: 14)),
-                    Text(subtitle, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12)),
+                    Text(label, style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary)),
+                    Text(subtitle, style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary)),
                   ],
                 ),
               ),

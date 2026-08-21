@@ -10,7 +10,7 @@ import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/game_mode_card.dart';
-import 'package:arif_quiz/ui/widgets/neon_button.dart';
+import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -124,11 +124,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
           const SizedBox(width: 14),
           Text(
             AppLocalizations.of(context).chooseMode,
-            style: TextStyle(
-              color: context.appColors.textPrimary,
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-            ),
+            style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
           ),
         ],
       ),
@@ -158,7 +154,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
             height: 52,
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppRadius.md),
             ),
             child: const Icon(
               Icons.quiz_rounded,
@@ -173,11 +169,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
               children: [
                 Text(
                   displayTitle,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -211,11 +203,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
 
   Widget _buildModeLabel() => Text(
         AppLocalizations.of(context).gameModeLabel,
-        style: TextStyle(
-          color: context.appColors.textPrimary,
-          fontSize: 16,
-          fontWeight: FontWeight.w800,
-        ),
+        style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
       ).animate().fadeIn(delay: 100.ms);
 
   // ─── Preview banner ──────────────────────────────────────────────────────────
@@ -223,18 +211,17 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
   Widget _buildPreviewBanner() {
     final info = switch (_selected) {
       GameMode.classic => (
-          icon: '🎮',
+          icon: GameMode.classic.icon,
           title: AppLocalizations.of(context).modeClassic,
           body: AppLocalizations.of(context).modeClassicDesc,
         ),
       GameMode.survival => (
-          icon: '❤️',
+          icon: GameMode.survival.icon,
           title: AppLocalizations.of(context).modeSurvival,
-          body:
-              AppLocalizations.of(context).modeSurvivalDesc,
+          body: AppLocalizations.of(context).modeSurvivalDesc,
         ),
       GameMode.speed => (
-          icon: '⚡',
+          icon: GameMode.speed.icon,
           title: AppLocalizations.of(context).modeSpeed,
           body: AppLocalizations.of(context).modeSpeedDesc,
         ),
@@ -248,12 +235,12 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: _modeColor.withValues(alpha: 0.07),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: _modeColor.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
-            Text(info.icon, style: const TextStyle(fontSize: 28)),
+            Icon(info.icon, size: 26, color: _modeColor),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -261,19 +248,12 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
                 children: [
                   Text(
                     info.title,
-                    style: TextStyle(
-                      color: _modeColor,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: context.type.labelLarge.copyWith(color: _modeColor, fontWeight: FontWeight.w800),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     info.body,
-                    style: TextStyle(
-                      color: context.appColors.textSecondary,
-                      fontSize: 12,
-                    ),
+                    style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                   ),
                 ],
               ),
@@ -289,12 +269,12 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
   Widget _buildPlayButton() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-      child: NeonButton(
+      child: AppButton(
         label: AppLocalizations.of(context).playInMode(_selected.localizedLabel(context)),
-        width: double.infinity,
+        fullWidth: true,
         icon: Icons.play_arrow_rounded,
-        color: _modeColor,
-        onTap: _startGame,
+        tint: _modeColor,
+        onPressed: _startGame,
       ),
     );
   }
@@ -340,10 +320,11 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
               height: 44,
               decoration: BoxDecoration(
                 color: AppColors.info.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               alignment: Alignment.center,
-              child: const Text('🎯', style: TextStyle(fontSize: 22)),
+              child: const Icon(Icons.my_location_rounded,
+            size: 22, color: AppColors.info),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -351,14 +332,9 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(AppLocalizations.of(context).trainingMode,
-                      style: TextStyle(
-                          color: context.appColors.textPrimary,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14)),
+                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
                   Text(AppLocalizations.of(context).trainingSubtitle,
-                      style: TextStyle(
-                          color: context.appColors.textSecondary,
-                          fontSize: 12)),
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary)),
                 ],
               ),
             ),
@@ -396,26 +372,19 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
                   height: 4,
                   decoration: BoxDecoration(
                     color: context.appColors.cardBgLight,
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(AppRadius.xxs),
                   ),
                 ),
               ),
               const SizedBox(height: 16),
               Text(AppLocalizations.of(context).trainingMode,
-                  style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800)),
+                  style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
               const SizedBox(height: 4),
               Text(AppLocalizations.of(context).trainingSheetBody,
-                  style: TextStyle(
-                      color: context.appColors.textSecondary, fontSize: 13)),
+                  style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
               const SizedBox(height: 16),
               Text(AppLocalizations.of(context).questionCountLabel,
-                  style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700)),
+                  style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary)),
               const SizedBox(height: 10),
               Wrap(
                 spacing: 10,
@@ -431,26 +400,23 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
                         color: sel
                             ? AppColors.info
                             : context.appColors.cardBgLight,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                       child: Text('$n',
-                          style: TextStyle(
-                              color: sel
+                          style: context.type.titleMedium.copyWith(color: sel
                                   ? Colors.white
-                                  : context.appColors.textPrimary,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 15)),
+                                  : context.appColors.textPrimary, fontWeight: FontWeight.w800)),
                     ),
                   );
                 }).toList(),
               ),
               const SizedBox(height: 20),
-              NeonButton(
+              AppButton(
                 label: AppLocalizations.of(context).startBtn,
-                width: double.infinity,
+                fullWidth: true,
                 icon: Icons.play_arrow_rounded,
-                color: AppColors.info,
-                onTap: () {
+                tint: AppColors.info,
+                onPressed: () {
                   Navigator.pop(ctx);
                   _launchTraining(selected);
                 },
@@ -495,7 +461,7 @@ class _InfoChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -504,11 +470,7 @@ class _InfoChip extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               label,
-              style: TextStyle(
-                color: color,
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w700),
             ),
           ],
         ),

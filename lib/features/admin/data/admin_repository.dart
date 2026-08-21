@@ -149,6 +149,75 @@ class AdminRepository {
         .toList();
   }
 
+  // ── Défi du jour : calendrier programmé à la main ─────────────────────────
+
+  Future<AdminDailyChallengeCalendar> getDailyChallenges() async {
+    final res = await _api.get('/admin/daily-challenges');
+    return AdminDailyChallengeCalendar.fromJson(
+        Map<String, dynamic>.from(res.data));
+  }
+
+  /// Quiz programmables : publiés et pourvus d'au moins une question.
+  Future<List<AdminSchedulableQuizModel>> getSchedulableQuizzes() async {
+    final res = await _api.get('/admin/daily-challenges/quizzes');
+    return (res.data['data'] as List)
+        .map((e) =>
+            AdminSchedulableQuizModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
+  /// [date] au format `Y-m-d`.
+  Future<AdminDailyChallengeModel> scheduleDailyChallenge({
+    required int quizId,
+    required String date,
+  }) async {
+    final res = await _api.post('/admin/daily-challenges', data: {
+      'quiz_id': quizId,
+      'challenge_date': date,
+    });
+    return AdminDailyChallengeModel.fromJson(
+        Map<String, dynamic>.from(res.data['data']));
+  }
+
+  Future<AdminDailyChallengeModel> updateDailyChallenge({
+    required int id,
+    required int quizId,
+    required String date,
+  }) async {
+    final res = await _api.put('/admin/daily-challenges/$id', data: {
+      'quiz_id': quizId,
+      'challenge_date': date,
+    });
+    return AdminDailyChallengeModel.fromJson(
+        Map<String, dynamic>.from(res.data['data']));
+  }
+
+  Future<void> deleteDailyChallenge(int id) async {
+    await _api.delete('/admin/daily-challenges/$id');
+  }
+
+  /// Remplit [days] jours consécutifs à partir de [startDate] en faisant tourner
+  /// [quizIds] dans l'ordre donné. Renvoie le décompte créé/mis à jour/ignoré.
+  Future<({int created, int updated, int skipped})> rotateDailyChallenges({
+    required List<int> quizIds,
+    required String startDate,
+    required int days,
+    bool overwrite = false,
+  }) async {
+    final res = await _api.post('/admin/daily-challenges/rotate', data: {
+      'quiz_ids': quizIds,
+      'start_date': startDate,
+      'days': days,
+      'overwrite': overwrite,
+    });
+    final data = Map<String, dynamic>.from(res.data['data']);
+    return (
+      created: data['created'] as int? ?? 0,
+      updated: data['updated'] as int? ?? 0,
+      skipped: data['skipped'] as int? ?? 0,
+    );
+  }
+
   // ── Questions ─────────────────────────────────────────────────────────────
 
   Future<({List<AdminQuestionModel> questions, int lastPage, int total})> getQuestions({

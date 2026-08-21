@@ -10,7 +10,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String greeting(String name) {
-    return 'مرحباً $name 👋';
+    return 'مرحباً $name';
   }
 
   @override
@@ -26,10 +26,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get seeAll => 'عرض الكل';
 
   @override
-  String get popular => '🔥 الأكثر شعبية';
+  String get popular => 'الأكثر شعبية';
 
   @override
-  String get friendsLeaderboard => '🏅 ترتيب الأصدقاء';
+  String get friendsLeaderboard => 'ترتيب الأصدقاء';
 
   @override
   String get guestBannerTitle => 'احفظ تقدمك!';
@@ -60,7 +60,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get journeyTitle => 'تسلّق مستويات الخريطة';
 
   @override
-  String get journeySubtitle => 'افتح المستويات واجمع النجوم ⭐';
+  String get journeySubtitle => 'افتح المستويات واجمع النجوم';
 
   @override
   String levelShort(int level) {
@@ -164,7 +164,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String levelsCount(int count) {
-    return '🏁  $count مستوى';
+    return '$count مستوى';
   }
 
   @override
@@ -232,22 +232,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get viewChallenge => 'عرض التحدي';
 
   @override
-  String get headlineOutstanding => 'مذهل! 🤩';
+  String get headlineOutstanding => 'مذهل!';
 
   @override
-  String get headlineExcellent => 'ممتاز! 🎉';
+  String get headlineExcellent => 'ممتاز!';
 
   @override
-  String get headlineGreat => 'أحسنت! 👏';
+  String get headlineGreat => 'أحسنت!';
 
   @override
-  String get headlineNotBad => 'ليس سيئاً! 👍';
+  String get headlineNotBad => 'ليس سيئاً!';
 
   @override
-  String get headlineKeepGoing => 'واصل! 💪';
+  String get headlineKeepGoing => 'واصل!';
 
   @override
-  String get headlineTryAgain => 'حاول مجدداً! 🔄';
+  String get headlineTryAgain => 'حاول مجدداً!';
 
   @override
   String get yourAnswer => 'إجابتك';
@@ -365,7 +365,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ruleReview => 'راجع الشروحات الكاملة بعد الاختبار';
 
   @override
-  String get startQuiz => 'ابدأ الاختبار 🚀';
+  String get startQuiz => 'ابدأ الاختبار';
 
   @override
   String get tryAnotherDifficulty => 'جرّب مستوى صعوبة آخر';
@@ -838,7 +838,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get bonusXp30 => '⚡ +30 نقطة خبرة إضافية';
+  String get bonusXp30 => '+30 نقطة خبرة إضافية';
 
   @override
   String get takeChallenge => 'خض التحدي';
@@ -1609,13 +1609,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get orSeparator => 'أو';
 
   @override
-  String get premiumFeatureNoAds => '✅ اختبارات ومسار بلا حدود، دون إعلانات';
+  String get premiumFeatureNoAds => 'اختبارات ومسار بلا حدود، دون إعلانات';
 
   @override
-  String get premiumFeatureAllModes => '⚡ جميع أوضاع اللعب، دون انقطاع';
+  String get premiumFeatureAllModes => 'جميع أوضاع اللعب، دون انقطاع';
 
   @override
-  String get premiumFeatureSupport => '❤️ أنت تدعم تطوير التطبيق';
+  String get premiumFeatureSupport => 'أنت تدعم تطوير التطبيق';
 
   @override
   String get loadFailedRetry => 'تعذّر التحميل. اسحب للتحديث.';
@@ -1653,4 +1653,132 @@ class AppLocalizationsAr extends AppLocalizations {
   String shareChallengeText(String title, String code) {
     return 'أتحدّاك على Arif Quiz! انضم إلى تحدّي «$title» بالرمز: $code';
   }
+
+  @override
+  String get adminDailyChallenge => 'تحدي اليوم';
+
+  @override
+  String get manageDailyChallengeDesc => 'برمجة الاختبار الخاص بكل يوم';
+
+  @override
+  String get dailyChallengeCalendarHint =>
+      'يوم بلا اختبار يعني أنه لا يوجد أي تحدٍّ للاعبين في ذلك اليوم.';
+
+  @override
+  String get scheduleDay => 'برمجة يوم';
+
+  @override
+  String get changeQuizBtn => 'تغيير';
+
+  @override
+  String get unscheduleBtn => 'إلغاء البرمجة';
+
+  @override
+  String get unscheduleConfirmTitle => 'إلغاء برمجة هذا اليوم؟';
+
+  @override
+  String unscheduleConfirmBody(String date, int count) {
+    return 'لن يعود ليوم $date أي تحدٍّ. يتم الاحتفاظ بـ $count مشاركة مسجّلة.';
+  }
+
+  @override
+  String get noChallengeTodayTitle => 'لا يوجد تحدٍّ مبرمج لليوم';
+
+  @override
+  String get noChallengeTodayBody =>
+      'تبقى بطاقة « التحدي اليومي » ظاهرة في التطبيق، لكنها تفتح شاشة فارغة ما لم يُبرمج اختبار لتاريخ اليوم.';
+
+  @override
+  String get scheduleToday => 'برمجة اليوم';
+
+  @override
+  String get upcomingSection => 'القادم';
+
+  @override
+  String get historySection => 'السجل';
+
+  @override
+  String get emptyCalendar => 'التقويم فارغ: لن يُقترح أي تحدٍّ على اللاعبين.';
+
+  @override
+  String freeDaysLabel(int count, int horizon) {
+    return '$count يوم متاح خلال الأيام $horizon القادمة';
+  }
+
+  @override
+  String get noSchedulableQuiz => 'لا يوجد اختبار قابل للبرمجة';
+
+  @override
+  String get noSchedulableQuizHint =>
+      'يحتاج تحدي اليوم إلى اختبار منشور يتضمّن سؤالاً واحداً على الأقل.';
+
+  @override
+  String get challengeQuizUnpublished =>
+      'تم إلغاء نشر الاختبار: لن يرى اللاعبون أي تحدٍّ في ذلك اليوم.';
+
+  @override
+  String get challengeQuizEmpty =>
+      'اختبار بلا أسئلة: لن يرى اللاعبون أي تحدٍّ في ذلك اليوم.';
+
+  @override
+  String attemptsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مشاركة',
+      one: 'مشاركة واحدة',
+      zero: 'لا مشاركة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fillRotation => 'تعبئة دورة';
+
+  @override
+  String get rotationHint =>
+      'تتناوب الاختبارات المحدّدة بترتيب اختيارك. تبقى الأيام المبرمجة كما هي ما لم تطلب استبدالها.';
+
+  @override
+  String get firstDay => 'اليوم الأول';
+
+  @override
+  String get numberOfDays => 'عدد الأيام';
+
+  @override
+  String get rotationQuizzes => 'اختبارات الدورة';
+
+  @override
+  String get overwriteScheduled => 'استبدال الأيام المبرمجة مسبقاً';
+
+  @override
+  String rotationDone(int created, int updated, int skipped) {
+    return 'تمت برمجة $created يوم، وتحديث $updated، والإبقاء على $skipped محجوز مسبقاً.';
+  }
+
+  @override
+  String fillDays(int count) {
+    return 'تعبئة $count يوم';
+  }
+
+  @override
+  String get chooseQuiz => 'اختر اختباراً';
+
+  @override
+  String get dateLabel => 'التاريخ';
+
+  @override
+  String get scheduleBtn => 'برمجة';
+
+  @override
+  String get oops => 'عفواً!';
+
+  @override
+  String get bonusKeepsStreak => 'يحافظ على سلسلتك';
+
+  @override
+  String get bonusDailyLeaderboard => 'الترتيب اليومي';
+
+  @override
+  String get alreadyPlayedTag => 'تمت المشاركة';
 }

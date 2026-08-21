@@ -1,12 +1,13 @@
-﻿import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/game_mode_select_screen.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/ui/widgets/rank_badge.dart';
 import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:arif_quiz/ui/widgets/challenge_card.dart';
-import 'package:arif_quiz/ui/widgets/neon_button.dart';
 import 'package:flutter/material.dart';
 
 class ChallengeDetailScreen extends StatefulWidget {
@@ -99,11 +100,11 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
                           ),
                         ],
                       )
-                    : NeonButton(
+                    : AppButton(
                         label: AppLocalizations.of(context).playThisChallenge,
-                        width: double.infinity,
+                        fullWidth: true,
                         icon: Icons.play_arrow_rounded,
-                        onTap: () => Navigator.push(
+                        onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => GameModeSelectScreen(
@@ -141,7 +142,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: AppColors.success.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
       ),
       child: Row(
@@ -151,11 +152,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
           Expanded(
             child: Text(
               AppLocalizations.of(context).alreadyPlayed,
-              style: TextStyle(
-                color: AppColors.success,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
+              style: context.type.bodyMedium.copyWith(color: AppColors.success, fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -172,7 +169,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
           child: Text(AppLocalizations.of(context).leaderboardCompleted(completed.length),
-              style: TextStyle(color: context.appColors.textPrimary, fontSize: 15, fontWeight: FontWeight.w700)),
+              style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary)),
         ),
       ),
       if (completed.isEmpty)
@@ -193,12 +190,12 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
                 leading: _rankWidget(rank as int),
                 title: Text(user['name'] ?? '', style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700)),
                 subtitle: Text('${(p['time_taken'] ?? 0)}s • ${p['correct_count']}/${_challenge.questionsCount}',
-                    style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+                    style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
                 trailing: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: AppColors.primary.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                   ),
                   child: Text('${(p['score'] as num).toStringAsFixed(1)}%',
                       style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w800)),
@@ -213,7 +210,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(AppLocalizations.of(context).pendingCount(pending.length),
-                style: TextStyle(color: context.appColors.textSecondary, fontSize: 14, fontWeight: FontWeight.w600)),
+                style: context.type.titleMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600)),
           ),
         ),
         SliverList(
@@ -224,7 +221,7 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
               return ListTile(
                 leading: CircleAvatar(radius: 16, backgroundColor: context.appColors.cardBgLight, child: Icon(Icons.hourglass_empty, size: 14, color: context.appColors.textMuted)),
                 title: Text(user['name'] ?? '', style: TextStyle(color: context.appColors.textSecondary)),
-                trailing: Text(AppLocalizations.of(context).pendingLabel, style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+                trailing: Text(AppLocalizations.of(context).pendingLabel, style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
               );
             },
             childCount: pending.length,
@@ -234,18 +231,5 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
     ];
   }
 
-  Widget _rankWidget(int rank) {
-    final (icon, color) = switch (rank) {
-      1 => ('🥇', AppColors.accent),
-      2 => ('🥈', context.appColors.textSecondary),
-      3 => ('🥉', const Color(0xFFCD7F32)),
-      _ => ('', context.appColors.textMuted),
-    };
-    if (icon.isNotEmpty) return Text(icon, style: const TextStyle(fontSize: 24));
-    return CircleAvatar(
-      radius: 16,
-      backgroundColor: context.appColors.cardBgLight,
-      child: Text('$rank', style: TextStyle(color: context.appColors.textMuted, fontSize: 13, fontWeight: FontWeight.w700)),
-    );
-  }
+  Widget _rankWidget(int rank) => RankBadge(rank: rank, size: 32);
 }

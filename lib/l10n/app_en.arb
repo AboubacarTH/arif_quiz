@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "greeting": "Hello, {name} 👋",
+  "greeting": "Hello, {name}",
   "@greeting": {
     "placeholders": {
       "name": {
@@ -12,8 +12,8 @@
   "readyToPlay": "Ready to play?",
   "categories": "Categories",
   "seeAll": "See all",
-  "popular": "🔥 Popular",
-  "friendsLeaderboard": "🏅 Friends leaderboard",
+  "popular": "Popular",
+  "friendsLeaderboard": "Friends leaderboard",
   "guestBannerTitle": "Save your progress!",
   "guestBannerSubtitle": "Create an account to unlock XP, streaks and rankings.",
   "signUp": "Sign up",
@@ -23,7 +23,7 @@
   "dailyChallengeSubtitle": "+30 bonus XP · Keeps your streak alive",
   "journeyTag": "JOURNEY MODE",
   "journeyTitle": "Climb the levels of the map",
-  "journeySubtitle": "Unlock levels, earn stars ⭐",
+  "journeySubtitle": "Unlock levels, earn stars",
   "levelShort": "Lvl {level}",
   "@levelShort": {
     "placeholders": {
@@ -86,7 +86,7 @@
   },
   "journeyUnavailable": "Journey unavailable",
   "comeBackLater": "Come back later",
-  "levelsCount": "🏁  {count} levels",
+  "levelsCount": "{count} levels",
   "@levelsCount": {
     "placeholders": {
       "count": {
@@ -134,12 +134,12 @@
   "createAccount": "Create account",
   "homeLabel": "Home",
   "viewChallenge": "View challenge",
-  "headlineOutstanding": "Outstanding! 🤩",
-  "headlineExcellent": "Excellent! 🎉",
-  "headlineGreat": "Great job! 👏",
-  "headlineNotBad": "Not bad! 👍",
-  "headlineKeepGoing": "Keep going! 💪",
-  "headlineTryAgain": "Try again! 🔄",
+  "headlineOutstanding": "Outstanding!",
+  "headlineExcellent": "Excellent!",
+  "headlineGreat": "Great job!",
+  "headlineNotBad": "Not bad!",
+  "headlineKeepGoing": "Keep going!",
+  "headlineTryAgain": "Try again!",
   "yourAnswer": "Your answer",
   "points": "Points",
   "timeLabel": "Time",
@@ -191,7 +191,7 @@
     }
   },
   "ruleReview": "Review full explanations after the quiz",
-  "startQuiz": "Start Quiz 🚀",
+  "startQuiz": "Start Quiz",
   "tryAnotherDifficulty": "Try another difficulty filter",
   "loadCategoriesError": "Couldn't load the categories",
   "noCategories": "No categories",
@@ -424,7 +424,7 @@
       }
     }
   },
-  "bonusXp30": "⚡ +30 bonus XP",
+  "bonusXp30": "+30 bonus XP",
   "takeChallenge": "Take the challenge",
   "saveChanges": "Save changes",
   "emailRequired": "Email is required",
@@ -437,7 +437,7 @@
   "scoresNotSaved": "Scores won't be saved",
   "passwordMin8": "Password must be at least 8 characters",
   "passwordsDontMatch": "Passwords do not match",
-  "registrationFailed": "Registration failed. Email may already be taken.",
+  "registrationFailed": "Registration failed. This email may already be in use.",
   "createAccountTitle": "Create an\naccount",
   "joinThousands": "Join thousands of players",
   "choosePassword": "Choose a password",
@@ -805,16 +805,15 @@
   "goPremium": "Go Premium",
   "goPremiumSubtitle": "Play with no ads, no limits",
   "orSeparator": "OR",
-  "premiumFeatureNoAds": "✅ Unlimited quizzes and journey, no ads",
-  "premiumFeatureAllModes": "⚡ Every game mode, never interrupted",
-  "premiumFeatureSupport": "❤️ You support the app's development",
+  "premiumFeatureNoAds": "Unlimited quizzes and journey, no ads",
+  "premiumFeatureAllModes": "Every game mode, never interrupted",
+  "premiumFeatureSupport": "You support the app's development",
   "loadFailedRetry": "Loading failed. Pull to refresh.",
   "loadQuizzesFailed": "Unable to load the quizzes.",
   "loadLeaderboardFailed": "Unable to load the leaderboard.",
   "loadProfileFailed": "Unable to load the profile.",
   "loadJourneyFailed": "Unable to load the journey.",
   "invalidCredentials": "Invalid email or password. Please try again.",
-  "registrationFailed": "Registration failed. This email may already be in use.",
   "dailyTag": "Daily",
   "secondsPerQuestionBadge": "{seconds}s / question",
   "@secondsPerQuestionBadge": {
@@ -848,5 +847,87 @@
         "type": "String"
       }
     }
-  }
+  },
+  "adminDailyChallenge": "Daily challenge",
+  "manageDailyChallengeDesc": "Schedule which quiz runs on which day",
+  "dailyChallengeCalendarHint": "A day with no quiz means no challenge at all for players.",
+  "scheduleDay": "Schedule a day",
+  "changeQuizBtn": "Change",
+  "unscheduleBtn": "Unschedule",
+  "unscheduleConfirmTitle": "Unschedule this day?",
+  "unscheduleConfirmBody": "{date} will no longer have a challenge. The {count} attempt(s) already played are kept.",
+  "@unscheduleConfirmBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noChallengeTodayTitle": "No challenge scheduled for today",
+  "noChallengeTodayBody": "The « Daily challenge » card stays visible in the app, but it opens an empty screen until a quiz is set on today's date.",
+  "scheduleToday": "Schedule today",
+  "upcomingSection": "Upcoming",
+  "historySection": "History",
+  "emptyCalendar": "The calendar is empty: players will not be offered any challenge.",
+  "freeDaysLabel": "{count} free day(s) in the next {horizon} days",
+  "@freeDaysLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "horizon": {
+        "type": "int"
+      }
+    }
+  },
+  "noSchedulableQuiz": "No quiz can be scheduled",
+  "noSchedulableQuizHint": "A daily challenge needs a published quiz with at least one question.",
+  "challengeQuizUnpublished": "Quiz unpublished since: players will see no challenge that day.",
+  "challengeQuizEmpty": "Quiz with no question: players will see no challenge that day.",
+  "attemptsCount": "{count, plural, =0{no attempt} =1{1 attempt} other{{count} attempts}}",
+  "@attemptsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fillRotation": "Fill a rotation",
+  "rotationHint": "The selected quizzes rotate in the order you pick them. Already scheduled days are kept unless you ask to overwrite them.",
+  "firstDay": "First day",
+  "numberOfDays": "Number of days",
+  "rotationQuizzes": "Quizzes in the rotation",
+  "overwriteScheduled": "Overwrite days already scheduled",
+  "rotationDone": "{created} day(s) scheduled, {updated} updated, {skipped} already taken and kept.",
+  "@rotationDone": {
+    "placeholders": {
+      "created": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "fillDays": "Fill {count} day(s)",
+  "@fillDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chooseQuiz": "Choose a quiz",
+  "dateLabel": "Date",
+  "scheduleBtn": "Schedule",
+  "oops": "Oops!",
+  "bonusKeepsStreak": "Keeps your streak alive",
+  "bonusDailyLeaderboard": "Daily leaderboard",
+  "alreadyPlayedTag": "Played"
 }

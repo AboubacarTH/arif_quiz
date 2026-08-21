@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/features/auth/presentation/screens/guest_screen.dart';
+import 'package:arif_quiz/features/auth/presentation/screens/guest_screen.dart';
 import 'package:arif_quiz/features/challenges/presentation/screens/challenges_screen.dart';
 import 'package:arif_quiz/features/friends/presentation/screens/friends_screen.dart';
 import 'package:arif_quiz/features/home/presentation/screens/home_screen.dart';
@@ -59,7 +59,7 @@ class _MainNavigationState extends State<MainNavigation> {
               builder: (ctx) => AlertDialog(
                 backgroundColor: context.appColors.cardBg,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
+                    borderRadius: BorderRadius.circular(AppRadius.md)),
                 title: Text(
                   AppLocalizations.of(context).exitAppTitle,
                   style: TextStyle(

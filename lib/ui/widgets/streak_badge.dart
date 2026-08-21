@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class StreakBadge extends StatelessWidget {
@@ -19,7 +20,7 @@ class StreakBadge extends StatelessWidget {
         color: streak > 0
             ? AppColors.warning.withValues(alpha: 0.15)
             : context.appColors.cardBgLight,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(
           color: streak > 0
               ? AppColors.warning.withValues(alpha: 0.4)
@@ -29,8 +30,14 @@ class StreakBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(streak > 0 ? '🔥' : '❄️',
-              style: TextStyle(fontSize: size + 2)),
+          Icon(
+              streak > 0
+                  ? Icons.local_fire_department_rounded
+                  : Icons.ac_unit_rounded,
+              size: size + 4,
+              color: streak > 0
+                  ? AppColors.warning
+                  : context.appColors.textMuted),
           const SizedBox(width: 4),
           Text(
             '$streak',
