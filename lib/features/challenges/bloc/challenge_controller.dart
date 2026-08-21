@@ -37,6 +37,7 @@ class ChallengeController extends ChangeNotifier {
     int? categoryId,
     required String mode,
     required String title,
+    required int questionsCount,
   }) async {
     isCreating = true;
     notifyListeners();
@@ -47,6 +48,7 @@ class ChallengeController extends ChangeNotifier {
         categoryId: categoryId,
         mode: mode,
         title: title,
+        questionsCount: questionsCount,
       );
       created.insert(0, challenge);
       notifyListeners();

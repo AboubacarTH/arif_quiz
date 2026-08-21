@@ -383,33 +383,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chooseMode => 'اختر الوضع';
 
   @override
-  String get randomQuestions10 => '10 أسئلة عشوائية';
-
-  @override
-  String get questions10 => '10 أسئلة';
-
-  @override
   String get gameModeLabel => 'وضع اللعب';
 
   @override
   String get modeClassic => 'الوضع الكلاسيكي';
 
   @override
-  String get modeClassicDesc =>
-      '10 أسئلة عشوائية · مؤقّت لكل سؤال · النتيجة بالنسبة المئوية';
+  String get modeClassicDesc => 'مؤقّت لكل سؤال · النتيجة بالمئة';
 
   @override
   String get modeSurvival => 'وضع البقاء';
 
   @override
-  String get modeSurvivalDesc =>
-      '10 أسئلة · إجابة خاطئة واحدة وتنتهي اللعبة · مكافأة ×1.3';
+  String get modeSurvivalDesc => 'خطأ واحد وينتهي كل شيء · مكافأة ×1.3';
 
   @override
   String get modeSpeed => 'جولة السرعة';
 
   @override
-  String get modeSpeedDesc => '10 أسئلة · 5 ثوانٍ لكل سؤال · مكافأة خبرة ×1.5';
+  String get modeSpeedDesc => '5 ثوانٍ لكل سؤال · مكافأة خبرة ×1.5';
 
   @override
   String playInMode(String mode) {
@@ -568,16 +560,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get srcQuizLabel => 'اختبار محدد';
 
   @override
-  String get srcQuizDesc => '10 أسئلة من اختبار تختاره';
+  String get srcQuizDesc => 'أسئلة من اختبار تختاره';
 
   @override
   String get srcCategoryLabel => 'حسب الفئة';
 
   @override
-  String get srcCategoryDesc => '10 أسئلة عشوائية من كل اختبارات فئة ما';
+  String get srcCategoryDesc => 'أسئلة عشوائية من اختبارات فئة واحدة';
 
   @override
-  String get srcAllDesc => '10 أسئلة عشوائية من كل الاختبارات المتاحة';
+  String get srcAllDesc => 'أسئلة عشوائية من كل الاختبارات المتاحة';
 
   @override
   String get whereQuestionsFrom => 'من أين تأتي الأسئلة؟';
@@ -1819,4 +1811,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reportSent => 'تمّ إرسال البلاغ';
+
+  @override
+  String get questionsCountLabel => 'عدد الأسئلة';
+
+  @override
+  String questionsCount(int count) {
+    return '$count أسئلة';
+  }
+
+  @override
+  String randomQuestionsCount(int count) {
+    return '$count أسئلة عشوائية';
+  }
 }

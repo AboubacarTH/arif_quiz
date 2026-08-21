@@ -21,6 +21,7 @@ class ChallengeRepository {
     int? categoryId,
     required String mode,
     required String title,
+    required int questionsCount,
   }) async {
     final res = await _api.post('/challenges', data: {
       'source_type': sourceType,
@@ -28,6 +29,7 @@ class ChallengeRepository {
       if (categoryId != null) 'category_id': categoryId,
       'mode': mode,
       'title': title,
+      'questions_count': questionsCount,
     });
     return ChallengeModel.fromJson(res.data['data']);
   }

@@ -136,7 +136,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
   Widget _buildQuizCard() {
     final displayTitle = widget.challengeSourceLabel
         ?? widget.quiz?.title
-        ?? AppLocalizations.of(context).randomQuestions10;
+        ?? AppLocalizations.of(context).randomQuestionsCount(10);
     final diff = widget.quiz?.difficulty;
     final diffColor = diff != null ? AppColors.difficultyColor(diff) : AppColors.primary;
 
@@ -177,7 +177,7 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
                 Row(
                   children: [
                     _InfoChip(
-                      label: AppLocalizations.of(context).questions10,
+                      label: AppLocalizations.of(context).questionsCount(10),
                       icon: Icons.help_outline_rounded,
                       color: AppColors.primary,
                     ),

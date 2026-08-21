@@ -219,6 +219,9 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
                         selectedCategory: _selectedCategory,
                         isCreating: widget.ctrl.isCreating,
                         onModeChanged: (m) => setState(() => _selectedMode = m),
+                        questionsCount: _questionsCount,
+                        onCountChanged: (n) =>
+                            setState(() => _questionsCount = n),
                         onCreate: _create,
                       ),
                   },
@@ -305,6 +308,10 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
 
   // ─── Create ──────────────────────────────────────────────────────────────────
 
+  /// Longueur du défi. Elle était figée à dix côté serveur, dans quatre
+  /// littéraux, tout en circulant dans les réponses comme si elle se réglait.
+  int _questionsCount = 10;
+
   Future<void> _create() async {
     if (_titleCtrl.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -319,6 +326,7 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
       categoryId: _sourceType == 'category' ? _selectedCategory?.id : null,
       mode: _selectedMode.apiValue,
       title: _titleCtrl.text.trim(),
+      questionsCount: _questionsCount,
     );
 
     if (challenge != null && mounted) {
@@ -794,10 +802,11 @@ class _StepQuizState extends State<_StepQuiz> {
                                   const SizedBox(height: 4),
                                   Row(
                                     children: [
-                                      _QuizChip(
-                                          label: AppLocalizations.of(context).questions10,
-                                          color: AppColors.primary),
-                                      const SizedBox(width: 6),
+                                      // La longueur du défi se choisit à
+                                      // l'étape suivante : annoncer un nombre
+                                      // ici serait une promesse en l'air. Le
+                                      // total de questions d'un quiz reste par
+                                      // ailleurs masqué aux joueurs.
                                       _QuizChip(
                                         label: DifficultyL10n.label(
                                             context, q.difficulty),
@@ -869,7 +878,9 @@ class _StepConfig extends StatelessWidget {
   final QuizModel? selectedQuiz;
   final CategoryModel? selectedCategory;
   final bool isCreating;
+  final int questionsCount;
   final ValueChanged<GameMode> onModeChanged;
+  final ValueChanged<int> onCountChanged;
   final VoidCallback onCreate;
 
   const _StepConfig({
@@ -880,7 +891,9 @@ class _StepConfig extends StatelessWidget {
     required this.selectedQuiz,
     required this.selectedCategory,
     required this.isCreating,
+    required this.questionsCount,
     required this.onModeChanged,
+    required this.onCountChanged,
     required this.onCreate,
   });
 
@@ -943,7 +956,7 @@ class _StepConfig extends StatelessWidget {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        AppLocalizations.of(context).randomQuestions10,
+                        AppLocalizations.of(context).randomQuestionsCount(questionsCount),
                         style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                       ),
                     ],
@@ -966,6 +979,26 @@ class _StepConfig extends StatelessWidget {
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context).challengeTitleHint,
             ),
+          ),
+          const SizedBox(height: 24),
+
+          // Longueur
+          Text(
+            AppLocalizations.of(context).questionsCountLabel,
+            style: context.type.titleMedium
+                .copyWith(color: context.appColors.textPrimary),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: AppSpacing.sm,
+            children: [
+              for (final n in const [5, 10, 15, 20, 30])
+                _CountChip(
+                  count: n,
+                  selected: questionsCount == n,
+                  onTap: () => onCountChanged(n),
+                ),
+            ],
           ),
           const SizedBox(height: 24),
 
@@ -999,4 +1032,41 @@ class _StepConfig extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Puce de longueur : le créateur choisit en un tap combien de questions
+/// comptera son défi.
+class _CountChip extends StatelessWidget {
+  final int count;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _CountChip({
+    required this.count,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) => Material(
+        color: selected
+            ? AppColors.primary
+            : context.appColors.cardBgLight,
+        borderRadius: AppRadius.rPill,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppRadius.rPill,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg, vertical: AppSpacing.sm + 2),
+            child: Text(
+              '$count',
+              style: context.type.labelLarge.copyWith(
+                  color: selected
+                      ? Colors.white
+                      : context.appColors.textSecondary),
+            ),
+          ),
+        ),
+      );
 }

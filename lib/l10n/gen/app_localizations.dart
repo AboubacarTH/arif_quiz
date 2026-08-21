@@ -762,18 +762,6 @@ abstract class AppLocalizations {
   /// **'Choose mode'**
   String get chooseMode;
 
-  /// No description provided for @randomQuestions10.
-  ///
-  /// In en, this message translates to:
-  /// **'10 random questions'**
-  String get randomQuestions10;
-
-  /// No description provided for @questions10.
-  ///
-  /// In en, this message translates to:
-  /// **'10 questions'**
-  String get questions10;
-
   /// No description provided for @gameModeLabel.
   ///
   /// In en, this message translates to:
@@ -789,7 +777,7 @@ abstract class AppLocalizations {
   /// No description provided for @modeClassicDesc.
   ///
   /// In en, this message translates to:
-  /// **'10 random questions · Timer per question · Score in %'**
+  /// **'Timer on each question · Score as a percentage'**
   String get modeClassicDesc;
 
   /// No description provided for @modeSurvival.
@@ -801,7 +789,7 @@ abstract class AppLocalizations {
   /// No description provided for @modeSurvivalDesc.
   ///
   /// In en, this message translates to:
-  /// **'10 questions · One wrong answer and it\'s over · ×1.3 bonus'**
+  /// **'One wrong answer and it is over · Bonus ×1.3'**
   String get modeSurvivalDesc;
 
   /// No description provided for @modeSpeed.
@@ -813,7 +801,7 @@ abstract class AppLocalizations {
   /// No description provided for @modeSpeedDesc.
   ///
   /// In en, this message translates to:
-  /// **'10 questions · 5 seconds per question · ×1.5 XP bonus'**
+  /// **'5 seconds per question · XP bonus ×1.5'**
   String get modeSpeedDesc;
 
   /// No description provided for @playInMode.
@@ -1119,7 +1107,7 @@ abstract class AppLocalizations {
   /// No description provided for @srcQuizDesc.
   ///
   /// In en, this message translates to:
-  /// **'10 questions from a quiz of your choice'**
+  /// **'Questions drawn from a quiz you pick'**
   String get srcQuizDesc;
 
   /// No description provided for @srcCategoryLabel.
@@ -1131,13 +1119,13 @@ abstract class AppLocalizations {
   /// No description provided for @srcCategoryDesc.
   ///
   /// In en, this message translates to:
-  /// **'10 random questions from all quizzes in a category'**
+  /// **'Random questions from every quiz in a category'**
   String get srcCategoryDesc;
 
   /// No description provided for @srcAllDesc.
   ///
   /// In en, this message translates to:
-  /// **'10 random questions from all available quizzes'**
+  /// **'Random questions from every available quiz'**
   String get srcAllDesc;
 
   /// No description provided for @whereQuestionsFrom.
@@ -3383,6 +3371,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Report sent'**
   String get reportSent;
+
+  /// No description provided for @questionsCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of questions'**
+  String get questionsCountLabel;
+
+  /// No description provided for @questionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} questions'**
+  String questionsCount(int count);
+
+  /// No description provided for @randomQuestionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} random questions'**
+  String randomQuestionsCount(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -379,12 +379,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseMode => 'Choose mode';
 
   @override
-  String get randomQuestions10 => '10 random questions';
-
-  @override
-  String get questions10 => '10 questions';
-
-  @override
   String get gameModeLabel => 'Game mode';
 
   @override
@@ -392,21 +386,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get modeClassicDesc =>
-      '10 random questions · Timer per question · Score in %';
+      'Timer on each question · Score as a percentage';
 
   @override
   String get modeSurvival => 'Survival Mode';
 
   @override
-  String get modeSurvivalDesc =>
-      '10 questions · One wrong answer and it\'s over · ×1.3 bonus';
+  String get modeSurvivalDesc => 'One wrong answer and it is over · Bonus ×1.3';
 
   @override
   String get modeSpeed => 'Speed Round';
 
   @override
-  String get modeSpeedDesc =>
-      '10 questions · 5 seconds per question · ×1.5 XP bonus';
+  String get modeSpeedDesc => '5 seconds per question · XP bonus ×1.5';
 
   @override
   String playInMode(String mode) {
@@ -565,17 +557,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get srcQuizLabel => 'A specific quiz';
 
   @override
-  String get srcQuizDesc => '10 questions from a quiz of your choice';
+  String get srcQuizDesc => 'Questions drawn from a quiz you pick';
 
   @override
   String get srcCategoryLabel => 'By category';
 
   @override
   String get srcCategoryDesc =>
-      '10 random questions from all quizzes in a category';
+      'Random questions from every quiz in a category';
 
   @override
-  String get srcAllDesc => '10 random questions from all available quizzes';
+  String get srcAllDesc => 'Random questions from every available quiz';
 
   @override
   String get whereQuestionsFrom => 'Where do the questions come from?';
@@ -1825,4 +1817,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportSent => 'Report sent';
+
+  @override
+  String get questionsCountLabel => 'Number of questions';
+
+  @override
+  String questionsCount(int count) {
+    return '$count questions';
+  }
+
+  @override
+  String randomQuestionsCount(int count) {
+    return '$count random questions';
+  }
 }
