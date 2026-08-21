@@ -1,15 +1,16 @@
 import 'package:arif_quiz/features/daily_challenge/data/daily_challenge_repository.dart';
-import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart' show GamePhase, GamePlayController;
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/features/game_modes/presentation/widgets/question_stage.dart';
+import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
+import 'package:arif_quiz/ui/widgets/timer_ring.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
-import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -243,71 +244,80 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
 
   Widget _buildPlayScreen() {
     final ctrl = _playCtrl;
-    final q = ctrl.currentQuestion;
-    final opts = q.choices(context);
-    final labels = ['A', 'B', 'C', 'D'];
 
-    return Scaffold(
-      backgroundColor: context.appColors.bg,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(AppRadius.lg), border: Border.all(color: AppColors.accent.withValues(alpha: 0.4))),
-                    child: Text(AppLocalizations.of(context).dailyTag, style: context.type.labelSmall.copyWith(color: AppColors.accent, fontWeight: FontWeight.w700)),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(AppRadius.xs),
-                      child: LinearProgressIndicator(
-                        value: ctrl.progress,
-                        backgroundColor: context.appColors.cardBg,
-                        valueColor: const AlwaysStoppedAnimation(AppColors.accent),
-                        minHeight: 8,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        if (await confirmQuitGame(context) && mounted) {
+          setState(() => _playing = false);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: context.appColors.bg,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.gutter),
+            child: Column(
+              children: [
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  children: [
+                    // Le défi du jour n'avait aucun bouton pour sortir : une
+                    // fois entré, le joueur y était enfermé.
+                    GestureDetector(
+                      onTap: () async {
+                        if (await confirmQuitGame(context) && mounted) {
+                          setState(() => _playing = false);
+                        }
+                      },
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: context.appColors.cardBg,
+                          borderRadius: AppRadius.rSm,
+                        ),
+                        child: Icon(Icons.close_rounded,
+                            color: context.appColors.textSecondary, size: 18),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text('${ctrl.index + 1}/${ctrl.questions.length}', style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(color: context.appColors.cardBg, borderRadius: BorderRadius.circular(AppRadius.lg)),
-                child: Text('${ctrl.timeLeft}s', style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
-              ),
-              const SizedBox(height: 20),
-              Align(alignment: AlignmentDirectional.centerStart, child: Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1), style: context.type.labelMedium.copyWith(color: AppColors.accent, letterSpacing: 0.5))),
-              const SizedBox(height: 8),
-              Align(alignment: AlignmentDirectional.centerStart, child: Text(q.text, style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, height: 1.4))),
-              // Les réponses suivent directement l'énoncé, séparées par une
-              // respiration ; elles défilent si elles ne tiennent pas.
-              const SizedBox(height: AppSpacing.questionToAnswers),
-              Expanded(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: opts.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemBuilder: (_, i) {
-                    final opt = opts[i];
-                    return AnswerOptionTile(
-                      label: labels[i < labels.length ? i : 0],
-                      option: opt,
-                      state: !ctrl.answered ? AnswerState.idle : (ctrl.selected == opt ? AnswerState.selected : AnswerState.idle),
-                      onTap: () => ctrl.selectAnswer(opt),
-                    );
-                  },
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: AppRadius.rXs,
+                        child: LinearProgressIndicator(
+                          value: ctrl.progress,
+                          backgroundColor: context.appColors.cardBg,
+                          valueColor:
+                              const AlwaysStoppedAnimation(AppColors.accent),
+                          minHeight: 8,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Text('${ctrl.index + 1}/${ctrl.questions.length}',
+                        style: context.type.bodyMedium.copyWith(
+                            color: context.appColors.textSecondary,
+                            fontWeight: FontWeight.w600)),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 28),
+                // Le même anneau que partout ailleurs : le chrono était ici un
+                // simple « 28s » posé dans une boîte.
+                TimerRing(
+                    timeLeft: ctrl.timeLeft,
+                    totalTime: ctrl.secondsPerQuestion,
+                    size: 80),
+                const SizedBox(height: 28),
+                Expanded(
+                  child: QuestionStage(
+                      controller: ctrl, accent: AppColors.accent),
+                ),
+                SkipQuestionButton(controller: ctrl),
+              ],
+            ),
           ),
         ),
       ),

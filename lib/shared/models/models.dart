@@ -4,6 +4,21 @@ import 'package:arif_quiz/shared/models/true_false.dart';
 
 export 'package:arif_quiz/shared/models/true_false.dart';
 
+/// Lecture tolérante d'un nombre venu de l'API.
+///
+/// Les colonnes `decimal` de MySQL ressortent en CHAÎNE dans le JSON de Laravel
+/// tant qu'aucun cast ne les convertit : `"100.00"`, pas `100.0`. Un
+/// `as num` sec levait alors une exception — invisible en développement, où
+/// SQLite renvoie bien un nombre, et déclenchée en production dès qu'un score
+/// existait. Le serveur est corrigé, mais l'app doit rester tolérante : elle
+/// tourne face à des versions de backend qu'elle ne choisit pas.
+double? asDouble(Object? value) => switch (value) {
+      null => null,
+      final num n => n.toDouble(),
+      final String s => double.tryParse(s),
+      _ => null,
+    };
+
 // ========== USER MODEL ==========
 class UserModel {
   final int id;
@@ -50,7 +65,7 @@ class UserModel {
         totalPoints: json['total_points'] ?? 0,
         quizzesTaken: json['quizzes_taken'] ?? 0,
         correctAnswers: json['correct_answers'] ?? 0,
-        accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0.0,
+        accuracy: asDouble(json['accuracy']) ?? 0.0,
         xp: json['xp'] ?? 0,
         level: json['level'] ?? 1,
         streak: json['streak'] ?? 0,
@@ -276,7 +291,7 @@ class ChallengeParticipant {
         user: json['user'] != null
             ? UserModel.fromJson(json['user'])
             : UserModel.fromJson({'id': 0, 'name': 'Unknown', 'email': ''}),
-        score: (json['score'] as num?)?.toDouble(),
+        score: asDouble(json['score']),
         correctCount: json['correct_count'],
         timeTaken: json['time_taken'],
         completedAt: json['completed_at'] != null
@@ -313,7 +328,7 @@ class DailyChallengeModel {
         quiz: QuizModel.fromJson(json['quiz']),
         challengeDate: DateTime.tryParse(json['challenge_date'] ?? '') ?? DateTime.now(),
         alreadyPlayed: json['already_played'] ?? false,
-        myScore: (json['my_score'] as num?)?.toDouble(),
+        myScore: asDouble(json['my_score']),
         myGrade: json['my_grade'],
         secondsUntilReset: json['seconds_until_reset'] ?? 86400,
       );
@@ -373,7 +388,7 @@ class FriendActivity {
         id: json['id'],
         user: UserModel.fromJson(json['user']),
         quiz: QuizModel.fromJson(json['quiz']),
-        score: (json['score'] as num).toDouble(),
+        score: asDouble(json['score']) ?? 0,
         grade: json['grade'],
         pointsEarned: json['points_earned'] ?? 0,
         completedAt: json['completed_at'] != null
@@ -454,7 +469,7 @@ class QuizModel {
                 Map<String, dynamic>.from(json['category']),
               )
             : null,
-        averageScore: (json['average_score'] as num?)?.toDouble(),
+        averageScore: asDouble(json['average_score']),
         pointsPerQuestion: json['points_per_question'],
       );
 }
@@ -570,7 +585,7 @@ class QuizAttemptResult {
   factory QuizAttemptResult.fromJson(Map<String, dynamic> json) =>
       QuizAttemptResult(
         attemptId: json['attempt_id'],
-        score: (json['score'] as num).toDouble(),
+        score: asDouble(json['score']) ?? 0,
         correctCount: json['correct_count'],
         totalQuestions: json['total_questions'],
         timeTaken: json['time_taken'],
@@ -675,7 +690,7 @@ class JourneyLevelModel {
         isBoss: json['is_boss'] ?? false,
         unlocked: json['unlocked'] ?? false,
         stars: json['stars'] ?? 0,
-        bestScore: (json['best_score'] as num?)?.toDouble() ?? 0,
+        bestScore: asDouble(json['best_score']) ?? 0,
       );
 }
 
@@ -749,7 +764,7 @@ class JourneyLevelResult {
         nextLevelId: json['next_level_id'],
         nextLevelIsBoss: json['next_level_is_boss'] ?? false,
         isBoss: json['is_boss'] ?? false,
-        score: (json['score'] as num?)?.toDouble() ?? 0,
+        score: asDouble(json['score']) ?? 0,
         stars: json['stars'] ?? 0,
         correctCount: json['correct_count'] ?? 0,
         totalQuestions: json['total_questions'] ?? 0,

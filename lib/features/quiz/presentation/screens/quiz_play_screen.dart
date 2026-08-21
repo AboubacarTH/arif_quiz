@@ -1,4 +1,3 @@
-import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
 import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
@@ -6,12 +5,11 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/features/game_modes/presentation/widgets/question_stage.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
-import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
-import 'package:arif_quiz/ui/widgets/question_media.dart';
 import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
 import 'package:arif_quiz/ui/widgets/timer_ring.dart';
 import 'package:flutter/material.dart';
@@ -177,8 +175,6 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
     }
 
     final ctrl = _ctrl!;
-    final q = ctrl.currentQuestion;
-    final opts = q.choices(context);
 
     return PopScope(
       canPop: false,
@@ -245,41 +241,11 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                 // ensemble, les choix suivent directement l'énoncé (séparés par
                 // une respiration) au lieu d'être ancrés en bas de l'écran.
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (q.hasMedia)
-                          QuestionMedia(
-                              imageUrl: q.imageUrl, audioUrl: q.audioUrl),
-                        Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1),
-                            style: context.type.labelMedium.copyWith(color: AppColors.primary, letterSpacing: 0.5)),
-                        const SizedBox(height: 8),
-                        Text(q.text,
-                            style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, height: 1.4)),
-                        const SizedBox(height: AppSpacing.questionToAnswers),
-                        AnswerOptionsGrid(
-                          options: opts,
-                          answered: ctrl.answered,
-                          selected: ctrl.selected,
-                          isCorrect: (o) => q.isCorrect(o),
-                          onSelect: ctrl.selectAnswer,
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
-                  ),
+                  child: QuestionStage(controller: ctrl, accent: AppColors.primary),
                 ),
 
                 // Skip
-                if (!ctrl.answered)
-                  TextButton(
-                    onPressed: ctrl.skip,
-                    child: Text(AppLocalizations.of(context).skip,
-                        style: context.type.bodyLarge.copyWith(color: context.appColors.textMuted)),
-                  )
-                else
-                  const SizedBox(height: 48),
+                SkipQuestionButton(controller: ctrl),
               ],
             ),
           ),

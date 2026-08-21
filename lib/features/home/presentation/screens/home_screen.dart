@@ -309,9 +309,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── Daily challenge ────────────────────────────────────────────────────────
 
-  /// Trois etats, trois messages. Un seul est cliquable : proposer d'ouvrir un
-  /// ecran qui n'a rien a montrer est ce qui rendait cette carte trompeuse.
-  Widget _dailyChallengeCard(DailyChallengeModel? daily) {
+  /// Trois états, trois messages. Un seul est cliquable : proposer d'ouvrir un
+  /// écran qui n'a rien à montrer est ce qui rendait cette carte trompeuse.
+  ///
+  /// Quand [status] est nul, la requête n'a pas abouti : la carte disparaît.
+  /// Se taire vaut mieux qu'annoncer « pas de défi » sur un timeout.
+  Widget _dailyChallengeCard(DailyStatus? status) {
+    if (status == null) return const SizedBox.shrink();
+
+    final daily = status.challenge;
     final l10n = AppLocalizations.of(context);
     final played = daily?.alreadyPlayed ?? false;
     final available = daily != null && !played;

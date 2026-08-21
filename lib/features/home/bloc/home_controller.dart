@@ -3,6 +3,18 @@ import 'package:arif_quiz/features/home/data/home_repository.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:flutter/foundation.dart';
 
+/// Ce que l'accueil sait du défi du jour.
+///
+/// Distinguer « il n'y a pas de défi » de « je n'ai pas pu le savoir » n'est
+/// pas un détail : la requête est optionnelle et peut échouer, et une carte qui
+/// annonce « Pas de défi aujourd'hui » sur un simple timeout ment au joueur.
+class DailyStatus {
+  /// Null = la journée n'a pas de défi programmé.
+  final DailyChallengeModel? challenge;
+
+  const DailyStatus(this.challenge);
+}
+
 abstract class HomeState {}
 class HomeInitial    extends HomeState {}
 class HomeLoading    extends HomeState {}
@@ -12,9 +24,9 @@ class HomeLoaded     extends HomeState {
   final List<QuizModel> featured;
   final List<Map<String, dynamic>> friendsLeaderboard;
 
-  /// Null = aucun défi programmé aujourd'hui. L'accueil doit alors le dire,
-  /// pas afficher une carte qui mène à un écran vide.
-  final DailyChallengeModel? daily;
+  /// Null = la requête n'a pas abouti, on ne sait rien. L'accueil se tait
+  /// alors, plutôt que d'affirmer quoi que ce soit.
+  final DailyStatus? daily;
 
   HomeLoaded({
     this.user,
@@ -57,10 +69,13 @@ class HomeController extends ChangeNotifier {
         friendsLb = await _repo.getFriendsLeaderboard();
       } catch (_) {}
 
-      DailyChallengeModel? daily;
+      DailyStatus? daily;
       try {
-        daily = await _daily.getToday();
-      } catch (_) {}
+        daily = DailyStatus(await _daily.getToday());
+      } catch (_) {
+        // On laisse `null` : l'accueil masquera la carte au lieu d'affirmer
+        // qu'il n'y a pas de défi.
+      }
 
       _emit(HomeLoaded(
         user:       results[2] as UserModel,
