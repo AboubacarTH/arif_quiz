@@ -800,7 +800,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
             Text(AppLocalizations.of(context).allowedUsers,
                 style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary)),
             const Spacer(),
-            Text('${_allowedUserIds.length} sélectionné(s)',
+            Text(AppLocalizations.of(context).selectedCount(_allowedUserIds.length),
                 style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:arif_quiz/features/badges/data/badge_repository.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/features/badges/presentation/badge_icon.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
@@ -150,9 +151,25 @@ class _BadgeTile extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Opacity(
-            opacity: unlocked ? 1 : 0.3,
-            child: Text(badge.emoji, style: AppType.score),
+          // Vignette : elle donne au succes une assiette constante, quelle que
+          // soit la longueur de son libelle. L'emoji, lui, flottait seul et les
+          // cartes d'une meme rangee ne s'alignaient pas.
+          Container(
+            width: 56,
+            height: 56,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: (unlocked ? AppColors.secondary : context.appColors.textMuted)
+                  .withValues(alpha: unlocked ? 0.16 : 0.08),
+            ),
+            child: Icon(
+              badgeIcon(badge.key),
+              size: 28,
+              color: unlocked
+                  ? AppColors.secondary
+                  : context.appColors.textMuted.withValues(alpha: 0.6),
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(

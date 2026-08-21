@@ -947,5 +947,24 @@
         "type": "int"
       }
     }
+  },
+  "challengeOpen": "Open",
+  "challengeClosed": "Closed",
+  "challengeExpired": "Expired",
+  "selectedCount": "{count} selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "friendAdded": "{name} added",
+  "@friendAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

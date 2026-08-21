@@ -4,6 +4,7 @@ import 'package:arif_quiz/features/friends/presentation/screens/add_friend_scree
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/widgets/friend_tile.dart';
@@ -106,23 +107,14 @@ class _FriendsScreenState extends State<FriendsScreen>
       return const Center(child: CircularProgressIndicator(color: AppColors.primary));
     }
     if (_ctrl.friends.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.group_rounded, size: 48, color: AppColors.primary),
-            const SizedBox(height: 12),
-            Text(AppLocalizations.of(context).noFriendsYet, style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary)),
-            const SizedBox(height: 8),
-            Text(AppLocalizations.of(context).searchPlayersToAdd, style: TextStyle(color: context.appColors.textSecondary)),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddFriendScreen(ctrl: _ctrl))),
-              icon: const Icon(Icons.person_add),
-              label: Text(AppLocalizations.of(context).addFriends),
-            ),
-          ],
-        ),
+      return EmptyState(
+        title: AppLocalizations.of(context).noFriendsYet,
+        subtitle: AppLocalizations.of(context).searchPlayersToAdd,
+        icon: Icons.group_rounded,
+        tint: AppColors.primary,
+        actionLabel: AppLocalizations.of(context).addFriends,
+        onAction: () => Navigator.push(context,
+            MaterialPageRoute(builder: (_) => AddFriendScreen(ctrl: _ctrl))),
       );
     }
     return RefreshIndicator(
@@ -148,16 +140,10 @@ class _FriendsScreenState extends State<FriendsScreen>
 
   Widget _buildRequests() {
     if (_ctrl.requests.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.mark_email_unread_rounded,
-                        size: 48, color: AppColors.secondary),
-            SizedBox(height: 12),
-            Text(AppLocalizations.of(context).noPendingRequests, style: TextStyle(color: context.appColors.textSecondary)),
-          ],
-        ),
+      return EmptyState(
+        title: AppLocalizations.of(context).noPendingRequests,
+        icon: Icons.mark_email_unread_rounded,
+        tint: AppColors.secondary,
       );
     }
     return ListView.separated(
@@ -176,7 +162,10 @@ class _FriendsScreenState extends State<FriendsScreen>
                   final ok = await _ctrl.acceptRequest(req.id);
                   if (ok && mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('${req.sender.name} ajouté !'), backgroundColor: AppColors.success),
+                      SnackBar(
+                          content: Text(AppLocalizations.of(context)
+                              .friendAdded(req.sender.name)),
+                          backgroundColor: AppColors.success),
                     );
                   }
                 },
@@ -194,15 +183,10 @@ class _FriendsScreenState extends State<FriendsScreen>
 
   Widget _buildActivity() {
     if (_ctrl.activity.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.insights_rounded, size: 48, color: AppColors.info),
-            SizedBox(height: 12),
-            Text(AppLocalizations.of(context).noRecentActivity, style: TextStyle(color: context.appColors.textSecondary)),
-          ],
-        ),
+      return EmptyState(
+        title: AppLocalizations.of(context).noRecentActivity,
+        icon: Icons.insights_rounded,
+        tint: AppColors.info,
       );
     }
     return RefreshIndicator(

@@ -1,5 +1,6 @@
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/core/i18n/challenge_status_l10n.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class ChallengeCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppRadius.xs),
                   ),
                   child: Text(
-                    challenge.isOpen ? 'Ouvert' : challenge.status,
+                    ChallengeStatusL10n.label(context, challenge),
                     style: context.type.labelSmall.copyWith(color: challenge.isOpen ? AppColors.success : context.appColors.textMuted, fontWeight: FontWeight.w600),
                   ),
                 ),

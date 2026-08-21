@@ -1797,4 +1797,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String journeyChapter(int number) {
     return 'الفصل $number';
   }
+
+  @override
+  String get challengeOpen => 'مفتوح';
+
+  @override
+  String get challengeClosed => 'منتهٍ';
+
+  @override
+  String get challengeExpired => 'منتهي الصلاحية';
+
+  @override
+  String selectedCount(int count) {
+    return '$count محدّد';
+  }
+
+  @override
+  String friendAdded(String name) {
+    return 'تمت إضافة $name';
+  }
 }

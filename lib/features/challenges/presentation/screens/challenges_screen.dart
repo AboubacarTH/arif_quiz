@@ -7,6 +7,7 @@ import 'package:arif_quiz/features/challenges/presentation/screens/join_challeng
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/ui/widgets/challenge_card.dart';
 import 'package:flutter/material.dart';
@@ -82,8 +83,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.sports_kabaddi_rounded,
-                  size: 56, color: AppColors.primary),
+                const StateGlyph(
+                  icon: Icons.sports_kabaddi_rounded, tint: AppColors.primary),
                 const SizedBox(height: 16),
                 Text(AppLocalizations.of(context).noChallengesYet, style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary)),
                 const SizedBox(height: 8),

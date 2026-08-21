@@ -1803,4 +1803,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String journeyChapter(int number) {
     return 'Chapter $number';
   }
+
+  @override
+  String get challengeOpen => 'Open';
+
+  @override
+  String get challengeClosed => 'Closed';
+
+  @override
+  String get challengeExpired => 'Expired';
+
+  @override
+  String selectedCount(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String friendAdded(String name) {
+    return '$name added';
+  }
 }

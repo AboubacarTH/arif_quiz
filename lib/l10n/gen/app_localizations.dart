@@ -3347,6 +3347,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Chapter {number}'**
   String journeyChapter(int number);
+
+  /// No description provided for @challengeOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get challengeOpen;
+
+  /// No description provided for @challengeClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get challengeClosed;
+
+  /// No description provided for @challengeExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get challengeExpired;
+
+  /// No description provided for @selectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String selectedCount(int count);
+
+  /// No description provided for @friendAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} added'**
+  String friendAdded(String name);
 }
 
 class _AppLocalizationsDelegate

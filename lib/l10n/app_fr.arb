@@ -540,5 +540,10 @@
   "noDailyChallengeToday": "Pas de défi aujourd’hui",
   "dailyBackTomorrow": "Un nouveau quiz demain",
   "dailyDoneScore": "Terminé — tu as fait {score}%",
-  "journeyChapter": "Chapitre {number}"
+  "journeyChapter": "Chapitre {number}",
+  "challengeOpen": "Ouvert",
+  "challengeClosed": "Terminé",
+  "challengeExpired": "Expiré",
+  "selectedCount": "{count} sélectionné(s)",
+  "friendAdded": "{name} ajouté"
 }

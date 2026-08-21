@@ -3,6 +3,7 @@ import 'package:arif_quiz/features/notifications/data/notifications_repository.d
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -75,16 +76,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
           : _items.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.notifications_none_rounded,
-                      size: 48, color: AppColors.secondary),
-                      SizedBox(height: 12),
-                      Text(AppLocalizations.of(context).noNotifications, style: TextStyle(color: context.appColors.textSecondary)),
-                    ],
-                  ),
+              ? EmptyState(
+                  title: AppLocalizations.of(context).noNotifications,
+                  icon: Icons.notifications_none_rounded,
+                  tint: AppColors.secondary,
                 )
               : RefreshIndicator(
                   onRefresh: _load,

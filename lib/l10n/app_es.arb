@@ -540,5 +540,10 @@
   "noDailyChallengeToday": "Hoy no hay desafío",
   "dailyBackTomorrow": "Mañana llega un nuevo cuestionario",
   "dailyDoneScore": "Completado — sacaste {score}%",
-  "journeyChapter": "Capítulo {number}"
+  "journeyChapter": "Capítulo {number}",
+  "challengeOpen": "Abierto",
+  "challengeClosed": "Finalizado",
+  "challengeExpired": "Caducado",
+  "selectedCount": "{count} seleccionado(s)",
+  "friendAdded": "{name} añadido"
 }

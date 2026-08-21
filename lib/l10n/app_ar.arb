@@ -540,5 +540,10 @@
   "noDailyChallengeToday": "لا يوجد تحدٍّ اليوم",
   "dailyBackTomorrow": "اختبار جديد غداً",
   "dailyDoneScore": "انتهى — نتيجتك {score}%",
-  "journeyChapter": "الفصل {number}"
+  "journeyChapter": "الفصل {number}",
+  "challengeOpen": "مفتوح",
+  "challengeClosed": "منتهٍ",
+  "challengeExpired": "منتهي الصلاحية",
+  "selectedCount": "{count} محدّد",
+  "friendAdded": "تمت إضافة {name}"
 }
