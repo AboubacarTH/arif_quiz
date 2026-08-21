@@ -1801,4 +1801,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get alreadyPlayedTag => 'Jugado';
+
+  @override
+  String get noDailyChallengeToday => 'Hoy no hay desafío';
+
+  @override
+  String get dailyBackTomorrow => 'Mañana llega un nuevo cuestionario';
+
+  @override
+  String dailyDoneScore(int score) {
+    return 'Completado — sacaste $score%';
+  }
 }

@@ -122,7 +122,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
     final canGoBack = Navigator.of(context).canPop();
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
       child: Row(
         children: [
           if (canGoBack) ...[
@@ -157,7 +157,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
   // ─── Search ──────────────────────────────────────────────────────────────────
 
   Widget _buildSearch() => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
         child: AppTextField(
           label: '',
           hint: AppLocalizations.of(context).searchQuizHint,
@@ -190,7 +190,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
         : AppColors.primary;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
       child: GestureDetector(
         onTap: _categoriesLoading ? null : _openCategorySheet,
         child: AnimatedContainer(
@@ -292,7 +292,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
   // ─── Difficulty chips ─────────────────────────────────────────────────────────
 
   Widget _buildDiffChips() => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -366,7 +366,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
       backgroundColor: context.appColors.cardBg,
       child: ListView.separated(
         controller: _scrollCtrl,
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
         itemCount: _ctrl.quizzes.length + (_ctrl.loadingMore ? 1 : 0),
         separatorBuilder: (_, __) => const SizedBox(height: 10),
         itemBuilder: (ctx, i) {

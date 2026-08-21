@@ -1,5 +1,6 @@
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dart';
+import 'package:arif_quiz/features/daily_challenge/data/daily_challenge_repository.dart';
 import 'package:arif_quiz/features/daily_challenge/presentation/screens/daily_challenge_screen.dart';
 import 'package:arif_quiz/features/home/bloc/home_controller.dart';
 import 'package:arif_quiz/features/home/data/home_repository.dart';
@@ -37,7 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _ctrl = HomeController(HomeRepository(apiService));
+    _ctrl = HomeController(
+        HomeRepository(apiService), DailyChallengeRepository(apiService));
     _ctrl.addListener(() {
       if (mounted) setState(() {});
     });
@@ -111,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
         else ...[
           SliverToBoxAdapter(child: _xpSection(d.user)),
           SliverToBoxAdapter(child: _journeyCard()),
-          SliverToBoxAdapter(child: _dailyChallengeCard()),
+          SliverToBoxAdapter(child: _dailyChallengeCard(d.daily)),
           if (d.friendsLeaderboard.length >= 2) ...[
             _sectionTitle(AppLocalizations.of(context).friendsLeaderboard),
             SliverToBoxAdapter(
@@ -307,73 +309,111 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── Daily challenge ────────────────────────────────────────────────────────
 
-  Widget _dailyChallengeCard() {
+  /// Trois etats, trois messages. Un seul est cliquable : proposer d'ouvrir un
+  /// ecran qui n'a rien a montrer est ce qui rendait cette carte trompeuse.
+  Widget _dailyChallengeCard(DailyChallengeModel? daily) {
+    final l10n = AppLocalizations.of(context);
+    final played = daily?.alreadyPlayed ?? false;
+    final available = daily != null && !played;
+
+    final (Color accent, IconData icon, String title, String subtitle) =
+        switch (daily) {
+      null => (
+          context.appColors.textMuted,
+          Icons.event_busy_rounded,
+          l10n.noDailyChallengeToday,
+          l10n.dailyBackTomorrow,
+        ),
+      _ when played => (
+          AppColors.success,
+          Icons.check_circle_rounded,
+          daily.quiz.title,
+          l10n.dailyDoneScore(daily.myScore?.round() ?? 0),
+        ),
+      _ => (
+          AppColors.primary,
+          Icons.auto_awesome_rounded,
+          daily.quiz.title,
+          l10n.dailyChallengeSubtitle,
+        ),
+    };
+
+    final card = Container(
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: context.cardElevated,
+        borderRadius: AppRadius.rLg,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.12),
+              borderRadius: AppRadius.rMd,
+            ),
+            child: Center(child: Icon(icon, size: 24, color: accent)),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  played ? l10n.alreadyPlayedTag : l10n.dailyChallengeTag,
+                  style: context.type.labelSmall
+                      .copyWith(color: accent, letterSpacing: 1.2),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.type.titleMedium,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.type.labelMedium,
+                ),
+              ],
+            ),
+          ),
+          if (daily != null) ...[
+            const SizedBox(width: 8),
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.15),
+                borderRadius: AppRadius.rSm,
+              ),
+              child: Icon(
+                available ? Icons.play_arrow_rounded : Icons.chevron_right_rounded,
+                color: accent,
+                size: 20,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
-      child: GestureDetector(
-        onTap: () => Navigator.push(
-            context, SlideRightRoute(page: const DailyChallengeScreen())),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
-          decoration: BoxDecoration(
-            color: context.cardElevated,
-            borderRadius: AppRadius.rLg,
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                child: const Center(
-                  child: Icon(Icons.auto_awesome_rounded,
-                      size: 24, color: AppColors.primary),
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).dailyChallengeTag,
-                      style: context.type.labelSmall.copyWith(color: AppColors.accent, letterSpacing: 1.2),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      AppLocalizations.of(context).dailyChallengeTitle,
-                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      AppLocalizations.of(context).dailyChallengeSubtitle,
-                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-                child: const Icon(
-                  Icons.chevron_right_rounded,
-                  color: AppColors.primary,
-                  size: 20,
-                ),
-              ),
-            ],
-          ),
-        ).animate().fadeIn(delay: 150.ms).slideX(begin: 0.04),
-      ),
+      child: daily == null
+          ? Opacity(opacity: 0.72, child: card)
+          : GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                SlideRightRoute(page: const DailyChallengeScreen()),
+              ).then((_) => _loadData()),
+              child: card,
+            ),
     );
   }
 

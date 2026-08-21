@@ -1801,4 +1801,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get alreadyPlayedTag => 'Joué';
+
+  @override
+  String get noDailyChallengeToday => 'Pas de défi aujourd’hui';
+
+  @override
+  String get dailyBackTomorrow => 'Un nouveau quiz demain';
+
+  @override
+  String dailyDoneScore(int score) {
+    return 'Terminé — tu as fait $score%';
+  }
 }

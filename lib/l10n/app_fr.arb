@@ -536,5 +536,8 @@
   "oops": "Oups !",
   "bonusKeepsStreak": "Maintient ton streak",
   "bonusDailyLeaderboard": "Classement quotidien",
-  "alreadyPlayedTag": "Joué"
+  "alreadyPlayedTag": "Joué",
+  "noDailyChallengeToday": "Pas de défi aujourd’hui",
+  "dailyBackTomorrow": "Un nouveau quiz demain",
+  "dailyDoneScore": "Terminé — tu as fait {score}%"
 }

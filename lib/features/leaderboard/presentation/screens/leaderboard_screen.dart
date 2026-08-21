@@ -96,7 +96,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
         // Rest of list
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
               (ctx, i) {

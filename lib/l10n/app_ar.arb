@@ -536,5 +536,8 @@
   "oops": "عفواً!",
   "bonusKeepsStreak": "يحافظ على سلسلتك",
   "bonusDailyLeaderboard": "الترتيب اليومي",
-  "alreadyPlayedTag": "تمت المشاركة"
+  "alreadyPlayedTag": "تمت المشاركة",
+  "noDailyChallengeToday": "لا يوجد تحدٍّ اليوم",
+  "dailyBackTomorrow": "اختبار جديد غداً",
+  "dailyDoneScore": "انتهى — نتيجتك {score}%"
 }

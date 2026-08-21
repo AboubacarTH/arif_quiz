@@ -172,7 +172,7 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
   Widget _buildFilters() {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        padding: const EdgeInsets.fromLTRB(20, 20, 16, 0),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -203,7 +203,7 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
     if (_ctrl.isLoading) {
       return const SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+          padding: EdgeInsets.fromLTRB(20, 20, 16, 0),
           child: QuizListSkeleton(count: 5),
         ),
       );
@@ -232,7 +232,7 @@ class _CategoryQuizzesScreenState extends State<CategoryQuizzesScreen> {
     }
 
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      padding: const EdgeInsets.fromLTRB(20, 20, 16, 0),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (ctx, i) {

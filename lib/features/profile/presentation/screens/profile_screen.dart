@@ -203,7 +203,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onRefresh: _ctrl.load,
         color: AppColors.primary,
         backgroundColor: context.appColors.cardBg,
-        child: _buildBody(),
+        // Une seule entrée pour tout l'écran (voir _buildBody).
+        child: _buildBody().animate().fadeIn(duration: 260.ms),
       ),
     );
   }
@@ -323,7 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 300.ms);
+    );
   }
 
   // ─── Hero card ───────────────────────────────────────────────────────────────
@@ -416,7 +417,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: 50.ms).slideY(begin: 0.05);
+    );
   }
 
   // ─── XP bar ──────────────────────────────────────────────────────────────────
@@ -472,7 +473,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: 100.ms);
+    );
   }
 
   // ─── Stats row ───────────────────────────────────────────────────────────────
@@ -480,11 +481,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildStatsRow(UserModel user) {
     return StatsRow(
       stats: [
-        StatItem('${user.quizzesTaken}', AppLocalizations.of(context).quizzesPlayed, AppColors.primary),
-        StatItem('${user.correctAnswers}', AppLocalizations.of(context).goodAnswers, AppColors.success),
-        StatItem('${user.accuracy.toStringAsFixed(0)}%', AppLocalizations.of(context).accuracy, AppColors.info),
+        StatItem('${user.quizzesTaken}',
+            AppLocalizations.of(context).quizzesPlayed),
+        StatItem('${user.correctAnswers}',
+            AppLocalizations.of(context).goodAnswers),
+        StatItem('${user.accuracy.toStringAsFixed(0)}%',
+            AppLocalizations.of(context).accuracy),
       ],
-    ).animate().fadeIn(delay: 150.ms);
+    );
   }
 
   // ─── Streak row ──────────────────────────────────────────────────────────────
@@ -510,7 +514,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
-    ).animate().fadeIn(delay: 200.ms);
+    );
   }
 
   // ─── Succès / badges ─────────────────────────────────────────────────────────
@@ -563,7 +567,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 220.ms);
+    );
   }
 
   // ─── Premium ────────────────────────────────────────────────────────────────
@@ -590,7 +594,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
-    ).animate().fadeIn(delay: 250.ms);
+    );
   }
 
   // ─── Theme ──────────────────────────────────────────────────────────────────
@@ -639,7 +643,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
-    ).animate().fadeIn(delay: 300.ms);
+    );
   }
 
   // ─── Langue ──────────────────────────────────────────────────────────────────
@@ -680,7 +684,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
-    ).animate().fadeIn(delay: 320.ms);
+    );
   }
 
   // ─── Recent activity ─────────────────────────────────────────────────────────
@@ -717,7 +721,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         else
           ...attempts.take(5).map((a) => _AttemptTile(attempt: a)),
       ],
-    ).animate().fadeIn(delay: 350.ms);
+    );
   }
 
   // ─── Admin ──────────────────────────────────────────────────────────────────
@@ -748,7 +752,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 380.ms);
+    );
   }
 
   // ─── Logout / Delete ────────────────────────────────────────────────────────
@@ -777,7 +781,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 400.ms);
+    );
   }
 
   Widget _buildDeleteAccountButton() {
@@ -804,7 +808,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 420.ms);
+    );
   }
 }
 

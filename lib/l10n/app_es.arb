@@ -536,5 +536,8 @@
   "oops": "¡Vaya!",
   "bonusKeepsStreak": "Mantiene tu racha",
   "bonusDailyLeaderboard": "Clasificación diaria",
-  "alreadyPlayedTag": "Jugado"
+  "alreadyPlayedTag": "Jugado",
+  "noDailyChallengeToday": "Hoy no hay desafío",
+  "dailyBackTomorrow": "Mañana llega un nuevo cuestionario",
+  "dailyDoneScore": "Completado — sacaste {score}%"
 }

@@ -77,8 +77,12 @@ class _ListCard extends StatelessWidget {
                 children: [
                   Text(
                     quiz.title,
-                    style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
-                    maxLines: 2,
+                    style: context.type.titleMedium,
+                    // Trois lignes, pas deux : les titres du catalogue se
+                    // terminent par ce qui les distingue (« … — Niveau
+                    // avancé »). Couper à deux lignes rendait trois quiz
+                    // consecutifs strictement identiques a l'oeil.
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
@@ -95,17 +99,12 @@ class _ListCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
-            // Play count + chevron
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Icon(Icons.chevron_right_rounded,
-                    color: context.appColors.textMuted),
-                const SizedBox(height: 4),
-                _Meta(Icons.play_circle_outline_rounded, '${quiz.playCount}'),
-              ],
-            ),
+            const SizedBox(width: 10),
+            // Le chevron a disparu : la carte entière est cliquable, il ne
+            // disait rien de plus et mangeait la largeur du titre. Or c'est
+            // exactement la fin des titres qui les distingue les uns des
+            // autres (« … — Niveau avancé »).
+            _Meta(Icons.play_circle_outline_rounded, '${quiz.playCount}'),
           ],
         ),
       ),

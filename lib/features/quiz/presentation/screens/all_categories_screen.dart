@@ -72,7 +72,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
   }
 
   Widget _buildHeader() => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
         child: Row(
           children: [
             GestureDetector(
@@ -124,7 +124,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
       color: AppColors.primary,
       backgroundColor: context.appColors.cardBg,
       child: GridView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 12,

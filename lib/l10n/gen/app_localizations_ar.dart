@@ -1781,4 +1781,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get alreadyPlayedTag => 'تمت المشاركة';
+
+  @override
+  String get noDailyChallengeToday => 'لا يوجد تحدٍّ اليوم';
+
+  @override
+  String get dailyBackTomorrow => 'اختبار جديد غداً';
+
+  @override
+  String dailyDoneScore(int score) {
+    return 'انتهى — نتيجتك $score%';
+  }
 }

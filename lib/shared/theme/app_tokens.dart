@@ -18,6 +18,11 @@ abstract final class AppSpacing {
   static const double xxl = 24;
   static const double xxxl = 32;
 
+  /// Marge horizontale d'un écran. Elle valait 16 sur certains écrans et 20 sur
+  /// d'autres : en passant de l'accueil aux catégories, tout le contenu se
+  /// décalait de 4 px. C'est le genre d'écart qu'on ne nomme pas mais qu'on voit.
+  static const double gutter = 20;
+
   /// Respiration entre l'énoncé d'une question et ses choix, en jeu.
   /// Les réponses suivent l'énoncé (elles ne sont plus ancrées en bas) : cet
   /// écart doit rester assez large pour séparer nettement les deux blocs.

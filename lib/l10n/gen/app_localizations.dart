@@ -3323,6 +3323,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Played'**
   String get alreadyPlayedTag;
+
+  /// No description provided for @noDailyChallengeToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No challenge today'**
+  String get noDailyChallengeToday;
+
+  /// No description provided for @dailyBackTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'A new quiz lands tomorrow'**
+  String get dailyBackTomorrow;
+
+  /// No description provided for @dailyDoneScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Done — you scored {score}%'**
+  String dailyDoneScore(int score);
 }
 
 class _AppLocalizationsDelegate

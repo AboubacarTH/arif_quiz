@@ -929,5 +929,15 @@
   "oops": "Oops!",
   "bonusKeepsStreak": "Keeps your streak alive",
   "bonusDailyLeaderboard": "Daily leaderboard",
-  "alreadyPlayedTag": "Played"
+  "alreadyPlayedTag": "Played",
+  "noDailyChallengeToday": "No challenge today",
+  "dailyBackTomorrow": "A new quiz lands tomorrow",
+  "dailyDoneScore": "Done — you scored {score}%",
+  "@dailyDoneScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -134,8 +134,14 @@ class StatsRow extends StatelessWidget {
 class StatItem {
   final String value;
   final String label;
-  final Color color;
-  const StatItem(this.value, this.label, this.color);
+
+  /// Teinte OPTIONNELLE, et seulement quand elle veut dire quelque chose.
+  /// Trois statistiques neutres peintes en trois couleurs différentes, c'est
+  /// de la décoration : rien ne dit pourquoi « quiz joués » serait rouille et
+  /// « précision » bleue. Sans teinte, le chiffre prend l'encre du texte.
+  final Color? color;
+
+  const StatItem(this.value, this.label, [this.color]);
 }
 
 class _StatCell extends StatelessWidget {
@@ -148,7 +154,9 @@ class _StatCell extends StatelessWidget {
         children: [
           Text(
             stat.value,
-            style: context.type.headlineLarge.copyWith(color: stat.color),
+            style: stat.color == null
+                ? context.type.headlineLarge
+                : context.type.headlineLarge.copyWith(color: stat.color),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
