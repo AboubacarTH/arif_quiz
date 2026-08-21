@@ -1,3 +1,4 @@
+import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/core/i18n/game_mode_l10n.dart';
 import 'package:arif_quiz/shared/models/models.dart';
@@ -22,6 +23,7 @@ class GameModeCard extends StatelessWidget {
         GameMode.classic => AppColors.primary,
         GameMode.survival => AppColors.error,
         GameMode.speed => AppColors.secondary,
+        GameMode.precision => AppColors.modePrecision,
       };
 
   List<_Badge> _badges(BuildContext context) => switch (mode) {
@@ -36,10 +38,17 @@ class GameModeCard extends StatelessWidget {
             const _Badge(icon: Icons.star_rounded, label: '×1.3 XP'),
           ],
         GameMode.speed => [
+            // Le budget n'est plus un chiffre unique : il suit la longueur de
+            // la question, entre ces deux bornes.
             _Badge(
                 icon: Icons.bolt_rounded,
-                label: AppLocalizations.of(context).secondsPerQuestionBadge(5)),
+                label: AppLocalizations.of(context)
+                    .secondsRangeBadge(kSpeedMinSeconds, kSpeedMaxSeconds)),
             const _Badge(icon: Icons.star_rounded, label: '×1.5 XP'),
+          ],
+        GameMode.precision => [
+            const _Badge(icon: Icons.add_circle_outline_rounded, label: '+2 / −1'),
+            const _Badge(icon: Icons.star_rounded, label: '×1.4 XP'),
           ],
       };
 

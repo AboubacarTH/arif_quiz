@@ -399,7 +399,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get modeSpeed => 'Ronda Rápida';
 
   @override
-  String get modeSpeedDesc => '5 segundos por pregunta · Bonus de XP ×1.5';
+  String get modeSpeedDesc =>
+      'Tiempo para leer, no para dudar · Bonus de XP ×1.5';
 
   @override
   String playInMode(String mode) {
@@ -1905,4 +1906,36 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get joinChallengeError => 'Código inválido o desafío inexistente';
+
+  @override
+  String get modePrecision => 'Modo Precisión';
+
+  @override
+  String get modePrecisionShort => 'Precisión';
+
+  @override
+  String get modePrecisionDesc =>
+      '+2 acierto · −1 fallo · 0 si pasas · Bono ×1.4';
+
+  @override
+  String precisionTally(String points, int max) {
+    return '$points / $max pts';
+  }
+
+  @override
+  String get precisionSkipHint => 'Pasar no cuesta nada';
+
+  @override
+  String get modePointsLabel => 'Puntos del modo';
+
+  @override
+  String secondsRangeBadge(int min, int max) {
+    return '$min–${max}s / pregunta';
+  }
+
+  @override
+  String get challengeLabel => 'Desafío';
+
+  @override
+  String get shareCardTagline => 'Desafía a tus amigos en ArifQuiz';
 }

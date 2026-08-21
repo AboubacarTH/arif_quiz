@@ -1,5 +1,6 @@
 import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
 import 'package:arif_quiz/core/monetization/play_gate.dart';
+import 'package:arif_quiz/features/game_modes/presentation/screens/precision_play_screen.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/speed_play_screen.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/survival_play_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.dart';
@@ -225,6 +226,11 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
           title: AppLocalizations.of(context).modeSpeed,
           body: AppLocalizations.of(context).modeSpeedDesc,
         ),
+      GameMode.precision => (
+          icon: GameMode.precision.icon,
+          title: AppLocalizations.of(context).modePrecision,
+          body: AppLocalizations.of(context).modePrecisionDesc,
+        ),
     };
 
     return AnimatedSwitcher(
@@ -291,6 +297,8 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
         SurvivalPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
       GameMode.speed =>
         SpeedPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
+      GameMode.precision =>
+        PrecisionPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
       GameMode.classic =>
         QuizPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
     };

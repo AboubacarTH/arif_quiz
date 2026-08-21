@@ -1,6 +1,7 @@
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/features/challenges/bloc/challenge_controller.dart';
 import 'package:arif_quiz/features/challenges/presentation/screens/challenge_detail_screen.dart';
+import 'package:arif_quiz/core/i18n/game_mode_l10n.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
@@ -122,7 +123,8 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
           Text(c.sourceLabel, style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
           const SizedBox(height: 8),
           Row(children: [
-            _chip(AppColors.modeColor(c.mode), _modeLabel(c.mode)),
+            _chip(AppColors.modeColor(c.mode),
+                GameMode.fromApi(c.mode).localizedLabel(context)),
             const SizedBox(width: 8),
             _chip(context.appColors.textMuted, AppLocalizations.of(context).byCreator(c.creator.name)),
           ]),
@@ -140,11 +142,6 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
         child: Text(text, style: context.type.labelMedium.copyWith(color: color, fontWeight: FontWeight.w600)),
       );
 
-  String _modeLabel(String mode) => switch (mode) {
-        'survival' => AppLocalizations.of(context).modeSurvivalShort,
-        'speed' => AppLocalizations.of(context).modeSpeedShort,
-        _ => AppLocalizations.of(context).modeClassicShort,
-      };
 
   Future<void> _previewChallenge(String code) async {
     setState(() => _isPreviewing = true);

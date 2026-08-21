@@ -10,6 +10,7 @@ extension GameModeL10n on GameMode {
       GameMode.classic => l10n.modeClassicShort,
       GameMode.survival => l10n.modeSurvivalShort,
       GameMode.speed => l10n.modeSpeedShort,
+      GameMode.precision => l10n.modePrecisionShort,
     };
   }
 
@@ -19,6 +20,7 @@ extension GameModeL10n on GameMode {
       GameMode.classic => l10n.modeClassicDesc,
       GameMode.survival => l10n.modeSurvivalDesc,
       GameMode.speed => l10n.modeSpeedDesc,
+      GameMode.precision => l10n.modePrecisionDesc,
     };
   }
 }

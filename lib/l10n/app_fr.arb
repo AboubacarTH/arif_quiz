@@ -116,7 +116,7 @@
   "modeSurvival": "Mode Survie",
   "modeSurvivalDesc": "Une mauvaise réponse et c’est terminé · Bonus ×1.3",
   "modeSpeed": "Speed Round",
-  "modeSpeedDesc": "5 secondes par question · Bonus XP ×1.5",
+  "modeSpeedDesc": "Le temps de lire, pas celui d'hésiter · Bonus XP ×1.5",
   "playInMode": "Jouer en mode {mode}",
   "trainingMode": "Mode entraînement",
   "trainingSubtitle": "Choisis le nombre de questions · sans enjeu",
@@ -566,5 +566,14 @@
   "noGlobalChallengesHint": "Lances-en un et vois qui le relève.",
   "joinChallengeAction": "Rejoindre",
   "expiresIn": "Se termine dans {hours} h",
-  "joinChallengeError": "Code invalide ou défi introuvable"
+  "joinChallengeError": "Code invalide ou défi introuvable",
+  "modePrecision": "Mode Précision",
+  "modePrecisionShort": "Précision",
+  "modePrecisionDesc": "+2 juste · −1 faux · 0 si tu passes · Bonus ×1.4",
+  "precisionTally": "{points} / {max} pts",
+  "precisionSkipHint": "Passer ne coûte rien",
+  "modePointsLabel": "Points du mode",
+  "secondsRangeBadge": "{min}–{max} s / question",
+  "challengeLabel": "Défi",
+  "shareCardTagline": "Défie tes amis sur ArifQuiz"
 }

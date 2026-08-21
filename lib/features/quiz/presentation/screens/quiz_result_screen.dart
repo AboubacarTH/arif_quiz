@@ -107,6 +107,47 @@ class QuizResultScreen extends StatelessWidget {
                         ),
                       ),
 
+                    // Le total du mode Précision. Le pourcentage au-dessus dit
+                    // la note ; celui-ci dit ce que la partie a rapporté dans
+                    // l'unité où on l'a jouée, pénalités comprises.
+                    if (result.modePoints != null) ...[
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(bottom: AppSpacing.md),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppColors.modePrecision.withValues(alpha: 0.10),
+                          borderRadius: AppRadius.rLg,
+                          border: Border.all(
+                              color: AppColors.modePrecision
+                                  .withValues(alpha: 0.30)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.center_focus_strong_rounded,
+                                size: 18, color: AppColors.modePrecision),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                AppLocalizations.of(context).modePointsLabel,
+                                style: context.type.labelMedium.copyWith(
+                                    color: context.appColors.textSecondary),
+                              ),
+                            ),
+                            Text(
+                              AppLocalizations.of(context).precisionTally(
+                                  ModeScoring.format(result.modePoints!),
+                                  result.maxModePoints ?? 0),
+                              style: context.type.titleLarge.copyWith(
+                                  color: AppColors.modePrecision,
+                                  fontWeight: FontWeight.w800),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+
                     // Stats row
                     Container(
                       padding: const EdgeInsets.all(18),

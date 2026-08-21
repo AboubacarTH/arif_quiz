@@ -95,6 +95,8 @@ class AppColors {
   static const modeClassic = Color(0xFFC2410C); // rust
   static const modeSurvival = Color(0xFFEF4444); // rouge
   static const modeSpeed = Color(0xFFA16207); // or
+  static const modePrecision = Color(0xFF0284C7); // bleu — le seul froid des
+  // quatre, pour que le mode qui punit l'erreur ne se confonde avec aucun autre
 
   // ── Aliases backward-compat (pointent vers le thème dark) ──
   static const darkBg = Color(0xFF14110D);
@@ -139,6 +141,7 @@ class AppColors {
   static Color modeColor(String mode) => switch (mode) {
         'survival' => modeSurvival,
         'speed' => modeSpeed,
+        'precision' => modePrecision,
         _ => modeClassic,
       };
 }

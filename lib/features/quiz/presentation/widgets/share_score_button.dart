@@ -2,6 +2,7 @@ import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:arif_quiz/core/i18n/game_mode_l10n.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -190,7 +191,8 @@ class ShareResultCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppRadius.pill),
               ),
               child: Text(
-                'Défi · ${_modeLabel(challenge!.mode)}',
+                '${AppLocalizations.of(context).challengeLabel} · '
+                '${GameMode.fromApi(challenge!.mode).localizedLabel(context)}',
                 style: context.type.labelMedium.copyWith(color: AppColors.primary),
               ),
             ),
@@ -206,18 +208,23 @@ class ShareResultCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _stat(context, '${result.correctCount}/${result.totalQuestions}',
-                    'Bonnes', AppColors.success),
+                _stat(
+                    context,
+                    '${result.correctCount}/${result.totalQuestions}',
+                    AppLocalizations.of(context).correctLabel,
+                    AppColors.success),
                 _sep(),
-                _stat(context, '${result.pointsEarned}', 'Points', AppColors.warning),
+                _stat(context, '${result.pointsEarned}',
+                    AppLocalizations.of(context).points, AppColors.warning),
                 _sep(),
-                _stat(context, _fmtTime(result.timeTaken), 'Temps', AppColors.info),
+                _stat(context, _fmtTime(result.timeTaken),
+                    AppLocalizations.of(context).timeLabel, AppColors.info),
               ],
             ),
           ),
           const SizedBox(height: 20),
           Text(
-            'Défie tes amis sur ArifQuiz',
+            AppLocalizations.of(context).shareCardTagline,
             style: context.type.bodyMedium.copyWith(color: _muted, fontWeight: FontWeight.w600),
           ),
         ],
@@ -241,9 +248,4 @@ class ShareResultCard extends StatelessWidget {
 
   String _fmtTime(int s) => s < 60 ? '${s}s' : '${s ~/ 60}m ${s % 60}s';
 
-  String _modeLabel(String mode) => switch (mode) {
-        'survival' => 'Survie',
-        'speed' => 'Speed',
-        _ => 'Classique',
-      };
 }

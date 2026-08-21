@@ -801,7 +801,7 @@ abstract class AppLocalizations {
   /// No description provided for @modeSpeedDesc.
   ///
   /// In en, this message translates to:
-  /// **'5 seconds per question · XP bonus ×1.5'**
+  /// **'Time to read, not to hesitate · ×1.5 XP'**
   String get modeSpeedDesc;
 
   /// No description provided for @playInMode.
@@ -3503,6 +3503,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid code, or the challenge no longer exists'**
   String get joinChallengeError;
+
+  /// No description provided for @modePrecision.
+  ///
+  /// In en, this message translates to:
+  /// **'Precision Mode'**
+  String get modePrecision;
+
+  /// No description provided for @modePrecisionShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Precision'**
+  String get modePrecisionShort;
+
+  /// No description provided for @modePrecisionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'+2 right · −1 wrong · 0 if you pass · ×1.4 XP'**
+  String get modePrecisionDesc;
+
+  /// No description provided for @precisionTally.
+  ///
+  /// In en, this message translates to:
+  /// **'{points} / {max} pts'**
+  String precisionTally(String points, int max);
+
+  /// No description provided for @precisionSkipHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Passing costs nothing'**
+  String get precisionSkipHint;
+
+  /// No description provided for @modePointsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode points'**
+  String get modePointsLabel;
+
+  /// No description provided for @secondsRangeBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'{min}–{max}s / question'**
+  String secondsRangeBadge(int min, int max);
+
+  /// No description provided for @challengeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge'**
+  String get challengeLabel;
+
+  /// No description provided for @shareCardTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge your friends on ArifQuiz'**
+  String get shareCardTagline;
 }
 
 class _AppLocalizationsDelegate

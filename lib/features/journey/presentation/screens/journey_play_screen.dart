@@ -215,7 +215,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                 const SizedBox(height: 28),
                 TimerRing(
                     timeLeft: ctrl.timeLeft,
-                    totalTime: ctrl.secondsPerQuestion,
+                    totalTime: ctrl.currentSeconds,
                     size: 80),
                 const SizedBox(height: 24),
                 // Média (image → audio), question puis réponses : le tout défile

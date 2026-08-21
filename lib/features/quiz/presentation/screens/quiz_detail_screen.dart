@@ -1,7 +1,6 @@
 import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
-import 'package:arif_quiz/core/monetization/play_gate.dart';
+import 'package:arif_quiz/features/game_modes/presentation/screens/game_mode_select_screen.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
-import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
@@ -216,11 +215,13 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
             size: AppButtonSize.large,
             icon: Icons.play_arrow_rounded,
             iconTrailing: true,
-            onPressed: () => PlayGate.requestPlay(
-              context,
-              onGranted: () => Navigator.push(
-                  context, SlideUpRoute(page: QuizPlayScreen(quiz: q))),
-            ),
+            // Vers le choix du mode, pas directement vers le Classique : c'est
+            // la seule porte d'entrée d'un joueur vers Survie, Speed et
+            // Précision. Le portail de monétisation est sur le bouton « Jouer »
+            // de l'écran suivant — le poser ici aussi ferait payer une partie
+            // pour le simple fait de regarder la liste des modes.
+            onPressed: () => Navigator.push(
+                context, SlideUpRoute(page: GameModeSelectScreen(quiz: q))),
           ),
         ),
       ],

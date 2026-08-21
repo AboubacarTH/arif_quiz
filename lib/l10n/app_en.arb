@@ -203,7 +203,7 @@
   "modeSurvival": "Survival Mode",
   "modeSurvivalDesc": "One wrong answer and it is over · Bonus ×1.3",
   "modeSpeed": "Speed Round",
-  "modeSpeedDesc": "5 seconds per question · XP bonus ×1.5",
+  "modeSpeedDesc": "Time to read, not to hesitate · ×1.5 XP",
   "playInMode": "Play {mode}",
   "@playInMode": {
     "placeholders": {
@@ -1008,5 +1008,34 @@
       }
     }
   },
-  "joinChallengeError": "Invalid code, or the challenge no longer exists"
+  "joinChallengeError": "Invalid code, or the challenge no longer exists",
+  "modePrecision": "Precision Mode",
+  "modePrecisionShort": "Precision",
+  "modePrecisionDesc": "+2 right · −1 wrong · 0 if you pass · ×1.4 XP",
+  "precisionTally": "{points} / {max} pts",
+  "@precisionTally": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "precisionSkipHint": "Passing costs nothing",
+  "modePointsLabel": "Mode points",
+  "secondsRangeBadge": "{min}–{max}s / question",
+  "@secondsRangeBadge": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeLabel": "Challenge",
+  "shareCardTagline": "Challenge your friends on ArifQuiz"
 }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/core/i18n/challenge_status_l10n.dart';
+import 'package:arif_quiz/core/i18n/game_mode_l10n.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
@@ -59,11 +60,11 @@ class ChallengeCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(_modeIcon(challenge.mode),
+                      Icon(GameMode.fromApi(challenge.mode).icon,
                           size: 12, color: modeColor),
                       const SizedBox(width: 4),
                       Text(
-                        _modeLabel(context, challenge.mode),
+                        GameMode.fromApi(challenge.mode).localizedLabel(context),
                         style: context.type.labelSmall.copyWith(
                             color: modeColor, fontWeight: FontWeight.w700),
                       ),
@@ -273,21 +274,4 @@ class ChallengeCard extends StatelessWidget {
     );
   }
 
-  /// Le libellé reste une chaîne traduisible ; le glyphe est une icône posée
-  /// à côté. Coller les deux dans la même chaîne empêchait de styler l'un sans
-  /// l'autre, et plaçait l'emoji à gauche même en arabe.
-  String _modeLabel(BuildContext context, String mode) {
-    final l10n = AppLocalizations.of(context);
-    return switch (mode) {
-      'survival' => l10n.modeSurvivalShort,
-      'speed' => l10n.modeSpeedShort,
-      _ => l10n.modeClassicShort,
-    };
-  }
-
-  IconData _modeIcon(String mode) => switch (mode) {
-        'survival' => Icons.favorite_rounded,
-        'speed' => Icons.bolt_rounded,
-        _ => Icons.sports_esports_rounded,
-      };
 }

@@ -398,7 +398,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get modeSpeed => 'Speed Round';
 
   @override
-  String get modeSpeedDesc => '5 seconds per question · XP bonus ×1.5';
+  String get modeSpeedDesc => 'Time to read, not to hesitate · ×1.5 XP';
 
   @override
   String playInMode(String mode) {
@@ -1893,4 +1893,36 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get joinChallengeError =>
       'Invalid code, or the challenge no longer exists';
+
+  @override
+  String get modePrecision => 'Precision Mode';
+
+  @override
+  String get modePrecisionShort => 'Precision';
+
+  @override
+  String get modePrecisionDesc =>
+      '+2 right · −1 wrong · 0 if you pass · ×1.4 XP';
+
+  @override
+  String precisionTally(String points, int max) {
+    return '$points / $max pts';
+  }
+
+  @override
+  String get precisionSkipHint => 'Passing costs nothing';
+
+  @override
+  String get modePointsLabel => 'Mode points';
+
+  @override
+  String secondsRangeBadge(int min, int max) {
+    return '$min–${max}s / question';
+  }
+
+  @override
+  String get challengeLabel => 'Challenge';
+
+  @override
+  String get shareCardTagline => 'Challenge your friends on ArifQuiz';
 }

@@ -586,6 +586,11 @@ class QuizAttemptResult {
   final String grade;
   final List<QuestionResult> results;
 
+  /// Total du mode Précision, et son maximum. `null` pour les autres modes : il
+  /// n'y a rien à afficher, pas un zéro.
+  final int? modePoints;
+  final int? maxModePoints;
+
   const QuizAttemptResult({
     this.attemptId,
     required this.score,
@@ -596,6 +601,8 @@ class QuizAttemptResult {
     this.xpEarned = 0,
     required this.grade,
     required this.results,
+    this.modePoints,
+    this.maxModePoints,
   });
 
   factory QuizAttemptResult.fromJson(Map<String, dynamic> json) =>
@@ -611,6 +618,8 @@ class QuizAttemptResult {
         results: ((json['results'] as List?) ?? [])
             .map((r) => QuestionResult.fromJson(r as Map<String, dynamic>))
             .toList(),
+        modePoints: json['mode_points'],
+        maxModePoints: json['max_mode_points'],
       );
 
   /// Scoring local (mode invité / hors-ligne) — source unique de vérité pour
@@ -620,13 +629,21 @@ class QuizAttemptResult {
     required List<QuestionModel> questions,
     required Map<String, String> answers,
     required int timeTaken,
+    GameMode mode = GameMode.classic,
   }) {
     var correct = 0;
+    var wrong = 0;
     final results = <QuestionResult>[];
     for (final q in questions) {
       final ua = answers[q.id.toString()];
       final ok = q.isCorrect(ua);
-      if (ok) correct++;
+      if (ok) {
+        correct++;
+      } else if (ua != null && ua.isNotEmpty) {
+        // Une question laissée de côté n'est pas une mauvaise réponse : en
+        // Précision, passer ne coûte rien, se tromper coûte un point.
+        wrong++;
+      }
       results.add(QuestionResult(
         questionId: q.id,
         question: q.text,
@@ -637,7 +654,7 @@ class QuizAttemptResult {
       ));
     }
     final total = questions.length;
-    final score = total > 0 ? correct / total * 100 : 0.0;
+    final score = ModeScoring.score(mode, correct, wrong, total);
     return QuizAttemptResult(
       score: score,
       correctCount: correct,
@@ -647,6 +664,8 @@ class QuizAttemptResult {
       xpEarned: 0,
       grade: gradeForScore(score),
       results: results,
+      modePoints: ModeScoring.points(mode, correct, wrong),
+      maxModePoints: ModeScoring.maxPoints(mode, total),
     );
   }
 }
@@ -798,18 +817,21 @@ class JourneyLevelResult {
 enum GameMode {
   classic,
   survival,
-  speed;
+  speed,
+  precision;
 
   String get label => switch (this) {
         classic => 'Classique',
         survival => 'Survie',
         speed => 'Speed Round',
+        precision => 'Précision',
       };
 
   String get apiValue => name;
 
   String get description => switch (this) {
         classic => 'Quiz standard avec timer global',
+        precision => '+2 juste, −1 faux, 0 si tu passes',
         survival => 'Une erreur et c\'est game over !',
         speed => '5 secondes par question, bonus XP ×1.5',
       };
@@ -820,7 +842,63 @@ enum GameMode {
         classic => Icons.sports_esports_rounded,
         survival => Icons.favorite_rounded,
         speed => Icons.bolt_rounded,
+        precision => Icons.center_focus_strong_rounded,
       };
+
+  static GameMode fromApi(String? value) => GameMode.values.firstWhere(
+        (m) => m.apiValue == value,
+        orElse: () => GameMode.classic,
+      );
+}
+
+/// Barème par mode, miroir exact de `ModeScoring` côté serveur.
+///
+/// Le client en a besoin deux fois : pour afficher le total qui monte pendant
+/// une partie en Précision, et pour noter les parties d'un invité, qui ne
+/// passent jamais par l'API. Les deux doivent donner le même chiffre que le
+/// serveur, sinon le score changerait en arrivant sur l'écran de résultat.
+class ModeScoring {
+  const ModeScoring._();
+
+  /// Ce que rapporte une bonne réponse en Précision.
+  static const precisionReward = 2;
+
+  /// Ce que coûte une mauvaise. Une question passée ne coûte rien.
+  static const precisionPenalty = 1;
+
+  /// Le total du mode, tel que le joueur le voit compter. `null` pour les modes
+  /// qui n'en ont pas.
+  static int? points(GameMode mode, int right, int wrong) =>
+      mode == GameMode.precision
+          ? right * precisionReward - wrong * precisionPenalty
+          : null;
+
+  /// Le maximum atteignable, pour afficher « 14 / 20 ».
+  static int? maxPoints(GameMode mode, int total) =>
+      mode == GameMode.precision ? total * precisionReward : null;
+
+  /// La note sur 100. En Précision, un total négatif vaut zéro : une note et un
+  /// classement n'ont pas de sens sous la barre.
+  ///
+  /// Arrondie à la décimale, comme le fait le serveur : sans cet arrondi, onze
+  /// points sur vingt donnaient ici 55.00000000000001 là où l'API renvoie 55, et
+  /// deux parties identiques n'affichaient pas le même score selon qu'on était
+  /// connecté ou invité.
+  static double score(GameMode mode, int right, int wrong, int total) {
+    if (total <= 0) return 0;
+    if (mode != GameMode.precision) return _round1(right / total * 100);
+
+    final earned = points(mode, right, wrong)!;
+    final max = maxPoints(mode, total)!;
+    return _round1((earned / max * 100).clamp(0, 100).toDouble());
+  }
+
+  static double _round1(double value) => (value * 10).roundToDouble() / 10;
+
+  /// Le total, écrit avec le vrai signe moins (U+2212) et non le trait d'union
+  /// que produit `int.toString()` : c'est le caractère qu'emploient le libellé
+  /// du mode et la pastille de gain, et les trois se lisent côte à côte.
+  static String format(int points) => points < 0 ? '−${-points}' : '$points';
 }
 
 // ========== BADGE MODEL ==========

@@ -401,7 +401,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get modeSpeed => 'Speed Round';
 
   @override
-  String get modeSpeedDesc => '5 secondes par question · Bonus XP ×1.5';
+  String get modeSpeedDesc =>
+      'Le temps de lire, pas celui d\'hésiter · Bonus XP ×1.5';
 
   @override
   String playInMode(String mode) {
@@ -1907,4 +1908,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get joinChallengeError => 'Code invalide ou défi introuvable';
+
+  @override
+  String get modePrecision => 'Mode Précision';
+
+  @override
+  String get modePrecisionShort => 'Précision';
+
+  @override
+  String get modePrecisionDesc =>
+      '+2 juste · −1 faux · 0 si tu passes · Bonus ×1.4';
+
+  @override
+  String precisionTally(String points, int max) {
+    return '$points / $max pts';
+  }
+
+  @override
+  String get precisionSkipHint => 'Passer ne coûte rien';
+
+  @override
+  String get modePointsLabel => 'Points du mode';
+
+  @override
+  String secondsRangeBadge(int min, int max) {
+    return '$min–$max s / question';
+  }
+
+  @override
+  String get challengeLabel => 'Défi';
+
+  @override
+  String get shareCardTagline => 'Défie tes amis sur ArifQuiz';
 }

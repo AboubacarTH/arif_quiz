@@ -26,7 +26,6 @@ class SpeedPlayScreen extends StatefulWidget {
 }
 
 class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
-  static const _secondsPerQuestion = 5;
 
   final _repo = QuizRepository(apiService);
   GamePlayController? _ctrl;
@@ -57,7 +56,11 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
       final ctrl = GamePlayController(
         mode: GameMode.speed,
         questions: questions,
-        secondsPerQuestion: _secondsPerQuestion,
+        // Le budget suit la longueur de la question : cinq secondes fixes ne
+        // laissaient pas le temps de lire un énoncé un peu long, options
+        // comprises, et encore moins celui de choisir.
+        secondsPerQuestion: kSpeedMinSeconds,
+        secondsFor: speedSecondsFor,
       );
       ctrl.addListener(_onChange);
       setState(() {

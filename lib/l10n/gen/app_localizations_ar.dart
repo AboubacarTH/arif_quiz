@@ -401,7 +401,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get modeSpeed => 'جولة السرعة';
 
   @override
-  String get modeSpeedDesc => '5 ثوانٍ لكل سؤال · مكافأة خبرة ×1.5';
+  String get modeSpeedDesc => 'وقت للقراءة لا للتردد · مكافأة خبرة ×1.5';
 
   @override
   String playInMode(String mode) {
@@ -1883,4 +1883,36 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get joinChallengeError => 'رمز غير صالح أو التحدّي غير موجود';
+
+  @override
+  String get modePrecision => 'وضع الدقة';
+
+  @override
+  String get modePrecisionShort => 'الدقة';
+
+  @override
+  String get modePrecisionDesc =>
+      '+2 صحيح · −1 خطأ · 0 عند التخطي · مكافأة ×1.4';
+
+  @override
+  String precisionTally(String points, int max) {
+    return '$points / $max نقطة';
+  }
+
+  @override
+  String get precisionSkipHint => 'التخطي لا يكلّف شيئاً';
+
+  @override
+  String get modePointsLabel => 'نقاط الوضع';
+
+  @override
+  String secondsRangeBadge(int min, int max) {
+    return '$min–$max ث / سؤال';
+  }
+
+  @override
+  String get challengeLabel => 'تحدٍّ';
+
+  @override
+  String get shareCardTagline => 'تحدَّ أصدقاءك على ArifQuiz';
 }

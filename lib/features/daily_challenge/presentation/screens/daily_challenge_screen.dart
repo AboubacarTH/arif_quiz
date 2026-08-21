@@ -315,7 +315,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                 // simple « 28s » posé dans une boîte.
                 TimerRing(
                     timeLeft: ctrl.timeLeft,
-                    totalTime: ctrl.secondsPerQuestion,
+                    totalTime: ctrl.currentSeconds,
                     size: 80),
                 const SizedBox(height: 28),
                 Expanded(

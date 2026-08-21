@@ -233,7 +233,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                 // Timer
                 TimerRing(
                     timeLeft: ctrl.timeLeft,
-                    totalTime: ctrl.secondsPerQuestion,
+                    totalTime: ctrl.currentSeconds,
                     size: 80),
                 const SizedBox(height: 28),
 
