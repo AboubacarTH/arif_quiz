@@ -2019,6 +2019,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String friendsCount(int count) {
-    return '$count friends';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count friends',
+      one: '1 friend',
+      zero: 'no friends',
+    );
+    return '$_temp0';
   }
 }

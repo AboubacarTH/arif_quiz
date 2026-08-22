@@ -3705,7 +3705,7 @@ abstract class AppLocalizations {
   /// No description provided for @friendsCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} friends'**
+  /// **'{count, plural, =0{no friends} =1{1 friend} other{{count} friends}}'**
   String friendsCount(int count);
 }
 

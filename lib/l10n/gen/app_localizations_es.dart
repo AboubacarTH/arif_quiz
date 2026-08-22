@@ -2034,6 +2034,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String friendsCount(int count) {
-    return '$count amigos';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count amigos',
+      one: '1 amigo',
+      zero: 'sin amigos',
+    );
+    return '$_temp0';
   }
 }

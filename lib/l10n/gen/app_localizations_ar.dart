@@ -2008,6 +2008,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String friendsCount(int count) {
-    return '$count صديق';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count صديق',
+      many: '$count صديقًا',
+      few: '$count أصدقاء',
+      two: 'صديقان',
+      one: 'صديق واحد',
+      zero: 'لا أصدقاء',
+    );
+    return '$_temp0';
   }
 }

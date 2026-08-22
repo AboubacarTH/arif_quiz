@@ -600,5 +600,5 @@
   "declineLabel": "Rechazar",
   "noPendingRequestsHint": "Las solicitudes que recibas aparecen aquí.",
   "noRecentActivityHint": "Las partidas de tus amigos se verán aquí.",
-  "friendsCount": "{count} amigos"
+  "friendsCount": "{count, plural, =0{sin amigos} =1{1 amigo} other{{count} amigos}}"
 }

@@ -1118,7 +1118,7 @@
   "declineLabel": "Decline",
   "noPendingRequestsHint": "Requests you receive land here.",
   "noRecentActivityHint": "Your friends’ games will show up here.",
-  "friendsCount": "{count} friends",
+  "friendsCount": "{count, plural, =0{no friends} =1{1 friend} other{{count} friends}}",
   "@friendsCount": {
     "placeholders": {
       "count": {
