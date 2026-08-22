@@ -1999,4 +1999,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timeUpTitle => 'Time’s up!';
+
+  @override
+  String pointsTotal(int points) {
+    return '$points pts';
+  }
+
+  @override
+  String get acceptLabel => 'Accept';
+
+  @override
+  String get declineLabel => 'Decline';
+
+  @override
+  String get noPendingRequestsHint => 'Requests you receive land here.';
+
+  @override
+  String get noRecentActivityHint => 'Your friends’ games will show up here.';
+
+  @override
+  String friendsCount(int count) {
+    return '$count friends';
+  }
 }

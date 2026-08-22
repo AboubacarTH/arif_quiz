@@ -1105,5 +1105,25 @@
     }
   },
   "noJokersLeft": "No jokers left",
-  "timeUpTitle": "Time’s up!"
+  "timeUpTitle": "Time’s up!",
+  "pointsTotal": "{points} pts",
+  "@pointsTotal": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "acceptLabel": "Accept",
+  "declineLabel": "Decline",
+  "noPendingRequestsHint": "Requests you receive land here.",
+  "noRecentActivityHint": "Your friends’ games will show up here.",
+  "friendsCount": "{count} friends",
+  "@friendsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

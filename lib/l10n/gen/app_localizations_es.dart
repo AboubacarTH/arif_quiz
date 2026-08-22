@@ -2012,4 +2012,28 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get timeUpTitle => '¡Se acabó el tiempo!';
+
+  @override
+  String pointsTotal(int points) {
+    return '$points pts';
+  }
+
+  @override
+  String get acceptLabel => 'Aceptar';
+
+  @override
+  String get declineLabel => 'Rechazar';
+
+  @override
+  String get noPendingRequestsHint =>
+      'Las solicitudes que recibas aparecen aquí.';
+
+  @override
+  String get noRecentActivityHint =>
+      'Las partidas de tus amigos se verán aquí.';
+
+  @override
+  String friendsCount(int count) {
+    return '$count amigos';
+  }
 }

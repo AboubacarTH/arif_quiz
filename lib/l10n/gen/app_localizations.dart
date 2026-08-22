@@ -3671,6 +3671,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time’s up!'**
   String get timeUpTitle;
+
+  /// No description provided for @pointsTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'{points} pts'**
+  String pointsTotal(int points);
+
+  /// No description provided for @acceptLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get acceptLabel;
+
+  /// No description provided for @declineLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get declineLabel;
+
+  /// No description provided for @noPendingRequestsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests you receive land here.'**
+  String get noPendingRequestsHint;
+
+  /// No description provided for @noRecentActivityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your friends’ games will show up here.'**
+  String get noRecentActivityHint;
+
+  /// No description provided for @friendsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} friends'**
+  String friendsCount(int count);
 }
 
 class _AppLocalizationsDelegate

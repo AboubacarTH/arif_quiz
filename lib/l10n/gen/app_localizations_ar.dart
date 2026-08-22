@@ -1988,4 +1988,26 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get timeUpTitle => 'انتهى الوقت!';
+
+  @override
+  String pointsTotal(int points) {
+    return '$points نقطة';
+  }
+
+  @override
+  String get acceptLabel => 'قبول';
+
+  @override
+  String get declineLabel => 'رفض';
+
+  @override
+  String get noPendingRequestsHint => 'الطلبات التي تصلك تظهر هنا.';
+
+  @override
+  String get noRecentActivityHint => 'ستظهر هنا مباريات أصدقائك.';
+
+  @override
+  String friendsCount(int count) {
+    return '$count صديق';
+  }
 }

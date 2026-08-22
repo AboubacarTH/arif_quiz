@@ -594,5 +594,11 @@
   "jokerTimeLabel": "+{seconds} ث",
   "hintFirstLetter": "تبدأ الإجابة الصحيحة بـ «{letter}»",
   "noJokersLeft": "لم يتبقَّ جوكر",
-  "timeUpTitle": "انتهى الوقت!"
+  "timeUpTitle": "انتهى الوقت!",
+  "pointsTotal": "{points} نقطة",
+  "acceptLabel": "قبول",
+  "declineLabel": "رفض",
+  "noPendingRequestsHint": "الطلبات التي تصلك تظهر هنا.",
+  "noRecentActivityHint": "ستظهر هنا مباريات أصدقائك.",
+  "friendsCount": "{count} صديق"
 }

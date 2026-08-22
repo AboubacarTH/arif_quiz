@@ -16,25 +16,55 @@ class FriendsController extends ChangeNotifier {
   String? error;
   int pendingRequestsCount = 0;
 
-  Future<void> loadFriends() async {
-    isLoading = true;
+  /// Une liste vide ne veut pas dire la même chose avant et après la réponse
+  /// du serveur. Sans ces deux témoins, les onglets Demandes et Activité
+  /// affirmaient « aucune demande » et « pas d'activité » avant même d'avoir
+  /// demandé — et le disaient encore si l'appel échouait.
+  bool requestsLoaded = false;
+  bool activityLoaded = false;
+
+  /// Rien n'est encore arrivé : c'est le seul moment où un squelette a du sens.
+  bool get isFirstLoad =>
+      friends.isEmpty && requests.isEmpty && activity.isEmpty && !requestsLoaded;
+
+  /// Le premier chargement de l'écran.
+  Future<void> load() => _loadAll(showSkeleton: true);
+
+  /// Un tirer-pour-rafraîchir : les listes restent à l'écran pendant l'appel.
+  /// Il recharge les trois onglets, pas seulement celui qu'on regarde — c'est
+  /// un même écran, et accepter une demande change aussi la liste d'amis.
+  Future<void> refresh() => _loadAll(showSkeleton: false);
+
+  Future<void> _loadAll({required bool showSkeleton}) async {
+    if (showSkeleton) {
+      isLoading = true;
+      notifyListeners();
+    }
     error = null;
-    notifyListeners();
+
     try {
-      friends = await _repo.getFriends();
-      await loadRequests();
+      await Future.wait([
+        _loadFriends(),
+        loadRequests(),
+        loadActivity(),
+      ]);
     } catch (e) {
-      error = e.toString();
+      if (isFirstLoad) error = e.toString();
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
 
+  Future<void> _loadFriends() async {
+    friends = await _repo.getFriends();
+  }
+
   Future<void> loadRequests() async {
     try {
       requests = await _repo.getRequests();
       pendingRequestsCount = requests.length;
+      requestsLoaded = true;
       notifyListeners();
     } catch (_) {}
   }
@@ -42,6 +72,7 @@ class FriendsController extends ChangeNotifier {
   Future<void> loadActivity() async {
     try {
       activity = await _repo.getFriendsActivity();
+      activityLoaded = true;
       notifyListeners();
     } catch (_) {}
   }
@@ -88,7 +119,9 @@ class FriendsController extends ChangeNotifier {
       await _repo.acceptRequest(friendshipId);
       requests.removeWhere((r) => r.id == friendshipId);
       pendingRequestsCount = requests.length;
-      await loadFriends();
+      notifyListeners();
+      // La demande acceptée devient un ami : l'autre onglet a changé aussi.
+      await refresh();
       return true;
     } catch (_) {
       return false;

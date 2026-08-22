@@ -2014,4 +2014,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get timeUpTitle => 'Temps écoulé !';
+
+  @override
+  String pointsTotal(int points) {
+    return '$points pts';
+  }
+
+  @override
+  String get acceptLabel => 'Accepter';
+
+  @override
+  String get declineLabel => 'Refuser';
+
+  @override
+  String get noPendingRequestsHint =>
+      'Les demandes que tu reçois arrivent ici.';
+
+  @override
+  String get noRecentActivityHint =>
+      'Les parties de tes amis s’afficheront ici.';
+
+  @override
+  String friendsCount(int count) {
+    return '$count amis';
+  }
 }
