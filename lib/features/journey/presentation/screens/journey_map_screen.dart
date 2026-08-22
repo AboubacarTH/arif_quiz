@@ -506,9 +506,7 @@ class _LevelNode extends StatelessWidget {
                 : Colors.white.withValues(alpha: 0.25),
             width: 2,
           ),
-          boxShadow: locked
-              ? AppShadows.card(context)
-              : AppShadows.tinted(context, color),
+          boxShadow: AppShadows.card(context),
         ),
         child: locked
             ? Icon(Icons.lock_rounded,

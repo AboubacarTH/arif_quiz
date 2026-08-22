@@ -107,7 +107,7 @@ class _JoinChallengeScreenState extends State<JoinChallengeScreen> {
       decoration: BoxDecoration(
         color: context.cardElevated,
         borderRadius: AppRadius.rLg,
-        boxShadow: AppShadows.tinted(context, AppColors.primary),
+        boxShadow: AppShadows.card(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

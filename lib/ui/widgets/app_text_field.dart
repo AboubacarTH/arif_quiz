@@ -99,15 +99,9 @@ class _AppTextFieldState extends State<AppTextField> {
             color: context.appColors.cardBg,
             borderRadius: BorderRadius.circular(AppRadius.md),
             border: Border.all(color: borderColor, width: _isFocused ? 2 : 1.5),
-            boxShadow: _isFocused
-                ? [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.1),
-                      blurRadius: 8,
-                      spreadRadius: 0,
-                    ),
-                  ]
-                : null,
+            // Le cadre passe de 1,5 à 2 pixels et prend la couleur principale
+            // quand le champ est actif : c'est la marque, pas un halo.
+            boxShadow: null,
           ),
           child: TextField(
             controller: widget.controller,

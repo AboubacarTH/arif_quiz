@@ -217,7 +217,6 @@ class AppTheme {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
             elevation: 0,
-            shadowColor: AppColors.primary.withValues(alpha: 0.22),
             padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.xxxl, vertical: AppSpacing.lg),
             shape: RoundedRectangleBorder(borderRadius: AppRadius.rMd),

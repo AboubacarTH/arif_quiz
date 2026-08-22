@@ -415,9 +415,7 @@ class _StepSource extends StatelessWidget {
                   border: selected
                       ? Border.all(color: src.color, width: 2)
                       : null,
-                  boxShadow: selected
-                      ? AppShadows.tinted(context, src.color)
-                      : AppShadows.card(context),
+                  boxShadow: AppShadows.card(context),
                 ),
                 child: Row(
                   children: [
@@ -607,7 +605,7 @@ class _StepCategoryState extends State<_StepCategory> {
                         decoration: BoxDecoration(
                           color: color.withValues(alpha: 0.1),
                           borderRadius: AppRadius.rLg,
-                          boxShadow: AppShadows.tinted(context, color),
+                          boxShadow: AppShadows.card(context),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -774,9 +772,7 @@ class _StepQuizState extends State<_StepQuiz> {
                           border: selected
                               ? Border.all(color: catColor, width: 2)
                               : null,
-                          boxShadow: selected
-                              ? AppShadows.tinted(context, catColor)
-                              : AppShadows.card(context),
+                          boxShadow: AppShadows.card(context),
                         ),
                         child: Row(
                           children: [

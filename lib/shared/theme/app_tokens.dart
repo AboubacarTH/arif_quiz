@@ -131,17 +131,11 @@ abstract final class AppShadows {
     ];
   }
 
-  /// Ombre teintée légère pour les surfaces accentuées (sans dégradé).
-  static List<BoxShadow> tinted(BuildContext context, Color color) {
-    final opacity = _isDark(context) ? 0.22 : 0.16;
-    return [
-      BoxShadow(
-        color: color.withValues(alpha: opacity),
-        blurRadius: 22,
-        offset: const Offset(0, 10),
-      ),
-    ];
-  }
+  // Il y avait ici un `tinted(context, color)` : une ombre de la COULEUR de
+  // l'élément, floue sur 22 pixels. Sur une carte sélectionnée elle donnait une
+  // auréole qui bavait tout autour du cadre — une tache de couleur, pas une
+  // ombre. Une surface accentuée se marque par son cadre et son fond ; la
+  // profondeur reste neutre, comme partout ailleurs.
 }
 
 /// Surface de carte « surélevée » : en sombre on relève la luminosité,

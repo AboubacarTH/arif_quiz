@@ -56,16 +56,9 @@ class TimerRing extends StatelessWidget {
             Container(
               width: size * 0.7,
               height: size * 0.7,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.error.withValues(alpha: 0.25),
-                    blurRadius: 16,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
+              // L'anneau et le chiffre passent au rouge : l'urgence est dite,
+              // un halo par-dessus ne faisait que la rendre floue.
+              decoration: const BoxDecoration(shape: BoxShape.circle),
             ),
           // Number
           AnimatedDefaultTextStyle(

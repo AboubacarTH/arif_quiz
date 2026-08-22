@@ -90,9 +90,7 @@ class GameModeCard extends StatelessWidget {
           border: selected
               ? Border.all(color: _color.withValues(alpha: 0.6), width: 2)
               : null,
-          boxShadow: selected
-              ? AppShadows.tinted(context, _color)
-              : AppShadows.card(context),
+          boxShadow: AppShadows.card(context),
         ),
         child: Row(
           children: [

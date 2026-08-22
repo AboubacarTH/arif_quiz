@@ -143,14 +143,12 @@ class _AppButtonState extends State<AppButton>
             color: disabled ? _bgColor.withValues(alpha: 0.45) : _bgColor,
             borderRadius: AppRadius.rMd,
             border: Border.fromBorderSide(_border),
-            boxShadow: !disabled
-                ? switch (widget.variant) {
-                    AppButtonVariant.primary =>
-                      AppShadows.tinted(context, _accent),
-                    AppButtonVariant.danger =>
-                      AppShadows.tinted(context, AppColors.error),
-                    _ => null,
-                  }
+            // Les variantes pleines portaient chacune une ombre de leur propre
+            // couleur ; elles prennent la même ombre neutre que tout le reste.
+            boxShadow: !disabled &&
+                    (widget.variant == AppButtonVariant.primary ||
+                        widget.variant == AppButtonVariant.danger)
+                ? AppShadows.card(context)
                 : null,
           ),
           child: Row(

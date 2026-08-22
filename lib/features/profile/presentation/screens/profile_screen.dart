@@ -336,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       decoration: BoxDecoration(
         color: context.cardElevated,
         borderRadius: AppRadius.rXl,
-        boxShadow: AppShadows.tinted(context, AppColors.primary),
+        boxShadow: AppShadows.card(context),
       ),
       child: Column(
         children: [
@@ -1176,7 +1176,7 @@ class _GetPremiumCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: context.cardElevated,
             borderRadius: AppRadius.rLg,
-            boxShadow: AppShadows.tinted(context, AppColors.primary),
+            boxShadow: AppShadows.card(context),
           ),
           child: Row(
             children: [
