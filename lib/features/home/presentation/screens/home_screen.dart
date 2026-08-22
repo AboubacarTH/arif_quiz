@@ -545,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isMe ? '$name (toi)' : name,
+                  isMe ? AppLocalizations.of(context).nameYou(name) : name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),

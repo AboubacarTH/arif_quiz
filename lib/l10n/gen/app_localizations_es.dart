@@ -2058,4 +2058,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get deleteAccountWarning =>
       'Esta acción es irreversible. Todos tus datos se borrarán definitivamente.';
+
+  @override
+  String nameYou(String name) {
+    return '$name (tú)';
+  }
 }

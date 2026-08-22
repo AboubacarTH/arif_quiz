@@ -604,5 +604,6 @@
   "statisticsSection": "الإحصائيات",
   "accountSection": "الحساب",
   "correctOutOf": "{correct}/{total} صحيحة",
-  "deleteAccountWarning": "لا يمكن التراجع عن هذا. ستُحذف كل بياناتك نهائياً."
+  "deleteAccountWarning": "لا يمكن التراجع عن هذا. ستُحذف كل بياناتك نهائياً.",
+  "nameYou": "{name} (أنت)"
 }

@@ -604,5 +604,6 @@
   "statisticsSection": "Estadísticas",
   "accountSection": "Cuenta",
   "correctOutOf": "{correct}/{total} correctas",
-  "deleteAccountWarning": "Esta acción es irreversible. Todos tus datos se borrarán definitivamente."
+  "deleteAccountWarning": "Esta acción es irreversible. Todos tus datos se borrarán definitivamente.",
+  "nameYou": "{name} (tú)"
 }

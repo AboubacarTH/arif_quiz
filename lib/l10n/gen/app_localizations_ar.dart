@@ -2035,4 +2035,9 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get deleteAccountWarning =>
       'لا يمكن التراجع عن هذا. ستُحذف كل بياناتك نهائياً.';
+
+  @override
+  String nameYou(String name) {
+    return '$name (أنت)';
+  }
 }

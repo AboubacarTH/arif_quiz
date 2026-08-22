@@ -2043,4 +2043,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get deleteAccountWarning =>
       'This cannot be undone. All your data will be permanently deleted.';
+
+  @override
+  String nameYou(String name) {
+    return '$name (you)';
+  }
 }

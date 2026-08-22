@@ -3731,6 +3731,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This cannot be undone. All your data will be permanently deleted.'**
   String get deleteAccountWarning;
+
+  /// No description provided for @nameYou.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (you)'**
+  String nameYou(String name);
 }
 
 class _AppLocalizationsDelegate

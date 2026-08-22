@@ -1139,5 +1139,13 @@
       }
     }
   },
-  "deleteAccountWarning": "This cannot be undone. All your data will be permanently deleted."
+  "deleteAccountWarning": "This cannot be undone. All your data will be permanently deleted.",
+  "nameYou": "{name} (you)",
+  "@nameYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }
