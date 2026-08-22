@@ -1918,7 +1918,7 @@ class AppLocalizationsEs extends AppLocalizations {
       '+2 acierto · −1 fallo · 0 si pasas · Bono ×1.4';
 
   @override
-  String precisionTally(String points, int max) {
+  String modeTally(String points, int max) {
     return '$points / $max pts';
   }
 
@@ -1938,4 +1938,78 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get shareCardTagline => 'Desafía a tus amigos en ArifQuiz';
+
+  @override
+  String get modeStreak => 'Modo Racha';
+
+  @override
+  String get modeStreakShort => 'Racha';
+
+  @override
+  String get modeStreakDesc =>
+      'Las respuestas seguidas valen cada vez más · Bono ×1.4';
+
+  @override
+  String get modeTimeAttack => 'Contrarreloj';
+
+  @override
+  String get modeTimeAttackShort => 'Contrarreloj';
+
+  @override
+  String get modeTimeAttackDesc =>
+      'Un reloj para la ronda · los aciertos lo alargan · Bono ×1.6';
+
+  @override
+  String get modeJokers => 'Modo Comodines';
+
+  @override
+  String get modeJokersShort => 'Comodines';
+
+  @override
+  String get modeJokersDesc =>
+      'Tres ayudas, cada una cuesta un punto · Bono ×1.1';
+
+  @override
+  String roundSecondsBadge(int seconds) {
+    return '${seconds}s / ronda';
+  }
+
+  @override
+  String bonusSecondsBadge(int seconds) {
+    return '+${seconds}s por acierto';
+  }
+
+  @override
+  String jokerCountBadge(int count) {
+    return '$count comodines';
+  }
+
+  @override
+  String streakRun(int streak) {
+    return '$streak seguidas';
+  }
+
+  @override
+  String nextAnswerWorth(int points) {
+    return 'la siguiente: +$points';
+  }
+
+  @override
+  String get jokerHintLabel => 'Pista';
+
+  @override
+  String jokerTimeLabel(int seconds) {
+    return '+${seconds}s';
+  }
+
+  @override
+  String hintFirstLetter(String letter) {
+    return 'La respuesta correcta empieza por «$letter»';
+  }
+
+  @override
+  String get noJokersLeft => 'Sin comodines';
+
+  @override
+  String get timeUpTitle => '¡Se acabó el tiempo!';
 }

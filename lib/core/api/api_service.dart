@@ -311,6 +311,7 @@ class ApiService {
     required List<int> questionIds,
     String mode = 'classic',
     int? sessionId,
+    int jokersUsed = 0,
   }) async {
     final res = await _dio.post('/quizzes/$quizId/submit', data: {
       'answers': answers,
@@ -318,6 +319,10 @@ class ApiService {
       'mode': mode,
       'question_ids': questionIds,
       if (sessionId != null) 'session_id': sessionId,
+      // Les coups de pouce ne laissent aucune trace dans les réponses : le
+      // serveur ne peut pas les deviner, il faut les lui dire pour qu'il
+      // applique leur coût.
+      if (jokersUsed > 0) 'jokers_used': jokersUsed,
     });
     return res.data;
   }

@@ -1895,7 +1895,7 @@ class AppLocalizationsAr extends AppLocalizations {
       '+2 صحيح · −1 خطأ · 0 عند التخطي · مكافأة ×1.4';
 
   @override
-  String precisionTally(String points, int max) {
+  String modeTally(String points, int max) {
     return '$points / $max نقطة';
   }
 
@@ -1915,4 +1915,77 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get shareCardTagline => 'تحدَّ أصدقاءك على ArifQuiz';
+
+  @override
+  String get modeStreak => 'وضع السلسلة';
+
+  @override
+  String get modeStreakShort => 'السلسلة';
+
+  @override
+  String get modeStreakDesc => 'الإجابات المتتالية تزداد قيمة · مكافأة ×1.4';
+
+  @override
+  String get modeTimeAttack => 'سباق مع الوقت';
+
+  @override
+  String get modeTimeAttackShort => 'سباق الوقت';
+
+  @override
+  String get modeTimeAttackDesc =>
+      'ساعة واحدة للجولة · الإجابات الصحيحة تُطيلها · مكافأة ×1.6';
+
+  @override
+  String get modeJokers => 'وضع الجوكر';
+
+  @override
+  String get modeJokersShort => 'الجوكر';
+
+  @override
+  String get modeJokersDesc =>
+      'ثلاث مساعدات، كل واحدة تكلّف نقطة · مكافأة ×1.1';
+
+  @override
+  String roundSecondsBadge(int seconds) {
+    return '$seconds ث / جولة';
+  }
+
+  @override
+  String bonusSecondsBadge(int seconds) {
+    return '+$seconds ث لكل إجابة صحيحة';
+  }
+
+  @override
+  String jokerCountBadge(int count) {
+    return '$count جوكر';
+  }
+
+  @override
+  String streakRun(int streak) {
+    return '$streak على التوالي';
+  }
+
+  @override
+  String nextAnswerWorth(int points) {
+    return 'التالية: +$points';
+  }
+
+  @override
+  String get jokerHintLabel => 'تلميح';
+
+  @override
+  String jokerTimeLabel(int seconds) {
+    return '+$seconds ث';
+  }
+
+  @override
+  String hintFirstLetter(String letter) {
+    return 'تبدأ الإجابة الصحيحة بـ «$letter»';
+  }
+
+  @override
+  String get noJokersLeft => 'لم يتبقَّ جوكر';
+
+  @override
+  String get timeUpTitle => 'انتهى الوقت!';
 }

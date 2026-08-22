@@ -1905,7 +1905,7 @@ class AppLocalizationsEn extends AppLocalizations {
       '+2 right · −1 wrong · 0 if you pass · ×1.4 XP';
 
   @override
-  String precisionTally(String points, int max) {
+  String modeTally(String points, int max) {
     return '$points / $max pts';
   }
 
@@ -1925,4 +1925,78 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareCardTagline => 'Challenge your friends on ArifQuiz';
+
+  @override
+  String get modeStreak => 'Streak Mode';
+
+  @override
+  String get modeStreakShort => 'Streak';
+
+  @override
+  String get modeStreakDesc =>
+      'Answers in a row are worth more and more · ×1.4 XP';
+
+  @override
+  String get modeTimeAttack => 'Time Attack';
+
+  @override
+  String get modeTimeAttackShort => 'Time Attack';
+
+  @override
+  String get modeTimeAttackDesc =>
+      'One clock for the round · right answers extend it · ×1.6 XP';
+
+  @override
+  String get modeJokers => 'Jokers Mode';
+
+  @override
+  String get modeJokersShort => 'Jokers';
+
+  @override
+  String get modeJokersDesc =>
+      'Three helping hands, each costs a point · ×1.1 XP';
+
+  @override
+  String roundSecondsBadge(int seconds) {
+    return '${seconds}s / round';
+  }
+
+  @override
+  String bonusSecondsBadge(int seconds) {
+    return '+${seconds}s per right answer';
+  }
+
+  @override
+  String jokerCountBadge(int count) {
+    return '$count jokers';
+  }
+
+  @override
+  String streakRun(int streak) {
+    return '$streak in a row';
+  }
+
+  @override
+  String nextAnswerWorth(int points) {
+    return 'next one: +$points';
+  }
+
+  @override
+  String get jokerHintLabel => 'Hint';
+
+  @override
+  String jokerTimeLabel(int seconds) {
+    return '+${seconds}s';
+  }
+
+  @override
+  String hintFirstLetter(String letter) {
+    return 'The right answer starts with “$letter”';
+  }
+
+  @override
+  String get noJokersLeft => 'No jokers left';
+
+  @override
+  String get timeUpTitle => 'Time’s up!';
 }

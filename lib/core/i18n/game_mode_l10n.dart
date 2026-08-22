@@ -11,6 +11,9 @@ extension GameModeL10n on GameMode {
       GameMode.survival => l10n.modeSurvivalShort,
       GameMode.speed => l10n.modeSpeedShort,
       GameMode.precision => l10n.modePrecisionShort,
+      GameMode.streak => l10n.modeStreakShort,
+      GameMode.timeattack => l10n.modeTimeAttackShort,
+      GameMode.jokers => l10n.modeJokersShort,
     };
   }
 
@@ -21,6 +24,9 @@ extension GameModeL10n on GameMode {
       GameMode.survival => l10n.modeSurvivalDesc,
       GameMode.speed => l10n.modeSpeedDesc,
       GameMode.precision => l10n.modePrecisionDesc,
+      GameMode.streak => l10n.modeStreakDesc,
+      GameMode.timeattack => l10n.modeTimeAttackDesc,
+      GameMode.jokers => l10n.modeJokersDesc,
     };
   }
 }

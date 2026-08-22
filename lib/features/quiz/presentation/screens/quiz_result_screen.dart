@@ -136,7 +136,7 @@ class QuizResultScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              AppLocalizations.of(context).precisionTally(
+                              AppLocalizations.of(context).modeTally(
                                   ModeScoring.format(result.modePoints!),
                                   result.maxModePoints ?? 0),
                               style: context.type.titleLarge.copyWith(

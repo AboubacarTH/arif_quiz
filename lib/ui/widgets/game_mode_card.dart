@@ -24,6 +24,9 @@ class GameModeCard extends StatelessWidget {
         GameMode.survival => AppColors.error,
         GameMode.speed => AppColors.secondary,
         GameMode.precision => AppColors.modePrecision,
+        GameMode.streak => AppColors.modeStreak,
+        GameMode.timeattack => AppColors.modeTimeAttack,
+        GameMode.jokers => AppColors.modeJokers,
       };
 
   List<_Badge> _badges(BuildContext context) => switch (mode) {
@@ -49,6 +52,27 @@ class GameModeCard extends StatelessWidget {
         GameMode.precision => [
             const _Badge(icon: Icons.add_circle_outline_rounded, label: '+2 / −1'),
             const _Badge(icon: Icons.star_rounded, label: '×1.4 XP'),
+          ],
+        GameMode.streak => [
+            const _Badge(icon: Icons.trending_up_rounded, label: '+1 → +4'),
+            const _Badge(icon: Icons.star_rounded, label: '×1.4 XP'),
+          ],
+        GameMode.timeattack => [
+            _Badge(
+                icon: Icons.timer_rounded,
+                label: AppLocalizations.of(context)
+                    .roundSecondsBadge(ModeScoring.timeAttackSeconds)),
+            _Badge(
+                icon: Icons.add_alarm_rounded,
+                label: AppLocalizations.of(context)
+                    .bonusSecondsBadge(ModeScoring.timeAttackBonus)),
+          ],
+        GameMode.jokers => [
+            _Badge(
+                icon: Icons.auto_awesome_rounded,
+                label: AppLocalizations.of(context)
+                    .jokerCountBadge(ModeScoring.jokerCount)),
+            const _Badge(icon: Icons.star_rounded, label: '×1.1 XP'),
           ],
       };
 
@@ -122,12 +146,14 @@ class GameModeCard extends StatelessWidget {
                     style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                   ),
                   const SizedBox(height: 8),
-                  Row(
+                  // En ligne tant que ça tient, à la ligne sinon : une puce
+                  // comme « +5 s par bonne réponse » débordait de la carte,
+                  // et une Row ne sait pas replier.
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 6,
                     children: _badges(context)
-                        .map((b) => Padding(
-                              padding: const EdgeInsetsDirectional.only(end: 8),
-                              child: _BadgeWidget(badge: b, color: _color),
-                            ))
+                        .map((b) => _BadgeWidget(badge: b, color: _color))
                         .toList(),
                   ),
                 ],

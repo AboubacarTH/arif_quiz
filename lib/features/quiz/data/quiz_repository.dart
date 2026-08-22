@@ -47,6 +47,7 @@ class QuizRepository {
     required List<int> questionIds,
     String mode = 'classic',
     int? sessionId,
+    int jokersUsed = 0,
   }) async {
     final res = await _api.submitQuizWithMode(
       quizId: quizId,
@@ -55,6 +56,7 @@ class QuizRepository {
       questionIds: questionIds,
       mode: mode,
       sessionId: sessionId,
+      jokersUsed: jokersUsed,
     );
     return QuizAttemptResult.fromJson(res);
   }

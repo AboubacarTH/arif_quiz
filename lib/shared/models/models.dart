@@ -630,13 +630,18 @@ class QuizAttemptResult {
     required Map<String, String> answers,
     required int timeTaken,
     GameMode mode = GameMode.classic,
+    int jokersUsed = 0,
   }) {
     var correct = 0;
     var wrong = 0;
+    // Dans l'ordre où les questions ont été posées : le mode Série compte les
+    // bonnes réponses enchaînées.
+    final sequence = <bool>[];
     final results = <QuestionResult>[];
     for (final q in questions) {
       final ua = answers[q.id.toString()];
       final ok = q.isCorrect(ua);
+      sequence.add(ok);
       if (ok) {
         correct++;
       } else if (ua != null && ua.isNotEmpty) {
@@ -654,7 +659,8 @@ class QuizAttemptResult {
       ));
     }
     final total = questions.length;
-    final score = ModeScoring.score(mode, correct, wrong, total);
+    final score =
+        ModeScoring.score(mode, sequence, wrong, total, jokersUsed: jokersUsed);
     return QuizAttemptResult(
       score: score,
       correctCount: correct,
@@ -664,7 +670,8 @@ class QuizAttemptResult {
       xpEarned: 0,
       grade: gradeForScore(score),
       results: results,
-      modePoints: ModeScoring.points(mode, correct, wrong),
+      modePoints:
+          ModeScoring.points(mode, sequence, wrong, jokersUsed: jokersUsed),
       maxModePoints: ModeScoring.maxPoints(mode, total),
     );
   }
@@ -818,13 +825,19 @@ enum GameMode {
   classic,
   survival,
   speed,
-  precision;
+  precision,
+  streak,
+  timeattack,
+  jokers;
 
   String get label => switch (this) {
         classic => 'Classique',
         survival => 'Survie',
         speed => 'Speed Round',
         precision => 'Précision',
+        streak => 'Série',
+        timeattack => 'Contre-la-montre',
+        jokers => 'Jokers',
       };
 
   String get apiValue => name;
@@ -832,6 +845,9 @@ enum GameMode {
   String get description => switch (this) {
         classic => 'Quiz standard avec timer global',
         precision => '+2 juste, −1 faux, 0 si tu passes',
+        streak => 'Les bonnes réponses enchaînées valent de plus en plus',
+        timeattack => 'Une seule horloge, que les bonnes réponses rallongent',
+        jokers => 'Trois coups de pouce pour la manche',
         survival => 'Une erreur et c\'est game over !',
         speed => '5 secondes par question, bonus XP ×1.5',
       };
@@ -843,6 +859,9 @@ enum GameMode {
         survival => Icons.favorite_rounded,
         speed => Icons.bolt_rounded,
         precision => Icons.center_focus_strong_rounded,
+        streak => Icons.trending_up_rounded,
+        timeattack => Icons.timer_rounded,
+        jokers => Icons.auto_awesome_rounded,
       };
 
   static GameMode fromApi(String? value) => GameMode.values.firstWhere(
@@ -854,9 +873,9 @@ enum GameMode {
 /// Barème par mode, miroir exact de `ModeScoring` côté serveur.
 ///
 /// Le client en a besoin deux fois : pour afficher le total qui monte pendant
-/// une partie en Précision, et pour noter les parties d'un invité, qui ne
-/// passent jamais par l'API. Les deux doivent donner le même chiffre que le
-/// serveur, sinon le score changerait en arrivant sur l'écran de résultat.
+/// une partie, et pour noter les parties d'un invité, qui ne passent jamais par
+/// l'API. Les deux doivent donner le même chiffre que le serveur, sinon le
+/// score changerait en arrivant sur l'écran de résultat.
 class ModeScoring {
   const ModeScoring._();
 
@@ -866,30 +885,116 @@ class ModeScoring {
   /// Ce que coûte une mauvaise. Une question passée ne coûte rien.
   static const precisionPenalty = 1;
 
+  /// Ce que rapporte une bonne réponse en Jokers.
+  static const jokerReward = 2;
+
+  /// Ce que coûte un coup de pouce.
+  static const jokerCost = 1;
+
+  /// Nombre de coups de pouce accordés pour une manche.
+  static const jokerCount = 3;
+
+  /// Durée d'une manche en Contre-la-montre.
+  static const timeAttackSeconds = 120;
+
+  /// Ce qu'une bonne réponse rend au chrono.
+  static const timeAttackBonus = 5;
+
+  /// Ce que le joker « du temps » ajoute à la question en cours.
+  static const jokerTimeBonus = 15;
+
+  /// Ce que vaut une bonne réponse selon la longueur de la série en cours.
+  ///
+  /// Deux bonnes réponses de suite ne prouvent rien ; sept d'affilée, si. La
+  /// marche est volontairement large — un palier tous les deux —, sinon le
+  /// joueur ne sait plus ce qu'il vient de gagner.
+  static int streakTier(int streak) => switch (streak) {
+        >= 7 => 4,
+        >= 5 => 3,
+        >= 3 => 2,
+        _ => 1,
+      };
+
+  /// Le total d'une manche en Série. L'ORDRE compte : sept bonnes réponses
+  /// d'affilée valent bien plus que sept réparties au hasard, et c'est tout
+  /// l'intérêt du mode. Une erreur — ou une question passée — remet à zéro.
+  static int streakPoints(List<bool> sequence) {
+    var total = 0;
+    var streak = 0;
+
+    for (final isRight in sequence) {
+      if (!isRight) {
+        streak = 0;
+        continue;
+      }
+      streak++;
+      total += streakTier(streak);
+    }
+
+    return total;
+  }
+
+  /// Les modes dont le joueur suit un total en points.
+  static bool hasPoints(GameMode mode) =>
+      mode == GameMode.precision ||
+      mode == GameMode.streak ||
+      mode == GameMode.jokers;
+
   /// Le total du mode, tel que le joueur le voit compter. `null` pour les modes
   /// qui n'en ont pas.
-  static int? points(GameMode mode, int right, int wrong) =>
-      mode == GameMode.precision
-          ? right * precisionReward - wrong * precisionPenalty
-          : null;
+  ///
+  /// [sequence] donne les issues DANS L'ORDRE OÙ LES QUESTIONS ONT ÉTÉ POSÉES ;
+  /// [wrong] ne compte que les mauvaises réponses données, pas les questions
+  /// laissées vides.
+  static int? points(
+    GameMode mode,
+    List<bool> sequence,
+    int wrong, {
+    int jokersUsed = 0,
+  }) {
+    final right = sequence.where((r) => r).length;
+
+    return switch (mode) {
+      GameMode.precision => right * precisionReward - wrong * precisionPenalty,
+      GameMode.jokers => right * jokerReward - jokersUsed * jokerCost,
+      GameMode.streak => streakPoints(sequence),
+      _ => null,
+    };
+  }
 
   /// Le maximum atteignable, pour afficher « 14 / 20 ».
-  static int? maxPoints(GameMode mode, int total) =>
-      mode == GameMode.precision ? total * precisionReward : null;
+  static int? maxPoints(GameMode mode, int total) => switch (mode) {
+        GameMode.precision => total * precisionReward,
+        GameMode.jokers => total * jokerReward,
+        // La manche sans faute : la même somme, sur une série jamais rompue.
+        GameMode.streak =>
+          streakPoints(List<bool>.filled(total < 0 ? 0 : total, true)),
+        _ => null,
+      };
 
-  /// La note sur 100. En Précision, un total négatif vaut zéro : une note et un
-  /// classement n'ont pas de sens sous la barre.
+  /// La note sur 100. Un total négatif vaut zéro : une note et un classement
+  /// n'ont pas de sens sous la barre.
   ///
   /// Arrondie à la décimale, comme le fait le serveur : sans cet arrondi, onze
   /// points sur vingt donnaient ici 55.00000000000001 là où l'API renvoie 55, et
   /// deux parties identiques n'affichaient pas le même score selon qu'on était
   /// connecté ou invité.
-  static double score(GameMode mode, int right, int wrong, int total) {
+  static double score(
+    GameMode mode,
+    List<bool> sequence,
+    int wrong,
+    int total, {
+    int jokersUsed = 0,
+  }) {
     if (total <= 0) return 0;
-    if (mode != GameMode.precision) return _round1(right / total * 100);
 
-    final earned = points(mode, right, wrong)!;
+    final right = sequence.where((r) => r).length;
+    if (!hasPoints(mode)) return _round1(right / total * 100);
+
+    final earned = points(mode, sequence, wrong, jokersUsed: jokersUsed)!;
     final max = maxPoints(mode, total)!;
+    if (max == 0) return 0;
+
     return _round1((earned / max * 100).clamp(0, 100).toDouble());
   }
 

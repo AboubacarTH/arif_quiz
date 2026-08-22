@@ -24,34 +24,44 @@ void main() {
 
   // ─── Le barème, qui doit dire la même chose que le serveur ────────────────
 
+  /// Une suite de réponses : [right] justes, puis [wrong] fausses.
+  List<bool> seq(int right, [int wrong = 0]) =>
+      [...List.filled(right, true), ...List.filled(wrong, false)];
+
   group('ModeScoring', () {
     test('+2 pour une bonne réponse, −1 pour une mauvaise', () {
-      expect(ModeScoring.points(GameMode.precision, 1, 0), 2);
-      expect(ModeScoring.points(GameMode.precision, 0, 1), -1);
-      expect(ModeScoring.points(GameMode.precision, 0, 0), 0,
+      expect(ModeScoring.points(GameMode.precision, seq(1), 0), 2);
+      expect(ModeScoring.points(GameMode.precision, seq(0, 1), 1), -1);
+      expect(ModeScoring.points(GameMode.precision, seq(0, 1), 0), 0,
           reason: 'passer ne rapporte ni ne coûte rien');
     });
 
     test('les autres modes n\'ont pas de total', () {
-      for (final mode in [GameMode.classic, GameMode.speed, GameMode.survival]) {
-        expect(ModeScoring.points(mode, 5, 3), isNull);
+      const modes = [
+        GameMode.classic,
+        GameMode.speed,
+        GameMode.survival,
+        GameMode.timeattack,
+      ];
+      for (final mode in modes) {
+        expect(ModeScoring.points(mode, seq(5, 3), 3), isNull);
         expect(ModeScoring.maxPoints(mode, 10), isNull);
       }
     });
 
     test('le score est la part du maximum atteint', () {
       // 7 justes, 3 fausses : 14 − 3 = 11 sur 20.
-      expect(ModeScoring.score(GameMode.precision, 7, 3, 10), 55);
-      expect(ModeScoring.score(GameMode.precision, 10, 0, 10), 100);
+      expect(ModeScoring.score(GameMode.precision, seq(7, 3), 3, 10), 55);
+      expect(ModeScoring.score(GameMode.precision, seq(10), 0, 10), 100);
     });
 
     test('un total négatif vaut zéro, pas un score négatif', () {
-      expect(ModeScoring.score(GameMode.precision, 2, 8, 10), 0);
+      expect(ModeScoring.score(GameMode.precision, seq(2, 8), 8, 10), 0);
     });
 
     test('les autres modes gardent le taux de réussite', () {
-      expect(ModeScoring.score(GameMode.classic, 7, 3, 10), 70);
-      expect(ModeScoring.score(GameMode.speed, 7, 3, 10), 70);
+      expect(ModeScoring.score(GameMode.classic, seq(7, 3), 3, 10), 70);
+      expect(ModeScoring.score(GameMode.speed, seq(7, 3), 3, 10), 70);
     });
 
     test('le total négatif porte le vrai signe moins', () {

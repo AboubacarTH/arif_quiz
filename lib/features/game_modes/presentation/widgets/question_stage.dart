@@ -28,16 +28,24 @@ class QuestionStage extends StatelessWidget {
   /// survie… Elle ne colore que l'étiquette « Question n ».
   final Color accent;
 
+  /// Choix retirés de la grille — le joker 50/50 s'en sert. Vide partout
+  /// ailleurs : un mode qui ne donne pas de coup de pouce montre tout.
+  final Set<String> hiddenOptions;
+
   const QuestionStage({
     super.key,
     required this.controller,
     this.accent = AppColors.primary,
+    this.hiddenOptions = const {},
   });
 
   @override
   Widget build(BuildContext context) {
     final q = controller.currentQuestion;
-    final options = q.choices(context);
+    final options = q
+        .choices(context)
+        .where((o) => !hiddenOptions.contains(o))
+        .toList();
 
     return SingleChildScrollView(
       child: Column(

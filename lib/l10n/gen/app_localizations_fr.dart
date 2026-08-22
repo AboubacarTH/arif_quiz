@@ -1920,7 +1920,7 @@ class AppLocalizationsFr extends AppLocalizations {
       '+2 juste · −1 faux · 0 si tu passes · Bonus ×1.4';
 
   @override
-  String precisionTally(String points, int max) {
+  String modeTally(String points, int max) {
     return '$points / $max pts';
   }
 
@@ -1940,4 +1940,78 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shareCardTagline => 'Défie tes amis sur ArifQuiz';
+
+  @override
+  String get modeStreak => 'Mode Série';
+
+  @override
+  String get modeStreakShort => 'Série';
+
+  @override
+  String get modeStreakDesc =>
+      'Les réponses enchaînées valent de plus en plus · Bonus ×1.4';
+
+  @override
+  String get modeTimeAttack => 'Contre-la-montre';
+
+  @override
+  String get modeTimeAttackShort => 'Contre-la-montre';
+
+  @override
+  String get modeTimeAttackDesc =>
+      'Une horloge pour la manche · les bonnes réponses la rallongent · Bonus ×1.6';
+
+  @override
+  String get modeJokers => 'Mode Jokers';
+
+  @override
+  String get modeJokersShort => 'Jokers';
+
+  @override
+  String get modeJokersDesc =>
+      'Trois coups de pouce, chacun coûte un point · Bonus ×1.1';
+
+  @override
+  String roundSecondsBadge(int seconds) {
+    return '$seconds s / manche';
+  }
+
+  @override
+  String bonusSecondsBadge(int seconds) {
+    return '+$seconds s par bonne réponse';
+  }
+
+  @override
+  String jokerCountBadge(int count) {
+    return '$count jokers';
+  }
+
+  @override
+  String streakRun(int streak) {
+    return '$streak d’affilée';
+  }
+
+  @override
+  String nextAnswerWorth(int points) {
+    return 'la suivante : +$points';
+  }
+
+  @override
+  String get jokerHintLabel => 'Indice';
+
+  @override
+  String jokerTimeLabel(int seconds) {
+    return '+$seconds s';
+  }
+
+  @override
+  String hintFirstLetter(String letter) {
+    return 'La bonne réponse commence par « $letter »';
+  }
+
+  @override
+  String get noJokersLeft => 'Plus de coup de pouce';
+
+  @override
+  String get timeUpTitle => 'Temps écoulé !';
 }

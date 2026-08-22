@@ -1,6 +1,9 @@
 import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
 import 'package:arif_quiz/core/monetization/play_gate.dart';
+import 'package:arif_quiz/features/game_modes/presentation/screens/jokers_play_screen.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/precision_play_screen.dart';
+import 'package:arif_quiz/features/game_modes/presentation/screens/streak_play_screen.dart';
+import 'package:arif_quiz/features/game_modes/presentation/screens/time_attack_play_screen.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/speed_play_screen.dart';
 import 'package:arif_quiz/features/game_modes/presentation/screens/survival_play_screen.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_play_screen.dart';
@@ -231,6 +234,21 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
           title: AppLocalizations.of(context).modePrecision,
           body: AppLocalizations.of(context).modePrecisionDesc,
         ),
+      GameMode.streak => (
+          icon: GameMode.streak.icon,
+          title: AppLocalizations.of(context).modeStreak,
+          body: AppLocalizations.of(context).modeStreakDesc,
+        ),
+      GameMode.timeattack => (
+          icon: GameMode.timeattack.icon,
+          title: AppLocalizations.of(context).modeTimeAttack,
+          body: AppLocalizations.of(context).modeTimeAttackDesc,
+        ),
+      GameMode.jokers => (
+          icon: GameMode.jokers.icon,
+          title: AppLocalizations.of(context).modeJokers,
+          body: AppLocalizations.of(context).modeJokersDesc,
+        ),
     };
 
     return AnimatedSwitcher(
@@ -299,6 +317,12 @@ class _GameModeSelectScreenState extends State<GameModeSelectScreen> {
         SpeedPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
       GameMode.precision =>
         PrecisionPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
+      GameMode.streak =>
+        StreakPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
+      GameMode.timeattack =>
+        TimeAttackPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
+      GameMode.jokers =>
+        JokersPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
       GameMode.classic =>
         QuizPlayScreen(quiz: quiz, challengeId: widget.challengeId, challenge: widget.challenge),
     };

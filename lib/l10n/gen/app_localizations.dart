@@ -3522,11 +3522,11 @@ abstract class AppLocalizations {
   /// **'+2 right · −1 wrong · 0 if you pass · ×1.4 XP'**
   String get modePrecisionDesc;
 
-  /// No description provided for @precisionTally.
+  /// No description provided for @modeTally.
   ///
   /// In en, this message translates to:
   /// **'{points} / {max} pts'**
-  String precisionTally(String points, int max);
+  String modeTally(String points, int max);
 
   /// No description provided for @precisionSkipHint.
   ///
@@ -3557,6 +3557,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Challenge your friends on ArifQuiz'**
   String get shareCardTagline;
+
+  /// No description provided for @modeStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Mode'**
+  String get modeStreak;
+
+  /// No description provided for @modeStreakShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get modeStreakShort;
+
+  /// No description provided for @modeStreakDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Answers in a row are worth more and more · ×1.4 XP'**
+  String get modeStreakDesc;
+
+  /// No description provided for @modeTimeAttack.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Attack'**
+  String get modeTimeAttack;
+
+  /// No description provided for @modeTimeAttackShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Attack'**
+  String get modeTimeAttackShort;
+
+  /// No description provided for @modeTimeAttackDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'One clock for the round · right answers extend it · ×1.6 XP'**
+  String get modeTimeAttackDesc;
+
+  /// No description provided for @modeJokers.
+  ///
+  /// In en, this message translates to:
+  /// **'Jokers Mode'**
+  String get modeJokers;
+
+  /// No description provided for @modeJokersShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Jokers'**
+  String get modeJokersShort;
+
+  /// No description provided for @modeJokersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Three helping hands, each costs a point · ×1.1 XP'**
+  String get modeJokersDesc;
+
+  /// No description provided for @roundSecondsBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s / round'**
+  String roundSecondsBadge(int seconds);
+
+  /// No description provided for @bonusSecondsBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'+{seconds}s per right answer'**
+  String bonusSecondsBadge(int seconds);
+
+  /// No description provided for @jokerCountBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} jokers'**
+  String jokerCountBadge(int count);
+
+  /// No description provided for @streakRun.
+  ///
+  /// In en, this message translates to:
+  /// **'{streak} in a row'**
+  String streakRun(int streak);
+
+  /// No description provided for @nextAnswerWorth.
+  ///
+  /// In en, this message translates to:
+  /// **'next one: +{points}'**
+  String nextAnswerWorth(int points);
+
+  /// No description provided for @jokerHintLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hint'**
+  String get jokerHintLabel;
+
+  /// No description provided for @jokerTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'+{seconds}s'**
+  String jokerTimeLabel(int seconds);
+
+  /// No description provided for @hintFirstLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'The right answer starts with “{letter}”'**
+  String hintFirstLetter(String letter);
+
+  /// No description provided for @noJokersLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'No jokers left'**
+  String get noJokersLeft;
+
+  /// No description provided for @timeUpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time’s up!'**
+  String get timeUpTitle;
 }
 
 class _AppLocalizationsDelegate

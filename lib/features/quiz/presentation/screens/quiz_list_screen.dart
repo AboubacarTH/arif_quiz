@@ -102,20 +102,26 @@ class _QuizListScreenState extends State<QuizListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.bg,
-      body: RefreshIndicator(
-        onRefresh: _ctrl.refresh,
-        color: AppColors.primary,
-        backgroundColor: context.appColors.cardBg,
-        child: CustomScrollView(
-          controller: _scrollCtrl,
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: [
-            _appBar(),
-            SliverToBoxAdapter(child: _search()),
-            SliverToBoxAdapter(child: _filterSummary()),
-            ..._listSlivers(),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-          ],
+      // La barre du haut se retire au défilement : sans zone sûre, les quiz
+      // passaient dessous et venaient se glisser derrière l'heure, le réseau
+      // et la batterie. Les autres onglets l'avaient déjà, pas celui-ci.
+      body: SafeArea(
+        bottom: false,
+        child: RefreshIndicator(
+          onRefresh: _ctrl.refresh,
+          color: AppColors.primary,
+          backgroundColor: context.appColors.cardBg,
+          child: CustomScrollView(
+            controller: _scrollCtrl,
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              _appBar(),
+              SliverToBoxAdapter(child: _search()),
+              SliverToBoxAdapter(child: _filterSummary()),
+              ..._listSlivers(),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            ],
+          ),
         ),
       ),
     );

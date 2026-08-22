@@ -6,6 +6,15 @@ import 'package:flutter/foundation.dart';
 /// Phases du cycle de jeu, communes à tous les modes.
 enum GamePhase { playing, gameOver, submitting, done }
 
+/// Qui tient le temps.
+///
+/// [perQuestion] : chaque question a son budget, et l'épuiser passe à la
+/// suivante. [global] : une seule horloge pour toute la manche — l'épuiser
+/// termine la partie, où qu'on en soit. C'est toute la différence du mode
+/// Contre-la-montre, et elle ne pouvait pas se loger dans un écran : la
+/// machine à états du jeu est ici.
+enum GameClock { perQuestion, global }
+
 /// Ce qu'une question est devenue. Un mode qui pénalise l'erreur doit pouvoir
 /// distinguer « faux » de « pas répondu » — pour le barème comme pour ce que le
 /// joueur voit s'afficher.
@@ -49,6 +58,8 @@ class GamePlayController extends ChangeNotifier {
     required this.questions,
     required this.secondsPerQuestion,
     this.secondsFor,
+    this.clock = GameClock.perQuestion,
+    this.bonusSecondsPerCorrect = 0,
     int? revealDelayMs,
   }) : revealDelayMs = revealDelayMs ?? _defaultRevealDelay(mode) {
     _startTimer();
@@ -57,17 +68,26 @@ class GamePlayController extends ChangeNotifier {
   final GameMode mode;
   final List<QuestionModel> questions;
 
-  /// Budget par défaut, quand [secondsFor] ne s'applique pas.
+  /// Budget de départ du chronomètre : celui d'une question quand l'horloge est
+  /// [GameClock.perQuestion], celui de la manche entière quand elle est
+  /// [GameClock.global].
   final int secondsPerQuestion;
 
   /// Budget calculé pour une question donnée. Le Speed Round s'en sert pour
   /// accorder plus de temps à une question longue qu'à une question brève.
   final int Function(QuestionModel)? secondsFor;
 
+  final GameClock clock;
+
+  /// Ce qu'une bonne réponse rend au chrono, en horloge globale.
+  final int bonusSecondsPerCorrect;
+
   final int revealDelayMs;
 
   final Map<String, String> _answers = {};
   final List<AnswerOutcome> _outcomes = [];
+
+  int _jokersUsed = 0;
 
   int _index = 0;
   int _timeLeft = 0;
@@ -118,9 +138,32 @@ class GamePlayController extends ChangeNotifier {
   int get wrongCount =>
       _outcomes.where((o) => o == AnswerOutcome.wrong).length;
 
+  /// Les issues sous la forme qu'attend le barème : juste ou pas, dans l'ordre.
+  List<bool> get _sequence =>
+      _outcomes.map((o) => o == AnswerOutcome.right).toList();
+
+  /// La série de bonnes réponses en cours. Une erreur ou une question passée la
+  /// remet à zéro.
+  int get currentStreak {
+    var streak = 0;
+    for (final outcome in _outcomes.reversed) {
+      if (outcome != AnswerOutcome.right) break;
+      streak++;
+    }
+    return streak;
+  }
+
+  /// Ce que rapportera la PROCHAINE bonne réponse. C'est le chiffre qui donne
+  /// envie de continuer — pas celui qu'on vient d'encaisser.
+  int get nextStreakTier => ModeScoring.streakTier(currentStreak + 1);
+
+  int get jokersUsed => _jokersUsed;
+  int get jokersLeft => ModeScoring.jokerCount - _jokersUsed;
+
   /// Le total du mode, tel qu'il doit s'afficher pendant la partie. `null` pour
   /// les modes qui n'en ont pas.
-  int? get modePoints => ModeScoring.points(mode, rightCount, wrongCount);
+  int? get modePoints =>
+      ModeScoring.points(mode, _sequence, wrongCount, jokersUsed: _jokersUsed);
 
   /// Le maximum atteignable sur l'ensemble des questions.
   int? get maxModePoints => ModeScoring.maxPoints(mode, questions.length);
@@ -136,13 +179,35 @@ class GamePlayController extends ChangeNotifier {
   static int _defaultRevealDelay(GameMode mode) => switch (mode) {
         GameMode.speed => 500,
         GameMode.survival => 700,
-        // En Précision, la révélation porte un gain ou une perte : il faut le
-        // temps de la lire.
-        GameMode.precision => 900,
-        GameMode.classic => 800,
+        // En Précision et en Série, la révélation porte un gain ou une perte :
+        // il faut le temps de la lire.
+        GameMode.precision || GameMode.streak => 900,
+        // En Contre-la-montre, l'horloge tourne pendant la révélation : la
+        // faire durer reviendrait à voler du temps au joueur.
+        GameMode.timeattack => 350,
+        GameMode.classic || GameMode.jokers => 800,
       };
 
   void _startTimer() {
+    if (clock == GameClock.global) {
+      // Une seule horloge pour la manche : on ne la relance pas d'une question
+      // à l'autre, sinon le mode n'aurait plus rien d'un contre-la-montre.
+      if (_timer != null) return;
+
+      _currentSeconds = secondsPerQuestion;
+      _timeLeft = _currentSeconds;
+      _timer = Timer.periodic(const Duration(seconds: 1), (t) {
+        _timeLeft--;
+        _totalTime++;
+        notifyListeners();
+        if (_timeLeft <= 0) {
+          t.cancel();
+          _endRound();
+        }
+      });
+      return;
+    }
+
     _timer?.cancel();
     _currentSeconds = secondsFor?.call(currentQuestion) ?? secondsPerQuestion;
     _timeLeft = _currentSeconds;
@@ -156,14 +221,41 @@ class GamePlayController extends ChangeNotifier {
     });
   }
 
+  /// Le chrono est tombé : la manche s'arrête là, questions restantes ou non.
+  void _endRound() {
+    _revealTimer?.cancel();
+    _phase = GamePhase.submitting;
+    notifyListeners();
+  }
+
+  /// Consomme un coup de pouce. Rend `false` s'il n'en reste plus, ou si la
+  /// question est déjà jouée — un joker ne sert à rien après coup.
+  bool useJoker() {
+    if (jokersLeft <= 0 || _answered || _phase != GamePhase.playing) {
+      return false;
+    }
+    _jokersUsed++;
+    notifyListeners();
+    return true;
+  }
+
+  /// Rallonge le temps restant. Le joker « du temps » s'en sert.
+  void addSeconds(int seconds) {
+    _timeLeft += seconds;
+    if (clock == GameClock.perQuestion) _currentSeconds += seconds;
+    notifyListeners();
+  }
+
   /// Sélection utilisateur.
   void selectAnswer(String answer) => _lockAnswer(answer);
 
   /// Passe la question sans répondre (bouton « Skip » du mode Classique).
   void skip() {
     if (_answered || _phase != GamePhase.playing) return;
-    _timer?.cancel();
-    _totalTime += _currentSeconds - _timeLeft;
+    if (clock == GameClock.perQuestion) {
+      _timer?.cancel();
+      _totalTime += _currentSeconds - _timeLeft;
+    }
     _answered = true;
     _record(AnswerOutcome.skipped);
     notifyListeners();
@@ -172,8 +264,10 @@ class GamePlayController extends ChangeNotifier {
 
   void _lockAnswer(String? answer) {
     if (_answered || _phase != GamePhase.playing) return;
-    _timer?.cancel();
-    _totalTime += _currentSeconds - _timeLeft;
+    if (clock == GameClock.perQuestion) {
+      _timer?.cancel();
+      _totalTime += _currentSeconds - _timeLeft;
+    }
     _selected = answer;
     _answered = true;
     if (answer != null) _answers[currentQuestion.id.toString()] = answer;
@@ -185,8 +279,15 @@ class GamePlayController extends ChangeNotifier {
         : correct
             ? AnswerOutcome.right
             : AnswerOutcome.wrong);
+    // En horloge globale, une bonne réponse rend du temps : c'est ce qui fait
+    // durer la manche, et donc tout l'enjeu.
+    if (clock == GameClock.global && correct && bonusSecondsPerCorrect > 0) {
+      _timeLeft += bonusSecondsPerCorrect;
+    }
+
     notifyListeners();
     _revealTimer = Timer(Duration(milliseconds: revealDelayMs), () {
+      if (_phase != GamePhase.playing) return;
       if (_stopOnWrong && !correct) {
         _phase = GamePhase.gameOver;
         notifyListeners();
@@ -205,6 +306,8 @@ class GamePlayController extends ChangeNotifier {
 
   void _advance() {
     if (isLast) {
+      // Plus de question : la manche est finie, l'horloge de la manche aussi.
+      if (clock == GameClock.global) _timer?.cancel();
       _phase = GamePhase.submitting;
       notifyListeners();
       return;
@@ -212,7 +315,9 @@ class GamePlayController extends ChangeNotifier {
     _index++;
     _selected = null;
     _answered = false;
-    _startTimer();
+    // En horloge globale, rien à relancer : le chrono de la manche court
+    // toujours.
+    if (clock == GameClock.perQuestion) _startTimer();
     notifyListeners();
   }
 

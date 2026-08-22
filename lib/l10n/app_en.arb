@@ -1012,8 +1012,8 @@
   "modePrecision": "Precision Mode",
   "modePrecisionShort": "Precision",
   "modePrecisionDesc": "+2 right · −1 wrong · 0 if you pass · ×1.4 XP",
-  "precisionTally": "{points} / {max} pts",
-  "@precisionTally": {
+  "modeTally": "{points} / {max} pts",
+  "@modeTally": {
     "placeholders": {
       "points": {
         "type": "String"
@@ -1037,5 +1037,73 @@
     }
   },
   "challengeLabel": "Challenge",
-  "shareCardTagline": "Challenge your friends on ArifQuiz"
+  "shareCardTagline": "Challenge your friends on ArifQuiz",
+  "modeStreak": "Streak Mode",
+  "modeStreakShort": "Streak",
+  "modeStreakDesc": "Answers in a row are worth more and more · ×1.4 XP",
+  "modeTimeAttack": "Time Attack",
+  "modeTimeAttackShort": "Time Attack",
+  "modeTimeAttackDesc": "One clock for the round · right answers extend it · ×1.6 XP",
+  "modeJokers": "Jokers Mode",
+  "modeJokersShort": "Jokers",
+  "modeJokersDesc": "Three helping hands, each costs a point · ×1.1 XP",
+  "roundSecondsBadge": "{seconds}s / round",
+  "@roundSecondsBadge": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "bonusSecondsBadge": "+{seconds}s per right answer",
+  "@bonusSecondsBadge": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "jokerCountBadge": "{count} jokers",
+  "@jokerCountBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "streakRun": "{streak} in a row",
+  "@streakRun": {
+    "placeholders": {
+      "streak": {
+        "type": "int"
+      }
+    }
+  },
+  "nextAnswerWorth": "next one: +{points}",
+  "@nextAnswerWorth": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "jokerHintLabel": "Hint",
+  "jokerTimeLabel": "+{seconds}s",
+  "@jokerTimeLabel": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "hintFirstLetter": "The right answer starts with “{letter}”",
+  "@hintFirstLetter": {
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "noJokersLeft": "No jokers left",
+  "timeUpTitle": "Time’s up!"
 }

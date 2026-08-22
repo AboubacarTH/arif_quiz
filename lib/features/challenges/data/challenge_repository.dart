@@ -71,12 +71,14 @@ class ChallengeRepository {
     required int timeTaken,
     required List<int> questionIds,
     int? sessionId,
+    int jokersUsed = 0,
   }) async {
     final res = await _api.post('/challenges/$challengeId/submit', data: {
       'answers': answers,
       'time_taken': timeTaken,
       'question_ids': questionIds,
       if (sessionId != null) 'session_id': sessionId,
+      if (jokersUsed > 0) 'jokers_used': jokersUsed,
     });
     final data = res.data['data'] as Map<String, dynamic>;
     return QuizAttemptResult.fromJson(data);
