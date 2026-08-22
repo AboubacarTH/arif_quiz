@@ -2043,4 +2043,19 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get statisticsSection => 'Estadísticas';
+
+  @override
+  String get accountSection => 'Cuenta';
+
+  @override
+  String correctOutOf(int correct, int total) {
+    return '$correct/$total correctas';
+  }
+
+  @override
+  String get deleteAccountWarning =>
+      'Esta acción es irreversible. Todos tus datos se borrarán definitivamente.';
 }

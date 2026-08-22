@@ -208,8 +208,8 @@
   "quizzesPlayed": "Quiz joués",
   "goodAnswers": "Bonnes rép.",
   "accuracy": "Précision",
-  "currentStreak": "Streak actuel",
-  "bestStreak": "Meilleur streak",
+  "currentStreak": "Jours d'affilée",
+  "bestStreak": "Record",
   "achievements": "Succès",
   "unlockBadgesByPlaying": "Débloque des badges en jouant",
   "appearance": "Apparence",
@@ -600,5 +600,9 @@
   "declineLabel": "Refuser",
   "noPendingRequestsHint": "Les demandes que tu reçois arrivent ici.",
   "noRecentActivityHint": "Les parties de tes amis s’afficheront ici.",
-  "friendsCount": "{count, plural, =0{aucun ami} =1{1 ami} other{{count} amis}}"
+  "friendsCount": "{count, plural, =0{aucun ami} =1{1 ami} other{{count} amis}}",
+  "statisticsSection": "Statistiques",
+  "accountSection": "Compte",
+  "correctOutOf": "{correct}/{total} bonnes",
+  "deleteAccountWarning": "Cette action est irréversible. Toutes tes données seront supprimées définitivement."
 }

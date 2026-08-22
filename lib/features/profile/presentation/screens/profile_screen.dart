@@ -14,7 +14,6 @@ import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/ui/widgets/paywall_sheet.dart';
 import 'package:arif_quiz/ui/widgets/shimmer_loading.dart';
-import 'package:arif_quiz/ui/widgets/stats_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -96,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Cette action est irréversible. Toutes tes données seront supprimées définitivement.',
+                AppLocalizations.of(context).deleteAccountWarning,
                 style: TextStyle(color: context.appColors.textSecondary),
               ),
               const SizedBox(height: 16),
@@ -200,7 +199,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: context.appColors.bg,
       body: RefreshIndicator(
-        onRefresh: _ctrl.load,
+        // `load` levait le squelette : la page entiere disparaissait le temps
+        // de l'appel, alors qu'elle a deja tout ce qu'il faut a l'ecran.
+        onRefresh: _ctrl.refresh,
         color: AppColors.primary,
         backgroundColor: context.appColors.cardBg,
         // Une seule entrée pour tout l'écran (voir _buildBody).
@@ -211,72 +212,96 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildBody() {
     if (_ctrl.isLoading) {
-      return CustomScrollView(slivers: [
-        SliverToBoxAdapter(child: _buildHeader(null)),
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: ProfileSkeleton(),
-          ),
+      return const SafeArea(
+        bottom: false,
+        child: CustomScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(AppSpacing.gutter),
+                child: ProfileSkeleton(),
+              ),
+            ),
+          ],
         ),
-      ]);
+      );
     }
 
     if (_ctrl.error != null) {
-      return ListView(children: [
-        const SizedBox(height: 200),
-        ErrorState(
-            message: AppLocalizations.of(context).loadProfileFailed,
-            onRetry: _ctrl.load),
-      ]);
+      return SafeArea(
+        bottom: false,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            const SizedBox(height: 160),
+            ErrorState(
+                message: AppLocalizations.of(context).loadProfileFailed,
+                onRetry: _ctrl.load),
+          ],
+        ),
+      );
     }
 
     final d = _ctrl.data!;
     final user = d.user;
 
-    return CustomScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      slivers: [
-        SliverToBoxAdapter(child: _buildHeader(user)),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHero(user, d.rank),
-                const SizedBox(height: 16),
-                _buildXpBar(user),
-                const SizedBox(height: 20),
-                _buildStatsRow(user),
-                const SizedBox(height: 20),
-                _buildStreakRow(user),
-                const SizedBox(height: 20),
-                _buildBadgesButton(),
-                const SizedBox(height: 24),
-                _buildPremiumSection(),
-                const SizedBox(height: 24),
-                _buildThemeSection(),
-                const SizedBox(height: 24),
-                _buildLanguageSection(),
-                // Ne s'affiche que là où la loi l'exige (EEE, UK, États US
-                // régulés) : ailleurs, le widget ne rend rien.
-                const _PrivacyOptionsTile(),
-                const SizedBox(height: 28),
-                _buildRecentActivity(d.recentAttempts),
-                if (user.role == 'admin') ...[
-                  const SizedBox(height: 24),
-                  _buildAdminButton(),
+    const gap = SizedBox(height: AppSpacing.xxl);
+    final l10n = AppLocalizations.of(context);
+
+    // La page etait une pile continue : identite, chiffres, reglages, historique
+    // et boutons de compte se suivaient sans qu'on sache ou l'un finissait. Elle
+    // se lit maintenant par sections — trois d'entre elles en avaient deja un
+    // titre, les autres flottaient.
+    return SafeArea(
+      bottom: false,
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(child: _buildHeader(user)),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.gutter, 0, AppSpacing.gutter, AppSpacing.xxxl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHero(user, d.rank),
+                  const SizedBox(height: AppSpacing.lg),
+                  _buildXpBar(user),
+                  gap,
+                  _SectionTitle(title: l10n.statisticsSection),
+                  const SizedBox(height: AppSpacing.md),
+                  _buildStatsCard(user),
+                  gap,
+                  _buildBadgesButton(),
+                  gap,
+                  _buildPremiumSection(),
+                  gap,
+                  _buildThemeSection(),
+                  gap,
+                  _buildLanguageSection(),
+                  // Ne s'affiche que là où la loi l'exige (EEE, UK, États US
+                  // régulés) : ailleurs, le widget ne rend rien.
+                  const _PrivacyOptionsTile(),
+                  gap,
+                  _buildRecentActivity(d.recentAttempts),
+                  gap,
+                  _SectionTitle(title: l10n.accountSection),
+                  const SizedBox(height: AppSpacing.md),
+                  if (user.role == 'admin') ...[
+                    _buildAdminButton(),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  _buildLogoutButton(),
+                  const SizedBox(height: AppSpacing.md),
+                  _buildDeleteAccountButton(),
                 ],
-                const SizedBox(height: 24),
-                _buildLogoutButton(),
-                const SizedBox(height: 12),
-                _buildDeleteAccountButton(),
-              ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -478,42 +503,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // ─── Stats row ───────────────────────────────────────────────────────────────
 
-  Widget _buildStatsRow(UserModel user) {
-    return StatsRow(
-      stats: [
-        StatItem('${user.quizzesTaken}',
-            AppLocalizations.of(context).quizzesPlayed),
-        StatItem('${user.correctAnswers}',
-            AppLocalizations.of(context).goodAnswers),
-        StatItem('${user.accuracy.toStringAsFixed(0)}%',
-            AppLocalizations.of(context).accuracy),
-      ],
-    );
-  }
+  /// Les cinq chiffres du joueur dans une seule carte.
+  ///
+  /// Ils vivaient dans deux blocs qui ne se ressemblaient pas — trois valeurs
+  /// nues d'un côté, deux cartes teintées de l'autre, l'une beige et l'autre
+  /// orange sans que la différence veuille dire quoi que ce soit. Ce sont les
+  /// mêmes chiffres sur le même joueur : une seule carte, un seul trait pour
+  /// séparer ce qu'on cumule de ce qu'on tient d'affilée.
+  Widget _buildStatsCard(UserModel user) {
+    final l10n = AppLocalizations.of(context);
 
-  // ─── Streak row ──────────────────────────────────────────────────────────────
-
-  Widget _buildStreakRow(UserModel user) {
-    return Row(
-      children: [
-        Expanded(
-          child: _StreakCard(
-            icon: Icons.local_fire_department_rounded,
-            value: '${user.streak}',
-            label: AppLocalizations.of(context).currentStreak,
-            color: AppColors.secondary,
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: context.cardElevated,
+        borderRadius: AppRadius.rLg,
+        boxShadow: AppShadows.card(context),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _Figure(
+                  value: '${user.quizzesTaken}',
+                  label: l10n.quizzesPlayed,
+                ),
+              ),
+              Expanded(
+                child: _Figure(
+                  value: '${user.correctAnswers}',
+                  label: l10n.goodAnswers,
+                ),
+              ),
+              Expanded(
+                child: _Figure(
+                  value: '${user.accuracy.toStringAsFixed(0)}%',
+                  label: l10n.accuracy,
+                ),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _StreakCard(
-            icon: Icons.emoji_events_rounded,
-            value: '${user.longestStreak}',
-            label: AppLocalizations.of(context).bestStreak,
-            color: AppColors.warning,
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
+            child: Divider(color: context.appColors.border, height: 1),
           ),
-        ),
-      ],
+          Row(
+            children: [
+              Expanded(
+                child: _Figure(
+                  value: '${user.streak}',
+                  label: l10n.currentStreak,
+                  icon: Icons.local_fire_department_rounded,
+                  color: AppColors.secondary,
+                ),
+              ),
+              Expanded(
+                child: _Figure(
+                  value: '${user.longestStreak}',
+                  label: l10n.bestStreak,
+                  icon: Icons.emoji_events_rounded,
+                  color: AppColors.warning,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -850,50 +907,55 @@ class _HeroBadge extends StatelessWidget {
 
 // ─── Streak card ─────────────────────────────────────────────────────────────
 
-class _StreakCard extends StatelessWidget {
-  final IconData icon;
+class _Figure extends StatelessWidget {
   final String value;
   final String label;
-  final Color color;
+  final IconData? icon;
+  final Color? color;
 
-  const _StreakCard({
-    required this.icon,
+  const _Figure({
     required this.value,
     required this.label,
-    required this.color,
+    this.icon,
+    this.color,
   });
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          border: Border.all(color: color.withValues(alpha: 0.2)),
-        ),
-        child: Row(
+  Widget build(BuildContext context) {
+    final tint = color ?? context.appColors.textPrimary;
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 26, color: color),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: context.type.headlineLarge.copyWith(color: color),
-                ),
-                Text(
-                  label,
-                  style: context.type.labelSmall.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w500),
-                ),
-              ],
+            if (icon != null) ...[
+              Icon(icon, size: 18, color: tint),
+              const SizedBox(width: 6),
+            ],
+            Text(
+              value,
+              style: context.type.headlineMedium
+                  .copyWith(color: tint, fontWeight: FontWeight.w800),
             ),
           ],
         ),
-      );
+        const SizedBox(height: 2),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: context.type.labelMedium
+                .copyWith(color: context.appColors.textMuted),
+          ),
+        ),
+      ],
+    );
+  }
 }
-
-// ─── Section title ───────────────────────────────────────────────────────────
 
 class _SectionTitle extends StatelessWidget {
   final String title;
@@ -968,7 +1030,10 @@ class _AttemptTile extends StatelessWidget {
                 Text(
                   title,
                   style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
-                  maxLines: 1,
+                  // Les titres de quiz finissent par ce qui les distingue
+                  // (« … — Niveau avancé ») : coupés à une ligne, cinq parties
+                  // differentes s'affichaient a l'identique.
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
@@ -979,7 +1044,7 @@ class _AttemptTile extends StatelessWidget {
                       style: context.type.labelMedium.copyWith(color: color),
                     ),
                     Text(
-                      '  ·  $correct/$total bonnes',
+                      '  ·  ${AppLocalizations.of(context).correctOutOf(correct, total)}',
                       style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],

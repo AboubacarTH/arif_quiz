@@ -3707,6 +3707,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{no friends} =1{1 friend} other{{count} friends}}'**
   String friendsCount(int count);
+
+  /// No description provided for @statisticsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statisticsSection;
+
+  /// No description provided for @accountSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountSection;
+
+  /// No description provided for @correctOutOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{correct}/{total} correct'**
+  String correctOutOf(int correct, int total);
+
+  /// No description provided for @deleteAccountWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This cannot be undone. All your data will be permanently deleted.'**
+  String get deleteAccountWarning;
 }
 
 class _AppLocalizationsDelegate

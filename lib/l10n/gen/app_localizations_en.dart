@@ -2028,4 +2028,19 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get statisticsSection => 'Statistics';
+
+  @override
+  String get accountSection => 'Account';
+
+  @override
+  String correctOutOf(int correct, int total) {
+    return '$correct/$total correct';
+  }
+
+  @override
+  String get deleteAccountWarning =>
+      'This cannot be undone. All your data will be permanently deleted.';
 }

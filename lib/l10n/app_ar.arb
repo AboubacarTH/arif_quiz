@@ -600,5 +600,9 @@
   "declineLabel": "رفض",
   "noPendingRequestsHint": "الطلبات التي تصلك تظهر هنا.",
   "noRecentActivityHint": "ستظهر هنا مباريات أصدقائك.",
-  "friendsCount": "{count, plural, =0{لا أصدقاء} =1{صديق واحد} =2{صديقان} few{{count} أصدقاء} many{{count} صديقًا} other{{count} صديق}}"
+  "friendsCount": "{count, plural, =0{لا أصدقاء} =1{صديق واحد} =2{صديقان} few{{count} أصدقاء} many{{count} صديقًا} other{{count} صديق}}",
+  "statisticsSection": "الإحصائيات",
+  "accountSection": "الحساب",
+  "correctOutOf": "{correct}/{total} صحيحة",
+  "deleteAccountWarning": "لا يمكن التراجع عن هذا. ستُحذف كل بياناتك نهائياً."
 }

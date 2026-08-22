@@ -43,8 +43,16 @@ class ProfileController extends ChangeNotifier {
 
   ProfileController(this._repo);
 
-  Future<void> load() async {
-    _emit(ProfileLoading());
+  /// Le premier chargement : l'écran n'a rien à montrer, le squelette a du sens.
+  Future<void> load() => _fetch(showSkeleton: true);
+
+  /// Un tirer-pour-rafraîchir : le profil reste à l'écran pendant l'appel.
+  /// L'écran n'en avait aucun — il fallait sortir de l'onglet et y revenir pour
+  /// voir ses points bouger après une partie.
+  Future<void> refresh() => _fetch(showSkeleton: false);
+
+  Future<void> _fetch({required bool showSkeleton}) async {
+    if (showSkeleton) _emit(ProfileLoading());
     try {
       final res = await _repo.getProfile();
       _emit(ProfileLoaded(
@@ -53,7 +61,11 @@ class ProfileController extends ChangeNotifier {
         recentAttempts: res['recent_attempts'] ?? [],
       ));
     } catch (e) {
-      _emit(ProfileError('Failed to load profile. ${e.toString()}'));
+      // Un rafraîchissement qui échoue ne doit pas effacer ce qui est déjà là :
+      // le réseau tombe, le profil affiché reste le dernier connu.
+      if (data == null) {
+        _emit(ProfileError('Failed to load profile. ${e.toString()}'));
+      }
     }
   }
 

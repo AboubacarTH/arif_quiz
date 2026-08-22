@@ -2020,4 +2020,19 @@ class AppLocalizationsAr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get statisticsSection => 'الإحصائيات';
+
+  @override
+  String get accountSection => 'الحساب';
+
+  @override
+  String correctOutOf(int correct, int total) {
+    return '$correct/$total صحيحة';
+  }
+
+  @override
+  String get deleteAccountWarning =>
+      'لا يمكن التراجع عن هذا. ستُحذف كل بياناتك نهائياً.';
 }

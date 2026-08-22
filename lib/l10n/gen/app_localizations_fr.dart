@@ -706,10 +706,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get accuracy => 'Précision';
 
   @override
-  String get currentStreak => 'Streak actuel';
+  String get currentStreak => 'Jours d\'affilée';
 
   @override
-  String get bestStreak => 'Meilleur streak';
+  String get bestStreak => 'Record';
 
   @override
   String get achievements => 'Succès';
@@ -2045,4 +2045,19 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get statisticsSection => 'Statistiques';
+
+  @override
+  String get accountSection => 'Compte';
+
+  @override
+  String correctOutOf(int correct, int total) {
+    return '$correct/$total bonnes';
+  }
+
+  @override
+  String get deleteAccountWarning =>
+      'Cette action est irréversible. Toutes tes données seront supprimées définitivement.';
 }

@@ -1125,5 +1125,19 @@
         "type": "int"
       }
     }
-  }
+  },
+  "statisticsSection": "Statistics",
+  "accountSection": "Account",
+  "correctOutOf": "{correct}/{total} correct",
+  "@correctOutOf": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteAccountWarning": "This cannot be undone. All your data will be permanently deleted."
 }
