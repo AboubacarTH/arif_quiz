@@ -9,6 +9,10 @@ import 'package:flutter/widgets.dart';
 abstract final class AuthErrorCodes {
   static const invalidCredentials = 'invalid_credentials';
   static const registrationFailed = 'registration_failed';
+  static const googleSignInFailed = 'google_sign_in_failed';
+  static const googleUnavailable = 'google_unavailable';
+  static const googleMisconfigured = 'google_misconfigured';
+  static const useGoogleToSignIn = 'use_google_to_sign_in';
 }
 
 class AuthErrorL10n {
@@ -19,6 +23,10 @@ class AuthErrorL10n {
     return switch (code) {
       AuthErrorCodes.registrationFailed => l10n.registrationFailed,
       AuthErrorCodes.invalidCredentials => l10n.invalidCredentials,
+      AuthErrorCodes.googleSignInFailed => l10n.googleSignInFailed,
+      AuthErrorCodes.googleUnavailable => l10n.googleUnavailable,
+      AuthErrorCodes.googleMisconfigured => l10n.googleMisconfigured,
+      AuthErrorCodes.useGoogleToSignIn => l10n.useGoogleToSignIn,
       // Un code inconnu ne doit jamais fuir en anglais dans l'UI.
       _ => l10n.invalidCredentials,
     };

@@ -65,7 +65,7 @@ import 'app_localizations_fr.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -88,18 +88,18 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
     Locale('en'),
     Locale('es'),
-    Locale('fr')
+    Locale('fr'),
   ];
 
   /// No description provided for @greeting.
@@ -3737,6 +3737,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} (you)'**
   String nameYou(String name);
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @googleSignInFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in failed. Please try again.'**
+  String get googleSignInFailed;
+
+  /// No description provided for @googleUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in isn\'t available on this device.'**
+  String get googleUnavailable;
+
+  /// No description provided for @googleMisconfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in isn\'t set up for this app yet.'**
+  String get googleMisconfigured;
+
+  /// No description provided for @useGoogleToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'This account was created with Google. Use \"Continue with Google\".'**
+  String get useGoogleToSignIn;
+
+  /// No description provided for @dontHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? '**
+  String get dontHaveAccount;
 }
 
 class _AppLocalizationsDelegate
@@ -3770,8 +3806,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

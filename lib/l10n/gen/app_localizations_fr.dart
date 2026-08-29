@@ -2065,4 +2065,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String nameYou(String name) {
     return '$name (toi)';
   }
+
+  @override
+  String get continueWithGoogle => 'Continuer avec Google';
+
+  @override
+  String get googleSignInFailed => 'La connexion Google a échoué. Réessayez.';
+
+  @override
+  String get googleUnavailable =>
+      'La connexion Google n\'est pas disponible sur cet appareil.';
+
+  @override
+  String get googleMisconfigured =>
+      'La connexion Google n\'est pas encore configurée pour cette application.';
+
+  @override
+  String get useGoogleToSignIn =>
+      'Ce compte a été créé avec Google. Utilisez « Continuer avec Google ».';
+
+  @override
+  String get dontHaveAccount => 'Pas encore de compte ? ';
 }

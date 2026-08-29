@@ -41,8 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const MainNavigation(),
-          transitionsBuilder: (_, a, __, child) =>
+          pageBuilder: (_, _, _) => const MainNavigation(),
+          transitionsBuilder: (_, a, _, child) =>
               FadeTransition(opacity: a, child: child),
           transitionDuration: const Duration(milliseconds: 400),
         ),
@@ -64,6 +64,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     if (!_validate()) return;
     await _auth.login(_emailCtrl.text.trim(), _passCtrl.text);
+  }
+
+  Future<void> _loginWithGoogle() async {
+    // Les erreurs de saisie du formulaire n'ont plus lieu d'être affichées :
+    // ce chemin ne les concerne pas.
+    setState(() {
+      _emailError = null;
+      _passError = null;
+    });
+    await _auth.signInWithGoogle();
   }
 
   @override
@@ -199,13 +209,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   size: AppButtonSize.large,
                   loading: _auth.isLoading,
                 ),
+                const SizedBox(height: 12),
+                GoogleSignInButton(
+                  onPressed: _auth.isLoading ? null : _loginWithGoogle,
+                ),
                 const SizedBox(height: 24),
                 Wrap(
                   alignment: WrapAlignment.center,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account? ",
+                      AppLocalizations.of(context).dontHaveAccount,
                       style: TextStyle(color: context.appColors.textSecondary),
                     ),
                     GestureDetector(
@@ -230,7 +244,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(child: Divider(color: context.appColors.border)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text('ou', style: context.type.bodyMedium.copyWith(color: context.appColors.textMuted)),
+                    child: Text(AppLocalizations.of(context).orSeparator,
+                        style: context.type.bodyMedium
+                            .copyWith(color: context.appColors.textMuted)),
                   ),
                   Expanded(child: Divider(color: context.appColors.border)),
                 ]),
@@ -241,8 +257,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => const MainNavigation(),
-                        transitionsBuilder: (_, a, __, child) =>
+                        pageBuilder: (_, _, _) => const MainNavigation(),
+                        transitionsBuilder: (_, a, _, child) =>
                             FadeTransition(opacity: a, child: child),
                         transitionDuration: const Duration(milliseconds: 400),
                       ),

@@ -605,5 +605,11 @@
   "accountSection": "Cuenta",
   "correctOutOf": "{correct}/{total} correctas",
   "deleteAccountWarning": "Esta acción es irreversible. Todos tus datos se borrarán definitivamente.",
-  "nameYou": "{name} (tú)"
+  "nameYou": "{name} (tú)",
+  "continueWithGoogle": "Continuar con Google",
+  "googleSignInFailed": "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
+  "googleUnavailable": "El inicio de sesión con Google no está disponible en este dispositivo.",
+  "googleMisconfigured": "El inicio de sesión con Google aún no está configurado en esta aplicación.",
+  "useGoogleToSignIn": "Esta cuenta se creó con Google. Usa «Continuar con Google».",
+  "dontHaveAccount": "¿No tienes cuenta? "
 }

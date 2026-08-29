@@ -605,5 +605,11 @@
   "accountSection": "Compte",
   "correctOutOf": "{correct}/{total} bonnes",
   "deleteAccountWarning": "Cette action est irréversible. Toutes tes données seront supprimées définitivement.",
-  "nameYou": "{name} (toi)"
+  "nameYou": "{name} (toi)",
+  "continueWithGoogle": "Continuer avec Google",
+  "googleSignInFailed": "La connexion Google a échoué. Réessayez.",
+  "googleUnavailable": "La connexion Google n'est pas disponible sur cet appareil.",
+  "googleMisconfigured": "La connexion Google n'est pas encore configurée pour cette application.",
+  "useGoogleToSignIn": "Ce compte a été créé avec Google. Utilisez « Continuer avec Google ».",
+  "dontHaveAccount": "Pas encore de compte ? "
 }

@@ -10,6 +10,7 @@ export 'widgets/shimmer_loading.dart';
 export 'widgets/empty_state.dart';
 export 'widgets/leaderboard_tile.dart';
 export 'widgets/app_bar.dart';
+export 'widgets/google_sign_in_button.dart';
 
 // Painters
 export 'painters/background_painter.dart';

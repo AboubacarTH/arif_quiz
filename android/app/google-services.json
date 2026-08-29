@@ -12,7 +12,44 @@
           "package_name": "com.a2digit.arif_quiz"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "257601508508-9u28lpta1831u8is1dcksekegm9p7e3p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a2digit.arif_quiz",
+            "certificate_hash": "692d8adaec38503f4e696d83a4cbab0acf5526ab"
+          }
+        },
+        {
+          "client_id": "257601508508-c0025esqj7j8dam1u1evg3jl4aup9qcd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a2digit.arif_quiz",
+            "certificate_hash": "1ebdd0955e97eae778c7d4e51b9c5ebf603d0bf1"
+          }
+        },
+        {
+          "client_id": "257601508508-f9k3bbvds3a0c9vmprlb3ekur8oc5v51.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a2digit.arif_quiz",
+            "certificate_hash": "ba197d301b26dbf9d86c31fa86538799d0457b63"
+          }
+        },
+        {
+          "client_id": "257601508508-pog0cdup4gdt3dh0c34jfegd666546q9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a2digit.arif_quiz",
+            "certificate_hash": "de6bf6613b4c98fb2e7ebb9e0b257cdf5cc61932"
+          }
+        },
+        {
+          "client_id": "257601508508-t95m33frpm9gpelple3rcan5f46rlqsm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBHAGGAPtvqq2P7RwhEzAJPZ8X6uHVCEtc"
@@ -20,7 +57,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "257601508508-t95m33frpm9gpelple3rcan5f46rlqsm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

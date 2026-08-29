@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Future<void> _deleteAccount(String password) async {
+  Future<void> _deleteAccount(String? password) async {
     try {
       await apiService.deleteAccount(password);
       if (!mounted) return;
@@ -74,6 +74,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _confirmDeleteAccount() {
+    // Un compte Google n'a pas de mot de passe : le champ n'aurait rien à
+    // vérifier, et l'exiger rendrait la suppression impossible.
+    final needsPassword = _ctrl.data?.user.hasPassword ?? true;
     final passwordCtrl = TextEditingController();
     bool obscure = true;
 
@@ -98,34 +101,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 AppLocalizations.of(context).deleteAccountWarning,
                 style: TextStyle(color: context.appColors.textSecondary),
               ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: passwordCtrl,
-                obscureText: obscure,
-                style: TextStyle(color: context.appColors.textPrimary),
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).password,
-                  labelStyle:
-                      TextStyle(color: context.appColors.textSecondary),
-                  filled: true,
-                  fillColor: context.appColors.bg,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                    borderSide: BorderSide(color: context.appColors.border),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscure
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                      color: context.appColors.textMuted,
-                      size: 20,
+              if (needsPassword) ...[
+                const SizedBox(height: 16),
+                TextField(
+                  controller: passwordCtrl,
+                  obscureText: obscure,
+                  style: TextStyle(color: context.appColors.textPrimary),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).password,
+                    labelStyle:
+                        TextStyle(color: context.appColors.textSecondary),
+                    filled: true,
+                    fillColor: context.appColors.bg,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      borderSide: BorderSide(color: context.appColors.border),
                     ),
-                    onPressed: () =>
-                        setStateDialog(() => obscure = !obscure),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        obscure
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: context.appColors.textMuted,
+                        size: 20,
+                      ),
+                      onPressed: () =>
+                          setStateDialog(() => obscure = !obscure),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
           actions: [
@@ -138,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             TextButton(
               onPressed: () {
-                final password = passwordCtrl.text;
+                final password = needsPassword ? passwordCtrl.text : null;
                 Navigator.pop(ctx);
                 _deleteAccount(password);
               },
@@ -632,7 +637,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildPremiumSection() {
     return ListenableBuilder(
       listenable: monetizationController,
-      builder: (_, __) => monetizationController.isPremium
+      builder: (_, _) => monetizationController.isPremium
           ? _PremiumBadge()
           : Column(
               children: [
@@ -670,7 +675,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: ListenableBuilder(
             listenable: themeController,
-            builder: (_, __) => Column(
+            builder: (_, _) => Column(
               children: [
                 _ThemeTile(
                   icon: Icons.smartphone_rounded,
@@ -720,7 +725,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: ListenableBuilder(
             listenable: localeController,
-            builder: (_, __) => Column(
+            builder: (_, _) => Column(
               children: [
                 for (final (i, code)
                     in LocaleController.supportedCodes.indexed) ...[

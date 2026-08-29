@@ -605,5 +605,11 @@
   "accountSection": "الحساب",
   "correctOutOf": "{correct}/{total} صحيحة",
   "deleteAccountWarning": "لا يمكن التراجع عن هذا. ستُحذف كل بياناتك نهائياً.",
-  "nameYou": "{name} (أنت)"
+  "nameYou": "{name} (أنت)",
+  "continueWithGoogle": "المتابعة باستخدام Google",
+  "googleSignInFailed": "تعذّر تسجيل الدخول باستخدام Google. حاول مرة أخرى.",
+  "googleUnavailable": "تسجيل الدخول باستخدام Google غير متاح على هذا الجهاز.",
+  "googleMisconfigured": "لم يتم إعداد تسجيل الدخول باستخدام Google لهذا التطبيق بعد.",
+  "useGoogleToSignIn": "أُنشئ هذا الحساب باستخدام Google. استخدم «المتابعة باستخدام Google».",
+  "dontHaveAccount": "ليس لديك حساب؟ "
 }

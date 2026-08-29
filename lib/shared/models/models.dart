@@ -27,6 +27,11 @@ class UserModel {
   final String email;
   final String? avatar;
   final String role;
+
+  /// Faux pour un compte ouvert via Google : aucun mot de passe n'existe, il
+  /// ne faut donc pas en demander un pour supprimer le compte.
+  final bool hasPassword;
+
   final int totalPoints;
   final int quizzesTaken;
   final int correctAnswers;
@@ -44,6 +49,7 @@ class UserModel {
     required this.email,
     this.avatar,
     required this.role,
+    this.hasPassword = true,
     required this.totalPoints,
     required this.quizzesTaken,
     required this.correctAnswers,
@@ -62,6 +68,9 @@ class UserModel {
         email: json['email'] ?? '',
         avatar: json['avatar'],
         role: json['role'] ?? 'user',
+        // Absent des réponses plus anciennes : on suppose alors un compte
+        // classique, ce qui redemande simplement le mot de passe.
+        hasPassword: json['has_password'] ?? true,
         totalPoints: json['total_points'] ?? 0,
         quizzesTaken: json['quizzes_taken'] ?? 0,
         correctAnswers: json['correct_answers'] ?? 0,

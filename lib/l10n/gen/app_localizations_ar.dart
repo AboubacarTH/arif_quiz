@@ -2040,4 +2040,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String nameYou(String name) {
     return '$name (أنت)';
   }
+
+  @override
+  String get continueWithGoogle => 'المتابعة باستخدام Google';
+
+  @override
+  String get googleSignInFailed =>
+      'تعذّر تسجيل الدخول باستخدام Google. حاول مرة أخرى.';
+
+  @override
+  String get googleUnavailable =>
+      'تسجيل الدخول باستخدام Google غير متاح على هذا الجهاز.';
+
+  @override
+  String get googleMisconfigured =>
+      'لم يتم إعداد تسجيل الدخول باستخدام Google لهذا التطبيق بعد.';
+
+  @override
+  String get useGoogleToSignIn =>
+      'أُنشئ هذا الحساب باستخدام Google. استخدم «المتابعة باستخدام Google».';
+
+  @override
+  String get dontHaveAccount => 'ليس لديك حساب؟ ';
 }

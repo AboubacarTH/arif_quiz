@@ -1147,5 +1147,11 @@
         "type": "String"
       }
     }
-  }
+  },
+  "continueWithGoogle": "Continue with Google",
+  "googleSignInFailed": "Google sign-in failed. Please try again.",
+  "googleUnavailable": "Google sign-in isn't available on this device.",
+  "googleMisconfigured": "Google sign-in isn't set up for this app yet.",
+  "useGoogleToSignIn": "This account was created with Google. Use \"Continue with Google\".",
+  "dontHaveAccount": "Don't have an account? "
 }

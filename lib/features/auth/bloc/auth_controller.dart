@@ -1,3 +1,4 @@
+import 'package:arif_quiz/core/auth/google_auth_service.dart';
 import 'package:arif_quiz/core/i18n/auth_error_l10n.dart';
 import 'package:arif_quiz/features/auth/data/auth_repository.dart';
 import 'package:arif_quiz/shared/models/models.dart';
@@ -13,6 +14,7 @@ class AuthRegisterRequested extends AuthEvent {
   final String name, email, password;
   AuthRegisterRequested(this.name, this.email, this.password);
 }
+class AuthGoogleRequested extends AuthEvent {}
 class AuthLogoutRequested extends AuthEvent {}
 class AuthCheckRequested extends AuthEvent {}
 
@@ -69,6 +71,11 @@ class AuthController extends ChangeNotifier {
       final result = await _repo.login(email.trim(), password);
       _emit(AuthAuthenticated(result.user));
       return true;
+    } on GoogleAccountException {
+      // Aucun mot de passe ne marchera : on oriente vers le bon bouton plutôt
+      // que de laisser croire à une faute de frappe.
+      _emit(AuthError(AuthErrorCodes.useGoogleToSignIn));
+      return false;
     } catch (_) {
       _emit(AuthError(AuthErrorCodes.invalidCredentials));
       return false;
@@ -86,6 +93,38 @@ class AuthController extends ChangeNotifier {
       return false;
     }
   }
+
+  /// Connexion via Google.
+  ///
+  /// Renvoie `false` aussi bien sur échec que sur annulation : dans le second
+  /// cas aucun message n'est affiché, refermer le sélecteur de compte est un
+  /// choix, pas une erreur.
+  Future<bool> signInWithGoogle() async {
+    _emit(AuthLoading());
+    try {
+      final result = await _repo.signInWithGoogle();
+      _emit(AuthAuthenticated(result.user));
+      return true;
+    } on GoogleAuthException catch (e) {
+      if (e.reason == GoogleAuthFailure.cancelled) {
+        _emit(AuthUnauthenticated());
+      } else {
+        _emit(AuthError(_codeFor(e.reason)));
+      }
+      return false;
+    } catch (_) {
+      // Le jeton Google était bon, c'est l'échange avec notre serveur qui a
+      // échoué.
+      _emit(AuthError(AuthErrorCodes.googleSignInFailed));
+      return false;
+    }
+  }
+
+  String _codeFor(GoogleAuthFailure reason) => switch (reason) {
+        GoogleAuthFailure.unavailable => AuthErrorCodes.googleUnavailable,
+        GoogleAuthFailure.misconfigured => AuthErrorCodes.googleMisconfigured,
+        _ => AuthErrorCodes.googleSignInFailed,
+      };
 
   Future<void> logout() async {
     try {

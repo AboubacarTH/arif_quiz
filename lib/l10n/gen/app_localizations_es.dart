@@ -2063,4 +2063,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String nameYou(String name) {
     return '$name (tú)';
   }
+
+  @override
+  String get continueWithGoogle => 'Continuar con Google';
+
+  @override
+  String get googleSignInFailed =>
+      'No se pudo iniciar sesión con Google. Inténtalo de nuevo.';
+
+  @override
+  String get googleUnavailable =>
+      'El inicio de sesión con Google no está disponible en este dispositivo.';
+
+  @override
+  String get googleMisconfigured =>
+      'El inicio de sesión con Google aún no está configurado en esta aplicación.';
+
+  @override
+  String get useGoogleToSignIn =>
+      'Esta cuenta se creó con Google. Usa «Continuar con Google».';
+
+  @override
+  String get dontHaveAccount => '¿No tienes cuenta? ';
 }

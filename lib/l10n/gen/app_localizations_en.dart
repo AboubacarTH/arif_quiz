@@ -2048,4 +2048,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String nameYou(String name) {
     return '$name (you)';
   }
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get googleSignInFailed => 'Google sign-in failed. Please try again.';
+
+  @override
+  String get googleUnavailable =>
+      'Google sign-in isn\'t available on this device.';
+
+  @override
+  String get googleMisconfigured =>
+      'Google sign-in isn\'t set up for this app yet.';
+
+  @override
+  String get useGoogleToSignIn =>
+      'This account was created with Google. Use \"Continue with Google\".';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account? ';
 }

@@ -1,5 +1,9 @@
+import 'package:arif_quiz/core/i18n/auth_error_l10n.dart';
+import 'package:arif_quiz/features/auth/bloc/auth_controller.dart';
+import 'package:arif_quiz/features/auth/data/auth_repository.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/email_confirmation_screen.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
+import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -21,6 +25,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPassCtrl = TextEditingController();
   bool _loading = false;
   String? _error;
+
+  /// Uniquement pour le chemin Google : l'inscription par formulaire passe
+  /// directement par `apiService`, et il n'y a pas lieu de la déplacer ici.
+  final AuthController _googleAuth =
+      AuthController(AuthRepository(apiService));
 
   String? _validate() {
     final name = _nameCtrl.text.trim();
@@ -46,6 +55,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     return null;
+  }
+
+  /// « Continuer avec Google » depuis l'inscription : Google a déjà vérifié
+  /// l'adresse, on saute donc l'écran de confirmation par code et on entre
+  /// directement dans l'app.
+  Future<void> _registerWithGoogle() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    final signedIn = await _googleAuth.signInWithGoogle();
+    if (!mounted) return;
+
+    if (signedIn) {
+      isGuest.value = false;
+      messagingService.syncToken();
+      Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, _, _) => const MainNavigation(),
+          transitionsBuilder: (_, a, _, child) =>
+              FadeTransition(opacity: a, child: child),
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+        (_) => false,
+      );
+      return;
+    }
+
+    // Un code nul signifie que l'utilisateur a simplement fermé le sélecteur
+    // de compte : rien à signaler.
+    final code = _googleAuth.errorCode;
+    setState(() {
+      _loading = false;
+      _error = code == null ? null : AuthErrorL10n.message(context, code);
+    });
   }
 
   Future<void> _register() async {
@@ -109,6 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailCtrl.dispose();
     _passCtrl.dispose();
     _confirmPassCtrl.dispose();
+    _googleAuth.dispose();
     super.dispose();
   }
 
@@ -207,6 +254,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   size: AppButtonSize.large,
                   loading: _loading,
                   onPressed: _loading ? null : _register,
+                ),
+                const SizedBox(height: 12),
+                GoogleSignInButton(
+                  onPressed: _loading ? null : _registerWithGoogle,
                 ),
                 const SizedBox(height: 24),
                 Center(
