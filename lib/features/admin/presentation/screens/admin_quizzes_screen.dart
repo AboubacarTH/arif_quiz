@@ -202,12 +202,11 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
     final locale = await _pickImportLocale();
     if (locale == null) return;
 
-    final picked = await FilePicker.platform.pickFiles(
+    final file = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls', 'csv'],
     );
-    if (picked == null || picked.files.isEmpty) return;
-    final file = picked.files.first;
+    if (file == null) return;
     if (file.path == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -426,7 +425,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
         itemCount: _quizzes.length + (_page < _lastPage ? 1 : 0),
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (_, i) {
           if (i == _quizzes.length) {
             _loadMore();

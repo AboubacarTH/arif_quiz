@@ -606,7 +606,7 @@ class _HomeScreenState extends State<HomeScreen> {
         clipBehavior: Clip.none,
         scrollDirection: Axis.horizontal,
         itemCount: cats.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (_, i) => _CategoryTile(
           category: cats[i],
           onTap: () => _openCategory(cats[i]),
@@ -624,7 +624,7 @@ class _HomeScreenState extends State<HomeScreen> {
           clipBehavior: Clip.none,
           scrollDirection: Axis.horizontal,
           itemCount: quizzes.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          separatorBuilder: (_, _) => const SizedBox(width: 12),
           itemBuilder: (_, i) => QuizCard(
             quiz: quizzes[i],
             style: QuizCardStyle.featured,

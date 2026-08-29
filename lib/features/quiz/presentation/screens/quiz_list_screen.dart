@@ -331,7 +331,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.gutter),
         sliver: SliverList.separated(
           itemCount: _ctrl.quizzes.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 10),
+          separatorBuilder: (_, _) => const SizedBox(height: 10),
           itemBuilder: (_, i) => QuizCard(
             quiz: _ctrl.quizzes[i],
             style: QuizCardStyle.list,

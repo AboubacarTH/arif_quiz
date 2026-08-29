@@ -28,6 +28,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
   String _difficulty = 'medium';
   bool _isPublished = false;
   PlatformFile? _pickedFile;
+  int? _pickedFileSize;
 
   bool _loading = true;
   bool _importing = false;
@@ -59,13 +60,16 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
   }
 
   Future<void> _pickFile() async {
-    final result = await FilePicker.platform.pickFiles(
+    final picked = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls', 'csv'],
     );
-    if (result != null && result.files.isNotEmpty) {
-      setState(() { _pickedFile = result.files.first; _result = null; _error = null; });
-    }
+    if (picked == null) return;
+    // La taille n'est plus un champ mais une lecture asynchrone : on la
+    // retient ici, le `build` ne pouvant pas l'attendre.
+    final size = await picked.length();
+    if (!mounted) return;
+    setState(() { _pickedFile = picked; _pickedFileSize = size; _result = null; _error = null; });
   }
 
   Future<void> _import() async {
@@ -98,6 +102,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
           _result = res;
           _importing = false;
           _pickedFile = null;
+          _pickedFileSize = null;
           _titleCtrl.clear();
           _descCtrl.clear();
         });
@@ -215,7 +220,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                           if (_pickedFile != null) ...[
                             const SizedBox(height: 4),
                             Text(
-                              '${(_pickedFile!.size / 1024).toStringAsFixed(1)} KB',
+                              '${((_pickedFileSize ?? 0) / 1024).toStringAsFixed(1)} KB',
                               style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
                             ),
                           ],

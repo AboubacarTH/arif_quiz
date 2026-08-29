@@ -109,8 +109,8 @@ class _Row extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: count,
-          separatorBuilder: (_, __) => const SizedBox(width: 12),
-          itemBuilder: (_, __) => ShimmerBox(
+          separatorBuilder: (_, _) => const SizedBox(width: 12),
+          itemBuilder: (_, _) => ShimmerBox(
               width: itemWidth, height: itemHeight, radius: AppRadius.lg),
         ),
       );

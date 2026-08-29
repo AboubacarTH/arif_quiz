@@ -86,7 +86,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   color: AppColors.primary,
                   child: ListView.separated(
                     itemCount: _items.length,
-                    separatorBuilder: (_, __) => Divider(color: context.appColors.border, height: 1),
+                    separatorBuilder: (_, _) => Divider(color: context.appColors.border, height: 1),
                     itemBuilder: (_, i) => _NotifTile(
                       notif: _items[i],
                       onTap: () async {

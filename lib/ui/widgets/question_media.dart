@@ -43,14 +43,14 @@ class QuestionMedia extends StatelessWidget {
           imageUrl: imageUrl!.trim(),
           fit: BoxFit.contain,
           width: double.infinity,
-          placeholder: (_, __) => const SizedBox(
+          placeholder: (_, _) => const SizedBox(
             height: 140,
             child: Center(
               child: CircularProgressIndicator(
                   color: AppColors.primary, strokeWidth: 2),
             ),
           ),
-          errorWidget: (_, __, ___) => SizedBox(
+          errorWidget: (_, _, _) => SizedBox(
             height: 120,
             child: Center(
               child: Icon(Icons.broken_image_rounded,

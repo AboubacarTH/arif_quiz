@@ -40,7 +40,8 @@ class ExportQuestionsSheet {
 
     try {
       final file = await download(locale);
-      await Share.shareXFiles([XFile(file.path)], text: title);
+      await SharePlus.instance
+          .share(ShareParams(files: [XFile(file.path)], text: title));
     } catch (e) {
       messenger.showSnackBar(
         SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),

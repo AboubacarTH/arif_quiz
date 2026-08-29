@@ -283,7 +283,7 @@ class _AdminQuestionsScreenState extends State<AdminQuestionsScreen> {
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
         itemCount: _questions.length + (_page < _lastPage ? 1 : 0),
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (_, i) {
           if (i == _questions.length) {
             _loadMore();
@@ -533,7 +533,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
         'journey_level_id': widget.journeyLevel?.id,
         'text': _text.text.trim(),
         'type': _type,
-        if (options != null) 'options': options,
+        'options': ?options,
         'correct_answer': _correctAnswer.text.trim(),
         'explanation': _explanation.text.trim().isEmpty ? null : _explanation.text.trim(),
         'image_url': _imageUrl.text.trim().isEmpty ? null : _imageUrl.text.trim(),
@@ -923,7 +923,7 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
                 imageUrl: ctrl.text.trim(),
                 height: 110,
                 fit: BoxFit.contain,
-                errorWidget: (_, __, ___) => Icon(Icons.broken_image_rounded,
+                errorWidget: (_, _, _) => Icon(Icons.broken_image_rounded,
                     color: context.appColors.textMuted, size: 30),
               ),
             )
@@ -946,15 +946,13 @@ class _QuestionFormScreenState extends State<_QuestionFormScreen> {
   }
 
   Future<void> _pickAndUpload(String type) async {
-    final picked = await FilePicker.platform.pickFiles(
+    final f = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: type == 'image'
           ? ['jpg', 'jpeg', 'png', 'gif', 'webp']
           : ['mp3', 'wav', 'ogg', 'm4a', 'aac'],
     );
-    if (picked == null || picked.files.isEmpty) return;
-    final f = picked.files.first;
-    if (f.path == null) return;
+    if (f == null || f.path == null) return;
 
     setState(() {
       if (type == 'image') {

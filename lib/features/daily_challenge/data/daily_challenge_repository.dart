@@ -22,7 +22,7 @@ class DailyChallengeRepository {
     final res = await _api.post('/daily-challenge/submit', data: {
       'answers': answers,
       'time_taken': timeTaken,
-      if (sessionId != null) 'session_id': sessionId,
+      'session_id': ?sessionId,
     });
     return QuizAttemptResult.fromJson(res.data['data']);
   }

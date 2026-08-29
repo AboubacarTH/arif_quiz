@@ -128,7 +128,7 @@ class _AnimatedProgressRingState extends State<AnimatedProgressRing>
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
         animation: _anim,
-        builder: (_, __) => CircularProgressIndicator(
+        builder: (_, _) => CircularProgressIndicator(
           value: _anim.value,
           strokeWidth: widget.strokeWidth,
           strokeCap: StrokeCap.round,

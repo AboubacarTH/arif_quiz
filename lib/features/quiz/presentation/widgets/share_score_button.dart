@@ -58,9 +58,11 @@ class _ShareScoreButtonState extends State<ShareScoreButton> {
 
       final grade = widget.result.grade;
       final pct = widget.result.score.toStringAsFixed(0);
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: l10n.shareScoreText(grade, pct, widget.quiz.title),
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: l10n.shareScoreText(grade, pct, widget.quiz.title),
+        ),
       );
     } catch (e) {
       debugPrint('Share score error: $e');

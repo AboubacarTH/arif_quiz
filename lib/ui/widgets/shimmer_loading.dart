@@ -46,7 +46,7 @@ class _ShimmerBoxState extends State<ShimmerBox>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _anim,
-      builder: (_, __) => Opacity(
+      builder: (_, _) => Opacity(
         opacity: _anim.value,
         child: Container(
           width: widget.width,
@@ -73,8 +73,8 @@ class QuizListSkeleton extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: count,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (_, __) => Container(
+      separatorBuilder: (_, _) => const SizedBox(height: 12),
+      itemBuilder: (_, _) => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: context.appColors.cardBg,
@@ -114,8 +114,8 @@ class CategoryRowSkeleton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         scrollDirection: Axis.horizontal,
         itemCount: 5,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (_, __) =>
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
+        itemBuilder: (_, _) =>
             const ShimmerBox(width: 96, height: 116, radius: 18),
       ),
     );

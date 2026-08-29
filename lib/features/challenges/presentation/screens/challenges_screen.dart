@@ -229,7 +229,7 @@ class _ChallengesScreenState extends State<ChallengesScreen>
       padding: const EdgeInsets.fromLTRB(
           AppSpacing.gutter, AppSpacing.lg, AppSpacing.gutter, 100),
       itemCount: challenges.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (_, i) => ChallengeCard(
         challenge: challenges[i],
         showCreator: true,

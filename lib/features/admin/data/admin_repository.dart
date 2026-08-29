@@ -51,9 +51,9 @@ class AdminRepository {
   }) async {
     final res = await _api.get('/admin/quizzes', queryParameters: {
       if (search != null && search.isNotEmpty) 'search': search,
-      if (categoryId != null) 'category_id': categoryId,
-      if (difficulty != null) 'difficulty': difficulty,
-      if (status != null) 'status': status,
+      'category_id': ?categoryId,
+      'difficulty': ?difficulty,
+      'status': ?status,
       'page': page,
     });
     final list = res.data['data'] as List;
@@ -229,9 +229,9 @@ class AdminRepository {
   }) async {
     final res = await _api.get('/admin/questions', queryParameters: {
       if (search != null && search.isNotEmpty) 'search': search,
-      if (quizId != null) 'quiz_id': quizId,
-      if (journeyLevelId != null) 'journey_level_id': journeyLevelId,
-      if (type != null) 'type': type,
+      'quiz_id': ?quizId,
+      'journey_level_id': ?journeyLevelId,
+      'type': ?type,
       'page': page,
     });
     final list = res.data['data'] as List;

@@ -97,9 +97,9 @@ class GuestScreen extends StatelessWidget {
                     Navigator.pushAndRemoveUntil(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (_, __, ___) =>
+                        pageBuilder: (_, _, _) =>
                             const MainNavigation(initialIndex: 0),
-                        transitionsBuilder: (_, a, __, child) =>
+                        transitionsBuilder: (_, a, _, child) =>
                             FadeTransition(opacity: a, child: child),
                       ),
                       (_) => false,

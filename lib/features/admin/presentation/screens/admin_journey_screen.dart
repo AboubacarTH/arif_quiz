@@ -223,7 +223,7 @@ class _AdminJourneyScreenState extends State<AdminJourneyScreen> {
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         itemCount: displayed.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (_, i) {
           final level = displayed[i];
           final realIndex = _levels.length - 1 - i;

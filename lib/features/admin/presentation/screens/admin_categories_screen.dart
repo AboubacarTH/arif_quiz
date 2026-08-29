@@ -149,7 +149,7 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
         itemCount: _categories.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (_, i) => _CategoryTile(
           cat: _categories[i],
           onEdit: () => _showForm(cat: _categories[i]),

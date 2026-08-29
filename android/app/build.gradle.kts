@@ -16,7 +16,10 @@ if (keyPropertiesFile.exists()) {
 
 android {
     namespace = "com.a2digit.arif_quiz"
-    compileSdk = 36
+    // Android 17 — imposé par flutter_secure_storage 11. Compiler contre une
+    // API plus récente que `targetSdk` ne change aucun comportement à
+    // l'exécution : seul `targetSdk` opte l'app dans les nouvelles règles.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

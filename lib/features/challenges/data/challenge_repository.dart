@@ -35,8 +35,8 @@ class ChallengeRepository {
   }) async {
     final res = await _api.post('/challenges', data: {
       'source_type': sourceType,
-      if (quizId != null) 'quiz_id': quizId,
-      if (categoryId != null) 'category_id': categoryId,
+      'quiz_id': ?quizId,
+      'category_id': ?categoryId,
       'mode': mode,
       'title': title,
       'questions_count': questionsCount,
@@ -77,7 +77,7 @@ class ChallengeRepository {
       'answers': answers,
       'time_taken': timeTaken,
       'question_ids': questionIds,
-      if (sessionId != null) 'session_id': sessionId,
+      'session_id': ?sessionId,
       if (jokersUsed > 0) 'jokers_used': jokersUsed,
     });
     final data = res.data['data'] as Map<String, dynamic>;

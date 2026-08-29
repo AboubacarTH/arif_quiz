@@ -755,7 +755,7 @@ class _StepQuizState extends State<_StepQuiz> {
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                   itemCount: filtered.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  separatorBuilder: (_, _) => const SizedBox(height: 10),
                   itemBuilder: (_, i) {
                     final q = filtered[i];
                     final selected = widget.selectedQuiz?.id == q.id;

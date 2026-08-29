@@ -176,9 +176,11 @@ class ChallengeCard extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      Share.share(
-                        AppLocalizations.of(context).shareChallengeText(
-                            challenge.title, challenge.code),
+                      SharePlus.instance.share(
+                        ShareParams(
+                          text: AppLocalizations.of(context).shareChallengeText(
+                              challenge.title, challenge.code),
+                        ),
                       );
                     },
                     icon: const Icon(Icons.share_rounded, size: 18, color: AppColors.secondary),

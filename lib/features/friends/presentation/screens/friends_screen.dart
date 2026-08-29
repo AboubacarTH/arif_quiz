@@ -139,7 +139,7 @@ class _FriendsScreenState extends State<FriendsScreen>
       padding: const EdgeInsets.fromLTRB(
           AppSpacing.gutter, AppSpacing.lg, AppSpacing.gutter, AppSpacing.xxl),
       itemCount: _ctrl.friends.length + 1,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (_, i) {
         if (i == 0) {
           return Padding(
@@ -191,7 +191,7 @@ class _FriendsScreenState extends State<FriendsScreen>
       padding: const EdgeInsets.fromLTRB(
           AppSpacing.gutter, AppSpacing.lg, AppSpacing.gutter, AppSpacing.xxl),
       itemCount: _ctrl.requests.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (_, i) {
         final request = _ctrl.requests[i];
 
@@ -267,7 +267,7 @@ class _FriendsScreenState extends State<FriendsScreen>
       padding: const EdgeInsets.fromLTRB(
           AppSpacing.gutter, AppSpacing.lg, AppSpacing.gutter, AppSpacing.xxl),
       itemCount: _ctrl.activity.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (_, i) => _activityCard(_ctrl.activity[i]),
     );
   }

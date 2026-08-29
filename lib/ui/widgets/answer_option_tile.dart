@@ -164,7 +164,7 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
             style: context.type.titleMedium.copyWith(color: _textColor, fontWeight: FontWeight.w600),
           ),
         ),
-        if (_trailingIcon != null) _trailingIcon!,
+        ?_trailingIcon,
       ],
     );
   }
@@ -178,7 +178,7 @@ class _AnswerOptionTileState extends State<AnswerOptionTile>
           children: [
             _labelBadge(),
             const Spacer(),
-            if (_trailingIcon != null) _trailingIcon!,
+            ?_trailingIcon,
           ],
         ),
         const SizedBox(height: 6),
