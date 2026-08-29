@@ -1,7 +1,9 @@
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dart';
+import 'package:arif_quiz/features/daily_challenge/data/daily_challenge_repository.dart';
 import 'package:arif_quiz/features/daily_challenge/presentation/screens/daily_challenge_screen.dart';
 import 'package:arif_quiz/features/home/bloc/home_controller.dart';
+import 'package:arif_quiz/features/home/presentation/widgets/home_skeleton.dart';
 import 'package:arif_quiz/features/home/data/home_repository.dart';
 import 'package:arif_quiz/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:arif_quiz/features/journey/presentation/screens/journey_map_screen.dart';
@@ -13,11 +15,11 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_list_screen.da
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/ui/widgets/rank_badge.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/ui/widgets/quiz_card.dart';
-import 'package:arif_quiz/ui/widgets/shimmer_loading.dart';
 import 'package:arif_quiz/ui/widgets/streak_badge.dart';
 import 'package:arif_quiz/ui/widgets/xp_progress_bar.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _ctrl = HomeController(HomeRepository(apiService));
+    _ctrl = HomeController(
+        HomeRepository(apiService), DailyChallengeRepository(apiService));
     _ctrl.addListener(() {
       if (mounted) setState(() {});
     });
@@ -70,21 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBody() {
     if (_ctrl.isLoading) {
       return CustomScrollView(slivers: [
-        SliverToBoxAdapter(child: _header(null)),
-        const SliverToBoxAdapter(child: SizedBox(height: 24)),
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: CategoryRowSkeleton(),
-          ),
-        ),
-        const SliverToBoxAdapter(child: SizedBox(height: 28)),
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: QuizListSkeleton(count: 3),
-          ),
-        ),
+        const SliverToBoxAdapter(child: HomeHeaderSkeleton()),
+        const SliverToBoxAdapter(child: HomeSkeleton()),
       ]);
     }
 
@@ -110,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
         else ...[
           SliverToBoxAdapter(child: _xpSection(d.user)),
           SliverToBoxAdapter(child: _journeyCard()),
-          SliverToBoxAdapter(child: _dailyChallengeCard()),
+          SliverToBoxAdapter(child: _dailyChallengeCard(d.daily)),
           if (d.friendsLeaderboard.length >= 2) ...[
             _sectionTitle(AppLocalizations.of(context).friendsLeaderboard),
             SliverToBoxAdapter(
@@ -143,20 +133,12 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   AppLocalizations.of(context).greeting(user?.name.split(' ').first ?? AppLocalizations.of(context).guest),
-                  style: TextStyle(
-                    color: context.appColors.textSecondary,
-                    fontSize: 14,
-                  ),
+                  style: context.type.bodyLarge.copyWith(color: context.appColors.textSecondary),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   AppLocalizations.of(context).readyToPlay,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    height: 1.1,
-                  ),
+                  style: context.type.displayMedium.copyWith(color: context.appColors.textPrimary, height: 1.1),
                 ),
               ],
             ),
@@ -167,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: AppColors.accent.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppRadius.lg),
               border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
             ),
             child: Row(
@@ -176,11 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 5),
                 Text(
                   '${user?.totalPoints ?? 0}',
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 13,
-                  ),
+                  style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                 ),
               ],
             ),
@@ -221,11 +199,12 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           color: context.cardElevated,
           borderRadius: AppRadius.rLg,
-          boxShadow: AppShadows.tinted(context, AppColors.primary),
+          boxShadow: AppShadows.card(context),
         ),
         child: Row(
           children: [
-            const Text('🏆', style: TextStyle(fontSize: 28)),
+            const Icon(Icons.emoji_events_rounded,
+                    size: 26, color: AppColors.secondary),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -233,16 +212,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     AppLocalizations.of(context).guestBannerTitle,
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     AppLocalizations.of(context).guestBannerSubtitle,
-                    style: TextStyle(color: context.appColors.textSecondary, fontSize: 11),
+                    style: context.type.labelSmall.copyWith(color: context.appColors.textSecondary),
                   ),
                 ],
               ),
@@ -260,11 +235,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: Text(
                       AppLocalizations.of(context).signUp,
-                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
+                      style: context.type.labelMedium.copyWith(color: Colors.white),
                     ),
                   ),
                 ),
@@ -277,11 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   child: Text(
                     AppLocalizations.of(context).logIn,
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: context.type.labelSmall.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -325,84 +296,117 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── Daily challenge ────────────────────────────────────────────────────────
 
-  Widget _dailyChallengeCard() {
+  /// Trois états, trois messages. Un seul est cliquable : proposer d'ouvrir un
+  /// écran qui n'a rien à montrer est ce qui rendait cette carte trompeuse.
+  ///
+  /// Quand [status] est nul, la requête n'a pas abouti : la carte disparaît.
+  /// Se taire vaut mieux qu'annoncer « pas de défi » sur un timeout.
+  Widget _dailyChallengeCard(DailyStatus? status) {
+    if (status == null) return const SizedBox.shrink();
+
+    final daily = status.challenge;
+    final l10n = AppLocalizations.of(context);
+    final played = daily?.alreadyPlayed ?? false;
+    final available = daily != null && !played;
+
+    final (Color accent, IconData icon, String title, String subtitle) =
+        switch (daily) {
+      null => (
+          context.appColors.textMuted,
+          Icons.event_busy_rounded,
+          l10n.noDailyChallengeToday,
+          l10n.dailyBackTomorrow,
+        ),
+      _ when played => (
+          AppColors.success,
+          Icons.check_circle_rounded,
+          daily.quiz.title,
+          l10n.dailyDoneScore(daily.myScore?.round() ?? 0),
+        ),
+      _ => (
+          AppColors.primary,
+          Icons.auto_awesome_rounded,
+          daily.quiz.title,
+          l10n.dailyChallengeSubtitle,
+        ),
+    };
+
+    final card = Container(
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: context.cardElevated,
+        borderRadius: AppRadius.rLg,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.12),
+              borderRadius: AppRadius.rMd,
+            ),
+            child: Center(child: Icon(icon, size: 24, color: accent)),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  played ? l10n.alreadyPlayedTag : l10n.dailyChallengeTag,
+                  style: context.type.labelSmall
+                      .copyWith(color: accent, letterSpacing: 1.2),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.type.titleMedium,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.type.labelMedium,
+                ),
+              ],
+            ),
+          ),
+          if (daily != null) ...[
+            const SizedBox(width: 8),
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.15),
+                borderRadius: AppRadius.rSm,
+              ),
+              child: Icon(
+                available ? Icons.play_arrow_rounded : Icons.chevron_right_rounded,
+                color: accent,
+                size: 20,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
-      child: GestureDetector(
-        onTap: () => Navigator.push(
-            context, SlideRightRoute(page: const DailyChallengeScreen())),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
-          decoration: BoxDecoration(
-            color: context.cardElevated,
-            borderRadius: AppRadius.rLg,
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Center(
-                  child: Text('🌟', style: TextStyle(fontSize: 24)),
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).dailyChallengeTag,
-                      style: TextStyle(
-                        color: AppColors.accent,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      AppLocalizations.of(context).dailyChallengeTitle,
-                      style: TextStyle(
-                        color: context.appColors.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      AppLocalizations.of(context).dailyChallengeSubtitle,
-                      style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.chevron_right_rounded,
-                  color: AppColors.primary,
-                  size: 20,
-                ),
-              ),
-            ],
-          ),
-        ).animate().fadeIn(delay: 150.ms).slideX(begin: 0.04),
-      ),
+      child: daily == null
+          ? Opacity(opacity: 0.72, child: card)
+          : GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                SlideRightRoute(page: const DailyChallengeScreen()),
+              ).then((_) => _loadData()),
+              child: card,
+            ),
     );
   }
 
@@ -427,10 +431,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 48,
                 decoration: BoxDecoration(
                   color: AppColors.secondary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: const Center(
-                  child: Text('🗺️', style: TextStyle(fontSize: 24)),
+                  child: Icon(Icons.map_rounded, size: 24, color: AppColors.accent),
                 ),
               ),
               const SizedBox(width: 14),
@@ -440,29 +444,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       AppLocalizations.of(context).journeyTag,
-                      style: TextStyle(
-                        color: AppColors.secondary,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                      ),
+                      style: context.type.labelSmall.copyWith(color: AppColors.secondary, letterSpacing: 1.2),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       AppLocalizations.of(context).journeyTitle,
-                      style: TextStyle(
-                        color: context.appColors.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       AppLocalizations.of(context).journeySubtitle,
-                      style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 12,
-                      ),
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],
                 ),
@@ -473,7 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 32,
                 decoration: BoxDecoration(
                   color: AppColors.secondary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: const Icon(
                   Icons.chevron_right_rounded,
@@ -521,16 +513,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final points = (e['total_points'] as num?)?.toInt() ?? 0;
     final level = (e['level'] as num?)?.toInt() ?? 1;
 
-    final Widget rankWidget = switch (rank) {
-      1 => const Text('🥇', style: TextStyle(fontSize: 20)),
-      2 => const Text('🥈', style: TextStyle(fontSize: 20)),
-      3 => const Text('🥉', style: TextStyle(fontSize: 20)),
-      _ => Text('$rank',
-          style: TextStyle(
-              color: context.appColors.textMuted,
-              fontWeight: FontWeight.w700,
-              fontSize: 13)),
-    };
+    final Widget rankWidget = RankBadge(rank: rank, size: 28);
 
     return Container(
       color: isMe
@@ -562,27 +545,20 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isMe ? '$name (toi)' : name,
+                  isMe ? AppLocalizations.of(context).nameYou(name) : name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14),
+                  style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
                 ),
                 Text(AppLocalizations.of(context).levelShort(level),
-                    style: TextStyle(
-                        color: context.appColors.textMuted, fontSize: 11)),
+                    style: context.type.labelSmall.copyWith(color: context.appColors.textMuted)),
               ],
             ),
           ),
           const Icon(Icons.star_rounded, color: AppColors.accent, size: 14),
           const SizedBox(width: 3),
           Text('$points',
-              style: const TextStyle(
-                  color: AppColors.accent,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13)),
+              style: context.type.labelLarge.copyWith(color: AppColors.accent, fontWeight: FontWeight.w800)),
         ],
       ),
     );
@@ -604,11 +580,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Text(
                   title,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                 ),
               ),
               if (actionLabel != null && onAction != null)
@@ -616,11 +588,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: onAction,
                   child: Text(
                     actionLabel,
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: context.type.labelLarge.copyWith(color: AppColors.primary),
                   ),
                 ),
             ],
@@ -632,13 +600,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _categoriesRow(List<CategoryModel> cats) {
     return SizedBox(
-      height: 132,
+      height: kHomeCategoryRow,
       child: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(20, 2, 20, 16),
+        padding: kHomeRowPadding,
         clipBehavior: Clip.none,
         scrollDirection: Axis.horizontal,
         itemCount: cats.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (_, i) => _CategoryTile(
           category: cats[i],
           onTap: () => _openCategory(cats[i]),
@@ -650,13 +618,13 @@ class _HomeScreenState extends State<HomeScreen> {
   // ─── Featured horizontal ─────────────────────────────────────────────────────
 
   Widget _featuredHorizontal(List<QuizModel> quizzes) => SizedBox(
-        height: 222,
+        height: kHomeFeaturedRow,
         child: ListView.separated(
-          padding: const EdgeInsets.fromLTRB(20, 2, 20, 16),
+          padding: kHomeRowPadding,
           clipBehavior: Clip.none,
           scrollDirection: Axis.horizontal,
           itemCount: quizzes.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          separatorBuilder: (_, _) => const SizedBox(width: 12),
           itemBuilder: (_, i) => QuizCard(
             quiz: quizzes[i],
             style: QuizCardStyle.featured,
@@ -720,22 +688,17 @@ class _CategoryTile extends StatelessWidget {
               height: 46,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.14),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Center(
                 child: Text(category.icon ?? '📚',
-                    style: const TextStyle(fontSize: 24)),
+                    style: context.type.headlineLarge),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               category.name,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                height: 1.1,
-              ),
+              style: context.type.labelSmall.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w700, height: 1.1),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -743,11 +706,7 @@ class _CategoryTile extends StatelessWidget {
             const SizedBox(height: 3),
             Text(
               AppLocalizations.of(context).quizCount(category.quizCount),
-              style: TextStyle(
-                color: color,
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w700),
             ),
           ],
         ),

@@ -12,13 +12,17 @@ class DailyChallengeRepository {
     return DailyChallengeModel.fromJson(res.data['data']);
   }
 
+  /// [sessionId] fige l'ensemble noté côté serveur : sans lui, le barème ne
+  /// sait pas quelles questions ont réellement été servies.
   Future<QuizAttemptResult> submit({
     required Map<String, String> answers,
     required int timeTaken,
+    int? sessionId,
   }) async {
     final res = await _api.post('/daily-challenge/submit', data: {
       'answers': answers,
       'time_taken': timeTaken,
+      'session_id': ?sessionId,
     });
     return QuizAttemptResult.fromJson(res.data['data']);
   }

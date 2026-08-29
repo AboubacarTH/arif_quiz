@@ -43,14 +43,14 @@ class QuestionMedia extends StatelessWidget {
           imageUrl: imageUrl!.trim(),
           fit: BoxFit.contain,
           width: double.infinity,
-          placeholder: (_, __) => const SizedBox(
+          placeholder: (_, _) => const SizedBox(
             height: 140,
             child: Center(
               child: CircularProgressIndicator(
                   color: AppColors.primary, strokeWidth: 2),
             ),
           ),
-          errorWidget: (_, __, ___) => SizedBox(
+          errorWidget: (_, _, _) => SizedBox(
             height: 120,
             child: Center(
               child: Icon(Icons.broken_image_rounded,
@@ -150,8 +150,7 @@ class _AudioPlayerBarState extends State<_AudioPlayerBar> {
               width: 44,
               height: 44,
               decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [AppColors.secondary, AppColors.secondaryLight]),
+                color: AppColors.secondary,
                 shape: BoxShape.circle,
               ),
               child: _loading
@@ -180,19 +179,15 @@ class _AudioPlayerBarState extends State<_AudioPlayerBar> {
                         color: AppColors.secondary, size: 15),
                     const SizedBox(width: 6),
                     Text(AppLocalizations.of(context).listenAudio,
-                        style: TextStyle(
-                            color: context.appColors.textSecondary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700)),
+                        style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary)),
                     const Spacer(),
                     Text('${_fmt(_position)} / ${_fmt(_duration)}',
-                        style: TextStyle(
-                            color: context.appColors.textMuted, fontSize: 11)),
+                        style: context.type.labelSmall.copyWith(color: context.appColors.textMuted)),
                   ],
                 ),
                 const SizedBox(height: 6),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(AppRadius.xxs),
                   child: LinearProgressIndicator(
                     value: progress,
                     minHeight: 5,

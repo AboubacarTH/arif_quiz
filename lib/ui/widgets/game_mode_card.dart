@@ -1,3 +1,4 @@
+import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/core/i18n/game_mode_l10n.dart';
 import 'package:arif_quiz/shared/models/models.dart';
@@ -22,6 +23,10 @@ class GameModeCard extends StatelessWidget {
         GameMode.classic => AppColors.primary,
         GameMode.survival => AppColors.error,
         GameMode.speed => AppColors.secondary,
+        GameMode.precision => AppColors.modePrecision,
+        GameMode.streak => AppColors.modeStreak,
+        GameMode.timeattack => AppColors.modeTimeAttack,
+        GameMode.jokers => AppColors.modeJokers,
       };
 
   List<_Badge> _badges(BuildContext context) => switch (mode) {
@@ -36,10 +41,38 @@ class GameModeCard extends StatelessWidget {
             const _Badge(icon: Icons.star_rounded, label: '×1.3 XP'),
           ],
         GameMode.speed => [
+            // Le budget n'est plus un chiffre unique : il suit la longueur de
+            // la question, entre ces deux bornes.
             _Badge(
                 icon: Icons.bolt_rounded,
-                label: AppLocalizations.of(context).secondsPerQuestionBadge(5)),
+                label: AppLocalizations.of(context)
+                    .secondsRangeBadge(kSpeedMinSeconds, kSpeedMaxSeconds)),
             const _Badge(icon: Icons.star_rounded, label: '×1.5 XP'),
+          ],
+        GameMode.precision => [
+            const _Badge(icon: Icons.add_circle_outline_rounded, label: '+2 / −1'),
+            const _Badge(icon: Icons.star_rounded, label: '×1.4 XP'),
+          ],
+        GameMode.streak => [
+            const _Badge(icon: Icons.trending_up_rounded, label: '+1 → +4'),
+            const _Badge(icon: Icons.star_rounded, label: '×1.4 XP'),
+          ],
+        GameMode.timeattack => [
+            _Badge(
+                icon: Icons.timer_rounded,
+                label: AppLocalizations.of(context)
+                    .roundSecondsBadge(ModeScoring.timeAttackSeconds)),
+            _Badge(
+                icon: Icons.add_alarm_rounded,
+                label: AppLocalizations.of(context)
+                    .bonusSecondsBadge(ModeScoring.timeAttackBonus)),
+          ],
+        GameMode.jokers => [
+            _Badge(
+                icon: Icons.auto_awesome_rounded,
+                label: AppLocalizations.of(context)
+                    .jokerCountBadge(ModeScoring.jokerCount)),
+            const _Badge(icon: Icons.star_rounded, label: '×1.1 XP'),
           ],
       };
 
@@ -57,9 +90,7 @@ class GameModeCard extends StatelessWidget {
           border: selected
               ? Border.all(color: _color.withValues(alpha: 0.6), width: 2)
               : null,
-          boxShadow: selected
-              ? AppShadows.tinted(context, _color)
-              : AppShadows.card(context),
+          boxShadow: AppShadows.card(context),
         ),
         child: Row(
           children: [
@@ -70,10 +101,10 @@ class GameModeCard extends StatelessWidget {
               height: 52,
               decoration: BoxDecoration(
                 color: _color.withValues(alpha: selected ? 0.2 : 0.12),
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Center(
-                child: Text(mode.icon, style: const TextStyle(fontSize: 26)),
+                child: Icon(mode.icon, color: _color, size: 26),
               ),
             ),
             const SizedBox(width: 14),
@@ -86,13 +117,9 @@ class GameModeCard extends StatelessWidget {
                     children: [
                       Text(
                         mode.localizedLabel(context),
-                        style: TextStyle(
-                          color: selected
+                        style: context.type.titleMedium.copyWith(color: selected
                               ? _color
-                              : context.appColors.textPrimary,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                        ),
+                              : context.appColors.textPrimary, fontWeight: FontWeight.w800),
                       ),
                       if (mode == GameMode.speed) ...[
                         const SizedBox(width: 6),
@@ -101,16 +128,11 @@ class GameModeCard extends StatelessWidget {
                               horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: AppColors.secondary.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(AppRadius.xs),
                           ),
-                          child: const Text(
+                          child: Text(
                             'BEST XP',
-                            style: TextStyle(
-                              color: AppColors.secondary,
-                              fontSize: 9,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 0.5,
-                            ),
+                            style: context.type.labelSmall.copyWith(color: AppColors.secondary, letterSpacing: 0.5),
                           ),
                         ),
                       ],
@@ -119,18 +141,17 @@ class GameModeCard extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     mode.localizedDescription(context),
-                    style: TextStyle(
-                      color: context.appColors.textSecondary,
-                      fontSize: 12,
-                    ),
+                    style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                   ),
                   const SizedBox(height: 8),
-                  Row(
+                  // En ligne tant que ça tient, à la ligne sinon : une puce
+                  // comme « +5 s par bonne réponse » débordait de la carte,
+                  // et une Row ne sait pas replier.
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 6,
                     children: _badges(context)
-                        .map((b) => Padding(
-                              padding: const EdgeInsetsDirectional.only(end: 8),
-                              child: _BadgeWidget(badge: b, color: _color),
-                            ))
+                        .map((b) => _BadgeWidget(badge: b, color: _color))
                         .toList(),
                   ),
                 ],
@@ -177,7 +198,7 @@ class _BadgeWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Row(
@@ -187,11 +208,7 @@ class _BadgeWidget extends StatelessWidget {
             const SizedBox(width: 3),
             Text(
               badge.label,
-              style: TextStyle(
-                color: color,
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w700),
             ),
           ],
         ),

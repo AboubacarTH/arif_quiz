@@ -1,6 +1,23 @@
+import 'package:flutter/material.dart';
+
 import 'package:arif_quiz/shared/models/true_false.dart';
 
 export 'package:arif_quiz/shared/models/true_false.dart';
+
+/// Lecture tolérante d'un nombre venu de l'API.
+///
+/// Les colonnes `decimal` de MySQL ressortent en CHAÎNE dans le JSON de Laravel
+/// tant qu'aucun cast ne les convertit : `"100.00"`, pas `100.0`. Un
+/// `as num` sec levait alors une exception — invisible en développement, où
+/// SQLite renvoie bien un nombre, et déclenchée en production dès qu'un score
+/// existait. Le serveur est corrigé, mais l'app doit rester tolérante : elle
+/// tourne face à des versions de backend qu'elle ne choisit pas.
+double? asDouble(Object? value) => switch (value) {
+      null => null,
+      final num n => n.toDouble(),
+      final String s => double.tryParse(s),
+      _ => null,
+    };
 
 // ========== USER MODEL ==========
 class UserModel {
@@ -10,6 +27,11 @@ class UserModel {
   final String email;
   final String? avatar;
   final String role;
+
+  /// Faux pour un compte ouvert via Google : aucun mot de passe n'existe, il
+  /// ne faut donc pas en demander un pour supprimer le compte.
+  final bool hasPassword;
+
   final int totalPoints;
   final int quizzesTaken;
   final int correctAnswers;
@@ -27,6 +49,7 @@ class UserModel {
     required this.email,
     this.avatar,
     required this.role,
+    this.hasPassword = true,
     required this.totalPoints,
     required this.quizzesTaken,
     required this.correctAnswers,
@@ -45,10 +68,13 @@ class UserModel {
         email: json['email'] ?? '',
         avatar: json['avatar'],
         role: json['role'] ?? 'user',
+        // Absent des réponses plus anciennes : on suppose alors un compte
+        // classique, ce qui redemande simplement le mot de passe.
+        hasPassword: json['has_password'] ?? true,
         totalPoints: json['total_points'] ?? 0,
         quizzesTaken: json['quizzes_taken'] ?? 0,
         correctAnswers: json['correct_answers'] ?? 0,
-        accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0.0,
+        accuracy: asDouble(json['accuracy']) ?? 0.0,
         xp: json['xp'] ?? 0,
         level: json['level'] ?? 1,
         streak: json['streak'] ?? 0,
@@ -163,6 +189,9 @@ class ChallengeModel {
   final QuizModel? quiz;
   final CategoryModel? category;
   final String sourceType; // 'quiz' | 'category' | 'all'
+
+  /// À qui le défi s'adresse : 'private' (sur code), 'friends', 'global'.
+  final String audience;
   final String mode;
   final String title;
   final String status;
@@ -180,6 +209,7 @@ class ChallengeModel {
     this.quiz,
     this.category,
     this.sourceType = 'quiz',
+    this.audience = 'private',
     required this.mode,
     required this.title,
     required this.status,
@@ -202,6 +232,7 @@ class ChallengeModel {
             ? CategoryModel.fromJson(Map<String, dynamic>.from(json['category']))
             : null,
         sourceType: json['source_type'] ?? 'quiz',
+        audience: json['audience'] ?? 'private',
         mode: json['mode'] ?? 'classic',
         title: json['title'] ?? '',
         status: json['status'] ?? 'open',
@@ -234,6 +265,7 @@ class ChallengeModel {
         quiz: quiz,
         category: category,
         sourceType: sourceType,
+        audience: audience,
         mode: mode,
         title: title,
         status: status,
@@ -247,6 +279,16 @@ class ChallengeModel {
 
   bool get isExpired => expiresAt != null && expiresAt!.isBefore(DateTime.now());
   bool get isOpen => status == 'open' && !isExpired;
+
+  /// Un défi annoncé (amis / global) ne vit que 24 h : le temps restant est
+  /// l'information la plus utile de sa carte.
+  bool get isAnnounced => audience != 'private';
+
+  int? get hoursLeft {
+    if (expiresAt == null || isExpired) return null;
+    final left = expiresAt!.difference(DateTime.now()).inHours;
+    return left < 1 ? 1 : left;
+  }
   bool get canDelete =>
       createdAt != null && DateTime.now().difference(createdAt!).inHours >= 24;
 }
@@ -274,7 +316,7 @@ class ChallengeParticipant {
         user: json['user'] != null
             ? UserModel.fromJson(json['user'])
             : UserModel.fromJson({'id': 0, 'name': 'Unknown', 'email': ''}),
-        score: (json['score'] as num?)?.toDouble(),
+        score: asDouble(json['score']),
         correctCount: json['correct_count'],
         timeTaken: json['time_taken'],
         completedAt: json['completed_at'] != null
@@ -311,7 +353,7 @@ class DailyChallengeModel {
         quiz: QuizModel.fromJson(json['quiz']),
         challengeDate: DateTime.tryParse(json['challenge_date'] ?? '') ?? DateTime.now(),
         alreadyPlayed: json['already_played'] ?? false,
-        myScore: (json['my_score'] as num?)?.toDouble(),
+        myScore: asDouble(json['my_score']),
         myGrade: json['my_grade'],
         secondsUntilReset: json['seconds_until_reset'] ?? 86400,
       );
@@ -371,7 +413,7 @@ class FriendActivity {
         id: json['id'],
         user: UserModel.fromJson(json['user']),
         quiz: QuizModel.fromJson(json['quiz']),
-        score: (json['score'] as num).toDouble(),
+        score: asDouble(json['score']) ?? 0,
         grade: json['grade'],
         pointsEarned: json['points_earned'] ?? 0,
         completedAt: json['completed_at'] != null
@@ -452,7 +494,7 @@ class QuizModel {
                 Map<String, dynamic>.from(json['category']),
               )
             : null,
-        averageScore: (json['average_score'] as num?)?.toDouble(),
+        averageScore: asDouble(json['average_score']),
         pointsPerQuestion: json['points_per_question'],
       );
 }
@@ -553,6 +595,11 @@ class QuizAttemptResult {
   final String grade;
   final List<QuestionResult> results;
 
+  /// Total du mode Précision, et son maximum. `null` pour les autres modes : il
+  /// n'y a rien à afficher, pas un zéro.
+  final int? modePoints;
+  final int? maxModePoints;
+
   const QuizAttemptResult({
     this.attemptId,
     required this.score,
@@ -563,12 +610,14 @@ class QuizAttemptResult {
     this.xpEarned = 0,
     required this.grade,
     required this.results,
+    this.modePoints,
+    this.maxModePoints,
   });
 
   factory QuizAttemptResult.fromJson(Map<String, dynamic> json) =>
       QuizAttemptResult(
         attemptId: json['attempt_id'],
-        score: (json['score'] as num).toDouble(),
+        score: asDouble(json['score']) ?? 0,
         correctCount: json['correct_count'],
         totalQuestions: json['total_questions'],
         timeTaken: json['time_taken'],
@@ -578,6 +627,8 @@ class QuizAttemptResult {
         results: ((json['results'] as List?) ?? [])
             .map((r) => QuestionResult.fromJson(r as Map<String, dynamic>))
             .toList(),
+        modePoints: json['mode_points'],
+        maxModePoints: json['max_mode_points'],
       );
 
   /// Scoring local (mode invité / hors-ligne) — source unique de vérité pour
@@ -587,13 +638,26 @@ class QuizAttemptResult {
     required List<QuestionModel> questions,
     required Map<String, String> answers,
     required int timeTaken,
+    GameMode mode = GameMode.classic,
+    int jokersUsed = 0,
   }) {
     var correct = 0;
+    var wrong = 0;
+    // Dans l'ordre où les questions ont été posées : le mode Série compte les
+    // bonnes réponses enchaînées.
+    final sequence = <bool>[];
     final results = <QuestionResult>[];
     for (final q in questions) {
       final ua = answers[q.id.toString()];
       final ok = q.isCorrect(ua);
-      if (ok) correct++;
+      sequence.add(ok);
+      if (ok) {
+        correct++;
+      } else if (ua != null && ua.isNotEmpty) {
+        // Une question laissée de côté n'est pas une mauvaise réponse : en
+        // Précision, passer ne coûte rien, se tromper coûte un point.
+        wrong++;
+      }
       results.add(QuestionResult(
         questionId: q.id,
         question: q.text,
@@ -604,7 +668,8 @@ class QuizAttemptResult {
       ));
     }
     final total = questions.length;
-    final score = total > 0 ? correct / total * 100 : 0.0;
+    final score =
+        ModeScoring.score(mode, sequence, wrong, total, jokersUsed: jokersUsed);
     return QuizAttemptResult(
       score: score,
       correctCount: correct,
@@ -614,11 +679,14 @@ class QuizAttemptResult {
       xpEarned: 0,
       grade: gradeForScore(score),
       results: results,
+      modePoints:
+          ModeScoring.points(mode, sequence, wrong, jokersUsed: jokersUsed),
+      maxModePoints: ModeScoring.maxPoints(mode, total),
     );
   }
 }
 
-/// Barème de note partagé, aligné sur le serveur (`QuizAttemptController::getGrade`).
+/// Barème de note partagé, aligné sur le serveur (`QuizAttempt::gradeFor`).
 String gradeForScore(double score) => switch (score) {
       >= 90 => 'S',
       >= 80 => 'A',
@@ -673,7 +741,7 @@ class JourneyLevelModel {
         isBoss: json['is_boss'] ?? false,
         unlocked: json['unlocked'] ?? false,
         stars: json['stars'] ?? 0,
-        bestScore: (json['best_score'] as num?)?.toDouble() ?? 0,
+        bestScore: asDouble(json['best_score']) ?? 0,
       );
 }
 
@@ -747,7 +815,7 @@ class JourneyLevelResult {
         nextLevelId: json['next_level_id'],
         nextLevelIsBoss: json['next_level_is_boss'] ?? false,
         isBoss: json['is_boss'] ?? false,
-        score: (json['score'] as num?)?.toDouble() ?? 0,
+        score: asDouble(json['score']) ?? 0,
         stars: json['stars'] ?? 0,
         correctCount: json['correct_count'] ?? 0,
         totalQuestions: json['total_questions'] ?? 0,
@@ -765,27 +833,186 @@ class JourneyLevelResult {
 enum GameMode {
   classic,
   survival,
-  speed;
+  speed,
+  precision,
+  streak,
+  timeattack,
+  jokers;
 
   String get label => switch (this) {
         classic => 'Classique',
         survival => 'Survie',
         speed => 'Speed Round',
+        precision => 'Précision',
+        streak => 'Série',
+        timeattack => 'Contre-la-montre',
+        jokers => 'Jokers',
       };
 
   String get apiValue => name;
 
   String get description => switch (this) {
         classic => 'Quiz standard avec timer global',
+        precision => '+2 juste, −1 faux, 0 si tu passes',
+        streak => 'Les bonnes réponses enchaînées valent de plus en plus',
+        timeattack => 'Une seule horloge, que les bonnes réponses rallongent',
+        jokers => 'Trois coups de pouce pour la manche',
         survival => 'Une erreur et c\'est game over !',
         speed => '5 secondes par question, bonus XP ×1.5',
       };
 
-  String get icon => switch (this) {
-        classic => '🎮',
-        survival => '❤️',
-        speed => '⚡',
+  /// Glyphe du mode. C'est une icone, pas un emoji : les emoji ne suivent ni la
+  /// couleur du theme ni la taille du texte, et changent de dessin selon l'OS.
+  IconData get icon => switch (this) {
+        classic => Icons.sports_esports_rounded,
+        survival => Icons.favorite_rounded,
+        speed => Icons.bolt_rounded,
+        precision => Icons.center_focus_strong_rounded,
+        streak => Icons.trending_up_rounded,
+        timeattack => Icons.timer_rounded,
+        jokers => Icons.auto_awesome_rounded,
       };
+
+  static GameMode fromApi(String? value) => GameMode.values.firstWhere(
+        (m) => m.apiValue == value,
+        orElse: () => GameMode.classic,
+      );
+}
+
+/// Barème par mode, miroir exact de `ModeScoring` côté serveur.
+///
+/// Le client en a besoin deux fois : pour afficher le total qui monte pendant
+/// une partie, et pour noter les parties d'un invité, qui ne passent jamais par
+/// l'API. Les deux doivent donner le même chiffre que le serveur, sinon le
+/// score changerait en arrivant sur l'écran de résultat.
+class ModeScoring {
+  const ModeScoring._();
+
+  /// Ce que rapporte une bonne réponse en Précision.
+  static const precisionReward = 2;
+
+  /// Ce que coûte une mauvaise. Une question passée ne coûte rien.
+  static const precisionPenalty = 1;
+
+  /// Ce que rapporte une bonne réponse en Jokers.
+  static const jokerReward = 2;
+
+  /// Ce que coûte un coup de pouce.
+  static const jokerCost = 1;
+
+  /// Nombre de coups de pouce accordés pour une manche.
+  static const jokerCount = 3;
+
+  /// Durée d'une manche en Contre-la-montre.
+  static const timeAttackSeconds = 120;
+
+  /// Ce qu'une bonne réponse rend au chrono.
+  static const timeAttackBonus = 5;
+
+  /// Ce que le joker « du temps » ajoute à la question en cours.
+  static const jokerTimeBonus = 15;
+
+  /// Ce que vaut une bonne réponse selon la longueur de la série en cours.
+  ///
+  /// Deux bonnes réponses de suite ne prouvent rien ; sept d'affilée, si. La
+  /// marche est volontairement large — un palier tous les deux —, sinon le
+  /// joueur ne sait plus ce qu'il vient de gagner.
+  static int streakTier(int streak) => switch (streak) {
+        >= 7 => 4,
+        >= 5 => 3,
+        >= 3 => 2,
+        _ => 1,
+      };
+
+  /// Le total d'une manche en Série. L'ORDRE compte : sept bonnes réponses
+  /// d'affilée valent bien plus que sept réparties au hasard, et c'est tout
+  /// l'intérêt du mode. Une erreur — ou une question passée — remet à zéro.
+  static int streakPoints(List<bool> sequence) {
+    var total = 0;
+    var streak = 0;
+
+    for (final isRight in sequence) {
+      if (!isRight) {
+        streak = 0;
+        continue;
+      }
+      streak++;
+      total += streakTier(streak);
+    }
+
+    return total;
+  }
+
+  /// Les modes dont le joueur suit un total en points.
+  static bool hasPoints(GameMode mode) =>
+      mode == GameMode.precision ||
+      mode == GameMode.streak ||
+      mode == GameMode.jokers;
+
+  /// Le total du mode, tel que le joueur le voit compter. `null` pour les modes
+  /// qui n'en ont pas.
+  ///
+  /// [sequence] donne les issues DANS L'ORDRE OÙ LES QUESTIONS ONT ÉTÉ POSÉES ;
+  /// [wrong] ne compte que les mauvaises réponses données, pas les questions
+  /// laissées vides.
+  static int? points(
+    GameMode mode,
+    List<bool> sequence,
+    int wrong, {
+    int jokersUsed = 0,
+  }) {
+    final right = sequence.where((r) => r).length;
+
+    return switch (mode) {
+      GameMode.precision => right * precisionReward - wrong * precisionPenalty,
+      GameMode.jokers => right * jokerReward - jokersUsed * jokerCost,
+      GameMode.streak => streakPoints(sequence),
+      _ => null,
+    };
+  }
+
+  /// Le maximum atteignable, pour afficher « 14 / 20 ».
+  static int? maxPoints(GameMode mode, int total) => switch (mode) {
+        GameMode.precision => total * precisionReward,
+        GameMode.jokers => total * jokerReward,
+        // La manche sans faute : la même somme, sur une série jamais rompue.
+        GameMode.streak =>
+          streakPoints(List<bool>.filled(total < 0 ? 0 : total, true)),
+        _ => null,
+      };
+
+  /// La note sur 100. Un total négatif vaut zéro : une note et un classement
+  /// n'ont pas de sens sous la barre.
+  ///
+  /// Arrondie à la décimale, comme le fait le serveur : sans cet arrondi, onze
+  /// points sur vingt donnaient ici 55.00000000000001 là où l'API renvoie 55, et
+  /// deux parties identiques n'affichaient pas le même score selon qu'on était
+  /// connecté ou invité.
+  static double score(
+    GameMode mode,
+    List<bool> sequence,
+    int wrong,
+    int total, {
+    int jokersUsed = 0,
+  }) {
+    if (total <= 0) return 0;
+
+    final right = sequence.where((r) => r).length;
+    if (!hasPoints(mode)) return _round1(right / total * 100);
+
+    final earned = points(mode, sequence, wrong, jokersUsed: jokersUsed)!;
+    final max = maxPoints(mode, total)!;
+    if (max == 0) return 0;
+
+    return _round1((earned / max * 100).clamp(0, 100).toDouble());
+  }
+
+  static double _round1(double value) => (value * 10).roundToDouble() / 10;
+
+  /// Le total, écrit avec le vrai signe moins (U+2212) et non le trait d'union
+  /// que produit `int.toString()` : c'est le caractère qu'emploient le libellé
+  /// du mode et la pastille de gain, et les trois se lisent côte à côte.
+  static String format(int points) => points < 0 ? '−${-points}' : '$points';
 }
 
 // ========== BADGE MODEL ==========
@@ -1134,4 +1361,128 @@ class AdminQuestionModel {
         quizTitle: json['quiz']?['title'],
         translations: parseTranslations(json['translations']),
       );
+}
+
+// ========== ADMIN DAILY CHALLENGE MODELS ==========
+
+/// Un quiz éligible à une programmation : publié et pourvu de questions.
+class AdminSchedulableQuizModel {
+  final int id;
+  final String title;
+  final String difficulty;
+  final int questionsCount;
+  final String? categoryName;
+
+  const AdminSchedulableQuizModel({
+    required this.id,
+    required this.title,
+    required this.difficulty,
+    required this.questionsCount,
+    this.categoryName,
+  });
+
+  factory AdminSchedulableQuizModel.fromJson(Map<String, dynamic> json) =>
+      AdminSchedulableQuizModel(
+        id: json['id'],
+        title: json['title'] ?? '',
+        difficulty: json['difficulty'] ?? 'easy',
+        questionsCount: json['questions_count'] ?? 0,
+        categoryName: json['category']?['name'],
+      );
+}
+
+/// Une date du calendrier du défi du jour.
+class AdminDailyChallengeModel {
+  final int id;
+  final DateTime challengeDate;
+  final bool isToday;
+  final bool isPast;
+
+  /// Faux si le quiz a été dépublié ou vidé après la programmation : ce jour-là
+  /// les joueurs ne verraient aucun défi.
+  final bool isPlayable;
+  final int attemptsCount;
+  final int? quizId;
+  final String? quizTitle;
+  final String difficulty;
+  final int questionsCount;
+  final bool quizIsPublished;
+  final String? categoryName;
+
+  const AdminDailyChallengeModel({
+    required this.id,
+    required this.challengeDate,
+    required this.isToday,
+    required this.isPast,
+    required this.isPlayable,
+    required this.attemptsCount,
+    this.quizId,
+    this.quizTitle,
+    required this.difficulty,
+    required this.questionsCount,
+    required this.quizIsPublished,
+    this.categoryName,
+  });
+
+  /// `Y-m-d` : le format attendu par l'API, indépendant du fuseau.
+  String get dateKey =>
+      '${challengeDate.year.toString().padLeft(4, '0')}-'
+      '${challengeDate.month.toString().padLeft(2, '0')}-'
+      '${challengeDate.day.toString().padLeft(2, '0')}';
+
+  factory AdminDailyChallengeModel.fromJson(Map<String, dynamic> json) {
+    final quiz = json['quiz'] as Map<String, dynamic>?;
+    return AdminDailyChallengeModel(
+      id: json['id'],
+      challengeDate:
+          DateTime.tryParse(json['challenge_date'] ?? '') ?? DateTime.now(),
+      isToday: json['is_today'] ?? false,
+      isPast: json['is_past'] ?? false,
+      isPlayable: json['is_playable'] ?? false,
+      attemptsCount: json['attempts_count'] ?? 0,
+      quizId: quiz?['id'],
+      quizTitle: quiz?['title'],
+      difficulty: quiz?['difficulty'] ?? 'easy',
+      questionsCount: quiz?['questions_count'] ?? 0,
+      quizIsPublished: quiz?['is_published'] ?? false,
+      categoryName: quiz?['category']?['name'],
+    );
+  }
+}
+
+/// Le calendrier complet renvoyé par l'admin, avec les trous à venir.
+class AdminDailyChallengeCalendar {
+  final List<AdminDailyChallengeModel> upcoming;
+  final List<AdminDailyChallengeModel> past;
+
+  /// Jours à venir sans défi programmé, en `Y-m-d`.
+  final List<String> missingDates;
+  final bool todayScheduled;
+  final int horizonDays;
+
+  const AdminDailyChallengeCalendar({
+    required this.upcoming,
+    required this.past,
+    required this.missingDates,
+    required this.todayScheduled,
+    required this.horizonDays,
+  });
+
+  factory AdminDailyChallengeCalendar.fromJson(Map<String, dynamic> json) {
+    final data = Map<String, dynamic>.from(json['data'] ?? {});
+    final meta = Map<String, dynamic>.from(json['meta'] ?? {});
+    List<AdminDailyChallengeModel> parse(String key) =>
+        ((data[key] ?? []) as List)
+            .map((e) =>
+                AdminDailyChallengeModel.fromJson(Map<String, dynamic>.from(e)))
+            .toList();
+
+    return AdminDailyChallengeCalendar(
+      upcoming: parse('upcoming'),
+      past: parse('past'),
+      missingDates: List<String>.from(meta['missing_dates'] ?? const []),
+      todayScheduled: meta['today_scheduled'] ?? false,
+      horizonDays: meta['horizon_days'] ?? 30,
+    );
+  }
 }

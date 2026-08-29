@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String greeting(String name) {
-    return 'Hello, $name 👋';
+    return 'Hello, $name';
   }
 
   @override
@@ -26,10 +26,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seeAll => 'See all';
 
   @override
-  String get popular => '🔥 Popular';
+  String get popular => 'Popular';
 
   @override
-  String get friendsLeaderboard => '🏅 Friends leaderboard';
+  String get friendsLeaderboard => 'Friends leaderboard';
 
   @override
   String get guestBannerTitle => 'Save your progress!';
@@ -60,7 +60,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get journeyTitle => 'Climb the levels of the map';
 
   @override
-  String get journeySubtitle => 'Unlock levels, earn stars ⭐';
+  String get journeySubtitle => 'Unlock levels, earn stars';
 
   @override
   String levelShort(int level) {
@@ -160,7 +160,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String levelsCount(int count) {
-    return '🏁  $count levels';
+    return '$count levels';
   }
 
   @override
@@ -228,22 +228,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewChallenge => 'View challenge';
 
   @override
-  String get headlineOutstanding => 'Outstanding! 🤩';
+  String get headlineOutstanding => 'Outstanding!';
 
   @override
-  String get headlineExcellent => 'Excellent! 🎉';
+  String get headlineExcellent => 'Excellent!';
 
   @override
-  String get headlineGreat => 'Great job! 👏';
+  String get headlineGreat => 'Great job!';
 
   @override
-  String get headlineNotBad => 'Not bad! 👍';
+  String get headlineNotBad => 'Not bad!';
 
   @override
-  String get headlineKeepGoing => 'Keep going! 💪';
+  String get headlineKeepGoing => 'Keep going!';
 
   @override
-  String get headlineTryAgain => 'Try again! 🔄';
+  String get headlineTryAgain => 'Try again!';
 
   @override
   String get yourAnswer => 'Your answer';
@@ -361,7 +361,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ruleReview => 'Review full explanations after the quiz';
 
   @override
-  String get startQuiz => 'Start Quiz 🚀';
+  String get startQuiz => 'Start Quiz';
 
   @override
   String get tryAnotherDifficulty => 'Try another difficulty filter';
@@ -379,12 +379,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseMode => 'Choose mode';
 
   @override
-  String get randomQuestions10 => '10 random questions';
-
-  @override
-  String get questions10 => '10 questions';
-
-  @override
   String get gameModeLabel => 'Game mode';
 
   @override
@@ -392,21 +386,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get modeClassicDesc =>
-      '10 random questions · Timer per question · Score in %';
+      'Timer on each question · Score as a percentage';
 
   @override
   String get modeSurvival => 'Survival Mode';
 
   @override
-  String get modeSurvivalDesc =>
-      '10 questions · One wrong answer and it\'s over · ×1.3 bonus';
+  String get modeSurvivalDesc => 'One wrong answer and it is over · Bonus ×1.3';
 
   @override
   String get modeSpeed => 'Speed Round';
 
   @override
-  String get modeSpeedDesc =>
-      '10 questions · 5 seconds per question · ×1.5 XP bonus';
+  String get modeSpeedDesc => 'Time to read, not to hesitate · ×1.5 XP';
 
   @override
   String playInMode(String mode) {
@@ -565,17 +557,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get srcQuizLabel => 'A specific quiz';
 
   @override
-  String get srcQuizDesc => '10 questions from a quiz of your choice';
+  String get srcQuizDesc => 'Questions drawn from a quiz you pick';
 
   @override
   String get srcCategoryLabel => 'By category';
 
   @override
   String get srcCategoryDesc =>
-      '10 random questions from all quizzes in a category';
+      'Random questions from every quiz in a category';
 
   @override
-  String get srcAllDesc => '10 random questions from all available quizzes';
+  String get srcAllDesc => 'Random questions from every available quiz';
 
   @override
   String get whereQuestionsFrom => 'Where do the questions come from?';
@@ -838,7 +830,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get bonusXp30 => '⚡ +30 bonus XP';
+  String get bonusXp30 => '+30 bonus XP';
 
   @override
   String get takeChallenge => 'Take the challenge';
@@ -1613,13 +1605,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orSeparator => 'OR';
 
   @override
-  String get premiumFeatureNoAds => '✅ Unlimited quizzes and journey, no ads';
+  String get premiumFeatureNoAds => 'Unlimited quizzes and journey, no ads';
 
   @override
-  String get premiumFeatureAllModes => '⚡ Every game mode, never interrupted';
+  String get premiumFeatureAllModes => 'Every game mode, never interrupted';
 
   @override
-  String get premiumFeatureSupport => '❤️ You support the app\'s development';
+  String get premiumFeatureSupport => 'You support the app\'s development';
 
   @override
   String get loadFailedRetry => 'Loading failed. Pull to refresh.';
@@ -1657,4 +1649,424 @@ class AppLocalizationsEn extends AppLocalizations {
   String shareChallengeText(String title, String code) {
     return 'I challenge you on Arif Quiz! Join my challenge “$title” with the code: $code';
   }
+
+  @override
+  String get adminDailyChallenge => 'Daily challenge';
+
+  @override
+  String get manageDailyChallengeDesc =>
+      'Schedule which quiz runs on which day';
+
+  @override
+  String get dailyChallengeCalendarHint =>
+      'A day with no quiz means no challenge at all for players.';
+
+  @override
+  String get scheduleDay => 'Schedule a day';
+
+  @override
+  String get changeQuizBtn => 'Change';
+
+  @override
+  String get unscheduleBtn => 'Unschedule';
+
+  @override
+  String get unscheduleConfirmTitle => 'Unschedule this day?';
+
+  @override
+  String unscheduleConfirmBody(String date, int count) {
+    return '$date will no longer have a challenge. The $count attempt(s) already played are kept.';
+  }
+
+  @override
+  String get noChallengeTodayTitle => 'No challenge scheduled for today';
+
+  @override
+  String get noChallengeTodayBody =>
+      'The « Daily challenge » card stays visible in the app, but it opens an empty screen until a quiz is set on today\'s date.';
+
+  @override
+  String get scheduleToday => 'Schedule today';
+
+  @override
+  String get upcomingSection => 'Upcoming';
+
+  @override
+  String get historySection => 'History';
+
+  @override
+  String get emptyCalendar =>
+      'The calendar is empty: players will not be offered any challenge.';
+
+  @override
+  String freeDaysLabel(int count, int horizon) {
+    return '$count free day(s) in the next $horizon days';
+  }
+
+  @override
+  String get noSchedulableQuiz => 'No quiz can be scheduled';
+
+  @override
+  String get noSchedulableQuizHint =>
+      'A daily challenge needs a published quiz with at least one question.';
+
+  @override
+  String get challengeQuizUnpublished =>
+      'Quiz unpublished since: players will see no challenge that day.';
+
+  @override
+  String get challengeQuizEmpty =>
+      'Quiz with no question: players will see no challenge that day.';
+
+  @override
+  String attemptsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count attempts',
+      one: '1 attempt',
+      zero: 'no attempt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fillRotation => 'Fill a rotation';
+
+  @override
+  String get rotationHint =>
+      'The selected quizzes rotate in the order you pick them. Already scheduled days are kept unless you ask to overwrite them.';
+
+  @override
+  String get firstDay => 'First day';
+
+  @override
+  String get numberOfDays => 'Number of days';
+
+  @override
+  String get rotationQuizzes => 'Quizzes in the rotation';
+
+  @override
+  String get overwriteScheduled => 'Overwrite days already scheduled';
+
+  @override
+  String rotationDone(int created, int updated, int skipped) {
+    return '$created day(s) scheduled, $updated updated, $skipped already taken and kept.';
+  }
+
+  @override
+  String fillDays(int count) {
+    return 'Fill $count day(s)';
+  }
+
+  @override
+  String get chooseQuiz => 'Choose a quiz';
+
+  @override
+  String get dateLabel => 'Date';
+
+  @override
+  String get scheduleBtn => 'Schedule';
+
+  @override
+  String get oops => 'Oops!';
+
+  @override
+  String get bonusKeepsStreak => 'Keeps your streak alive';
+
+  @override
+  String get bonusDailyLeaderboard => 'Daily leaderboard';
+
+  @override
+  String get alreadyPlayedTag => 'Played';
+
+  @override
+  String get noDailyChallengeToday => 'No challenge today';
+
+  @override
+  String get dailyBackTomorrow => 'A new quiz lands tomorrow';
+
+  @override
+  String dailyDoneScore(int score) {
+    return 'Done — you scored $score%';
+  }
+
+  @override
+  String journeyChapter(int number) {
+    return 'Chapter $number';
+  }
+
+  @override
+  String get challengeOpen => 'Open';
+
+  @override
+  String get challengeClosed => 'Closed';
+
+  @override
+  String get challengeExpired => 'Expired';
+
+  @override
+  String selectedCount(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String friendAdded(String name) {
+    return '$name added';
+  }
+
+  @override
+  String get reportSent => 'Report sent';
+
+  @override
+  String get questionsCountLabel => 'Number of questions';
+
+  @override
+  String questionsCount(int count) {
+    return '$count questions';
+  }
+
+  @override
+  String randomQuestionsCount(int count) {
+    return '$count random questions';
+  }
+
+  @override
+  String get allDifficulties => 'All levels';
+
+  @override
+  String get challengeAudienceLabel => 'Who can play';
+
+  @override
+  String get audiencePrivate => 'By code';
+
+  @override
+  String get audiencePrivateDesc => 'Only people you give the code to';
+
+  @override
+  String get audienceFriends => 'My friends';
+
+  @override
+  String get audienceFriendsDesc =>
+      'Your friends see it and join without a code';
+
+  @override
+  String get audienceGlobal => 'Everyone';
+
+  @override
+  String get audienceGlobalDesc => 'Anyone can find it and join';
+
+  @override
+  String get audienceExpiryNote =>
+      'Announced challenges disappear after 24 hours.';
+
+  @override
+  String get friendsChallengesTab => 'Friends';
+
+  @override
+  String get globalChallengesTab => 'Everyone';
+
+  @override
+  String get myChallengesTab => 'Mine';
+
+  @override
+  String get noFriendChallenges => 'No challenge from your friends';
+
+  @override
+  String get noFriendChallengesHint =>
+      'When a friend launches one, it lands here.';
+
+  @override
+  String get noGlobalChallenges => 'No public challenge right now';
+
+  @override
+  String get noGlobalChallengesHint => 'Launch one and see who takes it on.';
+
+  @override
+  String get joinChallengeAction => 'Join';
+
+  @override
+  String expiresIn(int hours) {
+    return 'Ends in $hours h';
+  }
+
+  @override
+  String get joinChallengeError =>
+      'Invalid code, or the challenge no longer exists';
+
+  @override
+  String get modePrecision => 'Precision Mode';
+
+  @override
+  String get modePrecisionShort => 'Precision';
+
+  @override
+  String get modePrecisionDesc =>
+      '+2 right · −1 wrong · 0 if you pass · ×1.4 XP';
+
+  @override
+  String modeTally(String points, int max) {
+    return '$points / $max pts';
+  }
+
+  @override
+  String get precisionSkipHint => 'Passing costs nothing';
+
+  @override
+  String get modePointsLabel => 'Mode points';
+
+  @override
+  String secondsRangeBadge(int min, int max) {
+    return '$min–${max}s / question';
+  }
+
+  @override
+  String get challengeLabel => 'Challenge';
+
+  @override
+  String get shareCardTagline => 'Challenge your friends on ArifQuiz';
+
+  @override
+  String get modeStreak => 'Streak Mode';
+
+  @override
+  String get modeStreakShort => 'Streak';
+
+  @override
+  String get modeStreakDesc =>
+      'Answers in a row are worth more and more · ×1.4 XP';
+
+  @override
+  String get modeTimeAttack => 'Time Attack';
+
+  @override
+  String get modeTimeAttackShort => 'Time Attack';
+
+  @override
+  String get modeTimeAttackDesc =>
+      'One clock for the round · right answers extend it · ×1.6 XP';
+
+  @override
+  String get modeJokers => 'Jokers Mode';
+
+  @override
+  String get modeJokersShort => 'Jokers';
+
+  @override
+  String get modeJokersDesc =>
+      'Three helping hands, each costs a point · ×1.1 XP';
+
+  @override
+  String roundSecondsBadge(int seconds) {
+    return '${seconds}s / round';
+  }
+
+  @override
+  String bonusSecondsBadge(int seconds) {
+    return '+${seconds}s per right answer';
+  }
+
+  @override
+  String jokerCountBadge(int count) {
+    return '$count jokers';
+  }
+
+  @override
+  String streakRun(int streak) {
+    return '$streak in a row';
+  }
+
+  @override
+  String nextAnswerWorth(int points) {
+    return 'next one: +$points';
+  }
+
+  @override
+  String get jokerHintLabel => 'Hint';
+
+  @override
+  String jokerTimeLabel(int seconds) {
+    return '+${seconds}s';
+  }
+
+  @override
+  String hintFirstLetter(String letter) {
+    return 'The right answer starts with “$letter”';
+  }
+
+  @override
+  String get noJokersLeft => 'No jokers left';
+
+  @override
+  String get timeUpTitle => 'Time’s up!';
+
+  @override
+  String pointsTotal(int points) {
+    return '$points pts';
+  }
+
+  @override
+  String get acceptLabel => 'Accept';
+
+  @override
+  String get declineLabel => 'Decline';
+
+  @override
+  String get noPendingRequestsHint => 'Requests you receive land here.';
+
+  @override
+  String get noRecentActivityHint => 'Your friends’ games will show up here.';
+
+  @override
+  String friendsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count friends',
+      one: '1 friend',
+      zero: 'no friends',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statisticsSection => 'Statistics';
+
+  @override
+  String get accountSection => 'Account';
+
+  @override
+  String correctOutOf(int correct, int total) {
+    return '$correct/$total correct';
+  }
+
+  @override
+  String get deleteAccountWarning =>
+      'This cannot be undone. All your data will be permanently deleted.';
+
+  @override
+  String nameYou(String name) {
+    return '$name (you)';
+  }
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get googleSignInFailed => 'Google sign-in failed. Please try again.';
+
+  @override
+  String get googleUnavailable =>
+      'Google sign-in isn\'t available on this device.';
+
+  @override
+  String get googleMisconfigured =>
+      'Google sign-in isn\'t set up for this app yet.';
+
+  @override
+  String get useGoogleToSignIn =>
+      'This account was created with Google. Use \"Continue with Google\".';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account? ';
 }

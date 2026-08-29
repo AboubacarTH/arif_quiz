@@ -124,7 +124,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         title: Text(AppLocalizations.of(context).confirmDeleteTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
         content: Text(AppLocalizations.of(context).deleteQuizBody(quiz.title)),
         actions: [
@@ -162,7 +162,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Text(AppLocalizations.of(context).fileLanguage,
-              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+              style: context.type.titleLarge.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           for (final l in [
             (code: 'en', label: AppLocalizations.of(context).importLangEn),
@@ -174,9 +174,9 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
               title: Text(l.label),
               subtitle: l.code == 'en'
                   ? Text(AppLocalizations.of(context).appendedAfterExisting,
-                      style: const TextStyle(fontSize: 12))
+                      style: context.type.labelMedium)
                   : Text(AppLocalizations.of(context).appliedToExisting,
-                      style: const TextStyle(fontSize: 12)),
+                      style: context.type.labelMedium),
               onTap: () => Navigator.pop(ctx, l.code),
             ),
         ],
@@ -202,12 +202,11 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
     final locale = await _pickImportLocale();
     if (locale == null) return;
 
-    final picked = await FilePicker.platform.pickFiles(
+    final file = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls', 'csv'],
     );
-    if (picked == null || picked.files.isEmpty) return;
-    final file = picked.files.first;
+    if (file == null) return;
     if (file.path == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -294,8 +293,8 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
                   : null,
               filled: true,
               fillColor: context.appColors.cardBg,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: context.appColors.border)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: context.appColors.border)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
             ),
             onChanged: (_) => _applyFilters(),
           ),
@@ -332,9 +331,9 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppColors.error.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                       ),
-                      child: Text(AppLocalizations.of(context).resetFilters, style: const TextStyle(color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w600)),
+                      child: Text(AppLocalizations.of(context).resetFilters, style: context.type.labelMedium.copyWith(color: AppColors.error, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],
@@ -355,7 +354,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          Text(AppLocalizations.of(context).filterByCategory, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByCategory, style: context.type.titleLarge.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           ListTile(
             title: Text(AppLocalizations.of(context).allFem),
@@ -380,7 +379,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          Text(AppLocalizations.of(context).filterByDifficulty, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByDifficulty, style: context.type.titleLarge.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           for (final d in [null, 'easy', 'medium', 'hard'])
             ListTile(
@@ -402,7 +401,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(16),
         children: [
-          Text(AppLocalizations.of(context).filterByStatus, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(AppLocalizations.of(context).filterByStatus, style: context.type.titleLarge.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           for (final s in [null, 'published', 'draft'])
             ListTile(
@@ -426,7 +425,7 @@ class _AdminQuizzesScreenState extends State<AdminQuizzesScreen> {
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
         itemCount: _quizzes.length + (_page < _lastPage ? 1 : 0),
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (_, i) {
           if (i == _quizzes.length) {
             _loadMore();
@@ -461,16 +460,12 @@ class _FilterChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: active ? AppColors.primary.withValues(alpha: 0.12) : context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(color: active ? AppColors.primary : context.appColors.border),
           ),
           child: Text(
             label,
-            style: TextStyle(
-              color: active ? AppColors.primary : context.appColors.textSecondary,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            style: context.type.labelMedium.copyWith(color: active ? AppColors.primary : context.appColors.textSecondary, fontWeight: FontWeight.w600),
           ),
         ),
       );
@@ -690,8 +685,8 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
             if (_error != null) ...[
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                child: Text(_error!, style: const TextStyle(color: AppColors.error, fontSize: 13)),
+                decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppRadius.md)),
+                child: Text(_error!, style: context.type.bodyMedium.copyWith(color: AppColors.error)),
               ),
               const SizedBox(height: 12),
             ],
@@ -747,7 +742,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
               value: _inJourney,
               onChanged: (v) => setState(() => _inJourney = v),
               title: Text(AppLocalizations.of(context).includeInJourney, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w600)),
-              subtitle: Text(AppLocalizations.of(context).journeyFeedDesc, style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+              subtitle: Text(AppLocalizations.of(context).journeyFeedDesc, style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
               activeThumbColor: AppColors.secondary,
               contentPadding: EdgeInsets.zero,
             ),
@@ -802,10 +797,10 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
         Row(
           children: [
             Text(AppLocalizations.of(context).allowedUsers,
-                style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700, fontSize: 14)),
+                style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary)),
             const Spacer(),
-            Text('${_allowedUserIds.length} sélectionné(s)',
-                style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+            Text(AppLocalizations.of(context).selectedCount(_allowedUserIds.length),
+                style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
           ],
         ),
         const SizedBox(height: 8),
@@ -823,7 +818,7 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
             children: _allowedUserIds.map((id) {
               final label = _userLabels[id] ?? 'ID $id';
               return Chip(
-                label: Text(label, style: const TextStyle(fontSize: 12)),
+                label: Text(label, style: context.type.labelMedium),
                 backgroundColor: context.appColors.cardBg,
                 onDeleted: () => setState(() => _allowedUserIds.remove(id)),
               );
@@ -855,8 +850,8 @@ class _QuizFormScreenState extends State<_QuizFormScreen> {
         labelText: label,
         filled: true,
         fillColor: context.appColors.cardBg,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
       );
 
   Widget _field(String label, TextEditingController ctrl, {String? Function(String?)? validator, int maxLines = 1, TextInputType? keyboardType}) {
@@ -955,7 +950,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
               width: 40, height: 4,
               decoration: BoxDecoration(
                   color: context.appColors.border,
-                  borderRadius: BorderRadius.circular(2)),
+                  borderRadius: BorderRadius.circular(AppRadius.xxs)),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
@@ -970,7 +965,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
                   filled: true,
                   fillColor: context.appColors.bg,
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
                       borderSide: BorderSide.none),
                 ),
               ),
@@ -998,9 +993,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
                                       fontWeight: FontWeight.w600)),
                               subtitle: u.username != null
                                   ? Text('@${u.username}',
-                                      style: TextStyle(
-                                          color: context.appColors.textMuted,
-                                          fontSize: 12))
+                                      style: context.type.labelMedium.copyWith(color: context.appColors.textMuted))
                                   : null,
                             );
                           },

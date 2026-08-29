@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -94,11 +95,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             : widget.user?.name ?? 'U')
                         .substring(0, 1)
                         .toUpperCase(),
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 36,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: AppType.score.copyWith(color: AppColors.primary),
                   ),
                 ),
               ),
@@ -154,7 +151,7 @@ class _ProfileError extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.error.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         border: Border.all(color: AppColors.error.withValues(alpha: 0.28)),
       ),
       child: Row(
@@ -165,7 +162,7 @@ class _ProfileError extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(color: AppColors.error, fontSize: 14),
+              style: context.type.bodyLarge.copyWith(color: AppColors.error),
             ),
           ),
         ],

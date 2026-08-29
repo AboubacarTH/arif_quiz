@@ -1,3 +1,4 @@
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/admin_card.dart';
 import 'package:arif_quiz/features/admin/presentation/widgets/translations_section.dart';
@@ -68,7 +69,7 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         title: Text(AppLocalizations.of(context).confirmDeleteTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
         content: Text(AppLocalizations.of(context).deleteCategoryBody(cat.name)),
         actions: [
@@ -120,11 +121,11 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
                 filled: true,
                 fillColor: context.appColors.cardBg,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                   borderSide: BorderSide(color: context.appColors.border),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                   borderSide: BorderSide(color: context.appColors.border),
                 ),
               ),
@@ -148,7 +149,7 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
         itemCount: _categories.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (_, i) => _CategoryTile(
           cat: _categories[i],
           onEdit: () => _showForm(cat: _categories[i]),
@@ -187,7 +188,7 @@ class _CategoryTile extends StatelessWidget {
         leading: AdminLeadingBox(
           color: color,
           child: cat.icon != null
-              ? Text(cat.icon!, style: const TextStyle(fontSize: 20))
+              ? Text(cat.icon!, style: context.type.headlineMedium)
               : Icon(Icons.category_rounded, color: color, size: 22),
         ),
         title: cat.name,
@@ -297,7 +298,7 @@ class _CategoryFormState extends State<_CategoryForm> {
               children: [
                 Text(
                   isEdit ? AppLocalizations.of(context).editCategory : AppLocalizations.of(context).newCategory,
-                  style: TextStyle(color: context.appColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w800),
+                  style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                 ),
                 const Spacer(),
                 IconButton(icon: const Icon(Icons.close_rounded), onPressed: () => Navigator.pop(context)),
@@ -307,8 +308,8 @@ class _CategoryFormState extends State<_CategoryForm> {
             if (_error != null) ...[
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
-                child: Text(_error!, style: const TextStyle(color: AppColors.error, fontSize: 13)),
+                decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppRadius.sm)),
+                child: Text(_error!, style: context.type.bodyMedium.copyWith(color: AppColors.error)),
               ),
               const SizedBox(height: 12),
             ],
@@ -360,11 +361,11 @@ class _CategoryFormState extends State<_CategoryForm> {
                 onPressed: _saving ? null : _save,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
                 ),
                 child: _saving
                     ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : Text(isEdit ? AppLocalizations.of(context).saveChanges : AppLocalizations.of(context).createBtn, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15)),
+                    : Text(isEdit ? AppLocalizations.of(context).saveChanges : AppLocalizations.of(context).createBtn, style: context.type.titleMedium.copyWith(color: Colors.white)),
               ),
             ),
           ],
@@ -383,8 +384,8 @@ class _CategoryFormState extends State<_CategoryForm> {
         hintText: hint,
         filled: true,
         fillColor: context.appColors.surface,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
       ),
     );
   }
@@ -393,7 +394,7 @@ class _CategoryFormState extends State<_CategoryForm> {
         labelText: label,
         filled: true,
         fillColor: context.appColors.surface,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
       );
 }

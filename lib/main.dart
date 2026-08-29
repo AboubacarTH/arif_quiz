@@ -82,7 +82,7 @@ class QuizApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: Listenable.merge([themeController, localeController]),
-      builder: (_, __) {
+      builder: (_, _) {
         final isDark = themeController.mode == ThemeMode.dark ||
             (themeController.mode == ThemeMode.system &&
                 WidgetsBinding.instance.platformDispatcher.platformBrightness ==

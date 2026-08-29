@@ -1,16 +1,17 @@
-﻿import 'package:arif_quiz/features/daily_challenge/data/daily_challenge_repository.dart';
-import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
+import 'package:arif_quiz/features/daily_challenge/data/daily_challenge_repository.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart' show GamePhase, GamePlayController;
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
 import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/features/game_modes/presentation/widgets/question_stage.dart';
+import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
+import 'package:arif_quiz/ui/widgets/timer_ring.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
-import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
-import 'package:arif_quiz/ui/widgets/neon_button.dart';
+import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -31,6 +32,11 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
   // Play state
   bool _playing = false;
   bool _submitting = false;
+
+  /// Session ouverte à la récupération des questions : c'est elle qui dit au
+  /// serveur quel sous-ensemble du quiz a été joué. L'écran la jetait, et la
+  /// correction portait alors sur le quiz entier.
+  int? _sessionId;
   late GamePlayController _playCtrl;
 
   @override
@@ -50,6 +56,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     setState(() => _loading = true);
     try {
       final data = await _quizRepo.getQuizQuestions(_daily!.quiz.id);
+      _sessionId = data.sessionId;
       _playCtrl = GamePlayController(
         mode: GameMode.classic,
         questions: data.questions,
@@ -75,6 +82,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
       final result = await _dailyRepo.submit(
         answers: Map<String, String>.from(_playCtrl.answers),
         timeTaken: _playCtrl.totalTime,
+        sessionId: _sessionId,
       );
       if (!mounted) return;
       Navigator.pushReplacement(
@@ -112,9 +120,9 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('📅', style: TextStyle(fontSize: 48)),
+            Icon(Icons.event_busy_rounded, size: 48, color: AppColors.textMuted),
             SizedBox(height: 12),
-            Text(AppLocalizations.of(context).noDailyToday, style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700)),
+            Text(AppLocalizations.of(context).noDailyToday, style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary)),
             SizedBox(height: 8),
             Text(AppLocalizations.of(context).comeBackTomorrow, style: TextStyle(color: context.appColors.textSecondary)),
           ],
@@ -134,26 +142,27 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppRadius.lg),
               border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
             ),
             child: Column(
               children: [
-                const Text('🌟', style: TextStyle(fontSize: 40)),
+                const Icon(Icons.auto_awesome_rounded,
+                size: 40, color: AppColors.secondary),
                 const SizedBox(height: 12),
-                Text(AppLocalizations.of(context).todaysChallengeTag, style: const TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 2)),
+                Text(AppLocalizations.of(context).todaysChallengeTag, style: context.type.labelMedium.copyWith(color: AppColors.accent, fontWeight: FontWeight.w800, letterSpacing: 2)),
                 const SizedBox(height: 8),
-                Text(d.quiz.title, style: TextStyle(color: context.appColors.textPrimary, fontSize: 22, fontWeight: FontWeight.w800), textAlign: TextAlign.center),
+                Text(d.quiz.title, style: context.type.headlineLarge.copyWith(color: context.appColors.textPrimary), textAlign: TextAlign.center),
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(color: context.appColors.cardBgLight, borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: context.appColors.cardBgLight, borderRadius: BorderRadius.circular(AppRadius.md)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.timer_outlined, size: 16, color: context.appColors.textMuted),
                       const SizedBox(width: 6),
-                      Text(AppLocalizations.of(context).renewsIn(h, m), style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+                      Text(AppLocalizations.of(context).renewsIn(h, m), style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
                     ],
                   ),
                 ),
@@ -166,7 +175,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: AppColors.success.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
               ),
               child: Row(
@@ -179,7 +188,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                       children: [
                         Text(AppLocalizations.of(context).challengeCompleted, style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w700)),
                         Text(AppLocalizations.of(context).yourScoreGrade(d.myScore?.toStringAsFixed(1) ?? '?', d.myGrade ?? '?'),
-                            style: TextStyle(color: context.appColors.textSecondary, fontSize: 13)),
+                            style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
                       ],
                     ),
                   ),
@@ -196,21 +205,28 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
               ),
               child: Column(
                 children: [
-                  _bonusRow(AppLocalizations.of(context).bonusXp30, AppColors.accent),
+                  _bonusRow(Icons.auto_awesome_rounded,
+                      AppLocalizations.of(context).bonusXp30, AppColors.accent),
                   const SizedBox(height: 8),
-                  _bonusRow('🔥 Maintient ton streak', AppColors.warning),
+                  _bonusRow(
+                      Icons.local_fire_department_rounded,
+                      AppLocalizations.of(context).bonusKeepsStreak,
+                      AppColors.warning),
                   const SizedBox(height: 8),
-                  _bonusRow('🏆 Classement quotidien', AppColors.secondary),
+                  _bonusRow(
+                      Icons.emoji_events_rounded,
+                      AppLocalizations.of(context).bonusDailyLeaderboard,
+                      AppColors.secondary),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            NeonButton(
+            AppButton(
               label: AppLocalizations.of(context).takeChallenge,
-              width: double.infinity,
+              fullWidth: true,
               icon: Icons.play_arrow_rounded,
-              color: AppColors.accent,
-              onTap: _startPlay,
+              tint: AppColors.accent,
+              onPressed: _startPlay,
             ),
           ],
         ],
@@ -218,81 +234,97 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     );
   }
 
-  Widget _bonusRow(String text, Color color) => Row(
+  /// L'icône est un paramètre à part : l'ancienne version découpait la chaîne
+  /// au premier espace pour en extraire l'emoji, ce qui cassait dès qu'une
+  /// traduction commençait par autre chose.
+  Widget _bonusRow(IconData icon, String text, Color color) => Row(
         children: [
-          Text(text.split(' ')[0], style: const TextStyle(fontSize: 18)),
+          Icon(icon, size: 20, color: color),
           const SizedBox(width: 10),
-          Text(text.substring(text.indexOf(' ') + 1), style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+          Expanded(
+            child: Text(text,
+                style: context.type.bodyLarge
+                    .copyWith(color: color, fontWeight: FontWeight.w600)),
+          ),
         ],
       );
 
   Widget _buildPlayScreen() {
     final ctrl = _playCtrl;
-    final q = ctrl.currentQuestion;
-    final opts = q.choices(context);
-    final labels = ['A', 'B', 'C', 'D'];
 
-    return Scaffold(
-      backgroundColor: context.appColors.bg,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20), border: Border.all(color: AppColors.accent.withValues(alpha: 0.4))),
-                    child: Text('🌟 ${AppLocalizations.of(context).dailyTag}', style: const TextStyle(color: AppColors.accent, fontSize: 11, fontWeight: FontWeight.w700)),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: LinearProgressIndicator(
-                        value: ctrl.progress,
-                        backgroundColor: context.appColors.cardBg,
-                        valueColor: const AlwaysStoppedAnimation(AppColors.accent),
-                        minHeight: 8,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        if (await confirmQuitGame(context) && mounted) {
+          setState(() => _playing = false);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: context.appColors.bg,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.gutter),
+            child: Column(
+              children: [
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  children: [
+                    // Le défi du jour n'avait aucun bouton pour sortir : une
+                    // fois entré, le joueur y était enfermé.
+                    GestureDetector(
+                      onTap: () async {
+                        if (await confirmQuitGame(context) && mounted) {
+                          setState(() => _playing = false);
+                        }
+                      },
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: context.appColors.cardBg,
+                          borderRadius: AppRadius.rSm,
+                        ),
+                        child: Icon(Icons.close_rounded,
+                            color: context.appColors.textSecondary, size: 18),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text('${ctrl.index + 1}/${ctrl.questions.length}', style: TextStyle(color: context.appColors.textSecondary, fontSize: 13)),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(color: context.appColors.cardBg, borderRadius: BorderRadius.circular(20)),
-                child: Text('${ctrl.timeLeft}s', style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w800)),
-              ),
-              const SizedBox(height: 20),
-              Align(alignment: AlignmentDirectional.centerStart, child: Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1), style: const TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 0.5))),
-              const SizedBox(height: 8),
-              Align(alignment: AlignmentDirectional.centerStart, child: Text(q.text, style: TextStyle(color: context.appColors.textPrimary, fontSize: 20, fontWeight: FontWeight.w700, height: 1.4))),
-              // Les réponses suivent directement l'énoncé, séparées par une
-              // respiration ; elles défilent si elles ne tiennent pas.
-              const SizedBox(height: AppSpacing.questionToAnswers),
-              Expanded(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: opts.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemBuilder: (_, i) {
-                    final opt = opts[i];
-                    return AnswerOptionTile(
-                      label: labels[i < labels.length ? i : 0],
-                      option: opt,
-                      state: !ctrl.answered ? AnswerState.idle : (ctrl.selected == opt ? AnswerState.selected : AnswerState.idle),
-                      onTap: () => ctrl.selectAnswer(opt),
-                    );
-                  },
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: AppRadius.rXs,
+                        child: LinearProgressIndicator(
+                          value: ctrl.progress,
+                          backgroundColor: context.appColors.cardBg,
+                          valueColor:
+                              const AlwaysStoppedAnimation(AppColors.accent),
+                          minHeight: 8,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Text('${ctrl.index + 1}/${ctrl.questions.length}',
+                        style: context.type.bodyMedium.copyWith(
+                            color: context.appColors.textSecondary,
+                            fontWeight: FontWeight.w600)),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 28),
+                // Le même anneau que partout ailleurs : le chrono était ici un
+                // simple « 28s » posé dans une boîte.
+                TimerRing(
+                    timeLeft: ctrl.timeLeft,
+                    totalTime: ctrl.currentSeconds,
+                    size: 80),
+                const SizedBox(height: 28),
+                Expanded(
+                  child: QuestionStage(
+                      controller: ctrl, accent: AppColors.accent),
+                ),
+                SkipQuestionButton(controller: ctrl),
+              ],
+            ),
           ),
         ),
       ),

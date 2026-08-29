@@ -1,6 +1,8 @@
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:arif_quiz/core/i18n/game_mode_l10n.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
@@ -56,9 +58,11 @@ class _ShareScoreButtonState extends State<ShareScoreButton> {
 
       final grade = widget.result.grade;
       final pct = widget.result.score.toStringAsFixed(0);
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: l10n.shareScoreText(grade, pct, widget.quiz.title),
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: l10n.shareScoreText(grade, pct, widget.quiz.title),
+        ),
       );
     } catch (e) {
       debugPrint('Share score error: $e');
@@ -140,17 +144,11 @@ class ShareResultCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('🎯', style: TextStyle(fontSize: 22)),
+              const Icon(Icons.my_location_rounded, size: 22, color: AppColors.primary),
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 'ARIFQUIZ',
-                style: TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2,
-                  fontFamily: 'Nunito',
-                ),
+                style: context.type.headlineMedium.copyWith(color: AppColors.primary, fontWeight: FontWeight.w800, letterSpacing: 2),
               ),
             ],
           ),
@@ -169,21 +167,11 @@ class ShareResultCard extends StatelessWidget {
               children: [
                 Text(
                   grade,
-                  style: TextStyle(
-                    color: gradeColor,
-                    fontSize: 56,
-                    height: 1,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: 'Nunito',
-                  ),
+                  style: AppType.scoreHero.copyWith(color: gradeColor, height: 1),
                 ),
                 Text(
                   '${result.score.toStringAsFixed(0)}%',
-                  style: TextStyle(
-                    color: gradeColor.withValues(alpha: 0.85),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: context.type.titleMedium.copyWith(color: gradeColor.withValues(alpha: 0.85)),
                 ),
               ],
             ),
@@ -194,13 +182,7 @@ class ShareResultCard extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: _ink,
-              fontSize: 20,
-              height: 1.2,
-              fontWeight: FontWeight.w800,
-              fontFamily: 'Nunito',
-            ),
+            style: context.type.headlineMedium.copyWith(color: _ink, height: 1.2, fontWeight: FontWeight.w800),
           ),
           if (challenge != null) ...[
             const SizedBox(height: 8),
@@ -208,15 +190,12 @@ class ShareResultCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(999),
+                borderRadius: BorderRadius.circular(AppRadius.pill),
               ),
               child: Text(
-                'Défi · ${_modeLabel(challenge!.mode)}',
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                ),
+                '${AppLocalizations.of(context).challengeLabel} · '
+                '${GameMode.fromApi(challenge!.mode).localizedLabel(context)}',
+                style: context.type.labelMedium.copyWith(color: AppColors.primary),
               ),
             ),
           ],
@@ -225,48 +204,45 @@ class ShareResultCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
               color: _card,
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(AppRadius.lg),
               border: Border.all(color: _border),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _stat('${result.correctCount}/${result.totalQuestions}',
-                    'Bonnes', AppColors.success),
+                _stat(
+                    context,
+                    '${result.correctCount}/${result.totalQuestions}',
+                    AppLocalizations.of(context).correctLabel,
+                    AppColors.success),
                 _sep(),
-                _stat('${result.pointsEarned}', 'Points', AppColors.warning),
+                _stat(context, '${result.pointsEarned}',
+                    AppLocalizations.of(context).points, AppColors.warning),
                 _sep(),
-                _stat(_fmtTime(result.timeTaken), 'Temps', AppColors.info),
+                _stat(context, _fmtTime(result.timeTaken),
+                    AppLocalizations.of(context).timeLabel, AppColors.info),
               ],
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            'Défie tes amis sur ArifQuiz 🚀',
-            style: TextStyle(
-              color: _muted,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
+          Text(
+            AppLocalizations.of(context).shareCardTagline,
+            style: context.type.bodyMedium.copyWith(color: _muted, fontWeight: FontWeight.w600),
           ),
         ],
       ),
     );
   }
 
-  Widget _stat(String value, String label, Color color) => Column(
+  Widget _stat(BuildContext context, String value, String label, Color color) =>
+      Column(
         children: [
           Text(
             value,
-            style: TextStyle(
-              color: color,
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              fontFamily: 'Nunito',
-            ),
+            style: context.type.headlineMedium.copyWith(color: color, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 2),
-          Text(label, style: const TextStyle(color: _muted, fontSize: 12)),
+          Text(label, style: context.type.labelMedium.copyWith(color: _muted)),
         ],
       );
 
@@ -274,9 +250,4 @@ class ShareResultCard extends StatelessWidget {
 
   String _fmtTime(int s) => s < 60 ? '${s}s' : '${s ~/ 60}m ${s % 60}s';
 
-  String _modeLabel(String mode) => switch (mode) {
-        'survival' => 'Survie',
-        'speed' => 'Speed',
-        _ => 'Classique',
-      };
 }

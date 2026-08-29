@@ -1,11 +1,37 @@
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
+
+/// Vignette d'état : le carré arrondi teinté qui coiffe un écran vide ou en
+/// erreur. Une seule forme pour les deux, sinon chaque écran vide invente la
+/// sienne — c'est exactement ce que faisaient les emoji posés en `fontSize: 60`.
+class StateGlyph extends StatelessWidget {
+  final IconData icon;
+  final Color tint;
+
+  const StateGlyph({super.key, required this.icon, required this.tint});
+
+  @override
+  Widget build(BuildContext context) => Container(
+        width: 72,
+        height: 72,
+        decoration: BoxDecoration(
+          color: tint.withValues(alpha: 0.10),
+          borderRadius: AppRadius.rXl,
+        ),
+        child: Icon(icon, color: tint, size: 34),
+      );
+}
 
 class EmptyState extends StatelessWidget {
   final String title;
   final String? subtitle;
-  final String? emoji;
+  final IconData? icon;
+
+  /// Teinte de la vignette. Par défaut la couleur muette : un écran vide n'est
+  /// pas un événement, il n'a pas à attirer l'œil comme une erreur.
+  final Color? tint;
   final String? actionLabel;
   final VoidCallback? onAction;
 
@@ -13,7 +39,8 @@ class EmptyState extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
-    this.emoji,
+    this.icon,
+    this.tint,
     this.actionLabel,
     this.onAction,
   });
@@ -28,32 +55,27 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (emoji != null)
-              Text(emoji!, style: const TextStyle(fontSize: 60)),
-            const SizedBox(height: 16),
+            if (icon != null) ...[
+              StateGlyph(
+                  icon: icon!, tint: tint ?? context.appColors.textMuted),
+              const SizedBox(height: AppSpacing.lg),
+            ],
             Text(
               title,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.headlineMedium,
               textAlign: TextAlign.center,
             ),
             if (subtitle != null) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 subtitle!,
-                style: TextStyle(
-                  color: context.appColors.textSecondary,
-                  fontSize: 14,
-                  height: 1.5,
-                ),
+                style: context.type.bodyLarge
+                    .copyWith(color: context.appColors.textSecondary),
                 textAlign: TextAlign.center,
               ),
             ],
             if (actionLabel != null && onAction != null) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xxl),
               ElevatedButton(
                 onPressed: onAction,
                 child: Text(actionLabel!),
@@ -86,34 +108,22 @@ class ErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Icon(Icons.wifi_off_rounded,
-                  color: AppColors.error, size: 34),
-            ),
-            const SizedBox(height: 16),
+            const StateGlyph(
+                icon: Icons.wifi_off_rounded, tint: AppColors.error),
+            const SizedBox(height: AppSpacing.lg),
             Text(
-              'Oops!',
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-              ),
+              AppLocalizations.of(context).oops,
+              style: context.type.headlineLarge,
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppSpacing.xs + 2),
             Text(
               message ?? AppLocalizations.of(context).somethingWrong,
-              style: TextStyle(
-                  color: context.appColors.textSecondary, fontSize: 14, height: 1.5),
+              style: context.type.bodyLarge
+                  .copyWith(color: context.appColors.textSecondary),
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xxl),
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh_rounded, size: 18),
@@ -133,16 +143,16 @@ class NoInternetBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg, vertical: AppSpacing.sm + 2),
       color: AppColors.error.withValues(alpha: 0.9),
       child: Row(
         children: [
           const Icon(Icons.wifi_off_rounded, color: Colors.white, size: 16),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.sm),
           Text(
             AppLocalizations.of(context).noInternet,
-            style: const TextStyle(
-                color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+            style: context.type.labelLarge.copyWith(color: Colors.white),
           ),
         ],
       ),

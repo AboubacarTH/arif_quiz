@@ -182,7 +182,7 @@ class AdsService {
     );
 
     try {
-      await ad.show(onUserEarnedReward: (_, __) => rewarded = true);
+      await ad.show(onUserEarnedReward: (_, _) => rewarded = true);
     } catch (e) {
       // `show()` a échoué avant d'armer quoi que ce soit : aucun callback ne
       // viendra, il faut rendre la main nous-mêmes sous peine de tout figer.

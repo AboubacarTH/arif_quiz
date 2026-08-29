@@ -88,7 +88,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         title: Text(AppLocalizations.of(context).confirmDeleteTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
         content: Text(AppLocalizations.of(context).deleteReportBody),
         actions: [
@@ -174,7 +174,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
         itemCount: _reports.length + (_page < _lastPage ? 1 : 0),
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (_, i) {
           if (i == _reports.length) {
             _loadMore();
@@ -223,16 +223,12 @@ class _FilterChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: active ? AppColors.primary.withValues(alpha: 0.12) : context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(color: active ? AppColors.primary : context.appColors.border),
           ),
           child: Text(
             label,
-            style: TextStyle(
-              color: active ? AppColors.primary : context.appColors.textSecondary,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            style: context.type.labelMedium.copyWith(color: active ? AppColors.primary : context.appColors.textSecondary, fontWeight: FontWeight.w600),
           ),
         ),
       );
@@ -273,7 +269,7 @@ class _ReportTile extends StatelessWidget {
                           l10n.markedCorrectAnswer(r.correctAnswer ?? ''),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: AppColors.success, fontSize: 12),
+                          style: context.type.labelMedium.copyWith(color: AppColors.success),
                         ),
                       ),
                     ],
@@ -348,7 +344,7 @@ class _ReportTile extends StatelessWidget {
                 color: context.appColors.cardBgLight,
                 borderRadius: AppRadius.rSm,
               ),
-              child: Text(r.comment!, style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, height: 1.4)),
+              child: Text(r.comment!, style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, height: 1.4)),
             ),
           ],
           const SizedBox(height: AppSpacing.md),

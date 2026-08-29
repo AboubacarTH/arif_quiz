@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +16,10 @@ class AppButton extends StatefulWidget {
   final bool loading;
   final bool fullWidth;
 
+  /// Teinte porteuse de sens — la couleur d'un mode de jeu, par exemple.
+  /// Elle remplace la couleur de la variante, jamais sa forme ni sa taille.
+  final Color? tint;
+
   const AppButton({
     super.key,
     required this.label,
@@ -26,6 +30,7 @@ class AppButton extends StatefulWidget {
     this.iconTrailing = false,
     this.loading = false,
     this.fullWidth = false,
+    this.tint,
   });
 
   @override
@@ -60,8 +65,10 @@ class _AppButtonState extends State<AppButton>
   void _onTapUp(_) => _controller.forward();
   void _onTapCancel() => _controller.forward();
 
+  Color get _accent => widget.tint ?? AppColors.primary;
+
   Color get _bgColor => switch (widget.variant) {
-        AppButtonVariant.primary => AppColors.primary,
+        AppButtonVariant.primary => _accent,
         AppButtonVariant.secondary => context.appColors.cardBg,
         AppButtonVariant.danger => AppColors.error,
         AppButtonVariant.ghost => Colors.transparent,
@@ -71,14 +78,13 @@ class _AppButtonState extends State<AppButton>
         AppButtonVariant.primary => Colors.white,
         AppButtonVariant.secondary => context.appColors.textPrimary,
         AppButtonVariant.danger => Colors.white,
-        AppButtonVariant.ghost => AppColors.primary,
+        AppButtonVariant.ghost => _accent,
       };
 
   BorderSide get _border => switch (widget.variant) {
         AppButtonVariant.secondary =>
           BorderSide(color: context.appColors.cardBgLight, width: 1.5),
-        AppButtonVariant.ghost =>
-          const BorderSide(color: AppColors.primary, width: 1.5),
+        AppButtonVariant.ghost => BorderSide(color: _accent, width: 1.5),
         _ => BorderSide.none,
       };
 
@@ -91,11 +97,6 @@ class _AppButtonState extends State<AppButton>
             horizontal: AppSpacing.xxxl, vertical: AppSpacing.lg + 2),
       };
 
-  double get _fontSize => switch (widget.size) {
-        AppButtonSize.small => 13,
-        AppButtonSize.medium => 15,
-        AppButtonSize.large => 17,
-      };
 
   double get _iconSize => switch (widget.size) {
         AppButtonSize.small => 16,
@@ -103,15 +104,18 @@ class _AppButtonState extends State<AppButton>
         AppButtonSize.large => 20,
       };
 
+  /// Les trois tailles de bouton sont trois rôles de l'échelle, pas trois
+  /// nombres : 13 / 15 / 17 sortent du thème, jamais d'un `fontSize:` local.
+  TextStyle get _labelStyle => switch (widget.size) {
+        AppButtonSize.small => context.type.labelLarge,
+        AppButtonSize.medium => context.type.titleMedium,
+        AppButtonSize.large => context.type.titleLarge,
+      };
+
   Widget _label() {
     final label = Text(
       widget.label,
-      style: TextStyle(
-        color: _fgColor,
-        fontSize: _fontSize,
-        fontWeight: FontWeight.w700,
-        fontFamily: 'Nunito',
-      ),
+      style: _labelStyle.copyWith(color: _fgColor),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,
@@ -139,14 +143,12 @@ class _AppButtonState extends State<AppButton>
             color: disabled ? _bgColor.withValues(alpha: 0.45) : _bgColor,
             borderRadius: AppRadius.rMd,
             border: Border.fromBorderSide(_border),
-            boxShadow: !disabled
-                ? switch (widget.variant) {
-                    AppButtonVariant.primary =>
-                      AppShadows.tinted(context, AppColors.primary),
-                    AppButtonVariant.danger =>
-                      AppShadows.tinted(context, AppColors.error),
-                    _ => null,
-                  }
+            // Les variantes pleines portaient chacune une ombre de leur propre
+            // couleur ; elles prennent la même ombre neutre que tout le reste.
+            boxShadow: !disabled &&
+                    (widget.variant == AppButtonVariant.primary ||
+                        widget.variant == AppButtonVariant.danger)
+                ? AppShadows.card(context)
                 : null,
           ),
           child: Row(

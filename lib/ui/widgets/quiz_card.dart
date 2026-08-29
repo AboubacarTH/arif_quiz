@@ -65,7 +65,7 @@ class _ListCard extends StatelessWidget {
               child: Center(
                 child: Text(
                   quiz.category?.icon ?? '📝',
-                  style: const TextStyle(fontSize: 26),
+                  style: context.type.displayMedium,
                 ),
               ),
             ),
@@ -77,12 +77,12 @@ class _ListCard extends StatelessWidget {
                 children: [
                   Text(
                     quiz.title,
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    maxLines: 2,
+                    style: context.type.titleMedium,
+                    // Trois lignes, pas deux : les titres du catalogue se
+                    // terminent par ce qui les distingue (« … — Niveau
+                    // avancé »). Couper à deux lignes rendait trois quiz
+                    // consecutifs strictement identiques a l'oeil.
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
@@ -99,17 +99,12 @@ class _ListCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
-            // Play count + chevron
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Icon(Icons.chevron_right_rounded,
-                    color: context.appColors.textMuted),
-                const SizedBox(height: 4),
-                _Meta(Icons.play_circle_outline_rounded, '${quiz.playCount}'),
-              ],
-            ),
+            const SizedBox(width: 10),
+            // Le chevron a disparu : la carte entière est cliquable, il ne
+            // disait rien de plus et mangeait la largeur du titre. Or c'est
+            // exactement la fin des titres qui les distingue les uns des
+            // autres (« … — Niveau avancé »).
+            _Meta(Icons.play_circle_outline_rounded, '${quiz.playCount}'),
           ],
         ),
       ),
@@ -156,7 +151,7 @@ class _GridCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(quiz.category?.icon ?? '📝',
-                        style: const TextStyle(fontSize: 22)),
+                        style: context.type.headlineLarge),
                   ),
                 ),
                 _Tag(DifficultyL10n.badge(context, quiz.difficulty), diffColor),
@@ -165,12 +160,7 @@ class _GridCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               quiz.title,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                height: 1.3,
-              ),
+              style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, height: 1.3),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -229,7 +219,7 @@ class _FeaturedCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(quiz.category?.icon ?? '📝',
-                        style: const TextStyle(fontSize: 26)),
+                        style: context.type.displayMedium),
                   ),
                 ),
                 _Tag(DifficultyL10n.badge(context, quiz.difficulty), diffColor),
@@ -238,12 +228,7 @@ class _FeaturedCard extends StatelessWidget {
             const SizedBox(height: 14),
             Text(
               quiz.title,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                height: 1.3,
-              ),
+              style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, height: 1.3),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -266,10 +251,7 @@ class _FeaturedCard extends StatelessWidget {
                   const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
                   const SizedBox(width: 4),
                   Text(AppLocalizations.of(context).playNow,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13)),
+                      style: context.type.labelLarge.copyWith(color: Colors.white)),
                 ],
               ),
             ),
@@ -291,11 +273,10 @@ class _Tag extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
         ),
         child: Text(label,
-            style: TextStyle(
-                color: color, fontSize: 10, fontWeight: FontWeight.w700)),
+            style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w700)),
       );
 }
 
@@ -311,7 +292,7 @@ class _Meta extends StatelessWidget {
           Icon(icon, color: context.appColors.textMuted, size: 13),
           const SizedBox(width: 3),
           Text(label,
-              style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+              style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
               maxLines: 1,
               overflow: TextOverflow.ellipsis),
         ],

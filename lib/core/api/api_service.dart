@@ -71,6 +71,7 @@ class ApiService {
     const publicAuth = [
       '/auth/login',
       '/auth/register',
+      '/auth/google',
       '/auth/forgot-password',
       '/auth/reset-password',
       '/auth/email/verify',
@@ -97,6 +98,18 @@ class ApiService {
     final res = await _dio.post('/auth/login', data: {
       'email': email,
       'password': password,
+    });
+    return res.data;
+  }
+
+  /// Échange l'ID token Google contre une session applicative.
+  ///
+  /// Le serveur crée le compte à la première connexion ; l'app ne fait pas la
+  /// différence entre inscription et connexion, elle reçoit un jeton dans les
+  /// deux cas.
+  Future<Map<String, dynamic>> googleSignIn(String idToken) async {
+    final res = await _dio.post('/auth/google', data: {
+      'id_token': idToken,
     });
     return res.data;
   }
@@ -158,8 +171,11 @@ class ApiService {
     await _storage.delete(key: 'auth_token');
   }
 
-  Future<void> deleteAccount(String password) async {
-    await _dio.delete('/profile', data: {'password': password});
+  /// Un compte Google n'a pas de mot de passe : on n'en envoie alors aucun,
+  /// et le serveur se contente du jeton de session.
+  Future<void> deleteAccount([String? password]) async {
+    await _dio.delete('/profile',
+        data: password == null ? null : {'password': password});
     await _storage.delete(key: 'auth_token');
   }
 
@@ -211,9 +227,9 @@ class ApiService {
     int page = 1,
   }) async {
     final res = await _dio.get('/quizzes', queryParameters: {
-      if (categoryId != null) 'category_id': categoryId,
-      if (difficulty != null) 'difficulty': difficulty,
-      if (search != null) 'search': search,
+      'category_id': ?categoryId,
+      'difficulty': ?difficulty,
+      'search': ?search,
       'page': page,
     });
     return res.data;
@@ -231,7 +247,7 @@ class ApiService {
 
   Future<Map<String, dynamic>> getQuizQuestions(int quizId, {int? count}) async {
     final res = await _dio.get('/quizzes/$quizId/questions', queryParameters: {
-      if (count != null) 'count': count,
+      'count': ?count,
     });
     return res.data;
   }
@@ -311,13 +327,18 @@ class ApiService {
     required List<int> questionIds,
     String mode = 'classic',
     int? sessionId,
+    int jokersUsed = 0,
   }) async {
     final res = await _dio.post('/quizzes/$quizId/submit', data: {
       'answers': answers,
       'time_taken': timeTaken,
       'mode': mode,
       'question_ids': questionIds,
-      if (sessionId != null) 'session_id': sessionId,
+      'session_id': ?sessionId,
+      // Les coups de pouce ne laissent aucune trace dans les réponses : le
+      // serveur ne peut pas les deviner, il faut les lui dire pour qu'il
+      // applique leur coût.
+      if (jokersUsed > 0) 'jokers_used': jokersUsed,
     });
     return res.data;
   }

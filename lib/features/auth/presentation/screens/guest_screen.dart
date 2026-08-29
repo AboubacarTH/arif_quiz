@@ -1,3 +1,4 @@
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/register_screen.dart';
@@ -41,28 +42,20 @@ class GuestScreen extends StatelessWidget {
                         width: 2),
                   ),
                   child: const Center(
-                    child: Text('🔒', style: TextStyle(fontSize: 40)),
+                    child: Icon(Icons.lock_rounded, size: 40, color: AppColors.primary),
                   ),
                 ),
                 const SizedBox(height: 24),
                 Text(
                   AppLocalizations.of(context).signInToContinue,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   AppLocalizations.of(context).guestScreenBody,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: context.appColors.textSecondary,
-                    fontSize: 14,
-                    height: 1.5,
-                  ),
+                  style: context.type.bodyLarge.copyWith(color: context.appColors.textSecondary, height: 1.5),
                 ),
                 const SizedBox(height: 36),
                 SizedBox(
@@ -73,14 +66,11 @@ class GuestScreen extends StatelessWidget {
                       backgroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
+                          borderRadius: BorderRadius.circular(AppRadius.md)),
                     ),
                     child: Text(
                       AppLocalizations.of(context).createAccount,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700),
+                      style: context.type.titleMedium.copyWith(color: Colors.white),
                     ),
                   ),
                 ),
@@ -93,14 +83,11 @@ class GuestScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       side: BorderSide(color: context.appColors.border),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
+                          borderRadius: BorderRadius.circular(AppRadius.md)),
                     ),
                     child: Text(
                       AppLocalizations.of(context).logIn,
-                      style: TextStyle(
-                          color: context.appColors.textPrimary,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700),
+                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
                     ),
                   ),
                 ),
@@ -110,9 +97,9 @@ class GuestScreen extends StatelessWidget {
                     Navigator.pushAndRemoveUntil(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (_, __, ___) =>
+                        pageBuilder: (_, _, _) =>
                             const MainNavigation(initialIndex: 0),
-                        transitionsBuilder: (_, a, __, child) =>
+                        transitionsBuilder: (_, a, _, child) =>
                             FadeTransition(opacity: a, child: child),
                       ),
                       (_) => false,
@@ -120,11 +107,7 @@ class GuestScreen extends StatelessWidget {
                   },
                   child: Text(
                     AppLocalizations.of(context).backToHome,
-                    style: TextStyle(
-                      color: context.appColors.textMuted,
-                      fontSize: 13,
-                      decoration: TextDecoration.underline,
-                    ),
+                    style: context.type.bodyMedium.copyWith(color: context.appColors.textMuted, decoration: TextDecoration.underline),
                   ),
                 ),
               ],

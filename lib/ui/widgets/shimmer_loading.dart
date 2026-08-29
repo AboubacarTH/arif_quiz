@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ShimmerBox extends StatefulWidget {
@@ -25,10 +26,12 @@ class _ShimmerBoxState extends State<ShimmerBox>
   @override
   void initState() {
     super.initState();
+    // Battement d'opacité plutôt que balayage de couleur : un squelette de
+    // chargement n'a pas besoin d'un dégradé mobile pour dire « ça arrive ».
     _ctrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1200))
-      ..repeat();
-    _anim = Tween<double>(begin: -1.5, end: 1.5).animate(
+        vsync: this, duration: const Duration(milliseconds: 1100))
+      ..repeat(reverse: true);
+    _anim = Tween<double>(begin: 0.45, end: 1.0).animate(
       CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
     );
   }
@@ -43,19 +46,14 @@ class _ShimmerBoxState extends State<ShimmerBox>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _anim,
-      builder: (_, __) => Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.radius),
-          gradient: LinearGradient(
-            begin: Alignment(_anim.value - 1, 0),
-            end: Alignment(_anim.value, 0),
-            colors: [
-              context.appColors.cardBg,
-              context.appColors.cardBgLight,
-              context.appColors.cardBg,
-            ],
+      builder: (_, _) => Opacity(
+        opacity: _anim.value,
+        child: Container(
+          width: widget.width,
+          height: widget.height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(widget.radius),
+            color: context.appColors.cardBgLight,
           ),
         ),
       ),
@@ -75,12 +73,12 @@ class QuizListSkeleton extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: count,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (_, __) => Container(
+      separatorBuilder: (_, _) => const SizedBox(height: 12),
+      itemBuilder: (_, _) => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: context.appColors.cardBg,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: context.appColors.cardBgLight),
         ),
         child: const Row(
@@ -116,8 +114,8 @@ class CategoryRowSkeleton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         scrollDirection: Axis.horizontal,
         itemCount: 5,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (_, __) =>
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
+        itemBuilder: (_, _) =>
             const ShimmerBox(width: 96, height: 116, radius: 18),
       ),
     );

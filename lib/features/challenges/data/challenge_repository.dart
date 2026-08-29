@@ -6,12 +6,21 @@ class ChallengeRepository {
 
   ChallengeRepository(this._api);
 
+  /// Les quatre listes de l'écran Défis : ce que j'ai créé, ce que j'ai
+  /// rejoint, et les deux fils de découverte — amis et global.
   Future<Map<String, List<ChallengeModel>>> getMyChallenges() async {
     final res = await _api.get('/challenges');
-    final data = res.data['data'];
+    final data = Map<String, dynamic>.from(res.data['data'] ?? {});
+
+    List<ChallengeModel> parse(String key) => ((data[key] ?? []) as List)
+        .map((e) => ChallengeModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+
     return {
-      'created': (data['created'] as List).map((e) => ChallengeModel.fromJson(e)).toList(),
-      'joined': (data['joined'] as List).map((e) => ChallengeModel.fromJson(e)).toList(),
+      'created': parse('created'),
+      'joined': parse('joined'),
+      'friends': parse('friends'),
+      'global': parse('global'),
     };
   }
 
@@ -21,13 +30,17 @@ class ChallengeRepository {
     int? categoryId,
     required String mode,
     required String title,
+    required int questionsCount,
+    required String audience,
   }) async {
     final res = await _api.post('/challenges', data: {
       'source_type': sourceType,
-      if (quizId != null) 'quiz_id': quizId,
-      if (categoryId != null) 'category_id': categoryId,
+      'quiz_id': ?quizId,
+      'category_id': ?categoryId,
       'mode': mode,
       'title': title,
+      'questions_count': questionsCount,
+      'audience': audience,
     });
     return ChallengeModel.fromJson(res.data['data']);
   }
@@ -58,12 +71,14 @@ class ChallengeRepository {
     required int timeTaken,
     required List<int> questionIds,
     int? sessionId,
+    int jokersUsed = 0,
   }) async {
     final res = await _api.post('/challenges/$challengeId/submit', data: {
       'answers': answers,
       'time_taken': timeTaken,
       'question_ids': questionIds,
-      if (sessionId != null) 'session_id': sessionId,
+      'session_id': ?sessionId,
+      if (jokersUsed > 0) 'jokers_used': jokersUsed,
     });
     final data = res.data['data'] as Map<String, dynamic>;
     return QuizAttemptResult.fromJson(data);

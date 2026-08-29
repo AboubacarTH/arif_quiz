@@ -10,7 +10,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String greeting(String name) {
-    return 'Bonjour, $name 👋';
+    return 'Bonjour, $name';
   }
 
   @override
@@ -26,10 +26,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get seeAll => 'Voir tout';
 
   @override
-  String get popular => '🔥 Populaires';
+  String get popular => 'Populaires';
 
   @override
-  String get friendsLeaderboard => '🏅 Classement amis';
+  String get friendsLeaderboard => 'Classement amis';
 
   @override
   String get guestBannerTitle => 'Sauvegarde ta progression !';
@@ -60,7 +60,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get journeyTitle => 'Grimpe les niveaux de la map';
 
   @override
-  String get journeySubtitle => 'Débloque, gagne des étoiles ⭐';
+  String get journeySubtitle => 'Débloque, gagne des étoiles';
 
   @override
   String levelShort(int level) {
@@ -162,7 +162,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String levelsCount(int count) {
-    return '🏁  $count niveaux';
+    return '$count niveaux';
   }
 
   @override
@@ -230,22 +230,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get viewChallenge => 'Voir le défi';
 
   @override
-  String get headlineOutstanding => 'Exceptionnel ! 🤩';
+  String get headlineOutstanding => 'Exceptionnel !';
 
   @override
-  String get headlineExcellent => 'Excellent ! 🎉';
+  String get headlineExcellent => 'Excellent !';
 
   @override
-  String get headlineGreat => 'Bien joué ! 👏';
+  String get headlineGreat => 'Bien joué !';
 
   @override
-  String get headlineNotBad => 'Pas mal ! 👍';
+  String get headlineNotBad => 'Pas mal !';
 
   @override
-  String get headlineKeepGoing => 'Continue ! 💪';
+  String get headlineKeepGoing => 'Continue !';
 
   @override
-  String get headlineTryAgain => 'Réessaie ! 🔄';
+  String get headlineTryAgain => 'Réessaie !';
 
   @override
   String get yourAnswer => 'Ta réponse';
@@ -364,7 +364,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ruleReview => 'Consulte les explications après le quiz';
 
   @override
-  String get startQuiz => 'Lancer le quiz 🚀';
+  String get startQuiz => 'Lancer le quiz';
 
   @override
   String get tryAnotherDifficulty => 'Essaie un autre filtre de difficulté';
@@ -382,34 +382,27 @@ class AppLocalizationsFr extends AppLocalizations {
   String get chooseMode => 'Choisir le mode';
 
   @override
-  String get randomQuestions10 => '10 questions aléatoires';
-
-  @override
-  String get questions10 => '10 questions';
-
-  @override
   String get gameModeLabel => 'Mode de jeu';
 
   @override
   String get modeClassic => 'Mode Classique';
 
   @override
-  String get modeClassicDesc =>
-      '10 questions aléatoires · Timer par question · Score en %';
+  String get modeClassicDesc => 'Timer par question · Score en %';
 
   @override
   String get modeSurvival => 'Mode Survie';
 
   @override
   String get modeSurvivalDesc =>
-      '10 questions · Une mauvaise réponse et c\'est terminé · Bonus ×1.3';
+      'Une mauvaise réponse et c’est terminé · Bonus ×1.3';
 
   @override
   String get modeSpeed => 'Speed Round';
 
   @override
   String get modeSpeedDesc =>
-      '10 questions · 5 secondes par question · Bonus XP ×1.5';
+      'Le temps de lire, pas celui d\'hésiter · Bonus XP ×1.5';
 
   @override
   String playInMode(String mode) {
@@ -568,18 +561,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get srcQuizLabel => 'Un quiz spécifique';
 
   @override
-  String get srcQuizDesc => '10 questions tirées d\'un quiz de ton choix';
+  String get srcQuizDesc => 'Des questions tirées d’un quiz de ton choix';
 
   @override
   String get srcCategoryLabel => 'Par catégorie';
 
   @override
   String get srcCategoryDesc =>
-      '10 questions aléatoires parmi tous les quiz d\'une catégorie';
+      'Des questions aléatoires parmi les quiz d’une catégorie';
 
   @override
   String get srcAllDesc =>
-      '10 questions aléatoires parmi tous les quiz disponibles';
+      'Des questions aléatoires parmi tous les quiz disponibles';
 
   @override
   String get whereQuestionsFrom => 'D\'où viennent les questions ?';
@@ -713,10 +706,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get accuracy => 'Précision';
 
   @override
-  String get currentStreak => 'Streak actuel';
+  String get currentStreak => 'Jours d\'affilée';
 
   @override
-  String get bestStreak => 'Meilleur streak';
+  String get bestStreak => 'Record';
 
   @override
   String get achievements => 'Succès';
@@ -845,7 +838,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get bonusXp30 => '⚡ +30 XP bonus';
+  String get bonusXp30 => '+30 XP bonus';
 
   @override
   String get takeChallenge => 'Relever le défi';
@@ -1627,15 +1620,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get premiumFeatureNoAds =>
-      '✅ Quiz et parcours illimités, sans publicité';
+      'Quiz et parcours illimités, sans publicité';
 
   @override
   String get premiumFeatureAllModes =>
-      '⚡ Tous les modes de jeu, sans interruption';
+      'Tous les modes de jeu, sans interruption';
 
   @override
-  String get premiumFeatureSupport =>
-      '❤️ Tu soutiens le développement de l\'app';
+  String get premiumFeatureSupport => 'Tu soutiens le développement de l\'app';
 
   @override
   String get loadFailedRetry => 'Chargement impossible. Tire pour rafraîchir.';
@@ -1673,4 +1665,425 @@ class AppLocalizationsFr extends AppLocalizations {
   String shareChallengeText(String title, String code) {
     return 'Je te défie sur Arif Quiz ! Rejoins mon défi « $title » avec le code : $code';
   }
+
+  @override
+  String get adminDailyChallenge => 'Défi du jour';
+
+  @override
+  String get manageDailyChallengeDesc => 'Programmer le quiz de chaque jour';
+
+  @override
+  String get dailyChallengeCalendarHint =>
+      'Une date sans quiz = aucun défi ce jour-là pour les joueurs.';
+
+  @override
+  String get scheduleDay => 'Programmer un jour';
+
+  @override
+  String get changeQuizBtn => 'Changer';
+
+  @override
+  String get unscheduleBtn => 'Déprogrammer';
+
+  @override
+  String get unscheduleConfirmTitle => 'Déprogrammer ce jour ?';
+
+  @override
+  String unscheduleConfirmBody(String date, int count) {
+    return 'Le $date n\'aura plus de défi. Les $count participation(s) déjà enregistrées sont conservées.';
+  }
+
+  @override
+  String get noChallengeTodayTitle => 'Aucun défi programmé pour aujourd\'hui';
+
+  @override
+  String get noChallengeTodayBody =>
+      'La carte « Défi quotidien » reste visible dans l\'application, mais elle ouvre un écran vide tant qu\'aucun quiz n\'est posé sur la date du jour.';
+
+  @override
+  String get scheduleToday => 'Programmer aujourd\'hui';
+
+  @override
+  String get upcomingSection => 'À venir';
+
+  @override
+  String get historySection => 'Historique';
+
+  @override
+  String get emptyCalendar =>
+      'Le calendrier est vide : aucun défi ne sera proposé aux joueurs.';
+
+  @override
+  String freeDaysLabel(int count, int horizon) {
+    return '$count jour(s) libre(s) dans les $horizon prochains jours';
+  }
+
+  @override
+  String get noSchedulableQuiz => 'Aucun quiz programmable';
+
+  @override
+  String get noSchedulableQuizHint =>
+      'Un défi du jour a besoin d\'un quiz publié et pourvu d\'au moins une question.';
+
+  @override
+  String get challengeQuizUnpublished =>
+      'Quiz dépublié depuis : les joueurs ne verront aucun défi ce jour-là.';
+
+  @override
+  String get challengeQuizEmpty =>
+      'Quiz sans question : les joueurs ne verront aucun défi ce jour-là.';
+
+  @override
+  String attemptsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count participations',
+      one: '1 participation',
+      zero: 'aucune participation',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fillRotation => 'Remplir une rotation';
+
+  @override
+  String get rotationHint =>
+      'Les quiz cochés tournent dans l\'ordre de sélection. Les dates déjà programmées sont conservées, sauf si vous demandez l\'écrasement.';
+
+  @override
+  String get firstDay => 'Premier jour';
+
+  @override
+  String get numberOfDays => 'Nombre de jours';
+
+  @override
+  String get rotationQuizzes => 'Quiz de la rotation';
+
+  @override
+  String get overwriteScheduled => 'Écraser les jours déjà programmés';
+
+  @override
+  String rotationDone(int created, int updated, int skipped) {
+    return '$created jour(s) programmé(s), $updated mis à jour, $skipped déjà occupé(s) et conservé(s).';
+  }
+
+  @override
+  String fillDays(int count) {
+    return 'Remplir $count jour(s)';
+  }
+
+  @override
+  String get chooseQuiz => 'Choisir un quiz';
+
+  @override
+  String get dateLabel => 'Date';
+
+  @override
+  String get scheduleBtn => 'Programmer';
+
+  @override
+  String get oops => 'Oups !';
+
+  @override
+  String get bonusKeepsStreak => 'Maintient ton streak';
+
+  @override
+  String get bonusDailyLeaderboard => 'Classement quotidien';
+
+  @override
+  String get alreadyPlayedTag => 'Joué';
+
+  @override
+  String get noDailyChallengeToday => 'Pas de défi aujourd’hui';
+
+  @override
+  String get dailyBackTomorrow => 'Un nouveau quiz demain';
+
+  @override
+  String dailyDoneScore(int score) {
+    return 'Terminé — tu as fait $score%';
+  }
+
+  @override
+  String journeyChapter(int number) {
+    return 'Chapitre $number';
+  }
+
+  @override
+  String get challengeOpen => 'Ouvert';
+
+  @override
+  String get challengeClosed => 'Terminé';
+
+  @override
+  String get challengeExpired => 'Expiré';
+
+  @override
+  String selectedCount(int count) {
+    return '$count sélectionné(s)';
+  }
+
+  @override
+  String friendAdded(String name) {
+    return '$name ajouté';
+  }
+
+  @override
+  String get reportSent => 'Signalement envoyé';
+
+  @override
+  String get questionsCountLabel => 'Nombre de questions';
+
+  @override
+  String questionsCount(int count) {
+    return '$count questions';
+  }
+
+  @override
+  String randomQuestionsCount(int count) {
+    return '$count questions aléatoires';
+  }
+
+  @override
+  String get allDifficulties => 'Toutes difficultés';
+
+  @override
+  String get challengeAudienceLabel => 'Qui peut jouer';
+
+  @override
+  String get audiencePrivate => 'Sur code';
+
+  @override
+  String get audiencePrivateDesc => 'Seulement ceux à qui tu donnes le code';
+
+  @override
+  String get audienceFriends => 'Mes amis';
+
+  @override
+  String get audienceFriendsDesc =>
+      'Tes amis le voient et le rejoignent sans code';
+
+  @override
+  String get audienceGlobal => 'Tout le monde';
+
+  @override
+  String get audienceGlobalDesc =>
+      'N’importe qui peut le trouver et le rejoindre';
+
+  @override
+  String get audienceExpiryNote =>
+      'Les défis annoncés disparaissent au bout de 24 heures.';
+
+  @override
+  String get friendsChallengesTab => 'Amis';
+
+  @override
+  String get globalChallengesTab => 'Tout le monde';
+
+  @override
+  String get myChallengesTab => 'Les miens';
+
+  @override
+  String get noFriendChallenges => 'Aucun défi de tes amis';
+
+  @override
+  String get noFriendChallengesHint =>
+      'Dès qu’un ami en lance un, il apparaît ici.';
+
+  @override
+  String get noGlobalChallenges => 'Aucun défi public en ce moment';
+
+  @override
+  String get noGlobalChallengesHint => 'Lances-en un et vois qui le relève.';
+
+  @override
+  String get joinChallengeAction => 'Rejoindre';
+
+  @override
+  String expiresIn(int hours) {
+    return 'Se termine dans $hours h';
+  }
+
+  @override
+  String get joinChallengeError => 'Code invalide ou défi introuvable';
+
+  @override
+  String get modePrecision => 'Mode Précision';
+
+  @override
+  String get modePrecisionShort => 'Précision';
+
+  @override
+  String get modePrecisionDesc =>
+      '+2 juste · −1 faux · 0 si tu passes · Bonus ×1.4';
+
+  @override
+  String modeTally(String points, int max) {
+    return '$points / $max pts';
+  }
+
+  @override
+  String get precisionSkipHint => 'Passer ne coûte rien';
+
+  @override
+  String get modePointsLabel => 'Points du mode';
+
+  @override
+  String secondsRangeBadge(int min, int max) {
+    return '$min–$max s / question';
+  }
+
+  @override
+  String get challengeLabel => 'Défi';
+
+  @override
+  String get shareCardTagline => 'Défie tes amis sur ArifQuiz';
+
+  @override
+  String get modeStreak => 'Mode Série';
+
+  @override
+  String get modeStreakShort => 'Série';
+
+  @override
+  String get modeStreakDesc =>
+      'Les réponses enchaînées valent de plus en plus · Bonus ×1.4';
+
+  @override
+  String get modeTimeAttack => 'Contre-la-montre';
+
+  @override
+  String get modeTimeAttackShort => 'Contre-la-montre';
+
+  @override
+  String get modeTimeAttackDesc =>
+      'Une horloge pour la manche · les bonnes réponses la rallongent · Bonus ×1.6';
+
+  @override
+  String get modeJokers => 'Mode Jokers';
+
+  @override
+  String get modeJokersShort => 'Jokers';
+
+  @override
+  String get modeJokersDesc =>
+      'Trois coups de pouce, chacun coûte un point · Bonus ×1.1';
+
+  @override
+  String roundSecondsBadge(int seconds) {
+    return '$seconds s / manche';
+  }
+
+  @override
+  String bonusSecondsBadge(int seconds) {
+    return '+$seconds s par bonne réponse';
+  }
+
+  @override
+  String jokerCountBadge(int count) {
+    return '$count jokers';
+  }
+
+  @override
+  String streakRun(int streak) {
+    return '$streak d’affilée';
+  }
+
+  @override
+  String nextAnswerWorth(int points) {
+    return 'la suivante : +$points';
+  }
+
+  @override
+  String get jokerHintLabel => 'Indice';
+
+  @override
+  String jokerTimeLabel(int seconds) {
+    return '+$seconds s';
+  }
+
+  @override
+  String hintFirstLetter(String letter) {
+    return 'La bonne réponse commence par « $letter »';
+  }
+
+  @override
+  String get noJokersLeft => 'Plus de coup de pouce';
+
+  @override
+  String get timeUpTitle => 'Temps écoulé !';
+
+  @override
+  String pointsTotal(int points) {
+    return '$points pts';
+  }
+
+  @override
+  String get acceptLabel => 'Accepter';
+
+  @override
+  String get declineLabel => 'Refuser';
+
+  @override
+  String get noPendingRequestsHint =>
+      'Les demandes que tu reçois arrivent ici.';
+
+  @override
+  String get noRecentActivityHint =>
+      'Les parties de tes amis s’afficheront ici.';
+
+  @override
+  String friendsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count amis',
+      one: '1 ami',
+      zero: 'aucun ami',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statisticsSection => 'Statistiques';
+
+  @override
+  String get accountSection => 'Compte';
+
+  @override
+  String correctOutOf(int correct, int total) {
+    return '$correct/$total bonnes';
+  }
+
+  @override
+  String get deleteAccountWarning =>
+      'Cette action est irréversible. Toutes tes données seront supprimées définitivement.';
+
+  @override
+  String nameYou(String name) {
+    return '$name (toi)';
+  }
+
+  @override
+  String get continueWithGoogle => 'Continuer avec Google';
+
+  @override
+  String get googleSignInFailed => 'La connexion Google a échoué. Réessayez.';
+
+  @override
+  String get googleUnavailable =>
+      'La connexion Google n\'est pas disponible sur cet appareil.';
+
+  @override
+  String get googleMisconfigured =>
+      'La connexion Google n\'est pas encore configurée pour cette application.';
+
+  @override
+  String get useGoogleToSignIn =>
+      'Ce compte a été créé avec Google. Utilisez « Continuer avec Google ».';
+
+  @override
+  String get dontHaveAccount => 'Pas encore de compte ? ';
 }

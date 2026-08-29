@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:arif_quiz/features/auth/presentation/screens/login_screen.dart';
 import 'package:arif_quiz/features/home/presentation/screens/main_navigation.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
@@ -151,18 +152,13 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
               children: [
                 Text(
                   AppLocalizations.of(context).confirmEmailTitle,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 36,
-                    fontWeight: FontWeight.w800,
-                    height: 1.1,
-                  ),
+                  style: AppType.score.copyWith(color: context.appColors.textPrimary, height: 1.1),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   AppLocalizations.of(context).validateEmailSubtitle,
                   style:
-                      TextStyle(color: context.appColors.textSecondary, fontSize: 16),
+                      context.type.titleLarge.copyWith(color: context.appColors.textSecondary),
                 ),
                 const SizedBox(height: 36),
                 if (_error != null) ...[
@@ -253,7 +249,7 @@ class _ConfirmationMessage extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         border: Border.all(color: color.withValues(alpha: 0.28)),
       ),
       child: Row(
@@ -263,7 +259,7 @@ class _ConfirmationMessage extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: TextStyle(color: color, fontSize: 14),
+              style: context.type.bodyLarge.copyWith(color: color),
             ),
           ),
         ],

@@ -70,7 +70,7 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
                 : ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: widget.ctrl.searchResults.length,
-                    separatorBuilder: (_, __) => Divider(color: context.appColors.border, height: 1),
+                    separatorBuilder: (_, _) => Divider(color: context.appColors.border, height: 1),
                     itemBuilder: (_, i) => _UserResultTile(
                       user: widget.ctrl.searchResults[i],
                       onSendRequest: () async {
@@ -113,7 +113,7 @@ class _UserResultTile extends StatelessWidget {
       title: Text(user.name, style: TextStyle(color: context.appColors.textPrimary, fontWeight: FontWeight.w700)),
       subtitle: Text(
         user.username != null ? '@${user.username} • Niv. ${user.level}' : AppLocalizations.of(context).levelShort(user.level),
-        style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+        style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
       ),
       trailing: _buildButton(context),
     );
@@ -124,7 +124,7 @@ class _UserResultTile extends StatelessWidget {
     if (status == 'accepted') {
       return Chip(
         label: Text(AppLocalizations.of(context).friendSingular,
-            style: const TextStyle(color: AppColors.success, fontSize: 12)),
+            style: context.type.labelMedium.copyWith(color: AppColors.success)),
         backgroundColor: const Color(0xFF0D2B1F),
         side: const BorderSide(color: AppColors.success, width: 1),
       );
@@ -133,7 +133,7 @@ class _UserResultTile extends StatelessWidget {
       return Chip(
         label: Text(
           user.isSender == true ? AppLocalizations.of(context).sentLabel : AppLocalizations.of(context).receivedLabel,
-          style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+          style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
         ),
         backgroundColor: context.appColors.cardBgLight,
         side: BorderSide(color: context.appColors.border),
@@ -142,7 +142,7 @@ class _UserResultTile extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: onSendRequest,
       icon: const Icon(Icons.person_add, size: 14),
-      label: Text(AppLocalizations.of(context).addBtn, style: const TextStyle(fontSize: 12)),
+      label: Text(AppLocalizations.of(context).addBtn, style: context.type.labelMedium),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         minimumSize: Size.zero,

@@ -76,7 +76,7 @@ class _AdminJourneyScreenState extends State<AdminJourneyScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         title: Text(l10n.confirmDeleteTitle,
             style: const TextStyle(fontWeight: FontWeight.w800)),
         content: Text(l10n.deleteJourneyLevelBody(
@@ -193,19 +193,15 @@ class _AdminJourneyScreenState extends State<AdminJourneyScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('🗺️', style: TextStyle(fontSize: 42)),
+              const Icon(Icons.map_rounded, size: 42, color: AppColors.accent),
               const SizedBox(height: 12),
               Text(l10n.noJourneyLevels,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800)),
+                  style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
               Text(l10n.noJourneyLevelsHint,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: context.appColors.textSecondary, fontSize: 13)),
+                  style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
               const SizedBox(height: 16),
               FilledButton.icon(
                 onPressed: () => _showForm(),
@@ -227,7 +223,7 @@ class _AdminJourneyScreenState extends State<AdminJourneyScreen> {
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         itemCount: displayed.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (_, i) {
           final level = displayed[i];
           final realIndex = _levels.length - 1 - i;
@@ -286,13 +282,10 @@ class _LevelTile extends StatelessWidget {
               color: _accent,
               filled: true,
               child: Text('${level.position}',
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900)),
+                  style: context.type.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.w900)),
             ),
             title: level.isBoss
-                ? '👑 ${level.displayTitle}'
+                ? level.displayTitle
                 : level.displayTitle,
             titleMaxLines: 1,
             subtitle: Text(
@@ -346,8 +339,7 @@ class _LevelTile extends StatelessWidget {
                       level.questionsCount == 0
                           ? l10n.levelHasNoQuestions
                           : l10n.levelNotPublished,
-                      style: const TextStyle(
-                          color: AppColors.warning, fontSize: 11),
+                      style: context.type.labelSmall.copyWith(color: AppColors.warning),
                     ),
                   ),
                 ],
@@ -390,7 +382,7 @@ class _MiniIcon extends StatelessWidget {
         message: tooltip,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
           child: Padding(
             padding: const EdgeInsets.all(2),
             child: Icon(icon,
@@ -503,11 +495,11 @@ class _LevelFormState extends State<_LevelForm> {
         filled: true,
         fillColor: context.appColors.bg,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: context.appColors.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: context.appColors.border),
         ),
       );
@@ -531,10 +523,7 @@ class _LevelFormState extends State<_LevelForm> {
             children: [
               Text(
                 widget.level == null ? l10n.addLevel : l10n.editLevel,
-                style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800),
+                style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 16),
               Row(
@@ -600,9 +589,8 @@ class _LevelFormState extends State<_LevelForm> {
                 contentPadding: EdgeInsets.zero,
                 value: _isBoss,
                 onChanged: (v) => setState(() => _isBoss = v),
-                title: Text('👑 ${l10n.bossLevel}',
-                    style: TextStyle(
-                        color: context.appColors.textPrimary, fontSize: 14)),
+                title: Text(l10n.bossLevel,
+                    style: context.type.bodyLarge.copyWith(color: context.appColors.textPrimary)),
                 activeThumbColor: AppColors.error,
               ),
               SwitchListTile(
@@ -610,11 +598,9 @@ class _LevelFormState extends State<_LevelForm> {
                 value: _isPublished,
                 onChanged: (v) => setState(() => _isPublished = v),
                 title: Text(l10n.published,
-                    style: TextStyle(
-                        color: context.appColors.textPrimary, fontSize: 14)),
+                    style: context.type.bodyLarge.copyWith(color: context.appColors.textPrimary)),
                 subtitle: Text(l10n.levelPublishHint,
-                    style: TextStyle(
-                        color: context.appColors.textSecondary, fontSize: 11)),
+                    style: context.type.labelSmall.copyWith(color: context.appColors.textSecondary)),
                 activeThumbColor: AppColors.success,
               ),
               const SizedBox(height: 12),
@@ -645,7 +631,7 @@ class _LevelFormState extends State<_LevelForm> {
                 const SizedBox(height: 12),
                 Text(_error!,
                     style:
-                        const TextStyle(color: AppColors.error, fontSize: 12)),
+                        context.type.labelMedium.copyWith(color: AppColors.error)),
               ],
               const SizedBox(height: 20),
               SizedBox(

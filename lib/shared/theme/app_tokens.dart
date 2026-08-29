@@ -18,6 +18,11 @@ abstract final class AppSpacing {
   static const double xxl = 24;
   static const double xxxl = 32;
 
+  /// Marge horizontale d'un écran. Elle valait 16 sur certains écrans et 20 sur
+  /// d'autres : en passant de l'accueil aux catégories, tout le contenu se
+  /// décalait de 4 px. C'est le genre d'écart qu'on ne nomme pas mais qu'on voit.
+  static const double gutter = 20;
+
   /// Respiration entre l'énoncé d'une question et ses choix, en jeu.
   /// Les réponses suivent l'énoncé (elles ne sont plus ancrées en bas) : cet
   /// écart doit rester assez large pour séparer nettement les deux blocs.
@@ -26,16 +31,24 @@ abstract final class AppSpacing {
 
 /// Rayons de coins cohérents.
 abstract final class AppRadius {
+  // Sept crans, du liseré à la pilule. Les écrans en utilisaient 14 valeurs
+  // différentes posées à la main (2, 4, 6, 8, 10, 12, 13, 14, 15, 16, 18, 20,
+  // 28, 999) : deux cartes voisines n'avaient pas le même arrondi.
+  static const double xxs = 4;
+  static const double xs = 8;
   static const double sm = 10;
   static const double md = 14;
   static const double lg = 18;
   static const double xl = 22;
   static const double pill = 999;
 
+  static BorderRadius get rXxs => BorderRadius.circular(xxs);
+  static BorderRadius get rXs => BorderRadius.circular(xs);
   static BorderRadius get rSm => BorderRadius.circular(sm);
   static BorderRadius get rMd => BorderRadius.circular(md);
   static BorderRadius get rLg => BorderRadius.circular(lg);
   static BorderRadius get rXl => BorderRadius.circular(xl);
+  static BorderRadius get rPill => BorderRadius.circular(pill);
 }
 
 /// Ombres douces et diffuses — le cœur du rendu « soft depth ».
@@ -118,23 +131,23 @@ abstract final class AppShadows {
     ];
   }
 
-  /// Ombre teintée légère pour les surfaces accentuées (sans dégradé).
-  static List<BoxShadow> tinted(BuildContext context, Color color) {
-    final opacity = _isDark(context) ? 0.22 : 0.16;
-    return [
-      BoxShadow(
-        color: color.withValues(alpha: opacity),
-        blurRadius: 22,
-        offset: const Offset(0, 10),
-      ),
-    ];
-  }
+  // Il y avait ici un `tinted(context, color)` : une ombre de la COULEUR de
+  // l'élément, floue sur 22 pixels. Sur une carte sélectionnée elle donnait une
+  // auréole qui bavait tout autour du cadre — une tache de couleur, pas une
+  // ombre. Une surface accentuée se marque par son cadre et son fond ; la
+  // profondeur reste neutre, comme partout ailleurs.
 }
 
 /// Surface de carte « surélevée » : en sombre on relève la luminosité,
 /// en clair on garde le blanc pur pour maximiser le contraste avec le fond.
+///
+/// Cette valeur était figée à `#232F3E`, un bleu ardoise hérité d'une palette
+/// précédente. Toutes les cartes du thème sombre tiraient donc vers le bleu,
+/// dans une application dont la palette est chaude — c'était le décalage le
+/// plus visible de l'app. Elle prend maintenant le cran chaud que la palette
+/// définit déjà pour ça.
 extension AppSurfaceExt on BuildContext {
   Color get cardElevated => Theme.of(this).brightness == Brightness.dark
-      ? const Color(0xFF232F3E)
-      : appColors.cardBg;
+      ? appColors.cardBgLight // brun chaud, un cran au-dessus du fond
+      : appColors.cardBg; // blanc pur : contraste maximal sur l'ivoire
 }

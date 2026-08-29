@@ -1,4 +1,3 @@
-import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
 import 'package:arif_quiz/features/challenges/data/challenge_repository.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/quiz/data/quiz_repository.dart';
@@ -6,11 +5,10 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_result_screen.
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/features/game_modes/presentation/widgets/question_stage.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
-import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
-import 'package:arif_quiz/ui/widgets/question_media.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +26,6 @@ class SpeedPlayScreen extends StatefulWidget {
 }
 
 class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
-  static const _secondsPerQuestion = 5;
 
   final _repo = QuizRepository(apiService);
   GamePlayController? _ctrl;
@@ -59,7 +56,11 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
       final ctrl = GamePlayController(
         mode: GameMode.speed,
         questions: questions,
-        secondsPerQuestion: _secondsPerQuestion,
+        // Le budget suit la longueur de la question : cinq secondes fixes ne
+        // laissaient pas le temps de lire un énoncé un peu long, options
+        // comprises, et encore moins celui de choisir.
+        secondsPerQuestion: kSpeedMinSeconds,
+        secondsFor: speedSecondsFor,
       );
       ctrl.addListener(_onChange);
       setState(() {
@@ -183,8 +184,6 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
     }
 
     final ctrl = _ctrl!;
-    final q = ctrl.currentQuestion;
-    final opts = q.choices(context);
     final timerPercent = ctrl.timePercent;
 
     return PopScope(
@@ -214,7 +213,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                         height: 36,
                         decoration: BoxDecoration(
                           color: context.appColors.cardBg,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
                         ),
                         child: Icon(
                           Icons.close_rounded,
@@ -226,7 +225,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                         child: LinearProgressIndicator(
                           value: ctrl.progress,
                           backgroundColor: context.appColors.cardBg,
@@ -239,10 +238,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     const SizedBox(width: 12),
                     Text(
                       '${ctrl.index + 1}/${ctrl.questions.length}',
-                      style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 13,
-                      ),
+                      style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],
                 ),
@@ -255,22 +251,18 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppColors.secondary.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                         border: Border.all(
                             color: AppColors.secondary.withValues(alpha: 0.4)),
                       ),
                       child: Text(
-                          '⚡ ${AppLocalizations.of(context).modeSpeedShort.toUpperCase()}',
-                          style: const TextStyle(
-                              color: AppColors.secondary,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 1)),
+                          AppLocalizations.of(context).modeSpeedShort.toUpperCase(),
+                          style: context.type.labelSmall.copyWith(color: AppColors.secondary, letterSpacing: 1)),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 800),
                           child: LinearProgressIndicator(
@@ -291,15 +283,11 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                     const SizedBox(width: 12),
                     Text(
                       '${ctrl.timeLeft} s',
-                      style: TextStyle(
-                        color: timerPercent > 0.5
+                      style: context.type.titleLarge.copyWith(color: timerPercent > 0.5
                             ? AppColors.secondary
                             : timerPercent > 0.25
                                 ? AppColors.warning
-                                : AppColors.error,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 16,
-                      ),
+                                : AppColors.error, fontWeight: FontWeight.w800),
                     ),
                   ],
                 ),
@@ -307,44 +295,7 @@ class _SpeedPlayScreenState extends State<SpeedPlayScreen> {
                 // Média (image → audio), question puis réponses : le tout défile
                 // ensemble, les choix suivent directement l'énoncé.
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (q.hasMedia)
-                          QuestionMedia(
-                              imageUrl: q.imageUrl, audioUrl: q.audioUrl),
-                        Text(
-                          AppLocalizations.of(context).questionNumber(ctrl.index + 1),
-                          style: const TextStyle(
-                            color: AppColors.secondary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          q.text,
-                          style: TextStyle(
-                            color: context.appColors.textPrimary,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            height: 1.4,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.questionToAnswers),
-                        AnswerOptionsGrid(
-                          options: opts,
-                          answered: ctrl.answered,
-                          selected: ctrl.selected,
-                          isCorrect: (o) => q.isCorrect(o),
-                          onSelect: ctrl.selectAnswer,
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
-                  ),
+                  child: QuestionStage(controller: ctrl, accent: AppColors.secondary),
                 ),
               ],
             ),

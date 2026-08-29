@@ -72,7 +72,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
   }
 
   Widget _buildHeader() => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
         child: Row(
           children: [
             GestureDetector(
@@ -93,11 +93,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
             Expanded(
               child: Text(
                 AppLocalizations.of(context).categories,
-                style: TextStyle(
-                  color: context.appColors.textPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -119,7 +115,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
       return EmptyState(
         title: AppLocalizations.of(context).noCategories,
         subtitle: AppLocalizations.of(context).comeBackSoon,
-        emoji: '📚',
+        icon: Icons.category_rounded,
       );
     }
 
@@ -128,7 +124,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
       color: AppColors.primary,
       backgroundColor: context.appColors.cardBg,
       child: GridView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 12,
@@ -175,11 +171,11 @@ class _CategoryGridTile extends StatelessWidget {
               height: 52,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.14),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Center(
                 child: Text(category.icon ?? '📚',
-                    style: const TextStyle(fontSize: 26)),
+                    style: context.type.displayMedium),
               ),
             ),
             const SizedBox(width: 12),
@@ -190,23 +186,14 @@ class _CategoryGridTile extends StatelessWidget {
                 children: [
                   Text(
                     category.name,
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      height: 1.15,
-                    ),
+                    style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary, height: 1.15),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '${category.quizCount} quiz${category.quizCount != 1 ? 'zes' : ''}',
-                    style: TextStyle(
-                      color: color,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w700),
                   ),
                 ],
               ),

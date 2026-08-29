@@ -4,6 +4,8 @@ import 'package:arif_quiz/features/quiz/presentation/screens/quiz_detail_screen.
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/core/i18n/difficulty_l10n.dart';
+import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
@@ -84,84 +86,96 @@ class _QuizListScreenState extends State<QuizListScreen> {
     super.dispose();
   }
 
+  int get _activeFilters =>
+      (_selectedCatId != null ? 1 : 0) + (_selectedDiff != null ? 1 : 0);
+
+  CategoryModel? get _selectedCategory =>
+      _categories.where((c) => c.id == _selectedCatId).firstOrNull;
+
+  String get _title {
+    final category = _selectedCategory;
+    if (category != null) return category.name;
+    return widget.initialCategoryName ?? AppLocalizations.of(context).allQuizzes;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.bg,
+      // La barre du haut se retire au défilement : sans zone sûre, les quiz
+      // passaient dessous et venaient se glisser derrière l'heure, le réseau
+      // et la batterie. Les autres onglets l'avaient déjà, pas celui-ci.
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildSearch(),
-            _buildCategoryChips(),
-            _buildDiffChips(),
-            if (_ctrl.quizzes.isNotEmpty) _buildCount(),
-            Expanded(child: _buildList()),
-          ],
+        bottom: false,
+        child: RefreshIndicator(
+          onRefresh: _ctrl.refresh,
+          color: AppColors.primary,
+          backgroundColor: context.appColors.cardBg,
+          child: CustomScrollView(
+            controller: _scrollCtrl,
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              _appBar(),
+              SliverToBoxAdapter(child: _search()),
+              SliverToBoxAdapter(child: _filterSummary()),
+              ..._listSlivers(),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // ─── Header ─────────────────────────────────────────────────────────────────
+  // ─── Barre ───────────────────────────────────────────────────────────────
 
-  Widget _buildHeader() {
-    final title = _selectedCatId != null
-        ? (_categories
-                .where((c) => c.id == _selectedCatId)
-                .firstOrNull
-                ?.name ??
-            widget.initialCategoryName ??
-            'Quiz')
-        : AppLocalizations.of(context).allQuizzes;
-
+  /// Elle flotte : elle s'efface quand on descend dans la liste et revient dès
+  /// qu'on remonte, sans jamais occuper la page en permanence.
+  Widget _appBar() {
     // Cet écran sert à la fois d'onglet (racine de la pile, rien à dépiler) et
     // de page poussée depuis l'accueil. En onglet, `Navigator.pop` remontait au
     // `PopScope` de MainNavigation et ouvrait la popup « Quitter l'application »
     // : la flèche n'a de sens que s'il y a vraiment une page en dessous.
     final canGoBack = Navigator.of(context).canPop();
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Row(
-        children: [
-          if (canGoBack) ...[
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: context.cardElevated,
-                  borderRadius: AppRadius.rMd,
-                  boxShadow: AppShadows.card(context),
-                ),
-                child: Icon(Icons.arrow_back_ios_new_rounded,
-                    color: context.appColors.textSecondary, size: 16),
-              ),
-            ),
-            const SizedBox(width: 12),
-          ],
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
+    return SliverAppBar(
+      floating: true,
+      snap: true,
+      centerTitle: false,
+      backgroundColor: context.appColors.bg,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      titleSpacing: canGoBack ? 0 : AppSpacing.gutter,
+      automaticallyImplyLeading: false,
+      leading: canGoBack
+          ? IconButton(
+              icon: Icon(Icons.arrow_back_ios_new_rounded,
+                  color: context.appColors.textSecondary, size: 18),
+              onPressed: () => Navigator.pop(context),
+            )
+          : null,
+      title: Text(
+        _title,
+        overflow: TextOverflow.ellipsis,
+        style: context.type.headlineMedium.copyWith(fontWeight: FontWeight.w800),
       ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: AppSpacing.md),
+          child: _FilterButton(
+            activeCount: _activeFilters,
+            onTap: _openFilterSheet,
+          ),
+        ),
+      ],
     );
   }
 
-  // ─── Search ──────────────────────────────────────────────────────────────────
+  // ─── Recherche ───────────────────────────────────────────────────────────
 
-  Widget _buildSearch() => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+  Widget _search() => Padding(
+        padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter, 0, AppSpacing.gutter, AppSpacing.md),
         child: AppTextField(
           label: '',
           hint: AppLocalizations.of(context).searchQuizHint,
@@ -177,7 +191,9 @@ class _QuizListScreenState extends State<QuizListScreen> {
                   })
               : null,
           onChanged: (v) {
-            if (v.isEmpty) _applyFilter(catId: _selectedCatId, diff: _selectedDiff);
+            if (v.isEmpty) {
+              _applyFilter(catId: _selectedCatId, diff: _selectedDiff);
+            }
           },
           onSubmitted: (v) =>
               _applyFilter(catId: _selectedCatId, diff: _selectedDiff, q: v),
@@ -185,91 +201,159 @@ class _QuizListScreenState extends State<QuizListScreen> {
         ),
       );
 
-  // ─── Category select box ─────────────────────────────────────────────────────
+  // ─── Filtres actifs + compteur ───────────────────────────────────────────
 
-  Widget _buildCategoryChips() {
-    final selected = _categories.where((c) => c.id == _selectedCatId).firstOrNull;
-    final selectedColor = selected != null
-        ? Color(int.parse(selected.color.replaceFirst('#', 'FF'), radix: 16))
-        : AppColors.primary;
+  /// Une seule ligne : ce qui filtre, et combien de quiz il en reste. Les
+  /// filtres se retirent d'un tap — inutile de rouvrir la feuille pour annuler.
+  Widget _filterSummary() {
+    final category = _selectedCategory;
+    final chips = <Widget>[
+      if (category != null)
+        _ActiveFilterChip(
+          label: category.name,
+          onRemove: () {
+            setState(() => _selectedCatId = null);
+            _applyFilter(diff: _selectedDiff, q: _searchCtrl.text);
+          },
+        ),
+      if (_selectedDiff != null)
+        _ActiveFilterChip(
+          label: DifficultyL10n.label(context, _selectedDiff!),
+          onRemove: () {
+            setState(() => _selectedDiff = null);
+            _applyFilter(catId: _selectedCatId, q: _searchCtrl.text);
+          },
+        ),
+    ];
+
+    if (chips.isEmpty && _ctrl.quizzes.isEmpty) return const SizedBox.shrink();
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: GestureDetector(
-        onTap: _categoriesLoading ? null : _openCategorySheet,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          decoration: BoxDecoration(
-            color: _selectedCatId != null
-                ? selectedColor.withValues(alpha: 0.08)
-                : context.cardElevated,
-            borderRadius: AppRadius.rMd,
-            border: _selectedCatId != null
-                ? Border.all(color: selectedColor.withValues(alpha: 0.5), width: 1.5)
-                : null,
-            boxShadow: _selectedCatId != null ? null : AppShadows.card(context),
-          ),
-          child: Row(
-            children: [
-              if (_categoriesLoading)
-                SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    color: context.appColors.textMuted,
-                    strokeWidth: 2,
-                  ),
-                )
-              else
-                Text(
-                  selected?.icon ?? '📚',
-                  style: const TextStyle(fontSize: 18),
-                ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  _categoriesLoading
-                      ? AppLocalizations.of(context).loadingEllipsis
-                      : selected?.name ?? AppLocalizations.of(context).allCategories,
-                  style: TextStyle(
-                    color: _selectedCatId != null
-                        ? selectedColor
-                        : context.appColors.textSecondary,
-                    fontSize: 14,
-                    fontWeight: _selectedCatId != null
-                        ? FontWeight.w700
-                        : FontWeight.w500,
-                  ),
-                ),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter, 0, AppSpacing.gutter, AppSpacing.md),
+      child: Row(
+        children: [
+          if (_ctrl.quizzes.isNotEmpty)
+            Text(
+              AppLocalizations.of(context).quizCount(_ctrl.quizzes.length),
+              style: context.type.labelMedium
+                  .copyWith(color: context.appColors.textMuted),
+            ),
+          if (chips.isNotEmpty) ...[
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.xs,
+                alignment: WrapAlignment.end,
+                children: chips,
               ),
-              if (_selectedCatId != null)
-                GestureDetector(
-                  onTap: () {
-                    setState(() => _selectedCatId = null);
-                    _applyFilter(diff: _selectedDiff, q: _searchCtrl.text);
-                  },
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: selectedColor.withValues(alpha: 0.15),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.close_rounded, color: selectedColor, size: 12),
-                  ),
-                )
-              else
-                Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: context.appColors.textMuted,
-                  size: 20,
-                ),
-            ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  void _openFilterSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: context.appColors.cardBg,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => _FilterSheet(
+        categories: _categories,
+        categoriesLoading: _categoriesLoading,
+        selectedCategory: _selectedCategory,
+        selectedDifficulty: _selectedDiff,
+        onPickCategory: () {
+          Navigator.pop(context);
+          _openCategorySheet();
+        },
+        onDifficulty: (d) {
+          setState(() => _selectedDiff = d);
+          _applyFilter(
+              catId: _selectedCatId, diff: d, q: _searchCtrl.text);
+        },
+        onClear: () {
+          Navigator.pop(context);
+          setState(() {
+            _selectedCatId = null;
+            _selectedDiff = null;
+          });
+          _applyFilter(q: _searchCtrl.text);
+        },
+      ),
+    );
+  }
+
+  // ─── Liste ───────────────────────────────────────────────────────────────
+
+  List<Widget> _listSlivers() {
+    if (_ctrl.isLoading) {
+      return [
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.gutter),
+            child: QuizListSkeleton(),
+          ),
+        ),
+      ];
+    }
+
+    if (_ctrl.error != null) {
+      return [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: ErrorState(
+              message: AppLocalizations.of(context).loadQuizzesFailed,
+              onRetry: _ctrl.load),
+        ),
+      ];
+    }
+
+    if (_ctrl.quizzes.isEmpty) {
+      return [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: EmptyState(
+            title: AppLocalizations.of(context).noQuizFound,
+            subtitle: AppLocalizations.of(context).tryAnotherFilter,
+            icon: Icons.search_off_rounded,
+          ),
+        ),
+      ];
+    }
+
+    return [
+      SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.gutter),
+        sliver: SliverList.separated(
+          itemCount: _ctrl.quizzes.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 10),
+          itemBuilder: (_, i) => QuizCard(
+            quiz: _ctrl.quizzes[i],
+            style: QuizCardStyle.list,
+            onTap: () => Navigator.push(
+              context,
+              SlideRightRoute(
+                  page: QuizDetailScreen(quizId: _ctrl.quizzes[i].id)),
+            ),
           ),
         ),
       ),
-    );
+      if (_ctrl.loadingMore)
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.all(AppSpacing.lg),
+            child: Center(
+              child: CircularProgressIndicator(
+                  color: AppColors.primary, strokeWidth: 2),
+            ),
+          ),
+        ),
+    ];
   }
 
   void _openCategorySheet() {
@@ -299,109 +383,6 @@ class _QuizListScreenState extends State<QuizListScreen> {
     );
   }
 
-  // ─── Difficulty chips ─────────────────────────────────────────────────────────
-
-  Widget _buildDiffChips() => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              for (final entry in {
-                null: AppLocalizations.of(context).difficulty,
-                'easy': AppLocalizations.of(context).diffEasy,
-                'medium': AppLocalizations.of(context).diffMedium,
-                'hard': AppLocalizations.of(context).diffHard,
-              }.entries)
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 8),
-                  child: _FilterChip(
-                    label: entry.value,
-                    selected: _selectedDiff == entry.key,
-                    color: entry.key == null
-                        ? context.appColors.textSecondary
-                        : AppColors.difficultyColor(entry.key!),
-                    onTap: () {
-                      setState(() => _selectedDiff = entry.key);
-                      _applyFilter(
-                          catId: _selectedCatId,
-                          diff: entry.key,
-                          q: _searchCtrl.text);
-                    },
-                  ),
-                ),
-            ],
-          ),
-        ),
-      );
-
-  // ─── Count ───────────────────────────────────────────────────────────────────
-
-  Widget _buildCount() => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
-        child: Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: Text(
-            AppLocalizations.of(context).quizCount(_ctrl.quizzes.length),
-            style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
-          ),
-        ),
-      );
-
-  // ─── List ─────────────────────────────────────────────────────────────────────
-
-  Widget _buildList() {
-    if (_ctrl.isLoading) {
-      return const Padding(
-        padding: EdgeInsets.all(16),
-        child: QuizListSkeleton(),
-      );
-    }
-    if (_ctrl.error != null) {
-      return ErrorState(
-          message: AppLocalizations.of(context).loadQuizzesFailed,
-          onRetry: _ctrl.load);
-    }
-    if (_ctrl.quizzes.isEmpty) {
-      return EmptyState(
-        title: AppLocalizations.of(context).noQuizFound,
-        subtitle: AppLocalizations.of(context).tryAnotherFilter,
-        emoji: '🔍',
-      );
-    }
-
-    return RefreshIndicator(
-      onRefresh: () => _ctrl.load(),
-      color: AppColors.primary,
-      backgroundColor: context.appColors.cardBg,
-      child: ListView.separated(
-        controller: _scrollCtrl,
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-        itemCount: _ctrl.quizzes.length + (_ctrl.loadingMore ? 1 : 0),
-        separatorBuilder: (_, __) => const SizedBox(height: 10),
-        itemBuilder: (ctx, i) {
-          if (i == _ctrl.quizzes.length) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator(
-                    color: AppColors.primary, strokeWidth: 2),
-              ),
-            );
-          }
-          return QuizCard(
-            quiz: _ctrl.quizzes[i],
-            style: QuizCardStyle.list,
-            onTap: () => Navigator.push(
-              ctx,
-              SlideRightRoute(
-                  page: QuizDetailScreen(quizId: _ctrl.quizzes[i].id)),
-            ),
-          );
-        },
-      ),
-    );
-  }
 }
 
 // ─── Category bottom sheet ───────────────────────────────────────────────────
@@ -452,7 +433,7 @@ class _CategorySheetState extends State<_CategorySheet> {
           height: 4,
           decoration: BoxDecoration(
             color: context.appColors.border,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(AppRadius.xxs),
           ),
         ),
         // Header
@@ -462,11 +443,7 @@ class _CategorySheetState extends State<_CategorySheet> {
             children: [
               Text(
                 AppLocalizations.of(context).categories,
-                style: TextStyle(
-                  color: context.appColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
               ),
               const Spacer(),
               if (widget.selectedId != null)
@@ -474,11 +451,7 @@ class _CategorySheetState extends State<_CategorySheet> {
                   onTap: () => widget.onSelect(null),
                   child: Text(
                     AppLocalizations.of(context).seeAll,
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: context.type.labelLarge.copyWith(color: AppColors.primary),
                   ),
                 ),
             ],
@@ -491,7 +464,7 @@ class _CategorySheetState extends State<_CategorySheet> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: context.appColors.bg,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(color: context.appColors.border),
             ),
             child: Row(
@@ -503,12 +476,10 @@ class _CategorySheetState extends State<_CategorySheet> {
                   child: TextField(
                     controller: _searchCtrl,
                     autofocus: false,
-                    style: TextStyle(
-                        color: context.appColors.textPrimary, fontSize: 14),
+                    style: context.type.bodyLarge.copyWith(color: context.appColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(context).searchCategoryHint,
-                      hintStyle: TextStyle(
-                          color: context.appColors.textMuted, fontSize: 14),
+                      hintStyle: context.type.bodyLarge.copyWith(color: context.appColors.textMuted),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
@@ -560,7 +531,7 @@ class _CategorySheetState extends State<_CategorySheet> {
                           color: isSelected
                               ? color.withValues(alpha: 0.1)
                               : Colors.transparent,
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                           border: Border.all(
                             color: isSelected
                                 ? color.withValues(alpha: 0.4)
@@ -575,11 +546,11 @@ class _CategorySheetState extends State<_CategorySheet> {
                               height: 40,
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                               ),
                               child: Center(
                                 child: Text(cat.icon ?? '📚',
-                                    style: const TextStyle(fontSize: 20)),
+                                    style: context.type.headlineMedium),
                               ),
                             ),
                             const SizedBox(width: 14),
@@ -589,23 +560,16 @@ class _CategorySheetState extends State<_CategorySheet> {
                                 children: [
                                   Text(
                                     cat.name,
-                                    style: TextStyle(
-                                      color: isSelected
+                                    style: context.type.titleMedium.copyWith(color: isSelected
                                           ? color
-                                          : context.appColors.textPrimary,
-                                      fontSize: 14,
-                                      fontWeight: isSelected
+                                          : context.appColors.textPrimary, fontWeight: isSelected
                                           ? FontWeight.w800
-                                          : FontWeight.w600,
-                                    ),
+                                          : FontWeight.w600),
                                   ),
                                   if (cat.quizCount > 0)
                                     Text(
                                       '${cat.quizCount} quiz${cat.quizCount > 1 ? 'zes' : ''}',
-                                      style: TextStyle(
-                                        color: context.appColors.textMuted,
-                                        fontSize: 12,
-                                      ),
+                                      style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
                                     ),
                                 ],
                               ),
@@ -657,7 +621,7 @@ class _FilterChip extends StatelessWidget {
             color: selected
                 ? color.withValues(alpha: 0.18)
                 : context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: selected ? color : context.appColors.border,
               width: selected ? 1.5 : 1,
@@ -665,12 +629,214 @@ class _FilterChip extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: TextStyle(
-              color: selected ? color : context.appColors.textSecondary,
-              fontSize: 12,
-              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            style: context.type.labelMedium.copyWith(color: selected ? color : context.appColors.textSecondary),
+          ),
+        ),
+      );
+}
+
+// ─── Bouton de filtres ───────────────────────────────────────────────────────
+
+/// Il remplace deux rangées épinglées en permanence. La pastille dit combien de
+/// filtres sont actifs, pour qu'on n'ait pas à ouvrir la feuille pour le savoir.
+class _FilterButton extends StatelessWidget {
+  final int activeCount;
+  final VoidCallback onTap;
+
+  const _FilterButton({required this.activeCount, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final active = activeCount > 0;
+
+    return Material(
+      color: active
+          ? AppColors.primary.withValues(alpha: 0.12)
+          : context.cardElevated,
+      borderRadius: AppRadius.rMd,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadius.rMd,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md, vertical: AppSpacing.sm + 2),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.tune_rounded,
+                  size: 18,
+                  color: active
+                      ? AppColors.primary
+                      : context.appColors.textSecondary),
+              if (active) ...[
+                const SizedBox(width: 6),
+                Text('$activeCount',
+                    style: context.type.labelLarge
+                        .copyWith(color: AppColors.primary)),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Un filtre actif, retirable d'un tap.
+class _ActiveFilterChip extends StatelessWidget {
+  final String label;
+  final VoidCallback onRemove;
+
+  const _ActiveFilterChip({required this.label, required this.onRemove});
+
+  @override
+  Widget build(BuildContext context) => Material(
+        color: AppColors.primary.withValues(alpha: 0.10),
+        borderRadius: AppRadius.rPill,
+        child: InkWell(
+          onTap: onRemove,
+          borderRadius: AppRadius.rPill,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 5, 7, 5),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.type.labelSmall
+                        .copyWith(color: AppColors.primary),
+                  ),
+                ),
+                const SizedBox(width: 3),
+                const Icon(Icons.close_rounded,
+                    size: 13, color: AppColors.primary),
+              ],
             ),
           ),
         ),
       );
+}
+
+// ─── Feuille de filtres ──────────────────────────────────────────────────────
+
+/// Catégorie et difficulté, appelées quand on en a besoin plutôt qu'occupant
+/// deux rangées en permanence.
+class _FilterSheet extends StatelessWidget {
+  final List<CategoryModel> categories;
+  final bool categoriesLoading;
+  final CategoryModel? selectedCategory;
+  final String? selectedDifficulty;
+  final VoidCallback onPickCategory;
+  final ValueChanged<String?> onDifficulty;
+  final VoidCallback onClear;
+
+  const _FilterSheet({
+    required this.categories,
+    required this.categoriesLoading,
+    required this.selectedCategory,
+    required this.selectedDifficulty,
+    required this.onPickCategory,
+    required this.onDifficulty,
+    required this.onClear,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final hasFilters = selectedCategory != null || selectedDifficulty != null;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(AppSpacing.gutter, AppSpacing.md,
+            AppSpacing.gutter, AppSpacing.xxl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: context.appColors.border,
+                  borderRadius: AppRadius.rPill,
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+
+            Text(l10n.categories, style: context.type.titleMedium),
+            const SizedBox(height: AppSpacing.sm),
+            InkWell(
+              onTap: categoriesLoading ? null : onPickCategory,
+              borderRadius: AppRadius.rMd,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md, vertical: AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: context.appColors.bg,
+                  borderRadius: AppRadius.rMd,
+                  border: Border.all(color: context.appColors.border),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedCategory?.name ?? l10n.allCategories,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.type.bodyLarge,
+                      ),
+                    ),
+                    Icon(Icons.expand_more_rounded,
+                        color: context.appColors.textMuted),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+
+            Text(l10n.difficulty, style: context.type.titleMedium),
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                for (final entry in {
+                  null: l10n.allDifficulties,
+                  'easy': l10n.diffEasy,
+                  'medium': l10n.diffMedium,
+                  'hard': l10n.diffHard,
+                }.entries)
+                  _FilterChip(
+                    label: entry.value,
+                    selected: selectedDifficulty == entry.key,
+                    color: entry.key == null
+                        ? context.appColors.textSecondary
+                        : AppColors.difficultyColor(entry.key!),
+                    onTap: () => onDifficulty(entry.key),
+                  ),
+              ],
+            ),
+
+            if (hasFilters) ...[
+              const SizedBox(height: AppSpacing.xl),
+              SizedBox(
+                width: double.infinity,
+                child: AppButton(
+                  label: l10n.resetFilters,
+                  variant: AppButtonVariant.ghost,
+                  icon: Icons.close_rounded,
+                  onPressed: onClear,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
 }

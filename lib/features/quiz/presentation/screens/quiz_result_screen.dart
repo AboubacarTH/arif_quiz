@@ -65,16 +65,9 @@ class QuizResultScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(grade,
-                                  style: TextStyle(
-                                      color: gradeColor,
-                                      fontSize: 52,
-                                      fontWeight: FontWeight.w800,
-                                      fontFamily: 'Nunito')),
+                                  style: AppType.scoreHero.copyWith(color: gradeColor)),
                               Text('${result.score.toStringAsFixed(1)}%',
-                                  style: TextStyle(
-                                      color: gradeColor.withValues(alpha: 0.7),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600)),
+                                  style: context.type.titleMedium.copyWith(color: gradeColor.withValues(alpha: 0.7), fontWeight: FontWeight.w600)),
                             ],
                           ),
                         ],
@@ -82,15 +75,10 @@ class QuizResultScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(_headline(context, result.score),
-                        style: TextStyle(
-                            color: context.appColors.textPrimary,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: 'Nunito')),
+                        style: context.type.headlineLarge.copyWith(color: context.appColors.textPrimary)),
                     const SizedBox(height: 4),
                     Text(quiz.title,
-                        style: TextStyle(
-                            color: context.appColors.textSecondary, fontSize: 13)),
+                        style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
                     const SizedBox(height: 24),
 
                     if (training)
@@ -101,25 +89,64 @@ class QuizResultScreen extends StatelessWidget {
                             horizontal: 14, vertical: 10),
                         decoration: BoxDecoration(
                           color: AppColors.info.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                           border: Border.all(
                               color: AppColors.info.withValues(alpha: 0.25)),
                         ),
                         child: Row(
                           children: [
-                            const Text('🎯', style: TextStyle(fontSize: 18)),
+                            const Icon(Icons.my_location_rounded, size: 18, color: AppColors.primary),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
                                 AppLocalizations.of(context).trainingResultNote,
-                                style: TextStyle(
-                                    color: context.appColors.textSecondary,
-                                    fontSize: 12),
+                                style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                               ),
                             ),
                           ],
                         ),
                       ),
+
+                    // Le total du mode Précision. Le pourcentage au-dessus dit
+                    // la note ; celui-ci dit ce que la partie a rapporté dans
+                    // l'unité où on l'a jouée, pénalités comprises.
+                    if (result.modePoints != null) ...[
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(bottom: AppSpacing.md),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppColors.modePrecision.withValues(alpha: 0.10),
+                          borderRadius: AppRadius.rLg,
+                          border: Border.all(
+                              color: AppColors.modePrecision
+                                  .withValues(alpha: 0.30)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.center_focus_strong_rounded,
+                                size: 18, color: AppColors.modePrecision),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                AppLocalizations.of(context).modePointsLabel,
+                                style: context.type.labelMedium.copyWith(
+                                    color: context.appColors.textSecondary),
+                              ),
+                            ),
+                            Text(
+                              AppLocalizations.of(context).modeTally(
+                                  ModeScoring.format(result.modePoints!),
+                                  result.maxModePoints ?? 0),
+                              style: context.type.titleLarge.copyWith(
+                                  color: AppColors.modePrecision,
+                                  fontWeight: FontWeight.w800),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
 
                     // Stats row
                     Container(
@@ -154,10 +181,7 @@ class QuizResultScreen extends StatelessWidget {
                     Align(
                         alignment: AlignmentDirectional.centerStart,
                         child: Text(AppLocalizations.of(context).answerReview,
-                            style: TextStyle(
-                                color: context.appColors.textPrimary,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700))),
+                            style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary))),
                     const SizedBox(height: 12),
                     ...result.results.map((r) => _ReviewCard(r, canReport: !guestMode)),
                   ],
@@ -172,26 +196,21 @@ class QuizResultScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                   border: Border.all(
                       color: AppColors.primary.withValues(alpha: 0.25)),
                 ),
                 child: Column(
                   children: [
                     Text(
-                      '🏆 Sauvegarde ta progression !',
-                      style: TextStyle(
-                        color: context.appColors.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
-                      ),
+                      AppLocalizations.of(context).guestBannerTitle,
+                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Crée un compte pour suivre tes scores\net débloquer toutes les fonctionnalités.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: context.appColors.textSecondary, fontSize: 12),
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -210,15 +229,12 @@ class QuizResultScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
                                 color: AppColors.primary,
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(AppRadius.sm),
                               ),
                               child: Text(
                                 AppLocalizations.of(context).createAccount,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
+                                style: context.type.labelLarge.copyWith(color: Colors.white),
                               ),
                             ),
                           ),
@@ -244,10 +260,7 @@ class QuizResultScreen extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context).logIn,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: context.appColors.textPrimary,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
+                                style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary),
                               ),
                             ),
                           ),
@@ -333,14 +346,10 @@ class _Stat extends StatelessWidget {
   Widget build(BuildContext context) => Column(
         children: [
           Text(value,
-              style: TextStyle(
-                  color: color,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  fontFamily: 'Nunito')),
+              style: context.type.headlineMedium.copyWith(color: color, fontWeight: FontWeight.w800)),
           const SizedBox(height: 2),
           Text(label,
-              style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+              style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
         ],
       );
 }
@@ -367,7 +376,7 @@ class _ReviewCardState extends State<_ReviewCard> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.07),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: color.withValues(alpha: 0.22)),
         ),
         child: Column(
@@ -385,11 +394,7 @@ class _ReviewCardState extends State<_ReviewCard> {
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(r.question,
-                        style: TextStyle(
-                            color: context.appColors.textPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            height: 1.3))),
+                        style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w600, height: 1.3))),
                 Icon(
                     _expanded
                         ? Icons.expand_less_rounded
@@ -409,17 +414,16 @@ class _ReviewCardState extends State<_ReviewCard> {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       color: context.appColors.cardBgLight,
-                      borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(AppRadius.xs)),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('💡 ', style: TextStyle(fontSize: 13)),
+                      Icon(Icons.lightbulb_outline_rounded,
+                          size: 15, color: AppColors.secondary),
+                      const SizedBox(width: 6),
                       Expanded(
                           child: Text(r.explanation!,
-                              style: TextStyle(
-                                  color: context.appColors.textSecondary,
-                                  fontSize: 12,
-                                  height: 1.4))),
+                              style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, height: 1.4))),
                     ],
                   ),
                 ),
@@ -438,7 +442,7 @@ class _ReviewCardState extends State<_ReviewCard> {
                     ),
                     icon: const Icon(Icons.flag_outlined, size: 16),
                     label: Text(AppLocalizations.of(context).reportQuestionAction,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                        style: context.type.labelMedium),
                   ),
                 ),
               ],
@@ -501,7 +505,10 @@ class _ReportSheetState extends State<_ReportSheet> {
       if (!mounted) return;
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: AppColors.success),
+        SnackBar(
+            content: Text(
+                message ?? AppLocalizations.of(context).reportSent),
+            backgroundColor: AppColors.success),
       );
     } catch (_) {
       if (!mounted) return;
@@ -537,7 +544,7 @@ class _ReportSheetState extends State<_ReportSheet> {
                   height: 4,
                   decoration: BoxDecoration(
                     color: context.appColors.cardBgLight,
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(AppRadius.xxs),
                   ),
                 ),
               ),
@@ -547,24 +554,17 @@ class _ReportSheetState extends State<_ReportSheet> {
                   const Icon(Icons.flag_rounded, color: AppColors.error, size: 20),
                   const SizedBox(width: 8),
                   Text(AppLocalizations.of(context).reportQuestionTitle,
-                      style: TextStyle(
-                          color: context.appColors.textPrimary,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800)),
+                      style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
                 ],
               ),
               const SizedBox(height: 4),
               Text(widget.result.question,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: context.appColors.textSecondary, fontSize: 13)),
+                  style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
               const SizedBox(height: 16),
               Text(AppLocalizations.of(context).reportReasonLabel,
-                  style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700)),
+                  style: context.type.labelLarge.copyWith(color: context.appColors.textPrimary)),
               const SizedBox(height: 8),
               ..._reportReasons(context).map((reason) {
                 final selected = _reason == reason.$1;
@@ -589,9 +589,7 @@ class _ReportSheetState extends State<_ReportSheet> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(reason.$2,
-                              style: TextStyle(
-                                  color: context.appColors.textPrimary,
-                                  fontSize: 14)),
+                              style: context.type.bodyLarge.copyWith(color: context.appColors.textPrimary)),
                         ),
                       ],
                     ),
@@ -635,7 +633,7 @@ class _AnswerRow extends StatelessWidget {
         padding: const EdgeInsetsDirectional.only(bottom: 4, start: 26),
         child: RichText(
           text: TextSpan(
-            style: const TextStyle(fontSize: 12, fontFamily: 'Nunito'),
+            style: context.type.labelMedium,
             children: [
               TextSpan(
                   text: '$label: ',

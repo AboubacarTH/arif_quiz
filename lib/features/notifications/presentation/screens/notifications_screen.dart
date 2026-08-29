@@ -1,7 +1,9 @@
-﻿import 'package:arif_quiz/features/notifications/data/notifications_repository.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:arif_quiz/features/notifications/data/notifications_repository.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -51,8 +53,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(color: AppColors.error, borderRadius: BorderRadius.circular(12)),
-                child: Text('$_unreadCount', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
+                decoration: BoxDecoration(color: AppColors.error, borderRadius: BorderRadius.circular(AppRadius.md)),
+                child: Text('$_unreadCount', style: context.type.labelMedium.copyWith(color: Colors.white)),
               ),
             ],
           ],
@@ -67,29 +69,24 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   _unreadCount = 0;
                 });
               },
-              child: Text(AppLocalizations.of(context).markAllRead, style: const TextStyle(color: AppColors.secondary, fontSize: 12)),
+              child: Text(AppLocalizations.of(context).markAllRead, style: context.type.labelMedium.copyWith(color: AppColors.secondary)),
             ),
         ],
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
           : _items.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('🔔', style: TextStyle(fontSize: 48)),
-                      SizedBox(height: 12),
-                      Text(AppLocalizations.of(context).noNotifications, style: TextStyle(color: context.appColors.textSecondary)),
-                    ],
-                  ),
+              ? EmptyState(
+                  title: AppLocalizations.of(context).noNotifications,
+                  icon: Icons.notifications_none_rounded,
+                  tint: AppColors.secondary,
                 )
               : RefreshIndicator(
                   onRefresh: _load,
                   color: AppColors.primary,
                   child: ListView.separated(
                     itemCount: _items.length,
-                    separatorBuilder: (_, __) => Divider(color: context.appColors.border, height: 1),
+                    separatorBuilder: (_, _) => Divider(color: context.appColors.border, height: 1),
                     itemBuilder: (_, i) => _NotifTile(
                       notif: _items[i],
                       onTap: () async {
@@ -130,17 +127,17 @@ class _NotifTile extends StatelessWidget {
           children: [
             Container(
               width: 40, height: 40,
-              decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
-              child: Center(child: Text(icon, style: const TextStyle(fontSize: 20))),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(AppRadius.md)),
+              child: Icon(icon, color: color, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(notif.message, style: TextStyle(color: notif.isRead ? context.appColors.textSecondary : context.appColors.textPrimary, fontSize: 13, fontWeight: notif.isRead ? FontWeight.w500 : FontWeight.w700)),
+                  Text(notif.message, style: context.type.bodyMedium.copyWith(color: notif.isRead ? context.appColors.textSecondary : context.appColors.textPrimary, fontWeight: notif.isRead ? FontWeight.w500 : FontWeight.w700)),
                   const SizedBox(height: 4),
-                  Text(timeago.format(notif.createdAt), style: TextStyle(color: context.appColors.textMuted, fontSize: 11)),
+                  Text(timeago.format(notif.createdAt), style: context.type.labelSmall.copyWith(color: context.appColors.textMuted)),
                 ],
               ),
             ),
@@ -152,11 +149,13 @@ class _NotifTile extends StatelessWidget {
     );
   }
 
-  (String, Color) _iconForType(String type) => switch (type) {
-        'friend_request' => ('👋', AppColors.secondary),
-        'friend_accepted' => ('🤝', AppColors.success),
-        'challenge_invitation' => ('⚔️', AppColors.primary),
-        'challenge_completed' => ('🏆', AppColors.accent),
-        _ => ('🔔', AppColors.textMuted),
+  (IconData, Color) _iconForType(String type) => switch (type) {
+        'friend_request' => (Icons.waving_hand_rounded, AppColors.secondary),
+        'friend_accepted' => (Icons.handshake_rounded, AppColors.success),
+        'challenge_invitation' =>
+          (Icons.sports_kabaddi_rounded, AppColors.primary),
+        'challenge_completed' =>
+          (Icons.emoji_events_rounded, AppColors.accent),
+        _ => (Icons.notifications_rounded, AppColors.textMuted),
       };
 }

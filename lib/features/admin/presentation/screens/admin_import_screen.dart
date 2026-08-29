@@ -1,3 +1,4 @@
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/features/admin/data/admin_repository.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
@@ -27,6 +28,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
   String _difficulty = 'medium';
   bool _isPublished = false;
   PlatformFile? _pickedFile;
+  int? _pickedFileSize;
 
   bool _loading = true;
   bool _importing = false;
@@ -58,13 +60,16 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
   }
 
   Future<void> _pickFile() async {
-    final result = await FilePicker.platform.pickFiles(
+    final picked = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls', 'csv'],
     );
-    if (result != null && result.files.isNotEmpty) {
-      setState(() { _pickedFile = result.files.first; _result = null; _error = null; });
-    }
+    if (picked == null) return;
+    // La taille n'est plus un champ mais une lecture asynchrone : on la
+    // retient ici, le `build` ne pouvant pas l'attendre.
+    final size = await picked.length();
+    if (!mounted) return;
+    setState(() { _pickedFile = picked; _pickedFileSize = size; _result = null; _error = null; });
   }
 
   Future<void> _import() async {
@@ -97,6 +102,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
           _result = res;
           _importing = false;
           _pickedFile = null;
+          _pickedFileSize = null;
           _titleCtrl.clear();
           _descCtrl.clear();
         });
@@ -130,8 +136,8 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                   if (_error != null) ...[
                     Container(
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                      child: Text(_error!, style: const TextStyle(color: AppColors.error, fontSize: 13)),
+                      decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppRadius.md)),
+                      child: Text(_error!, style: context.type.bodyMedium.copyWith(color: AppColors.error)),
                     ),
                     const SizedBox(height: 12),
                   ],
@@ -192,7 +198,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: context.appColors.cardBg,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                         border: Border.all(
                           color: _pickedFile != null ? AppColors.primary : context.appColors.border,
                           width: _pickedFile != null ? 1.5 : 1,
@@ -208,24 +214,20 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                           const SizedBox(height: 10),
                           Text(
                             _pickedFile != null ? _pickedFile!.name : AppLocalizations.of(context).tapToSelectFile,
-                            style: TextStyle(
-                              color: _pickedFile != null ? AppColors.primary : context.appColors.textSecondary,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
+                            style: context.type.titleMedium.copyWith(color: _pickedFile != null ? AppColors.primary : context.appColors.textSecondary, fontWeight: FontWeight.w600),
                             textAlign: TextAlign.center,
                           ),
                           if (_pickedFile != null) ...[
                             const SizedBox(height: 4),
                             Text(
-                              '${(_pickedFile!.size / 1024).toStringAsFixed(1)} KB',
-                              style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+                              '${((_pickedFileSize ?? 0) / 1024).toStringAsFixed(1)} KB',
+                              style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
                             ),
                           ],
                           const SizedBox(height: 4),
                           Text(
                             AppLocalizations.of(context).acceptedFormats,
-                            style: TextStyle(color: context.appColors.textMuted, fontSize: 12),
+                            style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
                           ),
                         ],
                       ),
@@ -242,11 +244,11 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
                           : const Icon(Icons.upload_rounded, color: Colors.white),
                       label: Text(
                         _importing ? AppLocalizations.of(context).importing : AppLocalizations.of(context).importBtn,
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
+                        style: context.type.titleMedium.copyWith(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
                       ),
                     ),
                   ),
@@ -262,7 +264,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.info.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
       ),
       child: Column(
@@ -271,12 +273,12 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
           Row(children: [
             const Icon(Icons.info_outline_rounded, color: AppColors.info, size: 18),
             const SizedBox(width: 8),
-            Text(AppLocalizations.of(context).excelFormatTitle, style: const TextStyle(color: AppColors.info, fontWeight: FontWeight.w700, fontSize: 13)),
+            Text(AppLocalizations.of(context).excelFormatTitle, style: context.type.labelLarge.copyWith(color: AppColors.info)),
           ]),
           const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context).excelFormatColumns,
-            style: TextStyle(color: context.appColors.textSecondary, fontSize: 12, height: 1.5),
+            style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, height: 1.5),
           ),
         ],
       ),
@@ -289,7 +291,7 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.success.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
       ),
       child: Column(
@@ -298,12 +300,12 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
           Row(children: [
             const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 20),
             const SizedBox(width: 8),
-            Text(AppLocalizations.of(context).importSuccess, style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 15)),
+            Text(AppLocalizations.of(context).importSuccess, style: context.type.titleMedium.copyWith(color: AppColors.success, fontWeight: FontWeight.w800)),
           ]),
           const SizedBox(height: 8),
-          Text(res['message'] as String? ?? '', style: TextStyle(color: context.appColors.textPrimary, fontSize: 13)),
+          Text(res['message'] as String? ?? '', style: context.type.bodyMedium.copyWith(color: context.appColors.textPrimary)),
           const SizedBox(height: 6),
-          Text(AppLocalizations.of(context).questionsImported((data['questions_count'] as int?) ?? 0), style: TextStyle(color: context.appColors.textSecondary, fontSize: 12)),
+          Text(AppLocalizations.of(context).questionsImported((data['questions_count'] as int?) ?? 0), style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary)),
         ],
       ),
     );
@@ -311,15 +313,15 @@ class _AdminImportScreenState extends State<AdminImportScreen> {
 
   Widget _sectionTitle(String text) => Text(
         text,
-        style: TextStyle(color: context.appColors.textPrimary, fontSize: 15, fontWeight: FontWeight.w800),
+        style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
       );
 
   InputDecoration _dec(String label) => InputDecoration(
         labelText: label,
         filled: true,
         fillColor: context.appColors.cardBg,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.appColors.border)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: context.appColors.border)),
       );
 
   Widget _field(String label, TextEditingController ctrl, {String? Function(String?)? validator, int maxLines = 1, TextInputType? keyboardType}) {

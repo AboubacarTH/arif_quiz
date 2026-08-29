@@ -1,5 +1,6 @@
-﻿import 'package:arif_quiz/l10n/gen/app_localizations.dart';
+import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/ui/widgets/rank_badge.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:flutter/material.dart';
 
@@ -23,20 +24,6 @@ class LeaderboardTile extends StatelessWidget {
     this.isCurrentUser = false,
   });
 
-  Color get _rankColor => switch (rank) {
-        1 => const Color(0xFFFFD700),
-        2 => const Color(0xFFAEB0B5),
-        3 => const Color(0xFFCD7F32),
-        _ => AppColors.textMuted,
-      };
-
-  String get _rankEmoji => switch (rank) {
-        1 => '🥇',
-        2 => '🥈',
-        3 => '🥉',
-        _ => '#$rank',
-      };
-
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -59,19 +46,7 @@ class LeaderboardTile extends StatelessWidget {
           // Rank
           SizedBox(
             width: 40,
-            child: rank <= 3
-                ? Text(_rankEmoji,
-                    style: const TextStyle(fontSize: 22),
-                    textAlign: TextAlign.center)
-                : Text(
-                    _rankEmoji,
-                    style: TextStyle(
-                      color: _rankColor,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 13,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+            child: Center(child: RankBadge(rank: rank, size: 30)),
           ),
           const SizedBox(width: 8),
 
@@ -89,13 +64,9 @@ class LeaderboardTile extends StatelessWidget {
             child: Center(
               child: Text(
                 name[0].toUpperCase(),
-                style: TextStyle(
-                  color: isCurrentUser
+                style: context.type.titleLarge.copyWith(color: isCurrentUser
                       ? AppColors.primary
-                      : context.appColors.textSecondary,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 17,
-                ),
+                      : context.appColors.textSecondary, fontWeight: FontWeight.w800),
               ),
             ),
           ),
@@ -111,13 +82,9 @@ class LeaderboardTile extends StatelessWidget {
                     Flexible(
                       child: Text(
                         name,
-                        style: TextStyle(
-                          color: isCurrentUser
+                        style: context.type.titleMedium.copyWith(color: isCurrentUser
                               ? AppColors.primary
-                              : context.appColors.textPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                        ),
+                              : context.appColors.textPrimary),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -129,14 +96,11 @@ class LeaderboardTile extends StatelessWidget {
                             horizontal: 6, vertical: 1),
                         decoration: BoxDecoration(
                           color: AppColors.primary.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(AppRadius.xxs),
                         ),
-                        child: const Text(
+                        child: Text(
                           'You',
-                          style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700),
+                          style: context.type.labelSmall.copyWith(color: AppColors.primary, fontWeight: FontWeight.w700),
                         ),
                       ),
                     ],
@@ -146,7 +110,7 @@ class LeaderboardTile extends StatelessWidget {
                 Text(
                   '$quizzesTaken quizzes · ${accuracy.toStringAsFixed(1)}% accuracy',
                   style:
-                      TextStyle(color: context.appColors.textMuted, fontSize: 11),
+                      context.type.labelSmall.copyWith(color: context.appColors.textMuted),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -166,18 +130,14 @@ class LeaderboardTile extends StatelessWidget {
                   const SizedBox(width: 3),
                   Text(
                     '$points',
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 15,
-                    ),
+                    style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
               Text(AppLocalizations.of(context).points.toLowerCase(),
-                  style: TextStyle(color: context.appColors.textMuted, fontSize: 10)),
+                  style: context.type.labelSmall.copyWith(color: context.appColors.textMuted)),
             ],
           ),
         ],
@@ -199,11 +159,10 @@ class PodiumDisplay extends StatelessWidget {
     final heights = [90.0, 130.0, 70.0];
     final ranks = [2, 1, 3];
     final colors = [
-      const Color(0xFFAEB0B5),
-      const Color(0xFFFFD700),
-      const Color(0xFFCD7F32),
+      AppColors.rankSilver,
+      AppColors.rankGold,
+      AppColors.rankBronze,
     ];
-    final medals = ['🥈', '🥇', '🥉'];
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -216,8 +175,8 @@ class PodiumDisplay extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(medals[i], style: const TextStyle(fontSize: 28)),
-                const SizedBox(height: 4),
+                RankBadge(rank: ranks[i], size: ranks[i] == 1 ? 34 : 28),
+                const SizedBox(height: 6),
                 // Avatar
                 Container(
                   width: ranks[i] == 1 ? 56 : 46,
@@ -230,30 +189,24 @@ class PodiumDisplay extends StatelessWidget {
                   child: Center(
                     child: Text(
                       (user['name'] as String)[0].toUpperCase(),
-                      style: TextStyle(
-                        color: color,
-                        fontWeight: FontWeight.w800,
-                        fontSize: ranks[i] == 1 ? 24 : 18,
-                      ),
+                      style: (ranks[i] == 1
+                              ? context.type.headlineLarge
+                              : context.type.headlineMedium)
+                          .copyWith(color: color, fontWeight: FontWeight.w800),
                     ),
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   (user['name'] as String).split(' ')[0],
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: context.type.labelMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w600),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
                 Text(
                   '${user['total_points']}pts',
-                  style: TextStyle(
-                      color: color, fontSize: 11, fontWeight: FontWeight.w700),
+                  style: context.type.labelSmall.copyWith(color: color, fontWeight: FontWeight.w700),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -270,11 +223,7 @@ class PodiumDisplay extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     '${ranks[i]}',
-                    style: TextStyle(
-                      color: color,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 22,
-                    ),
+                    style: context.type.headlineLarge.copyWith(color: color),
                   ),
                 ),
               ],

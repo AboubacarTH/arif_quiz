@@ -1,4 +1,4 @@
-﻿import 'package:arif_quiz/core/i18n/auth_error_l10n.dart';
+import 'package:arif_quiz/core/i18n/auth_error_l10n.dart';
 import 'package:arif_quiz/features/auth/bloc/auth_controller.dart';
 import 'package:arif_quiz/features/auth/data/auth_repository.dart';
 import 'package:arif_quiz/features/auth/presentation/screens/forgot_password_screen.dart';
@@ -41,8 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const MainNavigation(),
-          transitionsBuilder: (_, a, __, child) =>
+          pageBuilder: (_, _, _) => const MainNavigation(),
+          transitionsBuilder: (_, a, _, child) =>
               FadeTransition(opacity: a, child: child),
           transitionDuration: const Duration(milliseconds: 400),
         ),
@@ -64,6 +64,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     if (!_validate()) return;
     await _auth.login(_emailCtrl.text.trim(), _passCtrl.text);
+  }
+
+  Future<void> _loginWithGoogle() async {
+    // Les erreurs de saisie du formulaire n'ont plus lieu d'être affichées :
+    // ce chemin ne les concerne pas.
+    setState(() {
+      _emailError = null;
+      _passError = null;
+    });
+    await _auth.signInWithGoogle();
   }
 
   @override
@@ -90,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 40),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
                   child: Image.asset(
                     'assets/images/arifquiz_192.png',
                     width: 72,
@@ -101,18 +111,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 32),
                 Text(
                   AppLocalizations.of(context).welcomeBack,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 36,
-                    fontWeight: FontWeight.w800,
-                    height: 1.1,
-                  ),
+                  style: AppType.score.copyWith(color: context.appColors.textPrimary, height: 1.1),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   AppLocalizations.of(context).signInSubtitle,
                   style:
-                      TextStyle(color: context.appColors.textSecondary, fontSize: 16),
+                      context.type.titleLarge.copyWith(color: context.appColors.textSecondary),
                 ),
                 const SizedBox(height: 40),
                 // Error banner
@@ -121,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                         color: AppColors.error.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                         border: Border.all(
                             color: AppColors.error.withValues(alpha: 0.3))),
                     child: Row(
@@ -132,8 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Expanded(
                             child: Text(
                                 AuthErrorL10n.message(context, _auth.errorCode!),
-                                style: const TextStyle(
-                                    color: AppColors.error, fontSize: 13))),
+                                style: context.type.bodyMedium.copyWith(color: AppColors.error))),
                         GestureDetector(
                             onTap: _auth.clearError,
                             child: const Icon(Icons.close_rounded,
@@ -205,13 +209,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   size: AppButtonSize.large,
                   loading: _auth.isLoading,
                 ),
+                const SizedBox(height: 12),
+                GoogleSignInButton(
+                  onPressed: _auth.isLoading ? null : _loginWithGoogle,
+                ),
                 const SizedBox(height: 24),
                 Wrap(
                   alignment: WrapAlignment.center,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account? ",
+                      AppLocalizations.of(context).dontHaveAccount,
                       style: TextStyle(color: context.appColors.textSecondary),
                     ),
                     GestureDetector(
@@ -236,7 +244,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(child: Divider(color: context.appColors.border)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text('ou', style: TextStyle(color: context.appColors.textMuted, fontSize: 13)),
+                    child: Text(AppLocalizations.of(context).orSeparator,
+                        style: context.type.bodyMedium
+                            .copyWith(color: context.appColors.textMuted)),
                   ),
                   Expanded(child: Divider(color: context.appColors.border)),
                 ]),
@@ -247,8 +257,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => const MainNavigation(),
-                        transitionsBuilder: (_, a, __, child) =>
+                        pageBuilder: (_, _, _) => const MainNavigation(),
+                        transitionsBuilder: (_, a, _, child) =>
                             FadeTransition(opacity: a, child: child),
                         transitionDuration: const Duration(milliseconds: 400),
                       ),
@@ -271,11 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(width: 8),
                         Text(
                           AppLocalizations.of(context).continueAsGuest,
-                          style: TextStyle(
-                            color: context.appColors.textSecondary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: context.type.titleMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -285,7 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text(
                   AppLocalizations.of(context).scoresNotSaved,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: context.appColors.textMuted, fontSize: 11),
+                  style: context.type.labelSmall.copyWith(color: context.appColors.textMuted),
                 ),
               ],
             ),

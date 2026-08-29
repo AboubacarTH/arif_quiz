@@ -5,7 +5,7 @@ import 'package:arif_quiz/shared/models/models.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
-import 'package:arif_quiz/ui/widgets/neon_button.dart';
+import 'package:arif_quiz/ui/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -22,13 +22,29 @@ class JourneyResultScreen extends StatelessWidget {
 
   /// Les libellés existaient déjà en 4 langues (`resultPerfect`…) mais l'écran
   /// gardait des chaînes françaises en dur : le titre ne suivait pas la langue.
-  ({String emoji, String title}) _headline(BuildContext context) {
+  ({IconData icon, Color color, String title}) _headline(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return switch (result.stars) {
-      3 => (emoji: '🏆', title: l10n.resultPerfect),
-      2 => (emoji: '🎉', title: l10n.resultGreat),
-      1 => (emoji: '👍', title: l10n.resultPassed),
-      _ => (emoji: '😕', title: l10n.resultAlmost),
+      3 => (
+          icon: Icons.emoji_events_rounded,
+          color: AppColors.secondary,
+          title: l10n.resultPerfect
+        ),
+      2 => (
+          icon: Icons.celebration_rounded,
+          color: AppColors.success,
+          title: l10n.resultGreat
+        ),
+      1 => (
+          icon: Icons.thumb_up_rounded,
+          color: AppColors.info,
+          title: l10n.resultPassed
+        ),
+      _ => (
+          icon: Icons.replay_rounded,
+          color: AppColors.textMuted,
+          title: l10n.resultAlmost
+        ),
     };
   }
 
@@ -48,24 +64,19 @@ class JourneyResultScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(),
-                Text(h.emoji, style: const TextStyle(fontSize: 64))
+                Icon(h.icon, size: 72, color: h.color)
                     .animate()
                     .fadeIn(duration: 300.ms)
                     .scale(begin: const Offset(0.6, 0.6)),
                 const SizedBox(height: 12),
                 Text(
                   h.title,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: context.type.displayMedium.copyWith(color: context.appColors.textPrimary),
                 ).animate().fadeIn(delay: 120.ms),
                 const SizedBox(height: 6),
                 Text(
                   isBoss ? AppLocalizations.of(context).bossLevelLabel(result.level) : AppLocalizations.of(context).levelLabel(result.level),
-                  style: TextStyle(
-                      color: context.appColors.textSecondary, fontSize: 14),
+                  style: context.type.bodyLarge.copyWith(color: context.appColors.textSecondary),
                 ),
                 const SizedBox(height: 28),
                 _StarsRow(stars: result.stars, color: _accent),
@@ -73,21 +84,21 @@ class JourneyResultScreen extends StatelessWidget {
                 _StatsCard(result: result, accent: _accent),
                 const Spacer(),
                 if (result.nextLevelUnlocked && result.nextLevelId != null)
-                  NeonButton(
+                  AppButton(
                     label: AppLocalizations.of(context).nextLevel,
-                    width: double.infinity,
+                    fullWidth: true,
                     icon: Icons.arrow_forward_rounded,
-                    color: _accent,
-                    onTap: () => _goToLevel(context, result.nextLevelId!,
+                    tint: _accent,
+                    onPressed: () => _goToLevel(context, result.nextLevelId!,
                         result.nextLevel!, result.nextLevelIsBoss),
                   )
                 else if (!passed)
-                  NeonButton(
+                  AppButton(
                     label: AppLocalizations.of(context).retry,
-                    width: double.infinity,
+                    fullWidth: true,
                     icon: Icons.refresh_rounded,
-                    color: _accent,
-                    onTap: () =>
+                    tint: _accent,
+                    onPressed: () =>
                         _goToLevel(context, result.id, result.level, isBoss),
                   ),
                 const SizedBox(height: 12),
@@ -212,12 +223,10 @@ class _StatsCard extends StatelessWidget {
         child: Column(
           children: [
             Text(value,
-                style: TextStyle(
-                    color: color, fontSize: 20, fontWeight: FontWeight.w800)),
+                style: context.type.headlineMedium.copyWith(color: color, fontWeight: FontWeight.w800)),
             const SizedBox(height: 2),
             Text(label,
-                style: TextStyle(
-                    color: context.appColors.textSecondary, fontSize: 12)),
+                style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary)),
           ],
         ),
       );
@@ -252,10 +261,7 @@ class _SecondaryButton extends StatelessWidget {
               Icon(icon, size: 18, color: context.appColors.textSecondary),
               const SizedBox(width: 8),
               Text(label,
-                  style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700)),
+                  style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary)),
             ],
           ),
         ),

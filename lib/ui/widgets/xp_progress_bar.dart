@@ -1,3 +1,4 @@
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -29,29 +30,22 @@ class XpProgressBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
                 color: AppColors.primary,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppRadius.lg),
               ),
               child: Text(
                 AppLocalizations.of(context).levelShort(level),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: context.type.labelSmall.copyWith(color: Colors.white),
               ),
             ),
             Text(
               '$xpProgress / $xpNeeded XP',
-              style: TextStyle(
-                color: context.appColors.textSecondary,
-                fontSize: 11,
-              ),
+              style: context.type.labelSmall.copyWith(color: context.appColors.textSecondary),
             ),
           ],
         ),
         const SizedBox(height: 6),
         ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
           child: Stack(
             children: [
               Container(height: 8, color: context.appColors.cardBgLight),
@@ -61,7 +55,7 @@ class XpProgressBar extends StatelessWidget {
                   height: 8,
                   decoration: BoxDecoration(
                     color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.xs),
                   ),
                 ),
               ),

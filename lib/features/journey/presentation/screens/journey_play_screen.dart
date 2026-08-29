@@ -1,16 +1,14 @@
-import 'package:arif_quiz/core/i18n/true_false_l10n.dart';
 import 'package:arif_quiz/features/game_modes/bloc/game_play_controller.dart';
 import 'package:arif_quiz/features/journey/data/journey_repository.dart';
 import 'package:arif_quiz/features/journey/presentation/screens/journey_result_screen.dart';
 import 'package:arif_quiz/l10n/gen/app_localizations.dart';
 import 'package:arif_quiz/main.dart';
 import 'package:arif_quiz/shared/models/models.dart';
+import 'package:arif_quiz/features/game_modes/presentation/widgets/question_stage.dart';
 import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:arif_quiz/shared/theme/app_tokens.dart';
 import 'package:arif_quiz/ui/animations/page_transitions.dart';
-import 'package:arif_quiz/ui/widgets/answer_option_tile.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
-import 'package:arif_quiz/ui/widgets/question_media.dart';
 import 'package:arif_quiz/ui/widgets/quit_confirm_dialog.dart';
 import 'package:arif_quiz/ui/widgets/timer_ring.dart';
 import 'package:flutter/material.dart';
@@ -161,8 +159,6 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
     }
 
     final ctrl = _ctrl!;
-    final q = ctrl.currentQuestion;
-    final opts = q.choices(context);
 
     return PopScope(
       canPop: false,
@@ -192,7 +188,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                         height: 36,
                         decoration: BoxDecoration(
                             color: context.appColors.cardBg,
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(AppRadius.sm)),
                         child: Icon(Icons.close_rounded,
                             color: context.appColors.textSecondary, size: 18),
                       ),
@@ -202,7 +198,7 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                         child: LinearProgressIndicator(
                           value: ctrl.progress,
                           backgroundColor: context.appColors.cardBg,
@@ -213,64 +209,21 @@ class _JourneyPlayScreenState extends State<JourneyPlayScreen> {
                     ),
                     const SizedBox(width: 12),
                     Text('${ctrl.index + 1}/${ctrl.questions.length}',
-                        style: TextStyle(
-                            color: context.appColors.textSecondary,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600)),
+                        style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600)),
                   ],
                 ),
                 const SizedBox(height: 28),
                 TimerRing(
                     timeLeft: ctrl.timeLeft,
-                    totalTime: ctrl.secondsPerQuestion,
+                    totalTime: ctrl.currentSeconds,
                     size: 80),
                 const SizedBox(height: 24),
                 // Média (image → audio), question puis réponses : le tout défile
                 // ensemble, les choix suivent directement l'énoncé.
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (q.hasMedia)
-                          QuestionMedia(
-                              imageUrl: q.imageUrl, audioUrl: q.audioUrl),
-                        Text(AppLocalizations.of(context).questionNumber(ctrl.index + 1),
-                            style: TextStyle(
-                                color: _accent,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.5)),
-                        const SizedBox(height: 8),
-                        Text(q.text,
-                            style: TextStyle(
-                                color: context.appColors.textPrimary,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                height: 1.4,
-                                fontFamily: 'Nunito')),
-                        const SizedBox(height: AppSpacing.questionToAnswers),
-                        AnswerOptionsGrid(
-                          options: opts,
-                          answered: ctrl.answered,
-                          selected: ctrl.selected,
-                          isCorrect: (o) => q.isCorrect(o),
-                          onSelect: ctrl.selectAnswer,
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
-                  ),
+                  child: QuestionStage(controller: ctrl, accent: _accent),
                 ),
-                if (!ctrl.answered)
-                  TextButton(
-                    onPressed: ctrl.skip,
-                    child: Text(AppLocalizations.of(context).skip,
-                        style: TextStyle(
-                            color: context.appColors.textMuted, fontSize: 14)),
-                  )
-                else
-                  const SizedBox(height: 48),
+                SkipQuestionButton(controller: ctrl),
               ],
             ),
           ),
@@ -292,16 +245,16 @@ class _LevelBadge extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(isBoss ? '👑' : '🎯', style: const TextStyle(fontSize: 13)),
+            Icon(isBoss ? Icons.workspace_premium_rounded : Icons.my_location_rounded,
+                    size: 13, color: Colors.white),
             const SizedBox(width: 5),
             Text(isBoss ? AppLocalizations.of(context).bossShort(level) : AppLocalizations.of(context).levelShort(level),
-                style: TextStyle(
-                    color: color, fontSize: 12, fontWeight: FontWeight.w800)),
+                style: context.type.labelMedium.copyWith(color: color, fontWeight: FontWeight.w800)),
           ],
         ),
       );

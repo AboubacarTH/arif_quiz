@@ -1,4 +1,5 @@
-﻿import 'package:arif_quiz/shared/theme/app_theme.dart';
+import 'package:arif_quiz/shared/theme/app_tokens.dart';
+import 'package:arif_quiz/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -87,11 +88,7 @@ class _AppTextFieldState extends State<AppTextField> {
         // Label
         Text(
           widget.label,
-          style: TextStyle(
-            color: _isFocused ? AppColors.primary : context.appColors.textSecondary,
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
+          style: context.type.bodyMedium.copyWith(color: _isFocused ? AppColors.primary : context.appColors.textSecondary, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 6),
 
@@ -100,17 +97,11 @@ class _AppTextFieldState extends State<AppTextField> {
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
             color: context.appColors.cardBg,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             border: Border.all(color: borderColor, width: _isFocused ? 2 : 1.5),
-            boxShadow: _isFocused
-                ? [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.1),
-                      blurRadius: 8,
-                      spreadRadius: 0,
-                    ),
-                  ]
-                : null,
+            // Le cadre passe de 1,5 à 2 pixels et prend la couleur principale
+            // quand le champ est actif : c'est la marque, pas un halo.
+            boxShadow: null,
           ),
           child: TextField(
             controller: widget.controller,
@@ -126,15 +117,11 @@ class _AppTextFieldState extends State<AppTextField> {
             onTap: widget.onTap,
             onSubmitted: widget.onSubmitted,
             textInputAction: widget.textInputAction,
-            style: TextStyle(
-              color: context.appColors.textPrimary,
-              fontSize: 15,
-              fontFamily: 'Nunito',
-            ),
+            style: context.type.bodyLarge.copyWith(color: context.appColors.textPrimary),
             decoration: InputDecoration(
               hintText: widget.hint,
               hintStyle:
-                  TextStyle(color: context.appColors.textMuted, fontSize: 15),
+                  context.type.bodyLarge.copyWith(color: context.appColors.textMuted),
               prefixIcon: widget.prefixIcon != null
                   ? Icon(widget.prefixIcon,
                       color:
@@ -177,10 +164,7 @@ class _AppTextFieldState extends State<AppTextField> {
               Expanded(
                 child: Text(
                   widget.errorText ?? widget.helper!,
-                  style: TextStyle(
-                    color: hasError ? AppColors.error : context.appColors.textMuted,
-                    fontSize: 12,
-                  ),
+                  style: context.type.labelMedium.copyWith(color: hasError ? AppColors.error : context.appColors.textMuted),
                 ),
               ),
             ],

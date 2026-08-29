@@ -40,7 +40,8 @@ class ExportQuestionsSheet {
 
     try {
       final file = await download(locale);
-      await Share.shareXFiles([XFile(file.path)], text: title);
+      await SharePlus.instance
+          .share(ShareParams(files: [XFile(file.path)], text: title));
     } catch (e) {
       messenger.showSnackBar(
         SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
@@ -65,20 +66,15 @@ class _LocalePicker extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(l10n.exportQuestions,
-                style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800)),
+                style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800)),
             const SizedBox(height: 4),
             Text(title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: context.appColors.textSecondary, fontSize: 13)),
+                style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary)),
             const SizedBox(height: 6),
             Text(l10n.exportLocaleHint,
-                style: TextStyle(
-                    color: context.appColors.textMuted, fontSize: 12)),
+                style: context.type.labelMedium.copyWith(color: context.appColors.textMuted)),
             const SizedBox(height: 12),
             for (final code in LocaleController.supportedCodes)
               ListTile(

@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "greeting": "Hello, {name} 👋",
+  "greeting": "Hello, {name}",
   "@greeting": {
     "placeholders": {
       "name": {
@@ -12,8 +12,8 @@
   "readyToPlay": "Ready to play?",
   "categories": "Categories",
   "seeAll": "See all",
-  "popular": "🔥 Popular",
-  "friendsLeaderboard": "🏅 Friends leaderboard",
+  "popular": "Popular",
+  "friendsLeaderboard": "Friends leaderboard",
   "guestBannerTitle": "Save your progress!",
   "guestBannerSubtitle": "Create an account to unlock XP, streaks and rankings.",
   "signUp": "Sign up",
@@ -23,7 +23,7 @@
   "dailyChallengeSubtitle": "+30 bonus XP · Keeps your streak alive",
   "journeyTag": "JOURNEY MODE",
   "journeyTitle": "Climb the levels of the map",
-  "journeySubtitle": "Unlock levels, earn stars ⭐",
+  "journeySubtitle": "Unlock levels, earn stars",
   "levelShort": "Lvl {level}",
   "@levelShort": {
     "placeholders": {
@@ -86,7 +86,7 @@
   },
   "journeyUnavailable": "Journey unavailable",
   "comeBackLater": "Come back later",
-  "levelsCount": "🏁  {count} levels",
+  "levelsCount": "{count} levels",
   "@levelsCount": {
     "placeholders": {
       "count": {
@@ -134,12 +134,12 @@
   "createAccount": "Create account",
   "homeLabel": "Home",
   "viewChallenge": "View challenge",
-  "headlineOutstanding": "Outstanding! 🤩",
-  "headlineExcellent": "Excellent! 🎉",
-  "headlineGreat": "Great job! 👏",
-  "headlineNotBad": "Not bad! 👍",
-  "headlineKeepGoing": "Keep going! 💪",
-  "headlineTryAgain": "Try again! 🔄",
+  "headlineOutstanding": "Outstanding!",
+  "headlineExcellent": "Excellent!",
+  "headlineGreat": "Great job!",
+  "headlineNotBad": "Not bad!",
+  "headlineKeepGoing": "Keep going!",
+  "headlineTryAgain": "Try again!",
   "yourAnswer": "Your answer",
   "points": "Points",
   "timeLabel": "Time",
@@ -191,21 +191,19 @@
     }
   },
   "ruleReview": "Review full explanations after the quiz",
-  "startQuiz": "Start Quiz 🚀",
+  "startQuiz": "Start Quiz",
   "tryAnotherDifficulty": "Try another difficulty filter",
   "loadCategoriesError": "Couldn't load the categories",
   "noCategories": "No categories",
   "comeBackSoon": "Come back later, new content is on its way",
   "chooseMode": "Choose mode",
-  "randomQuestions10": "10 random questions",
-  "questions10": "10 questions",
   "gameModeLabel": "Game mode",
   "modeClassic": "Classic Mode",
-  "modeClassicDesc": "10 random questions · Timer per question · Score in %",
+  "modeClassicDesc": "Timer on each question · Score as a percentage",
   "modeSurvival": "Survival Mode",
-  "modeSurvivalDesc": "10 questions · One wrong answer and it's over · ×1.3 bonus",
+  "modeSurvivalDesc": "One wrong answer and it is over · Bonus ×1.3",
   "modeSpeed": "Speed Round",
-  "modeSpeedDesc": "10 questions · 5 seconds per question · ×1.5 XP bonus",
+  "modeSpeedDesc": "Time to read, not to hesitate · ×1.5 XP",
   "playInMode": "Play {mode}",
   "@playInMode": {
     "placeholders": {
@@ -277,10 +275,10 @@
   "enterChallengeTitle": "Enter a title for the challenge",
   "createError": "Error while creating",
   "srcQuizLabel": "A specific quiz",
-  "srcQuizDesc": "10 questions from a quiz of your choice",
+  "srcQuizDesc": "Questions drawn from a quiz you pick",
   "srcCategoryLabel": "By category",
-  "srcCategoryDesc": "10 random questions from all quizzes in a category",
-  "srcAllDesc": "10 random questions from all available quizzes",
+  "srcCategoryDesc": "Random questions from every quiz in a category",
+  "srcAllDesc": "Random questions from every available quiz",
   "whereQuestionsFrom": "Where do the questions come from?",
   "noCategoryAvailable": "No category available",
   "noQuizInCategory": "No quiz in this category",
@@ -424,7 +422,7 @@
       }
     }
   },
-  "bonusXp30": "⚡ +30 bonus XP",
+  "bonusXp30": "+30 bonus XP",
   "takeChallenge": "Take the challenge",
   "saveChanges": "Save changes",
   "emailRequired": "Email is required",
@@ -437,7 +435,7 @@
   "scoresNotSaved": "Scores won't be saved",
   "passwordMin8": "Password must be at least 8 characters",
   "passwordsDontMatch": "Passwords do not match",
-  "registrationFailed": "Registration failed. Email may already be taken.",
+  "registrationFailed": "Registration failed. This email may already be in use.",
   "createAccountTitle": "Create an\naccount",
   "joinThousands": "Join thousands of players",
   "choosePassword": "Choose a password",
@@ -805,16 +803,15 @@
   "goPremium": "Go Premium",
   "goPremiumSubtitle": "Play with no ads, no limits",
   "orSeparator": "OR",
-  "premiumFeatureNoAds": "✅ Unlimited quizzes and journey, no ads",
-  "premiumFeatureAllModes": "⚡ Every game mode, never interrupted",
-  "premiumFeatureSupport": "❤️ You support the app's development",
+  "premiumFeatureNoAds": "Unlimited quizzes and journey, no ads",
+  "premiumFeatureAllModes": "Every game mode, never interrupted",
+  "premiumFeatureSupport": "You support the app's development",
   "loadFailedRetry": "Loading failed. Pull to refresh.",
   "loadQuizzesFailed": "Unable to load the quizzes.",
   "loadLeaderboardFailed": "Unable to load the leaderboard.",
   "loadProfileFailed": "Unable to load the profile.",
   "loadJourneyFailed": "Unable to load the journey.",
   "invalidCredentials": "Invalid email or password. Please try again.",
-  "registrationFailed": "Registration failed. This email may already be in use.",
   "dailyTag": "Daily",
   "secondsPerQuestionBadge": "{seconds}s / question",
   "@secondsPerQuestionBadge": {
@@ -848,5 +845,313 @@
         "type": "String"
       }
     }
-  }
+  },
+  "adminDailyChallenge": "Daily challenge",
+  "manageDailyChallengeDesc": "Schedule which quiz runs on which day",
+  "dailyChallengeCalendarHint": "A day with no quiz means no challenge at all for players.",
+  "scheduleDay": "Schedule a day",
+  "changeQuizBtn": "Change",
+  "unscheduleBtn": "Unschedule",
+  "unscheduleConfirmTitle": "Unschedule this day?",
+  "unscheduleConfirmBody": "{date} will no longer have a challenge. The {count} attempt(s) already played are kept.",
+  "@unscheduleConfirmBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noChallengeTodayTitle": "No challenge scheduled for today",
+  "noChallengeTodayBody": "The « Daily challenge » card stays visible in the app, but it opens an empty screen until a quiz is set on today's date.",
+  "scheduleToday": "Schedule today",
+  "upcomingSection": "Upcoming",
+  "historySection": "History",
+  "emptyCalendar": "The calendar is empty: players will not be offered any challenge.",
+  "freeDaysLabel": "{count} free day(s) in the next {horizon} days",
+  "@freeDaysLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "horizon": {
+        "type": "int"
+      }
+    }
+  },
+  "noSchedulableQuiz": "No quiz can be scheduled",
+  "noSchedulableQuizHint": "A daily challenge needs a published quiz with at least one question.",
+  "challengeQuizUnpublished": "Quiz unpublished since: players will see no challenge that day.",
+  "challengeQuizEmpty": "Quiz with no question: players will see no challenge that day.",
+  "attemptsCount": "{count, plural, =0{no attempt} =1{1 attempt} other{{count} attempts}}",
+  "@attemptsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fillRotation": "Fill a rotation",
+  "rotationHint": "The selected quizzes rotate in the order you pick them. Already scheduled days are kept unless you ask to overwrite them.",
+  "firstDay": "First day",
+  "numberOfDays": "Number of days",
+  "rotationQuizzes": "Quizzes in the rotation",
+  "overwriteScheduled": "Overwrite days already scheduled",
+  "rotationDone": "{created} day(s) scheduled, {updated} updated, {skipped} already taken and kept.",
+  "@rotationDone": {
+    "placeholders": {
+      "created": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "fillDays": "Fill {count} day(s)",
+  "@fillDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chooseQuiz": "Choose a quiz",
+  "dateLabel": "Date",
+  "scheduleBtn": "Schedule",
+  "oops": "Oops!",
+  "bonusKeepsStreak": "Keeps your streak alive",
+  "bonusDailyLeaderboard": "Daily leaderboard",
+  "alreadyPlayedTag": "Played",
+  "noDailyChallengeToday": "No challenge today",
+  "dailyBackTomorrow": "A new quiz lands tomorrow",
+  "dailyDoneScore": "Done — you scored {score}%",
+  "@dailyDoneScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "journeyChapter": "Chapter {number}",
+  "@journeyChapter": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeOpen": "Open",
+  "challengeClosed": "Closed",
+  "challengeExpired": "Expired",
+  "selectedCount": "{count} selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "friendAdded": "{name} added",
+  "@friendAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reportSent": "Report sent",
+  "questionsCountLabel": "Number of questions",
+  "questionsCount": "{count} questions",
+  "@questionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "randomQuestionsCount": "{count} random questions",
+  "@randomQuestionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "allDifficulties": "All levels",
+  "challengeAudienceLabel": "Who can play",
+  "audiencePrivate": "By code",
+  "audiencePrivateDesc": "Only people you give the code to",
+  "audienceFriends": "My friends",
+  "audienceFriendsDesc": "Your friends see it and join without a code",
+  "audienceGlobal": "Everyone",
+  "audienceGlobalDesc": "Anyone can find it and join",
+  "audienceExpiryNote": "Announced challenges disappear after 24 hours.",
+  "friendsChallengesTab": "Friends",
+  "globalChallengesTab": "Everyone",
+  "myChallengesTab": "Mine",
+  "noFriendChallenges": "No challenge from your friends",
+  "noFriendChallengesHint": "When a friend launches one, it lands here.",
+  "noGlobalChallenges": "No public challenge right now",
+  "noGlobalChallengesHint": "Launch one and see who takes it on.",
+  "joinChallengeAction": "Join",
+  "expiresIn": "Ends in {hours} h",
+  "@expiresIn": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "joinChallengeError": "Invalid code, or the challenge no longer exists",
+  "modePrecision": "Precision Mode",
+  "modePrecisionShort": "Precision",
+  "modePrecisionDesc": "+2 right · −1 wrong · 0 if you pass · ×1.4 XP",
+  "modeTally": "{points} / {max} pts",
+  "@modeTally": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "precisionSkipHint": "Passing costs nothing",
+  "modePointsLabel": "Mode points",
+  "secondsRangeBadge": "{min}–{max}s / question",
+  "@secondsRangeBadge": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeLabel": "Challenge",
+  "shareCardTagline": "Challenge your friends on ArifQuiz",
+  "modeStreak": "Streak Mode",
+  "modeStreakShort": "Streak",
+  "modeStreakDesc": "Answers in a row are worth more and more · ×1.4 XP",
+  "modeTimeAttack": "Time Attack",
+  "modeTimeAttackShort": "Time Attack",
+  "modeTimeAttackDesc": "One clock for the round · right answers extend it · ×1.6 XP",
+  "modeJokers": "Jokers Mode",
+  "modeJokersShort": "Jokers",
+  "modeJokersDesc": "Three helping hands, each costs a point · ×1.1 XP",
+  "roundSecondsBadge": "{seconds}s / round",
+  "@roundSecondsBadge": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "bonusSecondsBadge": "+{seconds}s per right answer",
+  "@bonusSecondsBadge": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "jokerCountBadge": "{count} jokers",
+  "@jokerCountBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "streakRun": "{streak} in a row",
+  "@streakRun": {
+    "placeholders": {
+      "streak": {
+        "type": "int"
+      }
+    }
+  },
+  "nextAnswerWorth": "next one: +{points}",
+  "@nextAnswerWorth": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "jokerHintLabel": "Hint",
+  "jokerTimeLabel": "+{seconds}s",
+  "@jokerTimeLabel": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "hintFirstLetter": "The right answer starts with “{letter}”",
+  "@hintFirstLetter": {
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "noJokersLeft": "No jokers left",
+  "timeUpTitle": "Time’s up!",
+  "pointsTotal": "{points} pts",
+  "@pointsTotal": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "acceptLabel": "Accept",
+  "declineLabel": "Decline",
+  "noPendingRequestsHint": "Requests you receive land here.",
+  "noRecentActivityHint": "Your friends’ games will show up here.",
+  "friendsCount": "{count, plural, =0{no friends} =1{1 friend} other{{count} friends}}",
+  "@friendsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statisticsSection": "Statistics",
+  "accountSection": "Account",
+  "correctOutOf": "{correct}/{total} correct",
+  "@correctOutOf": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteAccountWarning": "This cannot be undone. All your data will be permanently deleted.",
+  "nameYou": "{name} (you)",
+  "@nameYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "continueWithGoogle": "Continue with Google",
+  "googleSignInFailed": "Google sign-in failed. Please try again.",
+  "googleUnavailable": "Google sign-in isn't available on this device.",
+  "googleMisconfigured": "Google sign-in isn't set up for this app yet.",
+  "useGoogleToSignIn": "This account was created with Google. Use \"Continue with Google\".",
+  "dontHaveAccount": "Don't have an account? "
 }

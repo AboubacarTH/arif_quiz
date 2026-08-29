@@ -14,7 +14,6 @@ import 'package:arif_quiz/ui/animations/page_transitions.dart';
 import 'package:arif_quiz/ui/widgets/empty_state.dart';
 import 'package:arif_quiz/ui/widgets/paywall_sheet.dart';
 import 'package:arif_quiz/ui/widgets/shimmer_loading.dart';
-import 'package:arif_quiz/ui/widgets/stats_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -54,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Future<void> _deleteAccount(String password) async {
+  Future<void> _deleteAccount(String? password) async {
     try {
       await apiService.deleteAccount(password);
       if (!mounted) return;
@@ -75,6 +74,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _confirmDeleteAccount() {
+    // Un compte Google n'a pas de mot de passe : le champ n'aurait rien à
+    // vérifier, et l'exiger rendrait la suppression impossible.
+    final needsPassword = _ctrl.data?.user.hasPassword ?? true;
     final passwordCtrl = TextEditingController();
     bool obscure = true;
 
@@ -84,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         builder: (ctx, setStateDialog) => AlertDialog(
           backgroundColor: context.appColors.cardBg,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
           title: Text(
             AppLocalizations.of(context).deleteAccountTitle,
             style: TextStyle(
@@ -96,37 +98,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Cette action est irréversible. Toutes tes données seront supprimées définitivement.',
+                AppLocalizations.of(context).deleteAccountWarning,
                 style: TextStyle(color: context.appColors.textSecondary),
               ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: passwordCtrl,
-                obscureText: obscure,
-                style: TextStyle(color: context.appColors.textPrimary),
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).password,
-                  labelStyle:
-                      TextStyle(color: context.appColors.textSecondary),
-                  filled: true,
-                  fillColor: context.appColors.bg,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: context.appColors.border),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscure
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                      color: context.appColors.textMuted,
-                      size: 20,
+              if (needsPassword) ...[
+                const SizedBox(height: 16),
+                TextField(
+                  controller: passwordCtrl,
+                  obscureText: obscure,
+                  style: TextStyle(color: context.appColors.textPrimary),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).password,
+                    labelStyle:
+                        TextStyle(color: context.appColors.textSecondary),
+                    filled: true,
+                    fillColor: context.appColors.bg,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      borderSide: BorderSide(color: context.appColors.border),
                     ),
-                    onPressed: () =>
-                        setStateDialog(() => obscure = !obscure),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        obscure
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: context.appColors.textMuted,
+                        size: 20,
+                      ),
+                      onPressed: () =>
+                          setStateDialog(() => obscure = !obscure),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
           actions: [
@@ -139,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             TextButton(
               onPressed: () {
-                final password = passwordCtrl.text;
+                final password = needsPassword ? passwordCtrl.text : null;
                 Navigator.pop(ctx);
                 _deleteAccount(password);
               },
@@ -160,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.cardBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         title: Text(
           AppLocalizations.of(context).logoutTitle,
           style: TextStyle(
@@ -200,82 +204,109 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: context.appColors.bg,
       body: RefreshIndicator(
-        onRefresh: _ctrl.load,
+        // `load` levait le squelette : la page entiere disparaissait le temps
+        // de l'appel, alors qu'elle a deja tout ce qu'il faut a l'ecran.
+        onRefresh: _ctrl.refresh,
         color: AppColors.primary,
         backgroundColor: context.appColors.cardBg,
-        child: _buildBody(),
+        // Une seule entrée pour tout l'écran (voir _buildBody).
+        child: _buildBody().animate().fadeIn(duration: 260.ms),
       ),
     );
   }
 
   Widget _buildBody() {
     if (_ctrl.isLoading) {
-      return CustomScrollView(slivers: [
-        SliverToBoxAdapter(child: _buildHeader(null)),
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: ProfileSkeleton(),
-          ),
+      return const SafeArea(
+        bottom: false,
+        child: CustomScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(AppSpacing.gutter),
+                child: ProfileSkeleton(),
+              ),
+            ),
+          ],
         ),
-      ]);
+      );
     }
 
     if (_ctrl.error != null) {
-      return ListView(children: [
-        const SizedBox(height: 200),
-        ErrorState(
-            message: AppLocalizations.of(context).loadProfileFailed,
-            onRetry: _ctrl.load),
-      ]);
+      return SafeArea(
+        bottom: false,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            const SizedBox(height: 160),
+            ErrorState(
+                message: AppLocalizations.of(context).loadProfileFailed,
+                onRetry: _ctrl.load),
+          ],
+        ),
+      );
     }
 
     final d = _ctrl.data!;
     final user = d.user;
 
-    return CustomScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      slivers: [
-        SliverToBoxAdapter(child: _buildHeader(user)),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHero(user, d.rank),
-                const SizedBox(height: 16),
-                _buildXpBar(user),
-                const SizedBox(height: 20),
-                _buildStatsRow(user),
-                const SizedBox(height: 20),
-                _buildStreakRow(user),
-                const SizedBox(height: 20),
-                _buildBadgesButton(),
-                const SizedBox(height: 24),
-                _buildPremiumSection(),
-                const SizedBox(height: 24),
-                _buildThemeSection(),
-                const SizedBox(height: 24),
-                _buildLanguageSection(),
-                // Ne s'affiche que là où la loi l'exige (EEE, UK, États US
-                // régulés) : ailleurs, le widget ne rend rien.
-                const _PrivacyOptionsTile(),
-                const SizedBox(height: 28),
-                _buildRecentActivity(d.recentAttempts),
-                if (user.role == 'admin') ...[
-                  const SizedBox(height: 24),
-                  _buildAdminButton(),
+    const gap = SizedBox(height: AppSpacing.xxl);
+    final l10n = AppLocalizations.of(context);
+
+    // La page etait une pile continue : identite, chiffres, reglages, historique
+    // et boutons de compte se suivaient sans qu'on sache ou l'un finissait. Elle
+    // se lit maintenant par sections — trois d'entre elles en avaient deja un
+    // titre, les autres flottaient.
+    return SafeArea(
+      bottom: false,
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(child: _buildHeader(user)),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.gutter, 0, AppSpacing.gutter, AppSpacing.xxxl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHero(user, d.rank),
+                  const SizedBox(height: AppSpacing.lg),
+                  _buildXpBar(user),
+                  gap,
+                  _SectionTitle(title: l10n.statisticsSection),
+                  const SizedBox(height: AppSpacing.md),
+                  _buildStatsCard(user),
+                  gap,
+                  _buildBadgesButton(),
+                  gap,
+                  _buildPremiumSection(),
+                  gap,
+                  _buildThemeSection(),
+                  gap,
+                  _buildLanguageSection(),
+                  // Ne s'affiche que là où la loi l'exige (EEE, UK, États US
+                  // régulés) : ailleurs, le widget ne rend rien.
+                  const _PrivacyOptionsTile(),
+                  gap,
+                  _buildRecentActivity(d.recentAttempts),
+                  gap,
+                  _SectionTitle(title: l10n.accountSection),
+                  const SizedBox(height: AppSpacing.md),
+                  if (user.role == 'admin') ...[
+                    _buildAdminButton(),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  _buildLogoutButton(),
+                  const SizedBox(height: AppSpacing.md),
+                  _buildDeleteAccountButton(),
                 ],
-                const SizedBox(height: 24),
-                _buildLogoutButton(),
-                const SizedBox(height: 12),
-                _buildDeleteAccountButton(),
-              ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -290,11 +321,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             Text(
               AppLocalizations.of(context).myProfile,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-              ),
+              style: context.type.headlineLarge.copyWith(color: context.appColors.textPrimary),
             ),
             const Spacer(),
             if (user != null)
@@ -318,11 +345,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(width: 6),
                       Text(
                         AppLocalizations.of(context).editBtn,
-                        style: TextStyle(
-                          color: context.appColors.textSecondary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: context.type.bodyMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -331,7 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 300.ms);
+    );
   }
 
   // ─── Hero card ───────────────────────────────────────────────────────────────
@@ -343,7 +366,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       decoration: BoxDecoration(
         color: context.cardElevated,
         borderRadius: AppRadius.rXl,
-        boxShadow: AppShadows.tinted(context, AppColors.primary),
+        boxShadow: AppShadows.card(context),
       ),
       child: Column(
         children: [
@@ -365,11 +388,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Center(
                   child: Text(
                     user.name[0].toUpperCase(),
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 36,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: AppType.score.copyWith(color: AppColors.primary),
                   ),
                 ),
               ),
@@ -385,11 +404,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Center(
                   child: Text(
                     '${user.level}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: context.type.labelSmall.copyWith(color: Colors.white),
                   ),
                 ),
               ),
@@ -398,30 +413,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 12),
           Text(
             user.name,
-            style: TextStyle(
-              color: context.appColors.textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-            ),
+            style: context.type.headlineMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
           ),
           if (user.username != null && user.username!.isNotEmpty) ...[
             const SizedBox(height: 2),
             Text(
               '@${user.username}',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
+              style: context.type.bodyMedium.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
             ),
           ],
           const SizedBox(height: 2),
           Text(
             user.email,
-            style: TextStyle(
-              color: context.appColors.textSecondary,
-              fontSize: 12,
-            ),
+            style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
           ),
           const SizedBox(height: 14),
           // Rank + Points badges
@@ -443,7 +447,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: 50.ms).slideY(begin: 0.05);
+    );
   }
 
   // ─── XP bar ──────────────────────────────────────────────────────────────────
@@ -467,31 +471,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.xs),
                 ),
                 child: Text(
                   AppLocalizations.of(context).levelLabel(user.level),
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: context.type.labelMedium.copyWith(color: AppColors.primary, fontWeight: FontWeight.w800),
                 ),
               ),
               const Spacer(),
               Text(
                 '${user.xpProgress} / ${user.xpNeeded} XP',
-                style: TextStyle(
-                  color: context.appColors.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary, fontWeight: FontWeight.w600),
               ),
             ],
           ),
           const SizedBox(height: 10),
           ClipRRect(
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(AppRadius.xs),
             child: LinearProgressIndicator(
               value: percent,
               minHeight: 10,
@@ -503,52 +499,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 6),
           Text(
             AppLocalizations.of(context).nextLevelIn(user.level + 1, user.xpNeeded - user.xpProgress),
-            style: TextStyle(
-              color: context.appColors.textMuted,
-              fontSize: 11,
-            ),
+            style: context.type.labelSmall.copyWith(color: context.appColors.textMuted),
           ),
         ],
       ),
-    ).animate().fadeIn(delay: 100.ms);
+    );
   }
 
   // ─── Stats row ───────────────────────────────────────────────────────────────
 
-  Widget _buildStatsRow(UserModel user) {
-    return StatsRow(
-      stats: [
-        StatItem('${user.quizzesTaken}', AppLocalizations.of(context).quizzesPlayed, AppColors.primary),
-        StatItem('${user.correctAnswers}', AppLocalizations.of(context).goodAnswers, AppColors.success),
-        StatItem('${user.accuracy.toStringAsFixed(0)}%', AppLocalizations.of(context).accuracy, AppColors.info),
-      ],
-    ).animate().fadeIn(delay: 150.ms);
-  }
+  /// Les cinq chiffres du joueur dans une seule carte.
+  ///
+  /// Ils vivaient dans deux blocs qui ne se ressemblaient pas — trois valeurs
+  /// nues d'un côté, deux cartes teintées de l'autre, l'une beige et l'autre
+  /// orange sans que la différence veuille dire quoi que ce soit. Ce sont les
+  /// mêmes chiffres sur le même joueur : une seule carte, un seul trait pour
+  /// séparer ce qu'on cumule de ce qu'on tient d'affilée.
+  Widget _buildStatsCard(UserModel user) {
+    final l10n = AppLocalizations.of(context);
 
-  // ─── Streak row ──────────────────────────────────────────────────────────────
-
-  Widget _buildStreakRow(UserModel user) {
-    return Row(
-      children: [
-        Expanded(
-          child: _StreakCard(
-            emoji: '🔥',
-            value: '${user.streak}',
-            label: AppLocalizations.of(context).currentStreak,
-            color: AppColors.secondary,
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: context.cardElevated,
+        borderRadius: AppRadius.rLg,
+        boxShadow: AppShadows.card(context),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _Figure(
+                  value: '${user.quizzesTaken}',
+                  label: l10n.quizzesPlayed,
+                ),
+              ),
+              Expanded(
+                child: _Figure(
+                  value: '${user.correctAnswers}',
+                  label: l10n.goodAnswers,
+                ),
+              ),
+              Expanded(
+                child: _Figure(
+                  value: '${user.accuracy.toStringAsFixed(0)}%',
+                  label: l10n.accuracy,
+                ),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _StreakCard(
-            emoji: '🏆',
-            value: '${user.longestStreak}',
-            label: AppLocalizations.of(context).bestStreak,
-            color: AppColors.warning,
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
+            child: Divider(color: context.appColors.border, height: 1),
           ),
-        ),
-      ],
-    ).animate().fadeIn(delay: 200.ms);
+          Row(
+            children: [
+              Expanded(
+                child: _Figure(
+                  value: '${user.streak}',
+                  label: l10n.currentStreak,
+                  icon: Icons.local_fire_department_rounded,
+                  color: AppColors.secondary,
+                ),
+              ),
+              Expanded(
+                child: _Figure(
+                  value: '${user.longestStreak}',
+                  label: l10n.bestStreak,
+                  icon: Icons.emoji_events_rounded,
+                  color: AppColors.warning,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   // ─── Succès / badges ─────────────────────────────────────────────────────────
@@ -574,10 +602,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: 44,
               decoration: BoxDecoration(
                 color: AppColors.secondary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               alignment: Alignment.center,
-              child: const Text('🏅', style: TextStyle(fontSize: 22)),
+              child: const Icon(Icons.military_tech_rounded,
+              size: 22, color: AppColors.secondary),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -586,16 +615,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Text(
                     AppLocalizations.of(context).achievements,
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14,
-                    ),
+                    style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                   ),
                   Text(
                     AppLocalizations.of(context).unlockBadgesByPlaying,
-                    style: TextStyle(
-                        color: context.appColors.textSecondary, fontSize: 12),
+                    style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                   ),
                 ],
               ),
@@ -605,7 +629,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 220.ms);
+    );
   }
 
   // ─── Premium ────────────────────────────────────────────────────────────────
@@ -613,7 +637,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildPremiumSection() {
     return ListenableBuilder(
       listenable: monetizationController,
-      builder: (_, __) => monetizationController.isPremium
+      builder: (_, _) => monetizationController.isPremium
           ? _PremiumBadge()
           : Column(
               children: [
@@ -632,7 +656,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
-    ).animate().fadeIn(delay: 250.ms);
+    );
   }
 
   // ─── Theme ──────────────────────────────────────────────────────────────────
@@ -651,7 +675,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: ListenableBuilder(
             listenable: themeController,
-            builder: (_, __) => Column(
+            builder: (_, _) => Column(
               children: [
                 _ThemeTile(
                   icon: Icons.smartphone_rounded,
@@ -681,7 +705,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
-    ).animate().fadeIn(delay: 300.ms);
+    );
   }
 
   // ─── Langue ──────────────────────────────────────────────────────────────────
@@ -701,7 +725,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: ListenableBuilder(
             listenable: localeController,
-            builder: (_, __) => Column(
+            builder: (_, _) => Column(
               children: [
                 for (final (i, code)
                     in LocaleController.supportedCodes.indexed) ...[
@@ -722,7 +746,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
-    ).animate().fadeIn(delay: 320.ms);
+    );
   }
 
   // ─── Recent activity ─────────────────────────────────────────────────────────
@@ -742,11 +766,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               child: Text(
                 AppLocalizations.of(context).seeAll,
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: context.type.labelLarge.copyWith(color: AppColors.primary),
               ),
             ),
           ],
@@ -756,14 +776,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           EmptyState(
             title: AppLocalizations.of(context).noQuizPlayed,
             subtitle: AppLocalizations.of(context).playFirstQuiz,
-            emoji: '🎯',
+            icon: Icons.quiz_rounded,
             actionLabel: AppLocalizations.of(context).playBtn,
             onAction: () {},
           )
         else
           ...attempts.take(5).map((a) => _AttemptTile(attempt: a)),
       ],
-    ).animate().fadeIn(delay: 350.ms);
+    );
   }
 
   // ─── Admin ──────────────────────────────────────────────────────────────────
@@ -779,7 +799,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: AppColors.info.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: AppColors.info.withValues(alpha: 0.25)),
         ),
         child: Row(
@@ -789,16 +809,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context).adminPanel,
-              style: const TextStyle(
-                color: AppColors.info,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.titleMedium.copyWith(color: AppColors.info),
             ),
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 380.ms);
+    );
   }
 
   // ─── Logout / Delete ────────────────────────────────────────────────────────
@@ -811,7 +827,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: AppColors.error.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border:
               Border.all(color: AppColors.error.withValues(alpha: 0.25)),
         ),
@@ -822,16 +838,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context).logOutAction,
-              style: const TextStyle(
-                color: AppColors.error,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.titleMedium.copyWith(color: AppColors.error),
             ),
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 400.ms);
+    );
   }
 
   Widget _buildDeleteAccountButton() {
@@ -842,7 +854,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: context.appColors.border),
         ),
         child: Row(
@@ -853,16 +865,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context).deleteMyAccount,
-              style: TextStyle(
-                color: context.appColors.textMuted,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: context.type.titleMedium.copyWith(color: context.appColors.textMuted, fontWeight: FontWeight.w600),
             ),
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 420.ms);
+    );
   }
 }
 
@@ -885,7 +893,7 @@ class _HeroBadge extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Row(
@@ -895,11 +903,7 @@ class _HeroBadge extends StatelessWidget {
             const SizedBox(width: 5),
             Text(
               label,
-              style: TextStyle(
-                color: color,
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-              ),
+              style: context.type.labelLarge.copyWith(color: color),
             ),
           ],
         ),
@@ -908,58 +912,55 @@ class _HeroBadge extends StatelessWidget {
 
 // ─── Streak card ─────────────────────────────────────────────────────────────
 
-class _StreakCard extends StatelessWidget {
-  final String emoji;
+class _Figure extends StatelessWidget {
   final String value;
   final String label;
-  final Color color;
+  final IconData? icon;
+  final Color? color;
 
-  const _StreakCard({
-    required this.emoji,
+  const _Figure({
     required this.value,
     required this.label,
-    required this.color,
+    this.icon,
+    this.color,
   });
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.2)),
-        ),
-        child: Row(
+  Widget build(BuildContext context) {
+    final tint = color ?? context.appColors.textPrimary;
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 26)),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: context.appColors.textSecondary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+            if (icon != null) ...[
+              Icon(icon, size: 18, color: tint),
+              const SizedBox(width: 6),
+            ],
+            Text(
+              value,
+              style: context.type.headlineMedium
+                  .copyWith(color: tint, fontWeight: FontWeight.w800),
             ),
           ],
         ),
-      );
+        const SizedBox(height: 2),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: context.type.labelMedium
+                .copyWith(color: context.appColors.textMuted),
+          ),
+        ),
+      ],
+    );
+  }
 }
-
-// ─── Section title ───────────────────────────────────────────────────────────
 
 class _SectionTitle extends StatelessWidget {
   final String title;
@@ -968,11 +969,7 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
         title,
-        style: TextStyle(
-          color: context.appColors.textPrimary,
-          fontSize: 16,
-          fontWeight: FontWeight.w800,
-        ),
+        style: context.type.titleLarge.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
       );
 }
 
@@ -1021,16 +1018,12 @@ class _AttemptTile extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppRadius.md),
             ),
             alignment: Alignment.center,
             child: Text(
               grade,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.w800,
-                fontSize: 20,
-              ),
+              style: context.type.headlineMedium.copyWith(color: color, fontWeight: FontWeight.w800),
             ),
           ),
           const SizedBox(width: 12),
@@ -1041,12 +1034,11 @@ class _AttemptTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    color: context.appColors.textPrimary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                  maxLines: 1,
+                  style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
+                  // Les titres de quiz finissent par ce qui les distingue
+                  // (« … — Niveau avancé ») : coupés à une ligne, cinq parties
+                  // differentes s'affichaient a l'identique.
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
@@ -1054,18 +1046,11 @@ class _AttemptTile extends StatelessWidget {
                   children: [
                     Text(
                       '${score.toStringAsFixed(0)}%',
-                      style: TextStyle(
-                        color: color,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                      ),
+                      style: context.type.labelMedium.copyWith(color: color),
                     ),
                     Text(
-                      '  ·  $correct/$total bonnes',
-                      style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 12,
-                      ),
+                      '  ·  ${AppLocalizations.of(context).correctOutOf(correct, total)}',
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],
                 ),
@@ -1077,19 +1062,12 @@ class _AttemptTile extends StatelessWidget {
                     const SizedBox(width: 3),
                     Text(
                       '+$points pts',
-                      style: const TextStyle(
-                        color: AppColors.warning,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
+                      style: context.type.labelMedium.copyWith(color: AppColors.warning, fontWeight: FontWeight.w600),
                     ),
                     if (date != null) ...[
                       Text(
                         '  ·  ${_formatDate(date)}',
-                        style: TextStyle(
-                          color: context.appColors.textMuted,
-                          fontSize: 11,
-                        ),
+                        style: context.type.labelSmall.copyWith(color: context.appColors.textMuted),
                       ),
                     ],
                   ],
@@ -1120,7 +1098,7 @@ class _PremiumBadge extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: AppColors.accent.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border:
               Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
         ),
@@ -1131,7 +1109,7 @@ class _PremiumBadge extends StatelessWidget {
               height: 44,
               decoration: BoxDecoration(
                 color: AppColors.accent.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: const Icon(Icons.workspace_premium_rounded,
                   color: AppColors.accent, size: 24),
@@ -1142,18 +1120,12 @@ class _PremiumBadge extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Arif Quiz Premium ✨',
-                    style: TextStyle(
-                      color: context.appColors.textPrimary,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14,
-                    ),
+                    'Arif Quiz Premium',
+                    style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                   ),
                   Text(
                     'Merci pour ton soutien — sans pub !',
-                    style: TextStyle(
-                        color: context.appColors.textSecondary,
-                        fontSize: 12),
+                    style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                   ),
                 ],
               ),
@@ -1248,16 +1220,12 @@ class _CreditsRow extends StatelessWidget {
           Expanded(
             child: Text(
               AppLocalizations.of(context).freePlaysTitle,
-              style: TextStyle(
-                color: context.appColors.textPrimary,
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-              ),
+              style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary),
             ),
           ),
           Text(
             AppLocalizations.of(context).creditsRemaining(credits),
-            style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700),
+            style: context.type.labelMedium.copyWith(color: color),
           ),
         ],
       ),
@@ -1278,7 +1246,7 @@ class _GetPremiumCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: context.cardElevated,
             borderRadius: AppRadius.rLg,
-            boxShadow: AppShadows.tinted(context, AppColors.primary),
+            boxShadow: AppShadows.card(context),
           ),
           child: Row(
             children: [
@@ -1287,7 +1255,7 @@ class _GetPremiumCard extends StatelessWidget {
                 height: 44,
                 decoration: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: const Icon(Icons.workspace_premium_rounded,
                     color: Colors.white, size: 24),
@@ -1299,17 +1267,11 @@ class _GetPremiumCard extends StatelessWidget {
                   children: [
                     Text(
                       AppLocalizations.of(context).goPremium,
-                      style: TextStyle(
-                        color: context.appColors.textPrimary,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
-                      ),
+                      style: context.type.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.w800),
                     ),
                     Text(
                       AppLocalizations.of(context).goPremiumSubtitle,
-                      style: TextStyle(
-                          color: context.appColors.textSecondary,
-                          fontSize: 12),
+                      style: context.type.labelMedium.copyWith(color: context.appColors.textSecondary),
                     ),
                   ],
                 ),
@@ -1343,7 +1305,7 @@ class _ThemeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
           child: Row(
@@ -1355,7 +1317,7 @@ class _ThemeTile extends StatelessWidget {
                   color: selected
                       ? AppColors.primary.withValues(alpha: 0.15)
                       : context.appColors.cardBgLight,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Icon(
                   icon,
@@ -1372,21 +1334,14 @@ class _ThemeTile extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: TextStyle(
-                        color: selected
+                      style: context.type.titleMedium.copyWith(color: selected
                             ? AppColors.primary
-                            : context.appColors.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
+                            : context.appColors.textPrimary),
                     ),
                     if (subtitle != null)
                       Text(
                         subtitle!,
-                        style: TextStyle(
-                          color: context.appColors.textMuted,
-                          fontSize: 12,
-                        ),
+                        style: context.type.labelMedium.copyWith(color: context.appColors.textMuted),
                       ),
                   ],
                 ),
