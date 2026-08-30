@@ -227,7 +227,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
           TextButton(
             onPressed: () async {
               final nav = Navigator.of(context);
-              await _subs.restorePurchases();
+              await _subs.refreshEntitlement();
               if (!mounted) return;
               if (_subs.isPremium) nav.pop();
             },

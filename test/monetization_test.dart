@@ -90,6 +90,9 @@ class _FakeSubs implements SubscriptionService {
   bool isPremium;
 
   @override
+  DateTime? premiumUntil;
+
+  @override
   VoidCallback? onChanged;
 
   _FakeSubs({this.isPremium = false});
@@ -110,7 +113,7 @@ class _FakeSubs implements SubscriptionService {
   Future<bool> buySubscription(ProductDetails product) async => false;
 
   @override
-  Future<void> restorePurchases() async {}
+  Future<void> refreshEntitlement() async {}
 
   @override
   Future<void> debugSetPremium(bool value) async => isPremium = value;
@@ -395,5 +398,104 @@ void main() {
     expect(notified, 1);
     expect(ctrl.isPremium, isTrue);
     expect(ctrl.adsRequired, isFalse);
+  });
+
+  /// Règle métier : l'instantané renvoyé par la boutique fait autorité dans les
+  /// deux sens. Google Play n'y liste que les abonnements encore valides et
+  /// n'émet rien à l'échéance : leur disparition est le seul signal d'expiration
+  /// dont l'app dispose.
+  group('abonnement — la boutique fait autorité', () {
+    PurchaseDetails bought(String productId, [PurchaseStatus? status]) =>
+        PurchaseDetails(
+          productID: productId,
+          verificationData: PurchaseVerificationData(
+            localVerificationData: '',
+            serverVerificationData: '',
+            source: 'google_play',
+          ),
+          transactionDate: null,
+          status: status ?? PurchaseStatus.restored,
+        );
+
+    test('un abonnement encore listé vaut premium', () {
+      expect(
+        SubscriptionService.hasActiveSubscription(
+            [bought(SubscriptionIds.monthly)]),
+        isTrue,
+      );
+    });
+
+    test('un instantané vide retire le premium (abonnement expiré)', () {
+      expect(SubscriptionService.hasActiveSubscription(const []), isFalse);
+    });
+
+    test('un abonnement annuel encore listé vaut premium', () {
+      expect(
+        SubscriptionService.hasActiveSubscription(
+            [bought(SubscriptionIds.yearly)]),
+        isTrue,
+      );
+    });
+
+    test('un achat étranger au catalogue ne vaut pas abonnement', () {
+      expect(
+        SubscriptionService.hasActiveSubscription([bought('autre_produit')]),
+        isFalse,
+      );
+    });
+
+    test('un paiement en attente ne vaut pas encore abonnement', () {
+      expect(
+        SubscriptionService.hasActiveSubscription(
+            [bought(SubscriptionIds.monthly, PurchaseStatus.pending)]),
+        isFalse,
+      );
+    });
+  });
+
+  /// Règle métier : le serveur a interrogé Google pour le compte entier, il
+  /// tranche. La boutique locale ne vaut que pour cet appareil, et le cache —
+  /// borné par l'échéance — ne sert qu'à survivre hors ligne.
+  ///
+  /// `null` en entrée veut dire « cette source n'a pas su répondre », ce qui
+  /// n'est jamais la même chose que « non » : c'est cette nuance qui évite de
+  /// couper l'accès d'un abonné parce que le réseau a hoqueté.
+  group('abonnement — arbitrage serveur / boutique / cache', () {
+    bool? decide({bool? server, bool? store, bool cached = false}) =>
+        SubscriptionService.decideEntitlement(
+          serverPremium: server,
+          storeActive: store,
+          cachedStillValid: cached,
+        );
+
+    test('le serveur prime quand il se prononce', () {
+      expect(decide(server: true, store: false), isTrue);
+    });
+
+    test('le serveur ferme un accès que la boutique croyait ouvert', () {
+      // Abonnement expiré côté compte : la boutique de cet appareil peut
+      // encore lister l'achat, elle n'a pas le dernier mot.
+      expect(decide(server: false, store: true, cached: true), isFalse);
+    });
+
+    test('serveur muet : la boutique de cet appareil fait foi', () {
+      expect(decide(server: null, store: true), isTrue);
+      expect(decide(server: null, store: false), isFalse);
+    });
+
+    test('serveur muet et rien en boutique : le cache couvre les autres appareils',
+        () {
+      // Abonnement souscrit sur un autre téléphone, hors ligne ici.
+      expect(decide(server: null, store: false, cached: true), isTrue);
+    });
+
+    test('un cache périmé ne rouvre rien', () {
+      expect(decide(server: null, store: false, cached: false), isFalse);
+    });
+
+    test('personne ne répond : rien ne bouge', () {
+      expect(decide(server: null, store: null, cached: true), isNull);
+      expect(decide(server: null, store: null, cached: false), isNull);
+    });
   });
 }

@@ -9,13 +9,18 @@ import 'core/api/api_service.dart';
 import 'core/i18n/locale_controller.dart';
 import 'core/messaging/messaging_service.dart';
 import 'core/monetization/monetization_controller.dart';
+import 'core/subscriptions/subscription_service.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/splash_screen.dart';
 
 final apiService = ApiService();
 final themeController = ThemeController();
 final localeController = LocaleController();
-final monetizationController = MonetizationController();
+// L'abonnement est vérifié côté serveur : le service a besoin de l'API pour
+// lui transmettre les jetons d'achat et lui demander l'accès du compte.
+final monetizationController = MonetizationController(
+  subs: SubscriptionService(api: apiService),
+);
 final messagingService = MessagingService(apiService);
 final ValueNotifier<bool> isGuest = ValueNotifier(false);
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -28,6 +33,9 @@ void main() async {
   messagingService.initialize();
   _wireUnauthorizedRedirect();
   _wireLocale();
+  // Se connecter ou se déconnecter change le compte auquel l'abonnement est
+  // rattaché : sans ceci, le premium du compte précédent resterait affiché.
+  apiService.onIdentityChanged = monetizationController.refreshSubscription;
   runApp(const QuizApp());
 
   // Consentement publicitaire, AdMob et Play Billing : après la première frame.

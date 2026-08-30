@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:arif_quiz/core/ads/ads_service.dart';
 import 'package:arif_quiz/core/monetization/play_credits.dart';
 import 'package:arif_quiz/core/subscriptions/subscription_service.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 /// Contrôleur central : publicités récompensées + crédits de parties + abonnement.
 ///
@@ -22,6 +22,9 @@ class MonetizationController extends ChangeNotifier {
 
   /// Une seule demande à la fois : voir [requestPlay].
   bool _requestInFlight = false;
+
+  /// Revérifie l'abonnement au retour dans l'app : voir [initialize].
+  AppLifecycleListener? _lifecycle;
 
   // ═══════════════════════════════════════════════════════════════
   // Coupe-circuit global : passer à false rouvre l'app en accès libre
@@ -77,6 +80,11 @@ class MonetizationController extends ChangeNotifier {
       _subs.initialize(),
       _credits.load(),
     ]);
+    // Une échéance d'abonnement ne réveille pas l'app. Sans cette
+    // revérification au retour au premier plan, un abonnement expiré pendant
+    // que l'app dormait resterait « actif » jusqu'au prochain lancement à
+    // froid — et l'app tourne des jours sans être tuée.
+    _lifecycle ??= AppLifecycleListener(onResume: _subs.refreshEntitlement);
     notifyListeners();
   }
 
@@ -261,4 +269,14 @@ class MonetizationController extends ChangeNotifier {
   }
 
   void refresh() => notifyListeners();
+
+  /// Redemande au serveur l'abonnement du compte connecté. Appelé au retour
+  /// dans l'app et à chaque changement d'identité.
+  Future<void> refreshSubscription() => _subs.refreshEntitlement();
+
+  @override
+  void dispose() {
+    _lifecycle?.dispose();
+    super.dispose();
+  }
 }

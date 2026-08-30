@@ -1,7 +1,7 @@
 name: arif_quiz
 description: A modern Quiz App with Laravel backend
 publish_to: 'none'
-version: 1.4.0+24
+version: 1.4.1+25
 
 environment:
   sdk: ^3.12.0

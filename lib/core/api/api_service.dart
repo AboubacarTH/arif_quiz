@@ -21,6 +21,12 @@ class ApiService {
   /// vers l'écran de connexion.
   void Function()? onUnauthorized;
 
+  /// Appelé quand l'utilisateur connecté change (connexion, déconnexion).
+  /// L'abonnement est rattaché à un compte, pas à l'appareil : il faut le
+  /// redemander au serveur, sinon le premium du compte précédent survivrait à
+  /// la bascule.
+  void Function()? onIdentityChanged;
+
   late final Dio _dio;
 
   ApiService() {
@@ -82,10 +88,12 @@ class ApiService {
 
   Future<void> saveToken(String token) async {
     await _storage.write(key: 'auth_token', value: token);
+    onIdentityChanged?.call();
   }
 
   Future<void> deleteToken() async {
     await _storage.delete(key: 'auth_token');
+    onIdentityChanged?.call();
   }
 
   Future<String?> getToken() async {
@@ -186,6 +194,27 @@ class ApiService {
     } on DioException catch (_) {
       rethrow;
     }
+  }
+
+  // ==================== ABONNEMENT ====================
+
+  /// Annonce un achat au serveur, qui le confronte à Google Play avant de le
+  /// rattacher au compte. Renvoie l'accès constaté côté serveur.
+  Future<Map<String, dynamic>> verifySubscription({
+    required String purchaseToken,
+    required String productId,
+  }) async {
+    final res = await _dio.post('/subscriptions/verify', data: {
+      'purchase_token': purchaseToken,
+      'product_id': productId,
+    });
+    return _asMap(res.data);
+  }
+
+  /// L'accès dont dispose le compte connecté, tous appareils confondus.
+  Future<Map<String, dynamic>> subscriptionStatus() async {
+    final res = await _dio.get('/subscriptions/status');
+    return _asMap(res.data);
   }
 
   // ==================== CATEGORIES ====================
